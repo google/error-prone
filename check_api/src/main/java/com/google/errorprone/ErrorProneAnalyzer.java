@@ -83,22 +83,18 @@ public final class ErrorProneAnalyzer implements TaskListener {
             .patchingOptions()
             .customRefactorer()
             .or(
-                Suppliers.memoize(
-                    () -> {
-                      ImmutableSet<String> namedCheckers =
-                          epOptions.patchingOptions().namedCheckers();
-                      ScannerSupplier toUse =
-                          ErrorPronePlugins.loadPlugins(scannerSupplier, context)
-                              .applyOverrides(epOptions)
-                              .filter(
-                                  bci -> {
-                                    String name = bci.canonicalName();
-                                    return epOptions.getSeverityMap().get(name) != Severity.OFF
-                                        && (namedCheckers.isEmpty()
-                                            || namedCheckers.contains(name));
-                                  });
-                      return ErrorProneScannerTransformer.create(toUse.get());
-                    }));
+                Suppliers.memoize(() -> {
+                  ImmutableSet<String> namedCheckers = epOptions.patchingOptions().namedCheckers();
+                  ScannerSupplier toUse =
+                      ErrorPronePlugins.loadPlugins(scannerSupplier, context)
+                          .applyOverrides(epOptions)
+                          .filter(bci -> {
+                            String name = bci.canonicalName();
+                            return epOptions.getSeverityMap().get(name) != Severity.OFF
+                                && (namedCheckers.isEmpty() || namedCheckers.contains(name));
+                          });
+                  return ErrorProneScannerTransformer.create(toUse.get());
+                }));
 
     return createWithCustomDescriptionListener(
         codeTransformer, epOptions, context, refactoringCollection[0]);
@@ -151,23 +147,22 @@ public final class ErrorProneAnalyzer implements TaskListener {
 
   private static Supplier<CodeTransformer> scansPlugins(
       ScannerSupplier scannerSupplier, ErrorProneOptions errorProneOptions, Context context) {
-    return Suppliers.memoize(
-        () -> {
-          // we can't load plugins from the processorpath until the filemanager has been
-          // initialized, so do it lazily
-          ErrorProneTimings timings = ErrorProneTimings.instance(context);
-          try (AutoCloseable unused = timings.initializationTimeSpan()) {
-            return ErrorProneScannerTransformer.create(
-                ErrorPronePlugins.loadPlugins(scannerSupplier, context)
-                    .applyOverrides(errorProneOptions)
-                    .get());
-          } catch (InvalidCommandLineOptionException e) {
-            throw new PropagatedException(e);
-          } catch (Exception e) {
-            // for the timing span, should be impossible
-            throw new AssertionError(e);
-          }
-        });
+    return Suppliers.memoize(() -> {
+      // we can't load plugins from the processorpath until the filemanager has been
+      // initialized, so do it lazily
+      ErrorProneTimings timings = ErrorProneTimings.instance(context);
+      try (AutoCloseable unused = timings.initializationTimeSpan()) {
+        return ErrorProneScannerTransformer.create(
+            ErrorPronePlugins.loadPlugins(scannerSupplier, context)
+                .applyOverrides(errorProneOptions)
+                .get());
+      } catch (InvalidCommandLineOptionException e) {
+        throw new PropagatedException(e);
+      } catch (Exception e) {
+        // for the timing span, should be impossible
+        throw new AssertionError(e);
+      }
+    });
   }
 
   static ErrorProneAnalyzer createWithCustomDescriptionListener(
@@ -213,14 +208,13 @@ public final class ErrorProneAnalyzer implements TaskListener {
         timings.initializationTime().toMillis());
     checkDurations.entrySet().stream()
         .sorted(comparing((Map.Entry<String, Duration> e) -> e.getValue()).reversed())
-        .forEach(
-            e ->
-                out.printf(
-                    Locale.ROOT,
-                    "  %8d ms  %5.1f%%  %s%n",
-                    e.getValue().toMillis(),
-                    total.isZero() ? 0.0 : 100.0 * e.getValue().toNanos() / total.toNanos(),
-                    e.getKey()));
+        .forEach(e ->
+            out.printf(
+                Locale.ROOT,
+                "  %8d ms  %5.1f%%  %s%n",
+                e.getValue().toMillis(),
+                total.isZero() ? 0.0 : 100.0 * e.getValue().toNanos() / total.toNanos(),
+                e.getKey()));
     out.flush();
   }
 

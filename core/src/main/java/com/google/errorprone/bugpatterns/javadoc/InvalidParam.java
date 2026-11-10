@@ -174,12 +174,11 @@ public final class InvalidParam extends BugChecker implements ClassTreeMatcher, 
         String message = String.format("Parameter name `%s` is unknown.", paramTree.getName());
         state.reportMatch(
             bestMatch
-                .map(
-                    bm ->
-                        buildDescription(diagnosticPosition(getCurrentPath(), state))
-                            .setMessage(message + String.format(" Did you mean %s?", bm))
-                            .addFix(replace(paramTree.getName(), bm, state))
-                            .build())
+                .map(bm ->
+                    buildDescription(diagnosticPosition(getCurrentPath(), state))
+                        .setMessage(message + String.format(" Did you mean %s?", bm))
+                        .addFix(replace(paramTree.getName(), bm, state))
+                        .build())
                 .orElse(
                     buildDescription(diagnosticPosition(getCurrentPath(), state))
                         .setMessage(message)

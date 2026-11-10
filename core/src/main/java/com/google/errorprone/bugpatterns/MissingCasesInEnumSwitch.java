@@ -67,10 +67,9 @@ public class MissingCasesInEnumSwitch extends BugChecker
             .flatMap(c -> c.getLabels().stream())
             .filter(label -> label instanceof PatternCaseLabelTree)
             .map(label -> (PatternCaseLabelTree) label)
-            .filter(
-                patternLabel ->
-                    ASTHelpers.isSubtype(
-                        switchType, ASTHelpers.getType(patternLabel.getPattern()), state))
+            .filter(patternLabel ->
+                ASTHelpers.isSubtype(
+                    switchType, ASTHelpers.getType(patternLabel.getPattern()), state))
             .count();
 
     // Continue to perform the check only if:

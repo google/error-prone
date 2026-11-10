@@ -72,20 +72,18 @@ public class AvoidCommonTypeNames extends BugChecker
           "Module");
 
   private static final Supplier<ImmutableMap<String, ClassSymbol>> NAMES_TO_AVOID =
-      memoize(
-          state -> {
-            Symtab symtab = state.getSymtab();
-            return stream(
-                    symtab
-                        .enterPackage(symtab.java_base, state.getNames().java_lang)
-                        .members()
-                        .getSymbols(
-                            s ->
-                                s instanceof ClassSymbol
-                                    && s.getModifiers().contains(PUBLIC)
-                                    && !IGNORED.contains(s.getSimpleName().toString())))
-                .collect(toImmutableMap(s -> s.getSimpleName().toString(), s -> (ClassSymbol) s));
-          });
+      memoize(state -> {
+        Symtab symtab = state.getSymtab();
+        return stream(
+                symtab
+                    .enterPackage(symtab.java_base, state.getNames().java_lang)
+                    .members()
+                    .getSymbols(s ->
+                        s instanceof ClassSymbol
+                            && s.getModifiers().contains(PUBLIC)
+                            && !IGNORED.contains(s.getSimpleName().toString())))
+            .collect(toImmutableMap(s -> s.getSimpleName().toString(), s -> (ClassSymbol) s));
+      });
 
   private Description check(Tree tree, Name simpleName, VisitorState state) {
     ClassSymbol clashingSymbol = NAMES_TO_AVOID.get(state).get(simpleName.toString());

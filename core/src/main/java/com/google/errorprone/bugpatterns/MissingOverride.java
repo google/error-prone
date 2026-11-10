@@ -92,20 +92,19 @@ public class MissingOverride extends BugChecker implements MethodTreeMatcher {
         // to allow deprecated methods to be removed non-atomically, we permit overrides of
         // @Deprecated to skip the annotation
         .filter(override -> !hasAnnotation(override, Deprecated.class.getName(), state))
-        .map(
-            override ->
-                buildDescription(tree)
-                    .addFix(SuggestedFix.prefixWith(tree, "@Override "))
-                    .setMessage(
-                        String.format(
-                            "%s %s method in %s; expected @Override",
-                            sym.getSimpleName(),
-                            override.enclClass().isInterface()
-                                    || override.getModifiers().contains(Modifier.ABSTRACT)
-                                ? "implements"
-                                : "overrides",
-                            override.enclClass().getSimpleName()))
-                    .build())
+        .map(override ->
+            buildDescription(tree)
+                .addFix(SuggestedFix.prefixWith(tree, "@Override "))
+                .setMessage(
+                    String.format(
+                        "%s %s method in %s; expected @Override",
+                        sym.getSimpleName(),
+                        override.enclClass().isInterface()
+                                || override.getModifiers().contains(Modifier.ABSTRACT)
+                            ? "implements"
+                            : "overrides",
+                        override.enclClass().getSimpleName()))
+                .build())
         .orElse(NO_MATCH);
   }
 }

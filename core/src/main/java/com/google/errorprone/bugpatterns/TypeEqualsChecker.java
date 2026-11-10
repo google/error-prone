@@ -119,17 +119,16 @@ public class TypeEqualsChecker extends BugChecker
 
     Description.Builder description = buildDescription(tree);
     ProcessingEnvUtils.getTypesExpr(state)
-        .ifPresent(
-            typesExpr -> {
-              String prefix = negate ? "!" : "";
-              String lhsSource = state.getSourceForNode(lhs);
-              String rhsSource = state.getSourceForNode(rhs);
-              description.addFix(
-                  SuggestedFix.replace(
-                      tree,
-                      String.format(
-                          "%s%s.isSameType(%s, %s)", prefix, typesExpr, lhsSource, rhsSource)));
-            });
+        .ifPresent(typesExpr -> {
+          String prefix = negate ? "!" : "";
+          String lhsSource = state.getSourceForNode(lhs);
+          String rhsSource = state.getSourceForNode(rhs);
+          description.addFix(
+              SuggestedFix.replace(
+                  tree,
+                  String.format(
+                      "%s%s.isSameType(%s, %s)", prefix, typesExpr, lhsSource, rhsSource)));
+        });
     return description.build();
   }
 }

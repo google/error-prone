@@ -215,13 +215,12 @@ public final class DistinctVarargsChecker extends BugChecker
     for (Map.Entry<String, Collection<Integer>> entry : argumentsByString.asMap().entrySet()) {
       entry.getValue().stream()
           .skip(1)
-          .forEachOrdered(
-              index ->
-                  suggestedFix.merge(
-                      SuggestedFix.replace(
-                          state.getEndPosition(arguments.get(index - 1)),
-                          state.getEndPosition(arguments.get(index)),
-                          "")));
+          .forEachOrdered(index ->
+              suggestedFix.merge(
+                  SuggestedFix.replace(
+                      state.getEndPosition(arguments.get(index - 1)),
+                      state.getEndPosition(arguments.get(index)),
+                      "")));
     }
     if (suggestedFix.isEmpty()) {
       return Description.NO_MATCH;

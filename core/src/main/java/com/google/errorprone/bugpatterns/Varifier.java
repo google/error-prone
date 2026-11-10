@@ -109,18 +109,17 @@ public final class Varifier extends BugChecker implements VariableTreeMatcher {
     // (but not Bar bar = Foo.builder()...build())
     if (BUILD_METHOD.matches(initializer, state)
         && streamReceivers(initializer)
-            .anyMatch(
-                t -> {
-                  if (!BUILDER_FACTORY.matches(t, state)) {
-                    return false;
-                  }
-                  if (t instanceof NewClassTree) {
-                    var enclosing = getSymbol(t).owner.getEnclosingElement();
-                    return enclosing instanceof TypeElement
-                        && isSameType(enclosing.asType(), getType(tree.getType()), state);
-                  }
-                  return isSameType(getReceiverType(t), getType(tree.getType()), state);
-                })) {
+            .anyMatch(t -> {
+              if (!BUILDER_FACTORY.matches(t, state)) {
+                return false;
+              }
+              if (t instanceof NewClassTree) {
+                var enclosing = getSymbol(t).owner.getEnclosingElement();
+                return enclosing instanceof TypeElement
+                    && isSameType(enclosing.asType(), getType(tree.getType()), state);
+              }
+              return isSameType(getReceiverType(t), getType(tree.getType()), state);
+            })) {
       return fix(tree);
     }
     // Foo foo = Foo.createFoo(..);

@@ -62,13 +62,12 @@ public final class ExternalApiList extends ErrorProneMethodRule {
   private static final String API_LIST_PARSER = "CheckReturnValue:ApiListParser";
 
   private static final Supplier<ConfigParser> CONFIG_PARSER =
-      VisitorState.memoize(
-          state ->
-              state
-                  .errorProneOptions()
-                  .getFlags()
-                  .getEnum(API_LIST_PARSER, ConfigParser.class)
-                  .orElse(ConfigParser.AS_STRINGS));
+      VisitorState.memoize(state ->
+          state
+              .errorProneOptions()
+              .getFlags()
+              .getEnum(API_LIST_PARSER, ConfigParser.class)
+              .orElse(ConfigParser.AS_STRINGS));
 
   private final ResultUsePolicy policy;
   private final Supplier<MethodPredicate> evaluator;
@@ -76,15 +75,14 @@ public final class ExternalApiList extends ErrorProneMethodRule {
   private ExternalApiList(String flagName, ResultUsePolicy policy) {
     this.policy = policy;
     this.evaluator =
-        VisitorState.memoize(
-            state ->
-                state
-                    .errorProneOptions()
-                    .getFlags()
-                    .get(flagName)
-                    .filter(s -> !s.isEmpty())
-                    .map(filename -> loadConfigListFromFile(filename, CONFIG_PARSER.get(state)))
-                    .orElse((m, s) -> false));
+        VisitorState.memoize(state ->
+            state
+                .errorProneOptions()
+                .getFlags()
+                .get(flagName)
+                .filter(s -> !s.isEmpty())
+                .map(filename -> loadConfigListFromFile(filename, CONFIG_PARSER.get(state)))
+                .orElse((m, s) -> false));
   }
 
   @Override
@@ -166,11 +164,10 @@ public final class ExternalApiList extends ErrorProneMethodRule {
     }
     return (methodSymbol, state) ->
         apis.get(surroundingClass(methodSymbol)).stream()
-            .anyMatch(
-                api ->
-                    methodSymbol.getSimpleName().contentEquals(api.methodName())
-                        && methodParametersMatch(
-                            api.parameterTypes(), methodSymbol.params(), state.getTypes()));
+            .anyMatch(api ->
+                methodSymbol.getSimpleName().contentEquals(api.methodName())
+                    && methodParametersMatch(
+                        api.parameterTypes(), methodSymbol.params(), state.getTypes()));
   }
 
   public static String surroundingClass(MethodSymbol methodSymbol) {

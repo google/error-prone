@@ -61,29 +61,27 @@ public class DangerousLiteralNullChecker extends BugChecker implements LiteralTr
   }
 
   private static final Supplier<ImmutableList<NullReplacementRule>> RULES =
-      VisitorState.memoize(
-          state ->
-              ImmutableList.of(
-                  NullReplacementRule.builder()
-                      .setKlass(state.getName("java.util.Optional"))
-                      .setMethod(state.getName("orElseGet"))
-                      .setReplacementBody("orElse(null)")
-                      .build(),
-                  NullReplacementRule.builder()
-                      .setKlass(state.getName("java.util.Optional"))
-                      .setMethod(state.getName("orElseThrow"))
-                      .setReplacementBody("orElseThrow(NullPointerException::new)")
-                      .build()));
+      VisitorState.memoize(state ->
+          ImmutableList.of(
+              NullReplacementRule.builder()
+                  .setKlass(state.getName("java.util.Optional"))
+                  .setMethod(state.getName("orElseGet"))
+                  .setReplacementBody("orElse(null)")
+                  .build(),
+              NullReplacementRule.builder()
+                  .setKlass(state.getName("java.util.Optional"))
+                  .setMethod(state.getName("orElseThrow"))
+                  .setReplacementBody("orElseThrow(NullPointerException::new)")
+                  .build()));
 
   private static final Supplier<ImmutableTable<Name, Name, String>> RULE_LOOKUP =
-      VisitorState.memoize(
-          state -> {
-            ImmutableTable.Builder<Name, Name, String> builder = ImmutableTable.builder();
-            for (NullReplacementRule rule : RULES.get(state)) {
-              builder.put(rule.klass(), rule.method(), rule.replacementBody());
-            }
-            return builder.buildOrThrow();
-          });
+      VisitorState.memoize(state -> {
+        ImmutableTable.Builder<Name, Name, String> builder = ImmutableTable.builder();
+        for (NullReplacementRule rule : RULES.get(state)) {
+          builder.put(rule.klass(), rule.method(), rule.replacementBody());
+        }
+        return builder.buildOrThrow();
+      });
 
   @Override
   public Description matchLiteral(LiteralTree tree, VisitorState state) {

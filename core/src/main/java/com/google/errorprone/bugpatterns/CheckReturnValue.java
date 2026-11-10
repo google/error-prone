@@ -262,12 +262,11 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
     return methodToInspect(tree).stream()
         .flatMap(method -> evaluator.evaluations(method, state))
         .findFirst()
-        .map(
-            evaluation ->
-                ImmutableMap.of(
-                    "rule", evaluation.rule(),
-                    "policy", evaluation.policy(),
-                    "scope", evaluation.scope()))
+        .map(evaluation ->
+            ImmutableMap.of(
+                "rule", evaluation.rule(),
+                "policy", evaluation.policy(),
+                "scope", evaluation.scope()))
         .orElse(ImmutableMap.of());
   }
 

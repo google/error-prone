@@ -65,12 +65,11 @@ public class TermEditDistance {
     double[][] worstCaseMatrix =
         sourceTerms.stream()
             .map(s -> s.length())
-            .map(
-                s ->
-                    targetTerms.stream()
-                        .map(t -> t.length())
-                        .mapToDouble(t -> maxDistanceFn.apply(s, t))
-                        .toArray())
+            .map(s ->
+                targetTerms.stream()
+                    .map(t -> t.length())
+                    .mapToDouble(t -> maxDistanceFn.apply(s, t))
+                    .toArray())
             .toArray(double[][]::new);
 
     double[] sourceTermDeletionCosts =

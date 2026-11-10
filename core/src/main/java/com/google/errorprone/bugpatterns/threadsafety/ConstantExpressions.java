@@ -88,15 +88,14 @@ public final class ConstantExpressions {
                 instanceMethod()
                     .onDescendantOfAny(wellKnownMutability.getKnownImmutableClasses().keySet()));
     this.threadSafety =
-        memoize(
-            s ->
-                ThreadSafety.builder()
-                    .purpose(ThreadSafety.Purpose.FOR_IMMUTABLE_CHECKER)
-                    .markerAnnotationInherited(true)
-                    .knownTypes(wellKnownMutability)
-                    .acceptedAnnotations(ImmutableSet.of(Immutable.class.getName()))
-                    .markerAnnotations(ImmutableSet.of())
-                    .build(s));
+        memoize(s ->
+            ThreadSafety.builder()
+                .purpose(ThreadSafety.Purpose.FOR_IMMUTABLE_CHECKER)
+                .markerAnnotationInherited(true)
+                .knownTypes(wellKnownMutability)
+                .acceptedAnnotations(ImmutableSet.of(Immutable.class.getName()))
+                .markerAnnotations(ImmutableSet.of())
+                .build(s));
   }
 
   public static ConstantExpressions fromFlags(ErrorProneFlags flags) {
@@ -139,14 +138,13 @@ public final class ConstantExpressions {
       public Void visitBinary(BinaryTree tree, Void unused) {
         if (tree.getKind().equals(Kind.EQUAL_TO) || tree.getKind().equals(Kind.NOT_EQUAL_TO)) {
           constantExpression(tree, state)
-              .ifPresent(
-                  e -> {
-                    if (tree.getKind().equals(Kind.NOT_EQUAL_TO)) {
-                      withNegation(() -> add(e));
-                    } else {
-                      add(e);
-                    }
-                  });
+              .ifPresent(e -> {
+                if (tree.getKind().equals(Kind.NOT_EQUAL_TO)) {
+                  withNegation(() -> add(e));
+                } else {
+                  add(e);
+                }
+              });
         } else if (negated
             ? tree.getKind().equals(Kind.CONDITIONAL_OR)
             : tree.getKind().equals(Kind.CONDITIONAL_AND)) {

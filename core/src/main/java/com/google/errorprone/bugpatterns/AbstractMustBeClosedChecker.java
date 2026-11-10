@@ -153,15 +153,14 @@ public abstract class AbstractMustBeClosedChecker extends BugChecker {
         VisitorState localState = state.withPath(getCurrentPath());
         if (matcher.matches(tree, localState)) {
           matchResourceExpression(tree, localState, suggester)
-              .ifPresent(
-                  change -> {
-                    fixBuilder.merge(change.otherFixes());
-                    change.closeBraceAfter().ifPresent(closeBraceLocations::add);
-                    if (firstIssuedFixLocation[0] == null) {
-                      // Attach the finding to the first invocation that broke the rules.
-                      firstIssuedFixLocation[0] = tree;
-                    }
-                  });
+              .ifPresent(change -> {
+                fixBuilder.merge(change.otherFixes());
+                change.closeBraceAfter().ifPresent(closeBraceLocations::add);
+                if (firstIssuedFixLocation[0] == null) {
+                  // Attach the finding to the first invocation that broke the rules.
+                  firstIssuedFixLocation[0] = tree;
+                }
+              });
         }
       }
 
@@ -245,12 +244,11 @@ public abstract class AbstractMustBeClosedChecker extends BugChecker {
       return Optional.empty();
     }
     return checkClosed(tree, state, suggester)
-        .filter(
-            unusedFix ->
-                !(exceptionTesting(tree, state)
-                    || UnusedReturnValueMatcher.mockitoInvocation(tree, state)
-                    || MOCKITO_MATCHER.matches(state.getPath().getParentPath().getLeaf(), state)
-                    || exemptChange(tree, state)));
+        .filter(unusedFix ->
+            !(exceptionTesting(tree, state)
+                || UnusedReturnValueMatcher.mockitoInvocation(tree, state)
+                || MOCKITO_MATCHER.matches(state.getPath().getParentPath().getLeaf(), state)
+                || exemptChange(tree, state)));
   }
 
   /// Returns true if `tree` is in a context that is commonly used to test that code throws, such as

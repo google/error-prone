@@ -355,23 +355,22 @@ public final class ASTHelpers {
   /** Returns whether this symbol or any of its owners are private. */
   public static boolean isEffectivelyPrivate(Symbol symbol) {
     return enclosingElements(symbol)
-        .anyMatch(
-            s -> {
-              if (s.isPrivate()) {
-                return true;
-              }
-              if (s instanceof ClassSymbol) {
-                // Anonymous classes. (Note: packages can be anonymous too.)
-                if (s.isAnonymous()) {
-                  return true;
-                }
-                // Local classes have a method as an owner.
-                if (s.owner instanceof MethodSymbol) {
-                  return true;
-                }
-              }
-              return false;
-            });
+        .anyMatch(s -> {
+          if (s.isPrivate()) {
+            return true;
+          }
+          if (s instanceof ClassSymbol) {
+            // Anonymous classes. (Note: packages can be anonymous too.)
+            if (s.isAnonymous()) {
+              return true;
+            }
+            // Local classes have a method as an owner.
+            if (s.owner instanceof MethodSymbol) {
+              return true;
+            }
+          }
+          return false;
+        });
   }
 
   /** Checks whether an expression requires parentheses. */
@@ -766,20 +765,18 @@ public final class ASTHelpers {
 
     // Iterate over all classes and interfaces that startClass inherits from.
     return types.closure(startClass).stream()
-        .flatMap(
-            (Type superClass) -> {
-              // Iterate over all the methods declared in superClass.
-              TypeSymbol superClassSymbol = superClass.tsym;
-              Scope superClassSymbols = superClassSymbol.members();
-              if (superClassSymbols == null) { // Can be null if superClass is a type variable
-                return Stream.empty();
-              }
-              return stream(
-                      superClassSymbols.getSymbolsByName(
-                          name, matchesMethodPredicate, NON_RECURSIVE))
-                  // By definition of the filter, we know that the symbol is a MethodSymbol.
-                  .map(symbol -> (MethodSymbol) symbol);
-            });
+        .flatMap((Type superClass) -> {
+          // Iterate over all the methods declared in superClass.
+          TypeSymbol superClassSymbol = superClass.tsym;
+          Scope superClassSymbols = superClassSymbol.members();
+          if (superClassSymbols == null) { // Can be null if superClass is a type variable
+            return Stream.empty();
+          }
+          return stream(
+                  superClassSymbols.getSymbolsByName(name, matchesMethodPredicate, NON_RECURSIVE))
+              // By definition of the filter, we know that the symbol is a MethodSymbol.
+              .map(symbol -> (MethodSymbol) symbol);
+        });
   }
 
   /**
@@ -1125,9 +1122,8 @@ public final class ASTHelpers {
 
   private static boolean hasDirectAnnotationWithSimpleName(
       Stream<? extends AnnotationMirror> annotations, String simpleName) {
-    return annotations.anyMatch(
-        annotation ->
-            MoreAnnotations.asElement(annotation).getSimpleName().contentEquals(simpleName));
+    return annotations.anyMatch(annotation ->
+        MoreAnnotations.asElement(annotation).getSimpleName().contentEquals(simpleName));
   }
 
   /**
@@ -1945,12 +1941,11 @@ public final class ASTHelpers {
    */
   public static boolean isInStaticInitializer(VisitorState state) {
     return stream(state.getPath())
-        .anyMatch(
-            tree ->
-                (tree instanceof VariableTree && variableIsStaticFinal((VarSymbol) getSymbol(tree)))
-                    || (tree instanceof AssignmentTree assignmentTree
-                        && getSymbol(assignmentTree.getVariable()) instanceof VarSymbol varSymbol
-                        && variableIsStaticFinal(varSymbol)));
+        .anyMatch(tree ->
+            (tree instanceof VariableTree && variableIsStaticFinal((VarSymbol) getSymbol(tree)))
+                || (tree instanceof AssignmentTree assignmentTree
+                    && getSymbol(assignmentTree.getVariable()) instanceof VarSymbol varSymbol
+                    && variableIsStaticFinal(varSymbol)));
   }
 
   /**

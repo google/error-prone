@@ -443,21 +443,20 @@ public final class ErrorProneOptions {
           .map(line -> line.replace("#.*", ""))
           // This might damage file paths with spaces.
           .flatMap(splitter::splitToStream)
-          .filter(
-              line -> {
-                if (isArgumentFile(line)) {
-                  // This would in fact be quite tricky to get right.
-                  // Although `@a.cfg` seems pretty clear, relative path, when errorprone is
-                  // invoked from various tools (Maven, Gradle, IDEs), the concept becomes a lot
-                  // fuzzier. I'm in folder `x`, call `mvn -f y`, with arg
-                  // `@${project.basedir}/a.cfg`
-                  // where would `@b.cfg` invoked in `a.cfg` be?
-                  // Instead the user can explicitly specify the 2-3 config files they need.
-                  throw new InvalidCommandLineOptionException(
-                      "The parameter file cannot reference another parameter file " + line);
-                }
-                return true;
-              })
+          .filter(line -> {
+            if (isArgumentFile(line)) {
+              // This would in fact be quite tricky to get right.
+              // Although `@a.cfg` seems pretty clear, relative path, when errorprone is
+              // invoked from various tools (Maven, Gradle, IDEs), the concept becomes a lot
+              // fuzzier. I'm in folder `x`, call `mvn -f y`, with arg
+              // `@${project.basedir}/a.cfg`
+              // where would `@b.cfg` invoked in `a.cfg` be?
+              // Instead the user can explicitly specify the 2-3 config files they need.
+              throw new InvalidCommandLineOptionException(
+                  "The parameter file cannot reference another parameter file " + line);
+            }
+            return true;
+          })
           .collect(toImmutableList());
     } catch (IOException unused) {
       throw new InvalidCommandLineOptionException("Error loading parameters file " + fileName);
@@ -540,31 +539,30 @@ public final class ErrorProneOptions {
               // Refaster rule, load from InputStream at file
               builder
                   .patchingOptionsBuilder()
-                  .customRefactorer(
-                      () -> {
-                        String path = remaining.substring("refaster:".length());
-                        try (InputStream in =
-                                Files.newInputStream(FileSystems.getDefault().getPath(path));
-                            ObjectInputStream ois =
-                                new ObjectInputStream(in) {
-                                  // Work around https://github.com/google/guava/issues/8693.
-                                  @Override
-                                  protected ObjectStreamClass readClassDescriptor()
-                                      throws IOException, ClassNotFoundException {
-                                    ObjectStreamClass desc = super.readClassDescriptor();
-                                    if (desc.getName()
-                                        .equals(ImmutableClassToInstanceMap.class.getName())) {
-                                      return ObjectStreamClass.lookup(
-                                          ImmutableClassToInstanceMap.class);
-                                    }
-                                    return desc;
-                                  }
-                                }) {
-                          return (CodeTransformer) ois.readObject();
-                        } catch (IOException | ClassNotFoundException e) {
-                          throw new RuntimeException("Can't load Refaster rule from " + path, e);
-                        }
-                      });
+                  .customRefactorer(() -> {
+                    String path = remaining.substring("refaster:".length());
+                    try (InputStream in =
+                            Files.newInputStream(FileSystems.getDefault().getPath(path));
+                        ObjectInputStream ois =
+                            new ObjectInputStream(in) {
+                              // Work around https://github.com/google/guava/issues/8693.
+                              @Override
+                              protected ObjectStreamClass readClassDescriptor()
+                                  throws IOException, ClassNotFoundException {
+                                ObjectStreamClass desc = super.readClassDescriptor();
+                                if (desc.getName()
+                                    .equals(ImmutableClassToInstanceMap.class.getName())) {
+                                  return ObjectStreamClass.lookup(
+                                      ImmutableClassToInstanceMap.class);
+                                }
+                                return desc;
+                              }
+                            }) {
+                      return (CodeTransformer) ois.readObject();
+                    } catch (IOException | ClassNotFoundException e) {
+                      throw new RuntimeException("Can't load Refaster rule from " + path, e);
+                    }
+                  });
             } else {
               Iterable<String> checks =
                   Splitter.on(',').trimResults().omitEmptyStrings().split(remaining);

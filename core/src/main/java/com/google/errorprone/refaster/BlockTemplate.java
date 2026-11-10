@@ -138,43 +138,42 @@ public abstract class BlockTemplate extends Template<BlockTemplateMatch> {
     for (UStatement templateStatement : templateStatements()) {
       choice = choice.flatMap(templateStatement);
     }
-    return choice.flatMap(
-        (UnifierWithUnconsumedStatements state) -> {
-          Unifier unifier = state.unifier();
-          Inliner inliner = unifier.createInliner();
-          try {
-            Optional<Unifier> checkedUnifier =
-                typecheck(
-                    unifier,
-                    inliner,
-                    new Warner(firstStatement),
-                    expectedTypes(inliner),
-                    actualTypes(inliner));
-            if (checkedUnifier.isPresent()) {
-              int consumedStatements = statements.size() - state.unconsumedStatements().size();
-              BlockTemplateMatch match =
-                  new BlockTemplateMatch(
-                      block, checkedUnifier.get(), offset, offset + consumedStatements);
-              boolean verified =
-                  ExpressionTemplate.trueOrNull(
-                      ExpressionTemplate.PLACEHOLDER_VERIFIER.scan(
-                          templateStatements(), checkedUnifier.get()));
-              if (!verified) {
-                return Choice.none();
-              }
-              return matchesStartingAnywhere(
-                      block,
-                      offset + consumedStatements,
-                      statements.subList(consumedStatements, statements.size()),
-                      context,
-                      compilationUnit)
-                  .map(list -> list.prepend(match));
-            }
-          } catch (CouldNotResolveImportException e) {
-            // fall through
+    return choice.flatMap((UnifierWithUnconsumedStatements state) -> {
+      Unifier unifier = state.unifier();
+      Inliner inliner = unifier.createInliner();
+      try {
+        Optional<Unifier> checkedUnifier =
+            typecheck(
+                unifier,
+                inliner,
+                new Warner(firstStatement),
+                expectedTypes(inliner),
+                actualTypes(inliner));
+        if (checkedUnifier.isPresent()) {
+          int consumedStatements = statements.size() - state.unconsumedStatements().size();
+          BlockTemplateMatch match =
+              new BlockTemplateMatch(
+                  block, checkedUnifier.get(), offset, offset + consumedStatements);
+          boolean verified =
+              ExpressionTemplate.trueOrNull(
+                  ExpressionTemplate.PLACEHOLDER_VERIFIER.scan(
+                      templateStatements(), checkedUnifier.get()));
+          if (!verified) {
+            return Choice.none();
           }
-          return Choice.none();
-        });
+          return matchesStartingAnywhere(
+                  block,
+                  offset + consumedStatements,
+                  statements.subList(consumedStatements, statements.size()),
+                  context,
+                  compilationUnit)
+              .map(list -> list.prepend(match));
+        }
+      } catch (CouldNotResolveImportException e) {
+        // fall through
+      }
+      return Choice.none();
+    });
   }
 
   private Choice<List<BlockTemplateMatch>> matchesStartingAnywhere(

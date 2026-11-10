@@ -165,23 +165,20 @@ public final class FloatingPointAssertionWithinEpsilon extends BugChecker
         BugChecker bugChecker, MethodInvocationTree tree, VisitorState state) {
       if (junitWithoutMessage.matches(tree, state)) {
         return check(tree.getArguments().get(2), tree.getArguments().get(0))
-            .map(
-                tolerance ->
-                    suggestJunitFix(bugChecker, tree).setMessage(description(tolerance)).build());
+            .map(tolerance ->
+                suggestJunitFix(bugChecker, tree).setMessage(description(tolerance)).build());
       }
       if (junitWithMessage.matches(tree, state)) {
         return check(tree.getArguments().get(3), tree.getArguments().get(1))
-            .map(
-                tolerance ->
-                    suggestJunitFix(bugChecker, tree).setMessage(description(tolerance)).build());
+            .map(tolerance ->
+                suggestJunitFix(bugChecker, tree).setMessage(description(tolerance)).build());
       }
       if (truthOfCall.matches(tree, state)) {
         return check(getReceiverArgument(tree), getOnlyElement(tree.getArguments()))
-            .map(
-                tolerance ->
-                    suggestTruthFix(bugChecker, tree, state)
-                        .setMessage(description(tolerance))
-                        .build());
+            .map(tolerance ->
+                suggestTruthFix(bugChecker, tree, state)
+                    .setMessage(description(tolerance))
+                    .build());
       }
       return Optional.empty();
     }

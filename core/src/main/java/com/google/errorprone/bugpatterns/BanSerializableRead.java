@@ -50,10 +50,8 @@ public final class BanSerializableRead extends AbstractBanUnsafeAPIChecker
               enclosingMethod(methodIsNamed("readObject"))),
           allOf(
               enclosingClass(isSubtypeOf("java.io.ObjectInputStream")),
-              enclosingMethod(
-                  (methodTree, state) ->
-                      BANNED_OBJECT_INPUT_STREAM_METHODS.contains(
-                          methodTree.getName().toString()))));
+              enclosingMethod((methodTree, state) ->
+                  BANNED_OBJECT_INPUT_STREAM_METHODS.contains(methodTree.getName().toString()))));
 
   /** Checks for unsafe deserialization calls on an ObjectInputStream in an ExpressionTree. */
   private static final Matcher<MethodInvocationTree> OBJECT_INPUT_STREAM_DESERIALIZE_MATCHER =

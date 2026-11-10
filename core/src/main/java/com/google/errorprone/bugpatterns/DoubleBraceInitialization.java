@@ -119,12 +119,11 @@ public class DoubleBraceInitialization extends BugChecker implements NewClassTre
       }
       ImmutableList<String> args =
           arguments.stream()
-              .map(
-                  arg ->
-                      arg.stream()
-                          .map(ASTHelpers::stripParentheses)
-                          .map(state::getSourceForNode)
-                          .collect(joining(", ", "\n", "")))
+              .map(arg ->
+                  arg.stream()
+                      .map(ASTHelpers::stripParentheses)
+                      .map(state::getSourceForNode)
+                      .collect(joining(", ", "\n", "")))
               .collect(toImmutableList());
 
       // check the enclosing context: calls to Collections.unmodifiable* are now redundant, and
@@ -215,10 +214,9 @@ public class DoubleBraceInitialization extends BugChecker implements NewClassTre
     }
     ImmutableList<? extends Tree> members =
         body.getMembers().stream()
-            .filter(
-                m ->
-                    !(m instanceof MethodTree methodTree
-                        && ASTHelpers.isGeneratedConstructor(methodTree)))
+            .filter(m ->
+                !(m instanceof MethodTree methodTree
+                    && ASTHelpers.isGeneratedConstructor(methodTree)))
             .collect(toImmutableList());
     if (members.size() != 1) {
       return NO_MATCH;

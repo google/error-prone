@@ -59,22 +59,20 @@ public final class UnnecessarilyVisible extends BugChecker implements MethodTree
       immutableEnumSet(Modifier.PROTECTED, Modifier.PUBLIC);
 
   private static final Supplier<ImmutableSet<Name>> FRAMEWORK_ANNOTATIONS =
-      VisitorState.memoize(
-          s ->
-              Streams.concat(
-                      Streams.concat(
-                              InjectMatchers.INJECT_ANNOTATIONS.stream(),
-                              InjectMatchers.PROVIDES_ANNOTATIONS.stream(),
-                              InjectMatchers.MULTIBINDINGS_ANNOTATIONS.stream())
-                          .map(s::getName),
-                      Stream.of(AFTER_TEMPLATE_ANNOTATION, BEFORE_TEMPLATE_ANNOTATION)
-                          .map(c -> c.binaryName(s)))
-                  .collect(toImmutableSet()));
+      VisitorState.memoize(s ->
+          Streams.concat(
+                  Streams.concat(
+                          InjectMatchers.INJECT_ANNOTATIONS.stream(),
+                          InjectMatchers.PROVIDES_ANNOTATIONS.stream(),
+                          InjectMatchers.MULTIBINDINGS_ANNOTATIONS.stream())
+                      .map(s::getName),
+                  Stream.of(AFTER_TEMPLATE_ANNOTATION, BEFORE_TEMPLATE_ANNOTATION)
+                      .map(c -> c.binaryName(s)))
+              .collect(toImmutableSet()));
 
   private static final Supplier<ImmutableSet<Name>> INJECT_ANNOTATIONS =
-      VisitorState.memoize(
-          s ->
-              InjectMatchers.INJECT_ANNOTATIONS.stream().map(s::getName).collect(toImmutableSet()));
+      VisitorState.memoize(s ->
+          InjectMatchers.INJECT_ANNOTATIONS.stream().map(s::getName).collect(toImmutableSet()));
 
   private static final String VISIBLE_FOR_TESTING_CAVEAT =
       " If this is only for testing purposes, consider annotating the element with"

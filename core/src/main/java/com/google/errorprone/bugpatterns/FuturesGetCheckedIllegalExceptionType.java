@@ -109,29 +109,28 @@ public final class FuturesGetCheckedIllegalExceptionType extends BugChecker
       argument(1, CLASS_OBJECT_FOR_CLASS_EXTENDING_RUNTIME_EXCEPTION);
 
   private static final Matcher<ExpressionTree> CLASS_OBJECT_FOR_CLASS_WITHOUT_USABLE_CONSTRUCTOR =
-      classLiteral(
-          (ExpressionTree tree, VisitorState state) -> {
-            ClassSymbol classSymbol = (ClassSymbol) getSymbol(tree);
-            if (classSymbol == null) {
-              return false;
-            }
+      classLiteral((ExpressionTree tree, VisitorState state) -> {
+        ClassSymbol classSymbol = (ClassSymbol) getSymbol(tree);
+        if (classSymbol == null) {
+          return false;
+        }
 
-            if (classSymbol.isInner()) {
-              return true;
-            }
+        if (classSymbol.isInner()) {
+          return true;
+        }
 
-            for (Symbol enclosedSymbol : getEnclosedElements(classSymbol)) {
-              if (!enclosedSymbol.isConstructor()) {
-                continue;
-              }
-              MethodSymbol constructorSymbol = (MethodSymbol) enclosedSymbol;
-              if (canBeUsedByGetChecked(constructorSymbol, state)) {
-                return false;
-              }
-            }
+        for (Symbol enclosedSymbol : getEnclosedElements(classSymbol)) {
+          if (!enclosedSymbol.isConstructor()) {
+            continue;
+          }
+          MethodSymbol constructorSymbol = (MethodSymbol) enclosedSymbol;
+          if (canBeUsedByGetChecked(constructorSymbol, state)) {
+            return false;
+          }
+        }
 
-            return true;
-          });
+        return true;
+      });
 
   private static final Matcher<MethodInvocationTree> PASSED_TYPE_WITHOUT_USABLE_CONSTRUCTOR =
       argument(1, CLASS_OBJECT_FOR_CLASS_WITHOUT_USABLE_CONSTRUCTOR);

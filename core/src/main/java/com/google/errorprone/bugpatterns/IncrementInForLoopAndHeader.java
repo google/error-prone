@@ -57,10 +57,8 @@ public class IncrementInForLoopAndHeader extends BugChecker implements ForLoopTr
     ImmutableSet<Symbol> incrementedSymbols =
         updates.stream()
             .filter(expStateTree -> expStateTree.getExpression() instanceof UnaryTree)
-            .map(
-                expStateTree ->
-                    ASTHelpers.getSymbol(
-                        ((UnaryTree) expStateTree.getExpression()).getExpression()))
+            .map(expStateTree ->
+                ASTHelpers.getSymbol(((UnaryTree) expStateTree.getExpression()).getExpression()))
             .filter(Objects::nonNull)
             .collect(toImmutableSet());
 

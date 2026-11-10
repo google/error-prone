@@ -58,12 +58,8 @@ public class ConstantField extends BugChecker implements VariableTreeMatcher {
     Description.Builder descriptionBuilder = buildDescription(tree);
     if (canBecomeStaticMember(sym)) {
       SuggestedFixes.addModifiers(tree, state, Modifier.FINAL, Modifier.STATIC)
-          .map(
-              f ->
-                  SuggestedFix.builder()
-                      .setShortDescription("make static and final")
-                      .merge(f)
-                      .build())
+          .map(f ->
+              SuggestedFix.builder().setShortDescription("make static and final").merge(f).build())
           .ifPresent(descriptionBuilder::addFix);
     }
     return descriptionBuilder

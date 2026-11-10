@@ -84,13 +84,12 @@ public class JUnit4TestNotRun extends BugChecker implements ClassTreeMatcher {
 
   private static boolean hasParameterisationAnnotation(List<? extends AnnotationTree> annotations) {
     return annotations.stream()
-        .anyMatch(
-            a ->
-                getType(a)
-                    .tsym
-                    .getQualifiedName()
-                    .toString()
-                    .startsWith("com.google.testing.junit.testparameterinjector."));
+        .anyMatch(a ->
+            getType(a)
+                .tsym
+                .getQualifiedName()
+                .toString()
+                .startsWith("com.google.testing.junit.testparameterinjector."));
   }
 
   private static boolean isInjectable(VariableTree variableTree, VisitorState state) {

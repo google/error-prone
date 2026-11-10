@@ -707,10 +707,8 @@ public final class SwitchUtils {
             .collect(toImmutableSet());
     return !deletedVariableSymbols.isEmpty()
         && getSubsequentCases(switchTree, caseTree).stream()
-            .anyMatch(
-                laterCase ->
-                    !disjoint(
-                        getReferencedLocalVariablesInTree(laterCase), deletedVariableSymbols));
+            .anyMatch(laterCase ->
+                !disjoint(getReferencedLocalVariablesInTree(laterCase), deletedVariableSymbols));
   }
 
   private SwitchUtils() {}

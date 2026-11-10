@@ -263,20 +263,18 @@ public final class PreferredInterfaceType extends BugChecker implements Compilat
           .flatMap(type -> toGoodReplacement(type, state))
           .filter(replacement -> !isSubtype(getType(tree), replacement, state))
           .filter(replacement -> isSubtype(replacement, getType(tree), state))
-          .ifPresent(
-              type -> {
-                SuggestedFix.Builder builder = SuggestedFix.builder();
-                SuggestedFix fix =
-                    builder
-                        .replace(
-                            getErasedTypeTree(tree), qualifyType(state, builder, type.asElement()))
-                        .build();
-                state.reportMatch(
-                    buildDescription(tree)
-                        .setMessage(getMessage(symbol, type, state))
-                        .addFix(fix)
-                        .build());
-              });
+          .ifPresent(type -> {
+            SuggestedFix.Builder builder = SuggestedFix.builder();
+            SuggestedFix fix =
+                builder
+                    .replace(getErasedTypeTree(tree), qualifyType(state, builder, type.asElement()))
+                    .build();
+            state.reportMatch(
+                buildDescription(tree)
+                    .setMessage(getMessage(symbol, type, state))
+                    .addFix(fix)
+                    .build());
+          });
     }
   }
 
@@ -322,14 +320,12 @@ public final class PreferredInterfaceType extends BugChecker implements Compilat
         .filter(bt -> bt.predicate().apply(type, state))
         .map(BetterTypes::betterTypes)
         .findFirst()
-        .flatMap(
-            betterTypes ->
-                betterTypes.stream()
-                    .map(typeName -> typeFromString(typeName).get(state))
-                    .filter(
-                        sensibleType ->
-                            sensibleType != null && isSubtype(type, sensibleType, state))
-                    .findFirst());
+        .flatMap(betterTypes ->
+            betterTypes.stream()
+                .map(typeName -> typeFromString(typeName).get(state))
+                .filter(
+                    sensibleType -> sensibleType != null && isSubtype(type, sensibleType, state))
+                .findFirst());
   }
 
   private record BetterTypes(TypePredicate predicate, ImmutableSet<String> betterTypes) {

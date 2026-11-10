@@ -454,11 +454,10 @@ public final class MethodInvocationMatcher {
         for (Map.Entry<Optional<Token>, Node> entry : nfa.row(node).entrySet()) {
           entry
               .getKey()
-              .ifPresent(
-                  label -> {
-                    destinations.put(label, entry.getValue());
-                    destinations.putAll(label, acceptsAny);
-                  });
+              .ifPresent(label -> {
+                destinations.put(label, entry.getValue());
+                destinations.putAll(label, acceptsAny);
+              });
         }
       }
 

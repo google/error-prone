@@ -74,11 +74,10 @@ public final class PreferInstanceofOverGetKind extends BugChecker
                   .collect(toImmutableListMultimap(k -> k.asInterface(), k -> k)))
           .entrySet()
           .stream()
-          .flatMap(
-              e ->
-                  e.getValue().size() == 1
-                      ? Stream.of(new SimpleEntry<>(getOnlyElement(e.getValue()), e.getKey()))
-                      : Stream.empty())
+          .flatMap(e ->
+              e.getValue().size() == 1
+                  ? Stream.of(new SimpleEntry<>(getOnlyElement(e.getValue()), e.getKey()))
+                  : Stream.empty())
           .collect(toImmutableMap(Map.Entry::getKey, Map.Entry::getValue));
 
   @Override

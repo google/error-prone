@@ -118,12 +118,11 @@ public class VisitorStateTest {
     // The following is bogus: The value is cached per compilation, not per compilation unit!
     // We'll test that the plugin throws an exception about that problem.
     private final Supplier<Optional<ClassTree>> firstClassTreeInCompilationUnit =
-        VisitorState.memoize(
-            s ->
-                s.getPath().getCompilationUnit().getTypeDecls().stream()
-                    .filter(t -> t.getKind().asInterface().equals(ClassTree.class))
-                    .map(ClassTree.class::cast)
-                    .findFirst());
+        VisitorState.memoize(s ->
+            s.getPath().getCompilationUnit().getTypeDecls().stream()
+                .filter(t -> t.getKind().asInterface().equals(ClassTree.class))
+                .map(ClassTree.class::cast)
+                .findFirst());
 
     @Override
     public Description matchClass(ClassTree tree, VisitorState state) {

@@ -353,10 +353,9 @@ public final class FloggerRequiredModifiers extends BugChecker
 
     String name =
         REASONABLE_LOGGER_NAMES.stream()
-            .filter(
-                candidate ->
-                    Iterables.isEmpty(
-                        targetClassSym.members().getSymbolsByName(state.getName(candidate))))
+            .filter(candidate ->
+                Iterables.isEmpty(
+                    targetClassSym.members().getSymbolsByName(state.getName(candidate))))
             .findFirst()
             .orElseThrow(IllegalStateException::new);
 

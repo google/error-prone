@@ -89,12 +89,11 @@ public final class CheckedExceptionNotThrown extends BugChecker implements Metho
 
     ImmutableList<ExpressionTree> canActuallyBeThrown =
         tree.getThrows().stream()
-            .filter(
-                et -> {
-                  Type type = getType(et);
-                  return !isCheckedExceptionType(type, state)
-                      || thrownExceptions.stream().anyMatch(t -> isSubtype(t, type, state));
-                })
+            .filter(et -> {
+              Type type = getType(et);
+              return !isCheckedExceptionType(type, state)
+                  || thrownExceptions.stream().anyMatch(t -> isSubtype(t, type, state));
+            })
             .collect(toImmutableList());
 
     if (tree.getThrows().equals(canActuallyBeThrown)) {

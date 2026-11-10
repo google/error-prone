@@ -286,13 +286,12 @@ public class MethodMatchersTest {
       implements MethodInvocationTreeMatcher {
     private static final Matcher<ExpressionTree> MATCHER =
         instanceMethod()
-            .onClass(
-                (type, state) -> {
-                  if (!type.tsym.getSimpleName().contentEquals("TargetOwner")) {
-                    throw new AssertionError("Unexpected class check on " + type);
-                  }
-                  return true;
-                })
+            .onClass((type, state) -> {
+              if (!type.tsym.getSimpleName().contentEquals("TargetOwner")) {
+                throw new AssertionError("Unexpected class check on " + type);
+              }
+              return true;
+            })
             .named("target")
             .withParameters("java.lang.String");
 

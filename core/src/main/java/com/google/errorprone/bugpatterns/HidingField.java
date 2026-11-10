@@ -61,11 +61,10 @@ public class HidingField extends BugChecker implements ClassTreeMatcher {
         classTree.getMembers().stream()
             .filter(mem -> mem instanceof VariableTree)
             .map(mem -> (VariableTree) mem)
-            .filter(
-                mem ->
-                    !isSuppressed(getSymbol(mem), visitorState)
-                        && !isIgnoredType(mem)
-                        && !isStatic(mem))
+            .filter(mem ->
+                !isSuppressed(getSymbol(mem), visitorState)
+                    && !isIgnoredType(mem)
+                    && !isStatic(mem))
             .collect(toCollection(ArrayList::new));
 
     ClassSymbol classSymbol = getSymbol(classTree);

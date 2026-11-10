@@ -148,10 +148,9 @@ public final class ResultUsePolicyEvaluator<C, S, M extends S> {
     ImmutableList<ResultUseRule<C, S>> scopeRules = rules.get(scope);
     return methodInfo
         .scopeMembers(scope, method, state)
-        .flatMap(
-            symbol ->
-                scopeRules.stream()
-                    .map(rule -> scopeEvaluator.evaluateForScope(rule, scope, symbol, state)))
+        .flatMap(symbol ->
+            scopeRules.stream()
+                .map(rule -> scopeEvaluator.evaluateForScope(rule, scope, symbol, state)))
         .flatMap(Optional::stream);
   }
 

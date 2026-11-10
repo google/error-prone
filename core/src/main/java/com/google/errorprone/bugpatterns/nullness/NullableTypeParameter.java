@@ -64,11 +64,10 @@ public class NullableTypeParameter extends BugChecker implements TypeParameterTr
     SuggestedFix.Builder fix = SuggestedFix.builder().delete(existingAnnotation);
     List<? extends Tree> bounds = tree.getBounds();
     if (bounds.stream()
-        .anyMatch(
-            b ->
-                b instanceof AnnotatedTypeTree annotatedTypeTree
-                    && NullnessAnnotations.fromAnnotationTrees(annotatedTypeTree.getAnnotations())
-                        .isPresent())) {
+        .anyMatch(b ->
+            b instanceof AnnotatedTypeTree annotatedTypeTree
+                && NullnessAnnotations.fromAnnotationTrees(annotatedTypeTree.getAnnotations())
+                    .isPresent())) {
       return SuggestedFix.emptyFix();
     }
     if (bounds.isEmpty()) {

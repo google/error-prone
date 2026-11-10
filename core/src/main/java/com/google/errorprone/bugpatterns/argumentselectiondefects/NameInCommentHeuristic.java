@@ -47,13 +47,12 @@ final class NameInCommentHeuristic implements Heuristic {
     ImmutableList<Commented> comments = findCommentsForArguments(node, state);
 
     return changes.changedPairs().stream()
-        .noneMatch(
-            p -> {
-              MatchType match =
-                  NamedParameterComment.match(comments.get(p.formal().index()), p.formal().name())
-                      .matchType();
-              return match == MatchType.EXACT_MATCH || match == MatchType.APPROXIMATE_MATCH;
-            });
+        .noneMatch(p -> {
+          MatchType match =
+              NamedParameterComment.match(comments.get(p.formal().index()), p.formal().name())
+                  .matchType();
+          return match == MatchType.EXACT_MATCH || match == MatchType.APPROXIMATE_MATCH;
+        });
   }
 
   private static ImmutableList<Commented> findCommentsForArguments(Tree tree, VisitorState state) {

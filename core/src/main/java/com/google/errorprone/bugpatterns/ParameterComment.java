@@ -72,9 +72,8 @@ public class ParameterComment extends BugChecker
             Stream.iterate(getLast(symbol.getParameters()), x -> x)),
         (commented, param) -> {
           if (commented.beforeComments().stream()
-              .anyMatch(
-                  c ->
-                      getTextFromComment(c).replace(" ", "").equals(param.getSimpleName() + "="))) {
+              .anyMatch(c ->
+                  getTextFromComment(c).replace(" ", "").equals(param.getSimpleName() + "="))) {
             return;
           }
           ImmutableList<ErrorProneComment> comments =

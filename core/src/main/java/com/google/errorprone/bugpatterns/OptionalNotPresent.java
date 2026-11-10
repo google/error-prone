@@ -124,17 +124,15 @@ public final class OptionalNotPresent extends BugChecker implements CompilationU
     private void checkForEmptiness(
         MethodInvocationTree tree, ConstantExpression constantExpression) {
       if (getMethodInvocations(Truthiness::requiredTrue)
-              .filter(
-                  truth ->
-                      truth.symbol() instanceof MethodSymbol
-                          && truth.symbol().getSimpleName().contentEquals("isEmpty"))
+              .filter(truth ->
+                  truth.symbol() instanceof MethodSymbol
+                      && truth.symbol().getSimpleName().contentEquals("isEmpty"))
               .flatMap(truth -> truth.receiver().stream())
               .anyMatch(constantExpression::equals)
           || getMethodInvocations(Truthiness::requiredFalse)
-              .filter(
-                  truth ->
-                      truth.symbol() instanceof MethodSymbol
-                          && truth.symbol().getSimpleName().contentEquals("isPresent"))
+              .filter(truth ->
+                  truth.symbol() instanceof MethodSymbol
+                      && truth.symbol().getSimpleName().contentEquals("isPresent"))
               .flatMap(truth -> truth.receiver().stream())
               .anyMatch(constantExpression::equals)) {
         state.reportMatch(describeMatch(tree));

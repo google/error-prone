@@ -221,11 +221,10 @@ public class BindingsTest extends AbstractUTreeTest {
 
     AtomicInteger matchCount = new AtomicInteger();
     boolean matches =
-        bindings.hasFreeIdentMatching(
-            expr -> {
-              matchCount.incrementAndGet();
-              return expr.toString().contains("length");
-            });
+        bindings.hasFreeIdentMatching(expr -> {
+          matchCount.incrementAndGet();
+          return expr.toString().contains("length");
+        });
 
     assertThat(matches).isTrue();
     // Tested e2 (false), e1 (true), and short-circuited before testing e3

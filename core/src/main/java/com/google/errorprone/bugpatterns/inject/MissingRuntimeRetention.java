@@ -60,23 +60,21 @@ import java.util.stream.Stream;
 public class MissingRuntimeRetention extends BugChecker implements ClassTreeMatcher {
 
   private static final Supplier<ImmutableSet<Name>> INJECT_ANNOTATIONS =
-      VisitorState.memoize(
-          state ->
-              Streams.concat(
-                      SCOPE_ANNOTATIONS.stream(),
-                      QUALIFIER_ANNOTATIONS.stream(),
-                      Stream.of(GUICE_MAP_KEY_ANNOTATION, DAGGER_MAP_KEY_ANNOTATION))
-                  .map(c -> c.binaryName(state))
-                  .collect(toImmutableSet()));
+      VisitorState.memoize(state ->
+          Streams.concat(
+                  SCOPE_ANNOTATIONS.stream(),
+                  QUALIFIER_ANNOTATIONS.stream(),
+                  Stream.of(GUICE_MAP_KEY_ANNOTATION, DAGGER_MAP_KEY_ANNOTATION))
+              .map(c -> c.binaryName(state))
+              .collect(toImmutableSet()));
 
   private static final Supplier<ImmutableSet<Name>> ANNOTATIONS =
-      VisitorState.memoize(
-          state ->
-              Streams.concat(
-                      Stream.of("com.google.apps.framework.annotations.ProcessorAnnotation")
-                          .map(state::binaryNameFromClassname),
-                      INJECT_ANNOTATIONS.get(state).stream())
-                  .collect(toImmutableSet()));
+      VisitorState.memoize(state ->
+          Streams.concat(
+                  Stream.of("com.google.apps.framework.annotations.ProcessorAnnotation")
+                      .map(state::binaryNameFromClassname),
+                  INJECT_ANNOTATIONS.get(state).stream())
+              .collect(toImmutableSet()));
 
   @Override
   public final Description matchClass(ClassTree classTree, VisitorState state) {

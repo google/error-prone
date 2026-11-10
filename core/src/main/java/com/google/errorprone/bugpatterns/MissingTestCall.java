@@ -147,13 +147,12 @@ public final class MissingTestCall extends BugChecker
     }.scan(state.getPath(), null);
     return Sets.difference(required, called).stream()
         .findFirst()
-        .map(
-            p ->
-                buildDescription(tree)
-                    .setMessage(
-                        String.format(
-                            "%s requires a terminating method call to have any effect.", p.name()))
-                    .build())
+        .map(p ->
+            buildDescription(tree)
+                .setMessage(
+                    String.format(
+                        "%s requires a terminating method call to have any effect.", p.name()))
+                .build())
         .orElse(NO_MATCH);
   }
 

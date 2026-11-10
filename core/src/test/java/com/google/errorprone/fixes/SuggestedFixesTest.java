@@ -145,11 +145,10 @@ public class SuggestedFixesTest {
       EditModifiers editModifiers =
           stream(state.getPath())
               .skip(1)
-              .map(
-                  t ->
-                      t instanceof ClassTree ct
-                          ? ASTHelpers.getAnnotation(ct, EditModifiers.class)
-                          : null)
+              .map(t ->
+                  t instanceof ClassTree ct
+                      ? ASTHelpers.getAnnotation(ct, EditModifiers.class)
+                      : null)
               .filter(x -> x != null)
               .findFirst()
               .orElse(null);
@@ -2768,13 +2767,12 @@ public class Test {
       boolean onlyInSameCompilationUnit,
       Function<? super Fix, Description> toDescriptionFn) {
     return Optional.of(SuggestedFix.prefixWith(tree, "@SuppressWarnings(\"foobar\") "))
-        .filter(
-            fix ->
-                SuggestedFixes.compilesWithFix(
-                    fix,
-                    state,
-                    ImmutableList.of("-Xlint:unchecked,rawtypes", "-Werror"),
-                    onlyInSameCompilationUnit))
+        .filter(fix ->
+            SuggestedFixes.compilesWithFix(
+                fix,
+                state,
+                ImmutableList.of("-Xlint:unchecked,rawtypes", "-Werror"),
+                onlyInSameCompilationUnit))
         .map(toDescriptionFn)
         .orElse(NO_MATCH);
   }
@@ -2943,11 +2941,8 @@ public class Test {
     @Override
     public Description matchAnnotation(AnnotationTree tree, VisitorState state) {
       return tree.getArguments().stream()
-          .filter(
-              t ->
-                  ((IdentifierTree) ((AssignmentTree) t).getVariable())
-                      .getName()
-                      .contentEquals("a"))
+          .filter(t ->
+              ((IdentifierTree) ((AssignmentTree) t).getVariable()).getName().contentEquals("a"))
           .findFirst()
           .map(t -> describeMatch(t, SuggestedFixes.removeElement(t, tree.getArguments(), state)))
           .orElse(NO_MATCH);

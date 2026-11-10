@@ -211,11 +211,9 @@ public final class RefactorSwitch extends BugChecker
 
     ImmutableList<Range<Integer>> caseRhsSourceCodeRanges =
         cases.stream()
-            .map(
-                caseTree ->
-                    Range.closedOpen(
-                        getStartPosition(caseTree.getBody()),
-                        state.getEndPosition(caseTree.getBody())))
+            .map(caseTree ->
+                Range.closedOpen(
+                    getStartPosition(caseTree.getBody()), state.getEndPosition(caseTree.getBody())))
             .collect(toImmutableList());
     // Has at least once case with a pattern
     boolean hasPattern =
@@ -369,11 +367,9 @@ public final class RefactorSwitch extends BugChecker
 
     ImmutableList<Range<Integer>> caseRhsSourceCodeRanges =
         cases.stream()
-            .map(
-                caseTree ->
-                    Range.closedOpen(
-                        getStartPosition(caseTree.getBody()),
-                        state.getEndPosition(caseTree.getBody())))
+            .map(caseTree ->
+                Range.closedOpen(
+                    getStartPosition(caseTree.getBody()), state.getEndPosition(caseTree.getBody())))
             .collect(toImmutableList());
 
     boolean hasDefault = cases.stream().anyMatch(ASTHelpers::isSwitchDefault);
@@ -843,26 +839,25 @@ public final class RefactorSwitch extends BugChecker
 
     assignmentSwitchAnalysisResult
         .precedingVariableDeclaration()
-        .ifPresent(
-            variableTree -> {
-              suggestedFixBuilder.delete(variableTree);
+        .ifPresent(variableTree -> {
+          suggestedFixBuilder.delete(variableTree);
 
-              lhsBuilder.append(
-                  Streams.concat(
-                          renderVariableTreeComments(variableTree, state).stream(),
-                          renderVariableTreeAnnotations(variableTree, state).stream(),
-                          Stream.of(renderVariableTreeFlags(variableTree)))
-                      .collect(joining("\n")));
+          lhsBuilder.append(
+              Streams.concat(
+                      renderVariableTreeComments(variableTree, state).stream(),
+                      renderVariableTreeAnnotations(variableTree, state).stream(),
+                      Stream.of(renderVariableTreeFlags(variableTree)))
+                  .collect(joining("\n")));
 
-              // Local variables declared with "var" must unfortunately be handled as a special case
-              // because getSourceForNode() returns null for the source code of a "var" declaration.
-              String sourceForType =
-                  hasImplicitType(variableTree, state)
-                      ? "var"
-                      : state.getSourceForNode(variableTree.getType());
+          // Local variables declared with "var" must unfortunately be handled as a special case
+          // because getSourceForNode() returns null for the source code of a "var" declaration.
+          String sourceForType =
+              hasImplicitType(variableTree, state)
+                  ? "var"
+                  : state.getSourceForNode(variableTree.getType());
 
-              lhsBuilder.append(sourceForType).append(" ");
-            });
+          lhsBuilder.append(sourceForType).append(" ");
+        });
 
     lhsBuilder
         .append(
@@ -914,19 +909,18 @@ public final class RefactorSwitch extends BugChecker
       StringBuilder replacementBuilder = new StringBuilder();
 
       // Invariant: treeOptional always present
-      treeOptional.ifPresent(
-          tree -> {
-            ImmutableList<ErrorProneComment> orphanedComments =
-                computeOrphanedComments(
-                    allComments,
-                    caseRhsSourceCodeRange,
-                    Range.closedOpen(getStartPosition(tree), state.getEndPosition(tree)));
-            String renderedOrphans = renderComments(orphanedComments);
-            if (!renderedOrphans.isEmpty()) {
-              replacementBuilder.append("\n").append(renderedOrphans).append("\n");
-            }
-            replacementBuilder.append(state.getSourceForNode(tree));
-          });
+      treeOptional.ifPresent(tree -> {
+        ImmutableList<ErrorProneComment> orphanedComments =
+            computeOrphanedComments(
+                allComments,
+                caseRhsSourceCodeRange,
+                Range.closedOpen(getStartPosition(tree), state.getEndPosition(tree)));
+        String renderedOrphans = renderComments(orphanedComments);
+        if (!renderedOrphans.isEmpty()) {
+          replacementBuilder.append("\n").append(renderedOrphans).append("\n");
+        }
+        replacementBuilder.append(state.getSourceForNode(tree));
+      });
 
       if (addSemicolonSuffix) {
         replacementBuilder.append(";");

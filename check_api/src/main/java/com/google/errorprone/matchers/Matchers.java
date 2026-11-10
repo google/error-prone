@@ -251,10 +251,9 @@ public final class Matchers {
 
   /** Matches an AST node that represents a local variable or parameter. */
   public static Matcher<ExpressionTree> isVariable() {
-    return symbolMatcher(
-        (symbol, state) ->
-            symbol.getKind() == ElementKind.LOCAL_VARIABLE
-                || symbol.getKind() == ElementKind.PARAMETER);
+    return symbolMatcher((symbol, state) ->
+        symbol.getKind() == ElementKind.LOCAL_VARIABLE
+            || symbol.getKind() == ElementKind.PARAMETER);
   }
 
   /**
@@ -472,9 +471,8 @@ public final class Matchers {
 
   /** Matches an AST node if its type is a primitive array type. */
   public static <T extends Tree> Matcher<T> isPrimitiveArrayType() {
-    return typePredicateMatcher(
-        (type, state) ->
-            state.getTypes().isArray(type) && state.getTypes().elemtype(type).isPrimitive());
+    return typePredicateMatcher((type, state) ->
+        state.getTypes().isArray(type) && state.getTypes().elemtype(type).isPrimitive());
   }
 
   /** Matches an AST node if its type is a primitive type. */

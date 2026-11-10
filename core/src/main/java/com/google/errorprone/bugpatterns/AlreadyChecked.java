@@ -219,30 +219,29 @@ public final class AlreadyChecked extends BugChecker implements CompilationUnitT
 
       constantExpressions
           .constantExpression(expressionTree, state)
-          .ifPresent(
-              e -> {
-                if (truths.contains(e)) {
-                  state.reportMatch(
-                      buildDescription(tree)
-                          .setMessage(
-                              format(
-                                  "This condition (on %s) is already known to be true; it (or its"
-                                      + " complement) has already been checked.",
-                                  e))
-                          .build());
-                }
+          .ifPresent(e -> {
+            if (truths.contains(e)) {
+              state.reportMatch(
+                  buildDescription(tree)
+                      .setMessage(
+                          format(
+                              "This condition (on %s) is already known to be true; it (or its"
+                                  + " complement) has already been checked.",
+                              e))
+                      .build());
+            }
 
-                if (falsehoods.contains(e)) {
-                  state.reportMatch(
-                      buildDescription(tree)
-                          .setMessage(
-                              format(
-                                  "This condition (on %s) is known to be false here. It (or its"
-                                      + " complement) has already been checked.",
-                                  e))
-                          .build());
-                }
-              });
+            if (falsehoods.contains(e)) {
+              state.reportMatch(
+                  buildDescription(tree)
+                      .setMessage(
+                          format(
+                              "This condition (on %s) is known to be false here. It (or its"
+                                  + " complement) has already been checked.",
+                              e))
+                      .build());
+            }
+          });
       return super.scan(tree, null);
     }
   }

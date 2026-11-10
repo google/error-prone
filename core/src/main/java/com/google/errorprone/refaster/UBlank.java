@@ -93,14 +93,13 @@ record UBlank(UUID unique) implements UStatement {
     ImmutableSortedSet<Integer> breakPoints =
         ContiguousSet.create(Range.closed(0, goodIndex), DiscreteDomain.integers());
     return Choice.from(breakPoints)
-        .map(
-            (Integer k) -> {
-              Unifier unifier = state.unifier().fork();
-              unifier.putBinding(key(), state.unconsumedStatements().subList(0, k));
-              ImmutableList<? extends StatementTree> remaining =
-                  state.unconsumedStatements().subList(k, state.unconsumedStatements().size());
-              return UnifierWithUnconsumedStatements.create(unifier, remaining);
-            });
+        .map((Integer k) -> {
+          Unifier unifier = state.unifier().fork();
+          unifier.putBinding(key(), state.unconsumedStatements().subList(0, k));
+          ImmutableList<? extends StatementTree> remaining =
+              state.unconsumedStatements().subList(k, state.unconsumedStatements().size());
+          return UnifierWithUnconsumedStatements.create(unifier, remaining);
+        });
   }
 
   @Override

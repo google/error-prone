@@ -281,12 +281,11 @@ public abstract class AbstractMockChecker<T extends Annotation> extends BugCheck
     return forbidder
         .get()
         .forbidReason(mockedClass, state)
-        .map(
-            reason ->
-                buildDescription(tree)
-                    .setMessage(
-                        buildMessage(mockedClass, reason.unmockableClass().tsym, reason.reason()))
-                    .build())
+        .map(reason ->
+            buildDescription(tree)
+                .setMessage(
+                    buildMessage(mockedClass, reason.unmockableClass().tsym, reason.reason()))
+                .build())
         .orElse(NO_MATCH);
   }
 

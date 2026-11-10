@@ -93,12 +93,11 @@ public final class AutoValueBuilderDefaultsInConstructor extends BugChecker
         .map(t -> (ExpressionStatementTree) t)
         .filter(t -> t.getExpression() instanceof MethodInvocationTree)
         .map(t -> (MethodInvocationTree) t.getExpression())
-        .filter(
-            t -> {
-              Symbol calledSymbol = getSymbol(t.getMethodSelect());
-              return calledSymbol.owner.equals(symbol.owner)
-                  && calledSymbol.getModifiers().contains(Modifier.ABSTRACT);
-            })
+        .filter(t -> {
+          Symbol calledSymbol = getSymbol(t.getMethodSelect());
+          return calledSymbol.owner.equals(symbol.owner)
+              && calledSymbol.getModifiers().contains(Modifier.ABSTRACT);
+        })
         .map(t -> state.getSourceForNode(t).replaceFirst("^this\\.", ""))
         .collect(toImmutableList());
   }

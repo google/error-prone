@@ -175,9 +175,8 @@ public final class InjectMatchers {
   private static <T extends Tree> Matcher<T> hasAnyOfAnnotations(
       ImmutableSet<ClassName> annotationClasses) {
     Supplier<ImmutableSet<Name>> name =
-        VisitorState.memoize(
-            state ->
-                annotationClasses.stream().map(c -> c.binaryName(state)).collect(toImmutableSet()));
+        VisitorState.memoize(state ->
+            annotationClasses.stream().map(c -> c.binaryName(state)).collect(toImmutableSet()));
     return (T tree, VisitorState state) ->
         !annotationsAmong(getDeclaredSymbol(tree), name.get(state), state).isEmpty();
   }

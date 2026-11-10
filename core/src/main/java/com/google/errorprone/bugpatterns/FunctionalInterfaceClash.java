@@ -82,16 +82,15 @@ public class FunctionalInterfaceClash extends BugChecker implements ClassTreeMat
     SetMultimap<String, MethodSymbol> methodsBySignature = HashMultimap.create();
     for (MethodSymbol msym : methodsByName.values()) {
       if (methodsByName.get(msym.getSimpleName().toString()).stream()
-          .anyMatch(
-              o ->
-                  !msym.overrides(o, (TypeSymbol) msym.owner, types, /* checkResult= */ true)
-                      && !o.equals(msym)
-                      && o.getParameters().length() == msym.getParameters().length()
-                      && zip(
-                              msym.getParameters().stream(),
-                              o.getParameters().stream(),
-                              (a, b) -> isSubtype(a.type, b.type, state))
-                          .allMatch(x -> x))) {
+          .anyMatch(o ->
+              !msym.overrides(o, (TypeSymbol) msym.owner, types, /* checkResult= */ true)
+                  && !o.equals(msym)
+                  && o.getParameters().length() == msym.getParameters().length()
+                  && zip(
+                          msym.getParameters().stream(),
+                          o.getParameters().stream(),
+                          (a, b) -> isSubtype(a.type, b.type, state))
+                      .allMatch(x -> x))) {
         continue;
       }
       methodsBySignature.put(functionalInterfaceSignature(state, msym), msym);
@@ -131,10 +130,9 @@ public class FunctionalInterfaceClash extends BugChecker implements ClassTreeMat
         // ignore if there are overridden clashing methodsBySignature in class
         if (streamSuperMethods(msym, types).anyMatch(t -> !t.owner.isInterface())
             && clash.stream()
-                .anyMatch(
-                    methodSymbol ->
-                        streamSuperMethods(methodSymbol, types)
-                            .anyMatch(t -> !t.owner.isInterface()))) {
+                .anyMatch(methodSymbol ->
+                    streamSuperMethods(methodSymbol, types)
+                        .anyMatch(t -> !t.owner.isInterface()))) {
           continue;
         }
 

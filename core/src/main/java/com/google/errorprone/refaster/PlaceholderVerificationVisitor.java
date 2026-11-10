@@ -77,9 +77,8 @@ final class PlaceholderVerificationVisitor extends TreeScanner<Boolean, Unifier>
     if (node instanceof JCExpression expr
         && unifier
             .getBindings()
-            .hasFreeIdentMatching(
-                keyBinding ->
-                    PlaceholderUnificationVisitor.equivalentExprs(unifier, expr, keyBinding))) {
+            .hasFreeIdentMatching(keyBinding ->
+                PlaceholderUnificationVisitor.equivalentExprs(unifier, expr, keyBinding))) {
       return false;
     }
     return firstNonNull(super.scan(node, unifier), true);

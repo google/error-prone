@@ -84,11 +84,10 @@ public class QualifierOrScopeOnInjectMethod extends BugChecker implements Method
       }
 
       ClassTree outerClass = ASTHelpers.findEnclosingNode(state.getPath(), ClassTree.class);
-      scopes.forEach(
-          a -> {
-            fixBuilder.delete(a);
-            fixBuilder.prefixWith(outerClass, state.getSourceForNode(a) + " ");
-          });
+      scopes.forEach(a -> {
+        fixBuilder.delete(a);
+        fixBuilder.prefixWith(outerClass, state.getSourceForNode(a) + " ");
+      });
       deleteAll(qualifiers, fixBuilder);
       return describeMatch(tree, fixBuilder.build());
     }
