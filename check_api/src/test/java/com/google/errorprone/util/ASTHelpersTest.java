@@ -2438,4 +2438,56 @@ class Test {
             """)
         .doTest();
   }
+
+  /** Prints enclosing classes of supermethods found by {@link ASTHelpers#streamSuperMethods}. */
+  @BugPattern(summary = "Prints supermethods", severity = WARNING)
+  public static final class StreamSuperMethodsChecker extends BugChecker
+      implements MethodTreeMatcher {
+    @Override
+    public Description matchMethod(MethodTree tree, VisitorState state) {
+      return buildDescription(tree)
+          .setMessage(
+              ASTHelpers.streamSuperMethods(getSymbol(tree), state.getTypes())
+                  .map(m -> m.owner.getSimpleName() + "." + m.getSimpleName())
+                  .collect(joining(", ", "[", "]")))
+          .build();
+    }
+  }
+
+  @Test
+  public void streamSuperMethods_skipsStaticConstructorAndPrivate() {
+    CompilationTestHelper.newInstance(StreamSuperMethodsChecker.class, getClass())
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              @SuppressWarnings("StreamSuperMethodsChecker")
+              static class Base {
+                Base() {}
+
+                static void s() {}
+
+                private void p() {}
+
+                void i() {}
+              }
+
+              static class Sub extends Base {
+                // BUG: Diagnostic contains: []
+                Sub() {}
+
+                // BUG: Diagnostic contains: []
+                static void s() {}
+
+                // BUG: Diagnostic contains: []
+                private void p() {}
+
+                @Override
+                // BUG: Diagnostic contains: [Base.i]
+                void i() {}
+              }
+            }
+            """)
+        .doTest();
+  }
 }

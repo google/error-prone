@@ -151,14 +151,13 @@ public class ForEachIterable extends BugChecker implements VariableTreeMatcher {
       fix.delete(existingVariable);
     } else {
       replacement = "element";
-      uses.forEach(
-          p -> {
-            TreePath path = p.getParentPath().getParentPath();
-            switch (path.getParentPath().getLeaf().getKind()) {
-              case EXPRESSION_STATEMENT -> fix.delete(path.getParentPath().getLeaf());
-              default -> fix.replace(path.getLeaf(), replacement);
-            }
-          });
+      uses.forEach(p -> {
+        TreePath path = p.getParentPath().getParentPath();
+        switch (path.getParentPath().getLeaf().getKind()) {
+          case EXPRESSION_STATEMENT -> fix.delete(path.getParentPath().getLeaf());
+          default -> fix.replace(path.getLeaf(), replacement);
+        }
+      });
     }
     Type elementType = getOnlyElement(iteratorType.getTypeArguments());
     if (elementType.hasTag(TypeTag.WILDCARD)) {

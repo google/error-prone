@@ -141,11 +141,9 @@ public class CompileTimeConstantExpressionMatcher implements Matcher<ExpressionT
             public Boolean visitSwitchExpression(SwitchExpressionTree tree, Void unused) {
               // This is intentionally quite restrictive: only accept bare values and throws.
               return tree.getCases().stream()
-                  .allMatch(
-                      c ->
-                          c.getCaseKind().equals(CaseKind.RULE)
-                              && (c.getBody().accept(this, null)
-                                  || c.getBody() instanceof ThrowTree));
+                  .allMatch(c ->
+                      c.getCaseKind().equals(CaseKind.RULE)
+                          && (c.getBody().accept(this, null) || c.getBody() instanceof ThrowTree));
             }
 
             @Override

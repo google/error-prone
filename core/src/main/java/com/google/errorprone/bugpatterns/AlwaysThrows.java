@@ -263,11 +263,8 @@ public final class AlwaysThrows extends BugChecker implements MethodInvocationTr
             "This ImmutableMap construction will throw (or have known duplicates overwritten) due"
                 + " to duplicates: "
                 + repeatedKeys.stream()
-                    .map(
-                        k ->
-                            k instanceof VarSymbol varSymbol
-                                ? varSymbol.getSimpleName()
-                                : k.toString())
+                    .map(k ->
+                        k instanceof VarSymbol varSymbol ? varSymbol.getSimpleName() : k.toString())
                     .collect(toImmutableSet()))
         .build();
   }

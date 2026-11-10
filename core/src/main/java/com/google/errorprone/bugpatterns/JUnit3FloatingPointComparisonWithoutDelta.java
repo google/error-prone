@@ -55,10 +55,8 @@ public class JUnit3FloatingPointComparisonWithoutDelta extends BugChecker
       MethodMatchers.staticMethod().onClass("junit.framework.TestCase").named("assertEquals");
 
   private static final Supplier<Symbol> TRUTH =
-      memoize(
-          state ->
-              JavacElements.instance(state.context)
-                  .getTypeElement("com.google.common.truth.Truth"));
+      memoize(state ->
+          JavacElements.instance(state.context).getTypeElement("com.google.common.truth.Truth"));
 
   @Override
   public Description matchMethodInvocation(

@@ -80,10 +80,8 @@ public class BugPatternIndexWriter {
 
     ImmutableList<Map<String, Object>> bugpatternData =
         Multimaps.asMap(sorted).entrySet().stream()
-            .map(
-                e ->
-                    ImmutableMap.of(
-                        "category", e.getKey().asCategoryHeader(), "checks", e.getValue()))
+            .map(e ->
+                ImmutableMap.of("category", e.getKey().asCategoryHeader(), "checks", e.getValue()))
             .collect(toImmutableList());
 
     templateData.put("bugpatterns", bugpatternData);

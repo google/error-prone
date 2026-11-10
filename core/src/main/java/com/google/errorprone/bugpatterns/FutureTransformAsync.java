@@ -144,11 +144,10 @@ public final class FutureTransformAsync extends BugChecker implements MethodInvo
         tree.getArguments().stream()
             .filter(LambdaExpressionTree.class::isInstance)
             .map(arg -> (LambdaExpressionTree) arg)
-            .filter(
-                lambdaTree ->
-                    !EXECUTOR.matches(lambdaTree, state)
-                        && (method.canThrowCheckedException
-                            || !throwsCheckedException(lambdaTree, state)))
+            .filter(lambdaTree ->
+                !EXECUTOR.matches(lambdaTree, state)
+                    && (method.canThrowCheckedException
+                        || !throwsCheckedException(lambdaTree, state)))
             .findFirst();
 
     return lambda
@@ -194,11 +193,10 @@ public final class FutureTransformAsync extends BugChecker implements MethodInvo
 
     boolean areAllImmediateFutures =
         returnExpressions.stream()
-            .allMatch(
-                expression ->
-                    expression instanceof MethodInvocationTree
-                        && (IMMEDIATE_FUTURE.matches(expression, state)
-                            || IMMEDIATE_VOID_FUTURE.matches(expression, state)));
+            .allMatch(expression ->
+                expression instanceof MethodInvocationTree
+                    && (IMMEDIATE_FUTURE.matches(expression, state)
+                        || IMMEDIATE_VOID_FUTURE.matches(expression, state)));
 
     if (areAllImmediateFutures) {
       SuggestedFix.Builder fix = SuggestedFix.builder();

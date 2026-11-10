@@ -64,161 +64,158 @@ import java.util.function.IntPredicate;
 public class ComparisonOutOfRange extends BugChecker implements BinaryTreeMatcher {
   @Override
   public Description matchBinary(BinaryTree tree, VisitorState state) {
-    BOUNDS_FOR_PRIMITIVES.forEach(
-        (testedValueType, range) -> {
-          // Match trees that have one constant operand and another of the specified type.
-          List<ExpressionTree> binaryTreeMatches =
-              matchBinaryTree(
-                  tree,
-                  Arrays.asList(
-                      ComparisonOutOfRange::hasNumericConstantValue,
-                      anyOf(
-                          isSameType(testedValueType),
-                          isSameType(s -> s.getTypes().boxedTypeOrType(testedValueType.get(s))))),
-                  state);
-          if (binaryTreeMatches == null) {
-            return;
-          }
-          Tree constant = binaryTreeMatches.getFirst();
+    BOUNDS_FOR_PRIMITIVES.forEach((testedValueType, range) -> {
+      // Match trees that have one constant operand and another of the specified type.
+      List<ExpressionTree> binaryTreeMatches =
+          matchBinaryTree(
+              tree,
+              Arrays.asList(
+                  ComparisonOutOfRange::hasNumericConstantValue,
+                  anyOf(
+                      isSameType(testedValueType),
+                      isSameType(s -> s.getTypes().boxedTypeOrType(testedValueType.get(s))))),
+              state);
+      if (binaryTreeMatches == null) {
+        return;
+      }
+      Tree constant = binaryTreeMatches.getFirst();
 
-          Number numericConstantValue =
-              constValue(constant) instanceof Character c
-                  ? Long.valueOf(c.charValue())
-                  : (Number) constValue(constant);
+      Number numericConstantValue =
+          constValue(constant) instanceof Character c
+              ? Long.valueOf(c.charValue())
+              : (Number) constValue(constant);
 
-          // We define a class whose first method we'll call immediately.
-          // This lets us have a bunch of fields and parameters in scope for our helper methods.
-          class MatchAttempt<N extends Number & Comparable<? super N>> {
-            final N constantValue;
-            final N minValue;
-            final N maxValue;
+      // We define a class whose first method we'll call immediately.
+      // This lets us have a bunch of fields and parameters in scope for our helper methods.
+      class MatchAttempt<N extends Number & Comparable<? super N>> {
+        final N constantValue;
+        final N minValue;
+        final N maxValue;
 
-            MatchAttempt(Function<Number, N> numericPromotion) {
-              this.constantValue = numericPromotion.apply(numericConstantValue);
-              this.minValue = numericPromotion.apply(range.lowerEndpoint());
-              this.maxValue = numericPromotion.apply(range.upperEndpoint());
-            }
+        MatchAttempt(Function<Number, N> numericPromotion) {
+          this.constantValue = numericPromotion.apply(numericConstantValue);
+          this.minValue = numericPromotion.apply(range.lowerEndpoint());
+          this.maxValue = numericPromotion.apply(range.upperEndpoint());
+        }
 
-            Description matchConstantResult() {
-              return switch (tree.getKind()) {
-                case EQUAL_TO -> matchOutOfBounds(/* willEvaluateTo= */ false);
-                case NOT_EQUAL_TO -> matchOutOfBounds(/* willEvaluateTo= */ true);
-                case LESS_THAN -> matchDoesNotSplitNumberLine(cmp -> cmp < 0);
-                case LESS_THAN_EQUAL -> matchDoesNotSplitNumberLine(cmp -> cmp <= 0);
-                case GREATER_THAN -> matchDoesNotSplitNumberLine(cmp -> cmp > 0);
-                case GREATER_THAN_EQUAL -> matchDoesNotSplitNumberLine(cmp -> cmp >= 0);
-                default -> NO_MATCH;
-              };
-            }
+        Description matchConstantResult() {
+          return switch (tree.getKind()) {
+            case EQUAL_TO -> matchOutOfBounds(/* willEvaluateTo= */ false);
+            case NOT_EQUAL_TO -> matchOutOfBounds(/* willEvaluateTo= */ true);
+            case LESS_THAN -> matchDoesNotSplitNumberLine(cmp -> cmp < 0);
+            case LESS_THAN_EQUAL -> matchDoesNotSplitNumberLine(cmp -> cmp <= 0);
+            case GREATER_THAN -> matchDoesNotSplitNumberLine(cmp -> cmp > 0);
+            case GREATER_THAN_EQUAL -> matchDoesNotSplitNumberLine(cmp -> cmp >= 0);
+            default -> NO_MATCH;
+          };
+        }
 
-            Description matchOutOfBounds(boolean willEvaluateTo) {
-              return constantValue.compareTo(minValue) < 0 || constantValue.compareTo(maxValue) > 0
-                  ? describeMatch(willEvaluateTo)
-                  : NO_MATCH;
-            }
+        Description matchOutOfBounds(boolean willEvaluateTo) {
+          return constantValue.compareTo(minValue) < 0 || constantValue.compareTo(maxValue) > 0
+              ? describeMatch(willEvaluateTo)
+              : NO_MATCH;
+        }
 
-            /*
-             * A proper "<" comparison to `constant` splits the number line into two pieces: On one
-             * side, the comparison is true; on the other, false. (Ditto for "<=," ">," and ">=.")
-             *
-             * So, if the comparison returns the *same* value for the far left side of the number
-             * line as it does for the far right side, then the comparison is out of range (e.g.,
-             * "someInt < Long.MAX_VALUE").
-             */
-            Description matchDoesNotSplitNumberLine(IntPredicate op) {
-              boolean minResult;
-              boolean maxResult;
-              if (constant == tree.getRightOperand()) {
-                minResult = op.test(minValue.compareTo(constantValue));
-                maxResult = op.test(maxValue.compareTo(constantValue));
-              } else {
-                minResult = op.test(constantValue.compareTo(minValue));
-                maxResult = op.test(constantValue.compareTo(maxValue));
-              }
-              return minResult == maxResult
-                  ? describeMatch(/* willEvaluateTo= */ minResult)
-                  : NO_MATCH;
-            }
-
-            /**
-             * Suggested fixes are as follows. For the byte equality case, convert the constant to
-             * its byte representation. For example, "255" becomes "-1. For other cases, replace the
-             * comparison with "true"/"false" since it's not clear what was intended and that is
-             * semantically equivalent.
-             *
-             * <p>TODO(eaftan): Suggested fixes don't handle side-effecting expressions, such as (d
-             * = reader.read()) == -1. Maybe add special case handling for assignments.
-             */
-            Description describeMatch(boolean willEvaluateTo) {
-              boolean byteEqualityMatch =
-                  isSameType(testedValueType.get(state), state.getSymtab().byteType, state)
-                      && (tree.getKind() == EQUAL_TO || tree.getKind() == NOT_EQUAL_TO);
-
-              return buildDescription(tree)
-                  .addFix(
-                      byteEqualityMatch
-                          ? replace(constant, Byte.toString(constantValue.byteValue()))
-                          : replace(tree, Boolean.toString(willEvaluateTo)))
-                  .setMessage(
-                      format(
-                          "%ss may have a value in the range %d to %d; "
-                              + "therefore, this comparison to %s will always evaluate to %s",
-                          testedValueType.get(state).tsym.name,
-                          range.lowerEndpoint(),
-                          range.upperEndpoint(),
-                          // TODO(cpovirk): Would it be better to show numericConstantValue?
-                          state.getSourceForNode(constant),
-                          willEvaluateTo))
-                  .build();
-            }
-          }
-
-          // JLS 5.6.2 - Binary Numeric Promotion:
-          // - If either is double, other is converted to double.
-          // - If either is float, other is converted to float.
-          // - If either is long, other is converted to long.
-          // - Otherwise, both are converted to int.
-          //
-          // Here, we're looking only at comparisons between an integral type and some constant.
-          // Thus, the only value that can be floating-point is the constant, and that's the
-          // only case in which we promote to a floating-point type.
-          //
-          // We promote both the constant and the bounds.
-          //
-          // Promoting the constant changes nothing: It it was integral, it remains integral and
-          // still has the same value, even if it's represented as a larger type. If it was
-          // floating-point, it's either untouched or promoted from float to double, which gives
-          // it a more precise type that it can't take advantage of because its source was still
-          // a float.
-          //
-          // Promoting the bound *can* change its value in the case of promoting an integral
-          // value to a floating-point value: For example, Integer.MAX_VALUE is rounded up to
-          // 2^31, regardless of whether we're promoting to float or to double. Thus, an
-          // equality comparison between an int and a float/double value of 2^31 is allowed,
-          // since it can be either true or false, even though you'd need to move from int to
-          // long in order to actually hold the value 2^31.
-          //
-          // Thus:
-          //
-          // When we promote integral types, we can always promote to long.
-          //
-          // When we promote to floating-point types, I *think* we could get away with always
-          // promoting to double. That would work because the bounds of int, etc. round to the
-          // same value, whether we're promoting them to float or to double (thanks to how close
-          // the bounds are to a power of two). However, that feels scarier to rely on,
-          // especially if we might ever use this promotion code for other purposes, like to
-          // determine whether a value promoted to float has any fractional part.
-          MatchAttempt<?> matchAttempt;
-          if (numericConstantValue instanceof Double) {
-            matchAttempt = new MatchAttempt<>(Number::doubleValue);
-          } else if (numericConstantValue instanceof Float) {
-            matchAttempt = new MatchAttempt<>(Number::floatValue);
+        /*
+         * A proper "<" comparison to `constant` splits the number line into two pieces: On one
+         * side, the comparison is true; on the other, false. (Ditto for "<=," ">," and ">=.")
+         *
+         * So, if the comparison returns the *same* value for the far left side of the number
+         * line as it does for the far right side, then the comparison is out of range (e.g.,
+         * "someInt < Long.MAX_VALUE").
+         */
+        Description matchDoesNotSplitNumberLine(IntPredicate op) {
+          boolean minResult;
+          boolean maxResult;
+          if (constant == tree.getRightOperand()) {
+            minResult = op.test(minValue.compareTo(constantValue));
+            maxResult = op.test(maxValue.compareTo(constantValue));
           } else {
-            // It's an Integer or a Long (sometimes because we replaced a Character with a Long).
-            matchAttempt = new MatchAttempt<>(Number::longValue);
+            minResult = op.test(constantValue.compareTo(minValue));
+            maxResult = op.test(constantValue.compareTo(maxValue));
           }
-          state.reportMatch(matchAttempt.matchConstantResult());
-        });
+          return minResult == maxResult ? describeMatch(/* willEvaluateTo= */ minResult) : NO_MATCH;
+        }
+
+        /**
+         * Suggested fixes are as follows. For the byte equality case, convert the constant to its
+         * byte representation. For example, "255" becomes "-1. For other cases, replace the
+         * comparison with "true"/"false" since it's not clear what was intended and that is
+         * semantically equivalent.
+         *
+         * <p>TODO(eaftan): Suggested fixes don't handle side-effecting expressions, such as (d =
+         * reader.read()) == -1. Maybe add special case handling for assignments.
+         */
+        Description describeMatch(boolean willEvaluateTo) {
+          boolean byteEqualityMatch =
+              isSameType(testedValueType.get(state), state.getSymtab().byteType, state)
+                  && (tree.getKind() == EQUAL_TO || tree.getKind() == NOT_EQUAL_TO);
+
+          return buildDescription(tree)
+              .addFix(
+                  byteEqualityMatch
+                      ? replace(constant, Byte.toString(constantValue.byteValue()))
+                      : replace(tree, Boolean.toString(willEvaluateTo)))
+              .setMessage(
+                  format(
+                      "%ss may have a value in the range %d to %d; "
+                          + "therefore, this comparison to %s will always evaluate to %s",
+                      testedValueType.get(state).tsym.name,
+                      range.lowerEndpoint(),
+                      range.upperEndpoint(),
+                      // TODO(cpovirk): Would it be better to show numericConstantValue?
+                      state.getSourceForNode(constant),
+                      willEvaluateTo))
+              .build();
+        }
+      }
+
+      // JLS 5.6.2 - Binary Numeric Promotion:
+      // - If either is double, other is converted to double.
+      // - If either is float, other is converted to float.
+      // - If either is long, other is converted to long.
+      // - Otherwise, both are converted to int.
+      //
+      // Here, we're looking only at comparisons between an integral type and some constant.
+      // Thus, the only value that can be floating-point is the constant, and that's the
+      // only case in which we promote to a floating-point type.
+      //
+      // We promote both the constant and the bounds.
+      //
+      // Promoting the constant changes nothing: It it was integral, it remains integral and
+      // still has the same value, even if it's represented as a larger type. If it was
+      // floating-point, it's either untouched or promoted from float to double, which gives
+      // it a more precise type that it can't take advantage of because its source was still
+      // a float.
+      //
+      // Promoting the bound *can* change its value in the case of promoting an integral
+      // value to a floating-point value: For example, Integer.MAX_VALUE is rounded up to
+      // 2^31, regardless of whether we're promoting to float or to double. Thus, an
+      // equality comparison between an int and a float/double value of 2^31 is allowed,
+      // since it can be either true or false, even though you'd need to move from int to
+      // long in order to actually hold the value 2^31.
+      //
+      // Thus:
+      //
+      // When we promote integral types, we can always promote to long.
+      //
+      // When we promote to floating-point types, I *think* we could get away with always
+      // promoting to double. That would work because the bounds of int, etc. round to the
+      // same value, whether we're promoting them to float or to double (thanks to how close
+      // the bounds are to a power of two). However, that feels scarier to rely on,
+      // especially if we might ever use this promotion code for other purposes, like to
+      // determine whether a value promoted to float has any fractional part.
+      MatchAttempt<?> matchAttempt;
+      if (numericConstantValue instanceof Double) {
+        matchAttempt = new MatchAttempt<>(Number::doubleValue);
+      } else if (numericConstantValue instanceof Float) {
+        matchAttempt = new MatchAttempt<>(Number::floatValue);
+      } else {
+        // It's an Integer or a Long (sometimes because we replaced a Character with a Long).
+        matchAttempt = new MatchAttempt<>(Number::longValue);
+      }
+      state.reportMatch(matchAttempt.matchConstantResult());
+    });
     return NO_MATCH;
   }
 

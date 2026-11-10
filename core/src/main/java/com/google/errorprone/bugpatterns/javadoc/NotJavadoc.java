@@ -62,12 +62,11 @@ public final class NotJavadoc extends BugChecker implements CompilationUnitTreeM
     for (ErrorProneToken token : getTokens(state.getSourceCode().toString(), state.context)) {
       ImmutableList<ErrorProneComment> javadoc =
           token.comments().stream()
-              .filter(
-                  comment ->
-                      switch (comment.getStyle()) {
-                        case JAVADOC_BLOCK, JAVADOC_LINE -> true;
-                        default -> false;
-                      })
+              .filter(comment ->
+                  switch (comment.getStyle()) {
+                    case JAVADOC_BLOCK, JAVADOC_LINE -> true;
+                    default -> false;
+                  })
               .collect(toImmutableList());
       if (javadoc.size() > 1) {
         ErrorProneComment firstComment =

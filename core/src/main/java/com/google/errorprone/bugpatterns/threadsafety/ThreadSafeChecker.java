@@ -193,10 +193,9 @@ public class ThreadSafeChecker extends BugChecker
     }
     ImmutableSet<String> threadSafeAndContainer =
         typarams.entrySet().stream()
-            .filter(
-                e ->
-                    annotation.containerOf().contains(e.getKey())
-                        && analysis.hasThreadSafeTypeParameterAnnotation(e.getValue()))
+            .filter(e ->
+                annotation.containerOf().contains(e.getKey())
+                    && analysis.hasThreadSafeTypeParameterAnnotation(e.getValue()))
             .map(Entry::getKey)
             .collect(toImmutableSet());
     if (!threadSafeAndContainer.isEmpty()) {

@@ -67,9 +67,8 @@ public class MisplacedScopeAnnotations extends BugChecker
     }
     ImmutableList<AnnotationTree> scopeAnnotations =
         tree.getParameters().stream()
-            .flatMap(
-                variable ->
-                    IS_SCOPE_ANNOTATION.multiMatchResult(variable, state).matchingNodes().stream())
+            .flatMap(variable ->
+                IS_SCOPE_ANNOTATION.multiMatchResult(variable, state).matchingNodes().stream())
             .filter(annotation -> !IS_QUALIFIER_ANNOTATION.matches(annotation, state))
             .collect(toImmutableList());
 

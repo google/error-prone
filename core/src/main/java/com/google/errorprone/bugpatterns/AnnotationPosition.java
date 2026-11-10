@@ -180,21 +180,19 @@ public final class AnnotationPosition extends BugChecker
     Symbol symbol = getSymbol(tree);
     ImmutableList<AnnotationTree> shouldBeBefore =
         annotations.stream()
-            .filter(
-                a -> {
-                  Position position = annotationPosition(tree, getAnnotationType(a, symbol, state));
-                  return position == Position.BEFORE
-                      || (position == Position.EITHER && getStartPosition(a) < firstModifierPos);
-                })
+            .filter(a -> {
+              Position position = annotationPosition(tree, getAnnotationType(a, symbol, state));
+              return position == Position.BEFORE
+                  || (position == Position.EITHER && getStartPosition(a) < firstModifierPos);
+            })
             .collect(toImmutableList());
     ImmutableList<AnnotationTree> shouldBeAfter =
         annotations.stream()
-            .filter(
-                a -> {
-                  Position position = annotationPosition(tree, getAnnotationType(a, symbol, state));
-                  return position == Position.AFTER
-                      || (position == Position.EITHER && getStartPosition(a) > firstModifierPos);
-                })
+            .filter(a -> {
+              Position position = annotationPosition(tree, getAnnotationType(a, symbol, state));
+              return position == Position.AFTER
+                  || (position == Position.EITHER && getStartPosition(a) > firstModifierPos);
+            })
             .collect(toImmutableList());
 
     int lastNonTypeAnnotationOrModifierPosition =

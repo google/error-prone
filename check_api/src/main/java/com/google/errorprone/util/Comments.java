@@ -140,12 +140,11 @@ public final class Comments {
 
     // Ignore comments nested inside arguments.
     TreeRangeSet<Integer> exclude = TreeRangeSet.create();
-    arguments.forEach(
-        arg ->
-            exclude.add(
-                Range.closed(
-                    getStartPosition(arg) - invocationStart,
-                    state.getEndPosition(arg) - invocationStart)));
+    arguments.forEach(arg ->
+        exclude.add(
+            Range.closed(
+                getStartPosition(arg) - invocationStart,
+                state.getEndPosition(arg) - invocationStart)));
 
     ErrorProneTokens errorProneTokens = new ErrorProneTokens(source.toString(), state.context);
     ImmutableList<ErrorProneToken> tokens = errorProneTokens.getTokens();

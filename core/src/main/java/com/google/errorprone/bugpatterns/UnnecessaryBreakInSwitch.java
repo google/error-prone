@@ -48,10 +48,8 @@ public class UnnecessaryBreakInSwitch extends BugChecker implements BugChecker.C
     if (unnecessaryBreaks.isEmpty()) {
       return NO_MATCH;
     }
-    unnecessaryBreaks.forEach(
-        unnecessaryBreak ->
-            state.reportMatch(
-                describeMatch(unnecessaryBreak, SuggestedFix.delete(unnecessaryBreak))));
+    unnecessaryBreaks.forEach(unnecessaryBreak ->
+        state.reportMatch(describeMatch(unnecessaryBreak, SuggestedFix.delete(unnecessaryBreak))));
     return NO_MATCH;
   }
 

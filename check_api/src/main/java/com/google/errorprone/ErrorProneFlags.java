@@ -103,25 +103,23 @@ public final class ErrorProneFlags implements Serializable {
    */
   public <T extends Enum<T>> Optional<ImmutableSet<T>> getEnumSet(String key, Class<T> clazz) {
     return this.get(key)
-        .map(
-            value ->
-                COMMA_SPLITTER
-                    .omitEmptyStrings()
-                    .splitToStream(value)
-                    .map(v -> asEnumValue(key, v, clazz))
-                    .collect(toImmutableSet()));
+        .map(value ->
+            COMMA_SPLITTER
+                .omitEmptyStrings()
+                .splitToStream(value)
+                .map(v -> asEnumValue(key, v, clazz))
+                .collect(toImmutableSet()));
   }
 
   private static <T extends Enum<T>> T asEnumValue(String key, String value, Class<T> clazz) {
     return stream(clazz.getEnumConstants())
         .filter(c -> Ascii.equalsIgnoreCase(c.name(), value))
         .findFirst()
-        .orElseThrow(
-            () ->
-                new IllegalArgumentException(
-                    String.format(
-                        "Error Prone flag %s=%s could not be parsed as an enum constant of %s",
-                        key, value, clazz)));
+        .orElseThrow(() ->
+            new IllegalArgumentException(
+                String.format(
+                    "Error Prone flag %s=%s could not be parsed as an enum constant of %s",
+                    key, value, clazz)));
   }
 
   private static boolean parseBoolean(String value) {

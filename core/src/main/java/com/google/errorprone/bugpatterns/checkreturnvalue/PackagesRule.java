@@ -48,18 +48,17 @@ public final class PackagesRule extends SymbolRule<VisitorState, Symbol> {
 
   private PackagesRule(ImmutableList<String> patterns) {
     this.packagesSupplier =
-        VisitorState.memoize(
-            state -> {
-              ImmutableMap.Builder<Name, Boolean> builder = ImmutableMap.builder();
-              for (String pattern : patterns) {
-                if (pattern.charAt(0) == '-') {
-                  builder.put(state.getName(pattern.substring(1)), false);
-                } else {
-                  builder.put(state.getName(pattern), true);
-                }
-              }
-              return builder.buildOrThrow();
-            });
+        VisitorState.memoize(state -> {
+          ImmutableMap.Builder<Name, Boolean> builder = ImmutableMap.builder();
+          for (String pattern : patterns) {
+            if (pattern.charAt(0) == '-') {
+              builder.put(state.getName(pattern.substring(1)), false);
+            } else {
+              builder.put(state.getName(pattern), true);
+            }
+          }
+          return builder.buildOrThrow();
+        });
   }
 
   @Override

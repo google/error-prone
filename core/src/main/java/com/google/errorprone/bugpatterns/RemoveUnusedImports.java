@@ -123,24 +123,23 @@ public final class RemoveUnusedImports extends BugChecker implements Compilation
         .setMessage(
             "Unused imports: "
                 + unusedImports.stream()
-                    .map(
-                        tree -> {
-                          String name = state.getSourceForNode(tree.getQualifiedIdentifier());
-                          var meanings = actualMeanings.get(getSimpleName(tree).toString());
-                          if (importedSymbols.get(tree).stream()
-                              .anyMatch(scanner.enumConstantCaseUsages::contains)) {
-                            return String.format(
-                                "%s (this is an enum constant: if it's only used within switch"
-                                    + " labels, that doesn't require an import)",
-                                name);
-                          }
-                          if (meanings.isEmpty()) {
-                            return name;
-                          }
-                          return String.format(
-                              "%s (this name appears in the file, but resolves to %s)",
-                              name, meanings.stream().collect(joining()));
-                        })
+                    .map(tree -> {
+                      String name = state.getSourceForNode(tree.getQualifiedIdentifier());
+                      var meanings = actualMeanings.get(getSimpleName(tree).toString());
+                      if (importedSymbols.get(tree).stream()
+                          .anyMatch(scanner.enumConstantCaseUsages::contains)) {
+                        return String.format(
+                            "%s (this is an enum constant: if it's only used within switch"
+                                + " labels, that doesn't require an import)",
+                            name);
+                      }
+                      if (meanings.isEmpty()) {
+                        return name;
+                      }
+                      return String.format(
+                          "%s (this name appears in the file, but resolves to %s)",
+                          name, meanings.stream().collect(joining()));
+                    })
                     .collect(joining(", ")))
         .build();
   }

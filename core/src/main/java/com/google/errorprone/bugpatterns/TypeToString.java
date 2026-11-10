@@ -118,18 +118,16 @@ public class TypeToString extends AbstractToString {
 
     // type1.toString().equals(type2.toString()) -> types.isSameType(type1, type2)
     return ProcessingEnvUtils.getTypesExpr(state)
-        .flatMap(
-            typesExpr ->
-                typeMirrorToCompare(argument, state)
-                    .map(
-                        typeMirrorToCompare ->
-                            SuggestedFix.replace(
-                                equalsCall,
-                                String.format(
-                                    "%s.isSameType(%s, %s)",
-                                    typesExpr,
-                                    state.getSourceForNode(stringifiedExpr),
-                                    typeMirrorToCompare))));
+        .flatMap(typesExpr ->
+            typeMirrorToCompare(argument, state)
+                .map(typeMirrorToCompare ->
+                    SuggestedFix.replace(
+                        equalsCall,
+                        String.format(
+                            "%s.isSameType(%s, %s)",
+                            typesExpr,
+                            state.getSourceForNode(stringifiedExpr),
+                            typeMirrorToCompare))));
   }
 
   private static Optional<String> typeMirrorToCompare(ExpressionTree argument, VisitorState state) {
@@ -151,40 +149,38 @@ public class TypeToString extends AbstractToString {
       return Optional.empty();
     }
     return primitiveOrVoidKind(rhs)
-        .map(
-            kind ->
-                // type.toString().equals("int") -> type.getKind() == TypeKind.INT
-                Optional.of(
-                    String.format(
-                        "%s%s.getKind() == %s.%s",
-                        prefix,
-                        lhs,
-                        SuggestedFixes.qualifyType(state, fix, "javax.lang.model.type.TypeKind"),
-                        kind)))
-        .orElseGet(
-            () -> {
-              if (!isName(rhs)) {
-                // Only fix compile-time constant strings that look like class names, to avoid
-                // incorrect fixes for generics
-                return Optional.empty();
-              }
-              // type.toString().equals("java.lang.Object") ->
-              //    java.util.Objects.equals(type, elements.getTypeElement("java.lang.Object")
-              var typesExprOpt = ProcessingEnvUtils.getTypesExpr(state);
-              var elementsExprOpt = ProcessingEnvUtils.getElementsExpr(state);
-              if (typesExprOpt.isEmpty() || elementsExprOpt.isEmpty()) {
-                return Optional.empty();
-              }
-              return Optional.of(
-                  String.format(
-                      "%s%s.equals(%s.asElement(%s), %s.getTypeElement(%s))",
-                      prefix,
-                      SuggestedFixes.qualifyType(state, fix, "java.util.Objects"),
-                      typesExprOpt.get(),
-                      lhs,
-                      elementsExprOpt.get(),
-                      state.getSourceForNode(rhsTree)));
-            });
+        .map(kind ->
+            // type.toString().equals("int") -> type.getKind() == TypeKind.INT
+            Optional.of(
+                String.format(
+                    "%s%s.getKind() == %s.%s",
+                    prefix,
+                    lhs,
+                    SuggestedFixes.qualifyType(state, fix, "javax.lang.model.type.TypeKind"),
+                    kind)))
+        .orElseGet(() -> {
+          if (!isName(rhs)) {
+            // Only fix compile-time constant strings that look like class names, to avoid
+            // incorrect fixes for generics
+            return Optional.empty();
+          }
+          // type.toString().equals("java.lang.Object") ->
+          //    java.util.Objects.equals(type, elements.getTypeElement("java.lang.Object")
+          var typesExprOpt = ProcessingEnvUtils.getTypesExpr(state);
+          var elementsExprOpt = ProcessingEnvUtils.getElementsExpr(state);
+          if (typesExprOpt.isEmpty() || elementsExprOpt.isEmpty()) {
+            return Optional.empty();
+          }
+          return Optional.of(
+              String.format(
+                  "%s%s.equals(%s.asElement(%s), %s.getTypeElement(%s))",
+                  prefix,
+                  SuggestedFixes.qualifyType(state, fix, "java.util.Objects"),
+                  typesExprOpt.get(),
+                  lhs,
+                  elementsExprOpt.get(),
+                  state.getSourceForNode(rhsTree)));
+        });
   }
 
   private static Optional<TypeKind> primitiveOrVoidKind(String name) {

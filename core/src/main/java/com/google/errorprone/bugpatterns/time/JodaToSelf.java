@@ -58,12 +58,11 @@ public final class JodaToSelf extends BugChecker
       Matchers.allOf(
           Matchers.anyOf(
               TYPE_NAMES.stream()
-                  .map(
-                      typeName ->
-                          Matchers.instanceMethod()
-                              .onExactClass("org.joda.time." + typeName)
-                              .named("to" + typeName)
-                              .withNoParameters())
+                  .map(typeName ->
+                      Matchers.instanceMethod()
+                          .onExactClass("org.joda.time." + typeName)
+                          .named("to" + typeName)
+                          .withNoParameters())
                   .collect(toImmutableList())),
           // Allow usage by JodaTime itself
           Matchers.not(Matchers.packageStartsWith("org.joda.time")));
@@ -72,11 +71,10 @@ public final class JodaToSelf extends BugChecker
       Matchers.allOf(
           Matchers.anyOf(
               Streams.concat(TYPE_NAMES.stream(), TYPES_WITHOUT_METHOD.stream())
-                  .map(
-                      typeName ->
-                          Matchers.constructor()
-                              .forClass("org.joda.time." + typeName)
-                              .withParameters("java.lang.Object"))
+                  .map(typeName ->
+                      Matchers.constructor()
+                          .forClass("org.joda.time." + typeName)
+                          .withParameters("java.lang.Object"))
                   .collect(toImmutableList())),
           // Allow usage by JodaTime itself
           Matchers.not(Matchers.packageStartsWith("org.joda.time")));

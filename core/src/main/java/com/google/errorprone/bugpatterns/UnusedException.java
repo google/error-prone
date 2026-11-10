@@ -121,10 +121,9 @@ public final class UnusedException extends BugChecker implements CatchTreeMatche
     SuggestedFix.Builder allFixes = SuggestedFix.builder();
     throwTrees.stream()
         .filter(badThrow -> badThrow.getExpression() instanceof NewClassTree)
-        .forEach(
-            badThrow ->
-                fixConstructor((NewClassTree) badThrow.getExpression(), exceptionSymbol, state)
-                    .ifPresent(allFixes::merge));
+        .forEach(badThrow ->
+            fixConstructor((NewClassTree) badThrow.getExpression(), exceptionSymbol, state)
+                .ifPresent(allFixes::merge));
     return describeMatch(tree, allFixes.build());
   }
 

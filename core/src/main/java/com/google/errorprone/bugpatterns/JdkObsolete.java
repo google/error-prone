@@ -760,11 +760,10 @@ public class JdkObsolete extends BugChecker
   private Description matchObsoleteApi(
       ExpressionTree tree, VisitorState state, ImmutableList<ObsoleteApi> obsoleteApis) {
     return obsoleteApis.stream()
-        .filter(
-            api ->
-                (androidMinSdkVersion.isEmpty()
-                        || androidMinSdkVersion.get() >= api.androidMinSdkVersion())
-                    && api.matcher().matches(tree, state))
+        .filter(api ->
+            (androidMinSdkVersion.isEmpty()
+                    || androidMinSdkVersion.get() >= api.androidMinSdkVersion())
+                && api.matcher().matches(tree, state))
         .map(api -> buildDescription(tree).setMessage(api.message()).build())
         .findFirst()
         .orElse(NO_MATCH);

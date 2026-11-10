@@ -91,10 +91,8 @@ public final class UnnecessaryMethodReference extends BugChecker
 
   private static boolean isKnownAlias(MemberReferenceTree tree, Type type, VisitorState state) {
     return KNOWN_ALIASES.stream()
-        .anyMatch(
-            k ->
-                k.matcher().matches(tree, state)
-                    && isSubtype(k.targetType().get(state), type, state));
+        .anyMatch(k ->
+            k.matcher().matches(tree, state) && isSubtype(k.targetType().get(state), type, state));
   }
 
   /**

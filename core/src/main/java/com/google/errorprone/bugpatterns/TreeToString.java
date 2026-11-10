@@ -114,10 +114,8 @@ public class TreeToString extends AbstractToString {
     return FindIdentifiers.findAllIdents(state).stream()
         .filter(s -> isSubtype(s.type, COM_GOOGLE_ERRORPRONE_VISITORSTATE.get(state), state))
         .findFirst()
-        .map(
-            s ->
-                SuggestedFix.replace(
-                    toStringCall, createStringReplacement(state, s, stringifiedExpr)));
+        .map(s ->
+            SuggestedFix.replace(toStringCall, createStringReplacement(state, s, stringifiedExpr)));
   }
 
   private static String createStringReplacement(

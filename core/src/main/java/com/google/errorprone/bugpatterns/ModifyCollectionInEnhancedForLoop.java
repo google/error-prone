@@ -78,11 +78,10 @@ public class ModifyCollectionInEnhancedForLoop extends BugChecker
       return NO_MATCH;
     }
     if (state.getTypes().closure(ASTHelpers.getReceiverType(tree)).stream()
-        .anyMatch(
-            s ->
-                enclosingPackage(s.asElement())
-                    .map(p -> p.getQualifiedName().toString().startsWith("java.util.concurrent"))
-                    .orElse(false))) {
+        .anyMatch(s ->
+            enclosingPackage(s.asElement())
+                .map(p -> p.getQualifiedName().toString().startsWith("java.util.concurrent"))
+                .orElse(false))) {
       return NO_MATCH;
     }
     if (blockEndsInBreakOrReturn(state)) {

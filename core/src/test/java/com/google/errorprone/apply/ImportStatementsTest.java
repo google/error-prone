@@ -65,23 +65,21 @@ public class ImportStatementsTest {
       }
       SuggestedFix.Builder fix = SuggestedFix.builder();
       MoreAnnotations.getStrings(annotation.get(), "toAdd")
-          .forEach(
-              i -> {
-                if (i.startsWith("static ")) {
-                  fix.addStaticImport(i.substring("static ".length()));
-                } else {
-                  fix.addImport(i);
-                }
-              });
+          .forEach(i -> {
+            if (i.startsWith("static ")) {
+              fix.addStaticImport(i.substring("static ".length()));
+            } else {
+              fix.addImport(i);
+            }
+          });
       MoreAnnotations.getStrings(annotation.get(), "toRemove")
-          .forEach(
-              i -> {
-                if (i.startsWith("static ")) {
-                  fix.removeStaticImport(i.substring("static ".length()));
-                } else {
-                  fix.removeImport(i);
-                }
-              });
+          .forEach(i -> {
+            if (i.startsWith("static ")) {
+              fix.removeStaticImport(i.substring("static ".length()));
+            } else {
+              fix.removeImport(i);
+            }
+          });
       return describeMatch(tree, fix.build());
     }
   }

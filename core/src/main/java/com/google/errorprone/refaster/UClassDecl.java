@@ -70,36 +70,35 @@ abstract class UClassDecl extends USimpleStatement implements ClassTree {
           Choice.from(
               ContiguousSet.create(
                   Range.closedOpen(0, currentMembers.size()), DiscreteDomain.integers()));
-      return methodChoice.flatMap(
-          (Integer i) -> {
-            ImmutableList<UMethodDecl> remainingMembers =
-                ImmutableList.<UMethodDecl>builder()
-                    .addAll(currentMembers.subList(0, i))
-                    .addAll(currentMembers.subList(i + 1, currentMembers.size()))
-                    .build();
-            UMethodDecl chosenMethod = currentMembers.get(i);
-            Unifier unifier = state.unifier().fork();
-            /*
-             * If multiple methods use the same parameter name, preserve the last parameter
-             * name from the target code.  For example, given a @BeforeTemplate with
-             *
-             *    int get(int index) {...}
-             *    int set(int index, int value) {...}
-             *
-             * and target code with the lines
-             *
-             *    int get(int i) {...}
-             *    int set(int j) {...}
-             *
-             * then use "j" in place of index in the @AfterTemplates.
-             */
-            for (UVariableDecl param : chosenMethod.getParameters()) {
-              unifier.clearBinding(param.key());
-            }
-            return chosenMethod
-                .unify(tree, unifier)
-                .map(UnifierWithRemainingMembers.withRemaining(remainingMembers));
-          });
+      return methodChoice.flatMap((Integer i) -> {
+        ImmutableList<UMethodDecl> remainingMembers =
+            ImmutableList.<UMethodDecl>builder()
+                .addAll(currentMembers.subList(0, i))
+                .addAll(currentMembers.subList(i + 1, currentMembers.size()))
+                .build();
+        UMethodDecl chosenMethod = currentMembers.get(i);
+        Unifier unifier = state.unifier().fork();
+        /*
+         * If multiple methods use the same parameter name, preserve the last parameter
+         * name from the target code.  For example, given a @BeforeTemplate with
+         *
+         *    int get(int index) {...}
+         *    int set(int index, int value) {...}
+         *
+         * and target code with the lines
+         *
+         *    int get(int i) {...}
+         *    int set(int j) {...}
+         *
+         * then use "j" in place of index in the @AfterTemplates.
+         */
+        for (UVariableDecl param : chosenMethod.getParameters()) {
+          unifier.clearBinding(param.key());
+        }
+        return chosenMethod
+            .unify(tree, unifier)
+            .map(UnifierWithRemainingMembers.withRemaining(remainingMembers));
+      });
     };
   }
 

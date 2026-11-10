@@ -68,11 +68,10 @@ public final class ExplicitArrayForVarargs extends BugChecker
     // Bail out if we're calling an overload of the same method: it's likely we'll introduce
     // problems (delegating constructors are a common case).
     if (stream(state.getPath().getParentPath())
-        .anyMatch(
-            t ->
-                getSymbol(t) instanceof MethodSymbol ms
-                    && ms.owner.equals(symbol.owner)
-                    && ms.name.contentEquals(symbol.name))) {
+        .anyMatch(t ->
+            getSymbol(t) instanceof MethodSymbol ms
+                && ms.owner.equals(symbol.owner)
+                && ms.name.contentEquals(symbol.name))) {
       return NO_MATCH;
     }
     // The last argument isn't substituting for varargs if it isn't in place of the varargs

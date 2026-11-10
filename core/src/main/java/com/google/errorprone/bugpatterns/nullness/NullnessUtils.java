@@ -121,27 +121,26 @@ public final class NullnessUtils {
 
   static boolean isLikelyToBePublicApi(Symbol sym) {
     return enclosingElements(sym)
-        .allMatch(
-            s ->
-                switch (s) {
-                  case ClassSymbol c -> isPublicOrProtected(c);
-                  case MethodSymbol m -> isPublicOrProtected(m);
-                  case VarSymbol v ->
-                      switch (v.getKind()) {
-                        case FIELD, ENUM_CONSTANT -> isPublicOrProtected(v);
-                        case RECORD_COMPONENT -> true;
-                        case PARAMETER ->
-                            /*
-                             * We have to make sure it's a method parameter, not a lambda parameter.
-                             * (A lambda parameter has its "enclosing element" set to the actually
-                             * enclosing method or to a synthetic MethodSymbol if the lambda is in a
-                             * field initializer or initializer block.)
-                             */
-                            ((MethodSymbol) v.getEnclosingElement()).getParameters().contains(v);
-                        default -> false;
-                      };
-                  default -> true;
-                });
+        .allMatch(s ->
+            switch (s) {
+              case ClassSymbol c -> isPublicOrProtected(c);
+              case MethodSymbol m -> isPublicOrProtected(m);
+              case VarSymbol v ->
+                  switch (v.getKind()) {
+                    case FIELD, ENUM_CONSTANT -> isPublicOrProtected(v);
+                    case RECORD_COMPONENT -> true;
+                    case PARAMETER ->
+                        /*
+                         * We have to make sure it's a method parameter, not a lambda parameter.
+                         * (A lambda parameter has its "enclosing element" set to the actually
+                         * enclosing method or to a synthetic MethodSymbol if the lambda is in a
+                         * field initializer or initializer block.)
+                         */
+                        ((MethodSymbol) v.getEnclosingElement()).getParameters().contains(v);
+                    default -> false;
+                  };
+              default -> true;
+            });
   }
 
   static boolean isLikelyToBePublicApi(TreePath path) {

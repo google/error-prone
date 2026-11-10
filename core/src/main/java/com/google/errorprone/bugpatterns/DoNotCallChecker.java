@@ -316,22 +316,21 @@ public class DoNotCallChecker extends BugChecker
     return findSuperMethods(symbol, state.getTypes()).stream()
         .filter(s -> hasAnnotation(s, DO_NOT_CALL_ANNOTATION, state))
         .findAny()
-        .map(
-            s -> {
-              String message =
-                  String.format(
-                      "Method overrides %s in %s which is annotated @DoNotCall,"
-                          + " it should also be annotated.",
-                      s.getSimpleName(), s.owner.getSimpleName());
-              return buildDescription(tree)
-                  .setMessage(message)
-                  .addFix(
-                      SuggestedFix.builder()
-                          .addImport(DO_NOT_CALL_ANNOTATION)
-                          .prefixWith(tree, "@DoNotCall ")
-                          .build())
-                  .build();
-            })
+        .map(s -> {
+          String message =
+              String.format(
+                  "Method overrides %s in %s which is annotated @DoNotCall,"
+                      + " it should also be annotated.",
+                  s.getSimpleName(), s.owner.getSimpleName());
+          return buildDescription(tree)
+              .setMessage(message)
+              .addFix(
+                  SuggestedFix.builder()
+                      .addImport(DO_NOT_CALL_ANNOTATION)
+                      .prefixWith(tree, "@DoNotCall ")
+                      .build())
+              .build();
+        })
         .orElse(NO_MATCH);
   }
 
@@ -395,24 +394,18 @@ public class DoNotCallChecker extends BugChecker
         }
         Types types = state.getTypes();
         return assigned.stream()
-            .flatMap(
-                typeSeen ->
-                    types.closure(typeSeen).stream()
-                        .flatMap(
-                            t ->
-                                t.tsym.members() == null
-                                    ? Stream.empty()
-                                    : stream(t.tsym.members().getSymbolsByName(sym.name)))
-                        .filter(
-                            symbol ->
-                                !sym.isStatic()
-                                    && (sym.flags() & Flags.SYNTHETIC) == 0
-                                    && hasAnnotation(symbol, DO_NOT_CALL_ANNOTATION, state)
-                                    && symbol.overrides(
-                                        sym,
-                                        types.erasure(typeSeen).tsym,
-                                        types,
-                                        /* checkResult= */ true)))
+            .flatMap(typeSeen ->
+                types.closure(typeSeen).stream()
+                    .flatMap(t ->
+                        t.tsym.members() == null
+                            ? Stream.empty()
+                            : stream(t.tsym.members().getSymbolsByName(sym.name)))
+                    .filter(symbol ->
+                        !sym.isStatic()
+                            && (sym.flags() & Flags.SYNTHETIC) == 0
+                            && hasAnnotation(symbol, DO_NOT_CALL_ANNOTATION, state)
+                            && symbol.overrides(
+                                sym, types.erasure(typeSeen).tsym, types, /* checkResult= */ true)))
             .findFirst();
       }
     }.scan(state.getPath(), null);

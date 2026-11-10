@@ -76,22 +76,20 @@ import org.safere.Pattern;
 public final class IdentifierName extends BugChecker
     implements ClassTreeMatcher, MethodTreeMatcher, VariableTreeMatcher {
   private static final Supplier<ImmutableSet<Name>> EXEMPTED_CLASS_ANNOTATIONS =
-      VisitorState.memoize(
-          s ->
-              Stream.of("org.robolectric.annotation.Implements")
-                  .map(s::getName)
-                  .collect(toImmutableSet()));
+      VisitorState.memoize(s ->
+          Stream.of("org.robolectric.annotation.Implements")
+              .map(s::getName)
+              .collect(toImmutableSet()));
 
   private static final Supplier<ImmutableSet<Name>> EXEMPTED_METHOD_ANNOTATIONS =
-      VisitorState.memoize(
-          s ->
-              Stream.of(
-                      "com.pholser.junit.quickcheck.Property",
-                      "com.google.caliper.Benchmark",
-                      "com.google.caliper.api.Macrobenchmark",
-                      "com.google.caliper.api.Footprint")
-                  .map(s::getName)
-                  .collect(toImmutableSet()));
+      VisitorState.memoize(s ->
+          Stream.of(
+                  "com.pholser.junit.quickcheck.Property",
+                  "com.google.caliper.Benchmark",
+                  "com.google.caliper.api.Macrobenchmark",
+                  "com.google.caliper.api.Footprint")
+              .map(s::getName)
+              .collect(toImmutableSet()));
 
   private static final String STATIC_VARIABLE_FINDING =
       "Static variables should be named in UPPER_SNAKE_CASE if deeply immutable or lowerCamelCase"

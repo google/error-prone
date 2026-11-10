@@ -93,10 +93,8 @@ public class UngroupedOverloads extends BugChecker implements ClassTreeMatcher {
     }
     ImmutableList<Description> descriptions =
         methods.asMap().entrySet().stream()
-            .flatMap(
-                e ->
-                    checkOverloads(
-                        state, classTree.getMembers(), ImmutableList.copyOf(e.getValue())))
+            .flatMap(e ->
+                checkOverloads(state, classTree.getMembers(), ImmutableList.copyOf(e.getValue())))
             .collect(toImmutableList());
     if (batchFindings && !descriptions.isEmpty()) {
       SuggestedFix.Builder fix = SuggestedFix.builder();
@@ -136,24 +134,22 @@ public class UngroupedOverloads extends BugChecker implements ClassTreeMatcher {
     sb.append(state.getSourceForNode(first.tree()));
     overloads.stream()
         .filter(o -> o != first)
-        .forEach(
-            o -> {
-              int start = state.getEndPosition(members.get(o.index() - 1));
-              int end = state.getEndPosition(o.tree());
-              sb.append(state.getSourceCode(), start, end).append('\n');
-              fixBuilder.replace(start, end, "");
-            });
+        .forEach(o -> {
+          int start = state.getEndPosition(members.get(o.index() - 1));
+          int end = state.getEndPosition(o.tree());
+          sb.append(state.getSourceCode(), start, end).append('\n');
+          fixBuilder.replace(start, end, "");
+        });
     fixBuilder.replace(first.tree(), sb.toString());
     SuggestedFix fix = fixBuilder.build();
     LineMap lineMap = state.getPath().getCompilationUnit().getLineMap();
     // emit findings for each overload
     return overloads.stream()
-        .map(
-            o ->
-                buildDescription(o.tree())
-                    .addFix(fix)
-                    .setMessage(createMessage(o.tree(), overloads, groups, lineMap, o))
-                    .build());
+        .map(o ->
+            buildDescription(o.tree())
+                .addFix(fix)
+                .setMessage(createMessage(o.tree(), overloads, groups, lineMap, o))
+                .build());
   }
 
   private static String createMessage(

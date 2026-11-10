@@ -75,11 +75,10 @@ import org.safere.Pattern;
 public final class FieldCanBeStatic extends BugChecker implements VariableTreeMatcher {
 
   private static final Supplier<ImmutableSet<Name>> EXEMPTING_VARIABLE_ANNOTATIONS =
-      VisitorState.memoize(
-          s ->
-              Stream.of("com.google.inject.testing.fieldbinder.Bind")
-                  .map(s::getName)
-                  .collect(toImmutableSet()));
+      VisitorState.memoize(s ->
+          Stream.of("com.google.inject.testing.fieldbinder.Bind")
+              .map(s::getName)
+              .collect(toImmutableSet()));
 
   private final WellKnownMutability wellKnownMutability;
   private final ConstantExpressions constantExpressions;

@@ -131,76 +131,70 @@ public class ReturnMissingNullable extends BugChecker implements CompilationUnit
    */
   // TODO(cpovirk): For performance, generate a Multimap indexed by Name?
   private static final Supplier<ImmutableSet<MethodSymbol>> METHODS_KNOWN_TO_RETURN_NULL =
-      memoize(
-          state ->
-              concat(
-                      /*
-                       * We assume that no one is implementing a Map<MyEnum, V> that contains every
-                       * enum constant and throws an exception for non-MyEnum values. Also, we
-                       * assume that no one minds annotating methods like ImmutableMap.put() with
-                       * @Nullable even though they always throw an exception instead of returning.
-                       */
-                      streamElements(state, "java.util.Map")
-                          .filter(
-                              m ->
-                                  hasName(m, "get")
-                                      || hasName(m, "put")
-                                      || hasName(m, "putIfAbsent")
-                                      || (hasName(m, "remove") && hasParams(m, 1))
-                                      || (hasName(m, "replace") && hasParams(m, 2))),
-                      streamElements(state, "com.google.common.collect.BiMap")
-                          .filter(m -> hasName(m, "forcePut")),
-                      streamElements(state, "com.google.common.collect.Table")
-                          .filter(
-                              m -> hasName(m, "get") || hasName(m, "put") || hasName(m, "remove")),
-                      streamElements(state, "com.google.common.cache.Cache")
-                          .filter(m -> hasName(m, "getIfPresent")),
-                      /*
-                       * We assume that no one is implementing a never-empty Queue, etc. -- or at
-                       * least that no one minds annotating its return types with @Nullable anyway.
-                       */
-                      streamElements(state, "java.util.Queue")
-                          .filter(m -> hasName(m, "poll") || hasName(m, "peek")),
-                      streamElements(state, "java.util.Deque")
-                          .filter(
-                              m ->
-                                  hasName(m, "pollFirst")
-                                      || hasName(m, "peekFirst")
-                                      || hasName(m, "pollLast")
-                                      || hasName(m, "peekLast")),
-                      streamElements(state, "java.util.NavigableSet")
-                          .filter(
-                              m ->
-                                  hasName(m, "lower")
-                                      || hasName(m, "floor")
-                                      || hasName(m, "ceiling")
-                                      || hasName(m, "higher")
-                                      || hasName(m, "pollFirst")
-                                      || hasName(m, "pollLast")),
-                      streamElements(state, "java.util.NavigableMap")
-                          .filter(
-                              m ->
-                                  hasName(m, "lowerEntry")
-                                      || hasName(m, "floorEntry")
-                                      || hasName(m, "ceilingEntry")
-                                      || hasName(m, "higherEntry")
-                                      || hasName(m, "lowerKey")
-                                      || hasName(m, "floorKey")
-                                      || hasName(m, "ceilingKey")
-                                      || hasName(m, "higherKey")
-                                      || hasName(m, "firstEntry")
-                                      || hasName(m, "lastEntry")
-                                      || hasName(m, "pollFirstEntry")
-                                      || hasName(m, "pollLastEntry")),
-                      // We assume no one is implementing an infinite Spliterator.
-                      streamElements(state, "java.util.Spliterator")
-                          .filter(m -> hasName(m, "trySplit")))
+      memoize(state ->
+          concat(
                   /*
-                   * TODO(cpovirk): Consider AbstractIterator.computeNext().
-                   *
+                   * We assume that no one is implementing a Map<MyEnum, V> that contains every
+                   * enum constant and throws an exception for non-MyEnum values. Also, we
+                   * assume that no one minds annotating methods like ImmutableMap.put() with
+                   * @Nullable even though they always throw an exception instead of returning.
                    */
-                  .map(MethodSymbol.class::cast)
-                  .collect(toImmutableSet()));
+                  streamElements(state, "java.util.Map")
+                      .filter(m ->
+                          hasName(m, "get")
+                              || hasName(m, "put")
+                              || hasName(m, "putIfAbsent")
+                              || (hasName(m, "remove") && hasParams(m, 1))
+                              || (hasName(m, "replace") && hasParams(m, 2))),
+                  streamElements(state, "com.google.common.collect.BiMap")
+                      .filter(m -> hasName(m, "forcePut")),
+                  streamElements(state, "com.google.common.collect.Table")
+                      .filter(m -> hasName(m, "get") || hasName(m, "put") || hasName(m, "remove")),
+                  streamElements(state, "com.google.common.cache.Cache")
+                      .filter(m -> hasName(m, "getIfPresent")),
+                  /*
+                   * We assume that no one is implementing a never-empty Queue, etc. -- or at
+                   * least that no one minds annotating its return types with @Nullable anyway.
+                   */
+                  streamElements(state, "java.util.Queue")
+                      .filter(m -> hasName(m, "poll") || hasName(m, "peek")),
+                  streamElements(state, "java.util.Deque")
+                      .filter(m ->
+                          hasName(m, "pollFirst")
+                              || hasName(m, "peekFirst")
+                              || hasName(m, "pollLast")
+                              || hasName(m, "peekLast")),
+                  streamElements(state, "java.util.NavigableSet")
+                      .filter(m ->
+                          hasName(m, "lower")
+                              || hasName(m, "floor")
+                              || hasName(m, "ceiling")
+                              || hasName(m, "higher")
+                              || hasName(m, "pollFirst")
+                              || hasName(m, "pollLast")),
+                  streamElements(state, "java.util.NavigableMap")
+                      .filter(m ->
+                          hasName(m, "lowerEntry")
+                              || hasName(m, "floorEntry")
+                              || hasName(m, "ceilingEntry")
+                              || hasName(m, "higherEntry")
+                              || hasName(m, "lowerKey")
+                              || hasName(m, "floorKey")
+                              || hasName(m, "ceilingKey")
+                              || hasName(m, "higherKey")
+                              || hasName(m, "firstEntry")
+                              || hasName(m, "lastEntry")
+                              || hasName(m, "pollFirstEntry")
+                              || hasName(m, "pollLastEntry")),
+                  // We assume no one is implementing an infinite Spliterator.
+                  streamElements(state, "java.util.Spliterator")
+                      .filter(m -> hasName(m, "trySplit")))
+              /*
+               * TODO(cpovirk): Consider AbstractIterator.computeNext().
+               *
+               */
+              .map(MethodSymbol.class::cast)
+              .collect(toImmutableSet()));
 
   private final boolean beingConservative;
   private final boolean onlyLikelyPublicApi;

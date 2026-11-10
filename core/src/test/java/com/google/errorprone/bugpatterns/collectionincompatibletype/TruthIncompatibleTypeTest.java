@@ -842,19 +842,18 @@ public class Test {
 
   private static ImmutableList<Method> getAssertionMethods(Class<?> clazz) {
     return stream(clazz.getDeclaredMethods())
-        .filter(
-            m ->
-                Modifier.isPublic(m.getModifiers())
-                    && !m.getName().equals("equals")
-                    && m.getParameterCount() > 0
-                    && !m.getName().startsWith("ignoring")
-                    // Kotlin `internal` methods are `public` in the class file.
-                    // We can identify them by looking for a mangled name.
-                    && !m.getName().contains("$")
-                    && (stream(m.getParameterTypes()).allMatch(p -> p.equals(Iterable.class))
-                        || stream(m.getParameterTypes())
-                            .allMatch(p -> p.equals(Object.class) || p.isArray())
-                        || stream(m.getParameterTypes()).allMatch(Class::isArray)))
+        .filter(m ->
+            Modifier.isPublic(m.getModifiers())
+                && !m.getName().equals("equals")
+                && m.getParameterCount() > 0
+                && !m.getName().startsWith("ignoring")
+                // Kotlin `internal` methods are `public` in the class file.
+                // We can identify them by looking for a mangled name.
+                && !m.getName().contains("$")
+                && (stream(m.getParameterTypes()).allMatch(p -> p.equals(Iterable.class))
+                    || stream(m.getParameterTypes())
+                        .allMatch(p -> p.equals(Object.class) || p.isArray())
+                    || stream(m.getParameterTypes()).allMatch(Class::isArray)))
         .collect(toImmutableList());
   }
 }

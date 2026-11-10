@@ -105,11 +105,9 @@ public final class UnnecessaryQualifier extends BugChecker
       case FIELD -> {
         if (INJECTION_FIELDS.stream().anyMatch(ip -> hasAnnotation(tree, ip, state))
             || tree.getModifiers().getAnnotations().stream()
-                .anyMatch(
-                    anno ->
-                        INJECTION_PREFIXES.stream()
-                            .anyMatch(
-                                p -> getSymbol(anno).getSimpleName().toString().startsWith(p)))) {
+                .anyMatch(anno ->
+                    INJECTION_PREFIXES.stream()
+                        .anyMatch(p -> getSymbol(anno).getSimpleName().toString().startsWith(p)))) {
           return NO_MATCH;
         }
         if (isRecord(symbol)) {
@@ -194,11 +192,10 @@ public final class UnnecessaryQualifier extends BugChecker
   private static ImmutableList<AnnotationTree> getQualifiers(
       ModifiersTree modifiers, VisitorState state) {
     return modifiers.getAnnotations().stream()
-        .filter(
-            anno ->
-                QUALIFIERS.stream().anyMatch(q -> hasAnnotation(getSymbol(anno), q, state))
-                    && IGNORED_ANNOTATIONS.stream()
-                        .noneMatch(a -> getSymbol(anno).equals(a.symbol(state))))
+        .filter(anno ->
+            QUALIFIERS.stream().anyMatch(q -> hasAnnotation(getSymbol(anno), q, state))
+                && IGNORED_ANNOTATIONS.stream()
+                    .noneMatch(a -> getSymbol(anno).equals(a.symbol(state))))
         .collect(toImmutableList());
   }
 

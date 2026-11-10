@@ -541,10 +541,9 @@ public final class Inliner extends BugChecker
       List<? extends Tree> typeArguments, ImmutableSet<String> typeParamNames) {
     return !typeArguments.isEmpty()
         && typeArguments.stream()
-            .allMatch(
-                arg ->
-                    arg instanceof IdentifierTree it
-                        && typeParamNames.contains(it.getName().toString()));
+            .allMatch(arg ->
+                arg instanceof IdentifierTree it
+                    && typeParamNames.contains(it.getName().toString()));
   }
 
   /**

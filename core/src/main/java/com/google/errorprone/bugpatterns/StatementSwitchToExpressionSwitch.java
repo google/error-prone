@@ -1111,26 +1111,25 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
     analysisResult
         .assignmentSwitchAnalysisResult()
         .precedingVariableDeclaration()
-        .ifPresent(
-            variableTree -> {
-              suggestedFixBuilder.delete(variableTree);
+        .ifPresent(variableTree -> {
+          suggestedFixBuilder.delete(variableTree);
 
-              replacementCodeBuilder.append(
-                  Streams.concat(
-                          renderVariableTreeComments(variableTree, state).stream(),
-                          renderVariableTreeAnnotations(variableTree, state).stream(),
-                          Stream.of(renderVariableTreeFlags(variableTree)))
-                      .collect(joining("\n")));
+          replacementCodeBuilder.append(
+              Streams.concat(
+                      renderVariableTreeComments(variableTree, state).stream(),
+                      renderVariableTreeAnnotations(variableTree, state).stream(),
+                      Stream.of(renderVariableTreeFlags(variableTree)))
+                  .collect(joining("\n")));
 
-              // Local variables declared with "var" must unfortunately be handled as a special case
-              // because getSourceForNode() returns null for the source code of a "var" declaration.
-              String sourceForType =
-                  hasImplicitType(variableTree, state)
-                      ? "var"
-                      : state.getSourceForNode(variableTree.getType());
+          // Local variables declared with "var" must unfortunately be handled as a special case
+          // because getSourceForNode() returns null for the source code of a "var" declaration.
+          String sourceForType =
+              hasImplicitType(variableTree, state)
+                  ? "var"
+                  : state.getSourceForNode(variableTree.getType());
 
-              replacementCodeBuilder.append(sourceForType).append(" ");
-            });
+          replacementCodeBuilder.append(sourceForType).append(" ");
+        });
 
     List<? extends CaseTree> cases = switchTree.getCases();
     ImmutableList<ErrorProneComment> allSwitchComments =

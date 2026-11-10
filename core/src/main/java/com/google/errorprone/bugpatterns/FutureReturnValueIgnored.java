@@ -50,11 +50,10 @@ import javax.inject.Inject;
 public final class FutureReturnValueIgnored extends AbstractReturnValueIgnored
     implements ReturnTreeMatcher {
   private static final Supplier<Type> FUTURE =
-      memoize(
-          state -> {
-            var symbol = state.getElements().getTypeElement("java.util.concurrent.Future");
-            return symbol == null ? null : (Type) symbol.asType();
-          });
+      memoize(state -> {
+        var symbol = state.getElements().getTypeElement("java.util.concurrent.Future");
+        return symbol == null ? null : (Type) symbol.asType();
+      });
 
   private static final Matcher<ExpressionTree> IGNORED_METHODS =
       anyOf(

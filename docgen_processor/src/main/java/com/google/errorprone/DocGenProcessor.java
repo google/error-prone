@@ -84,11 +84,10 @@ public class DocGenProcessor extends AbstractProcessor {
           Gson gson = new Gson();
           bugPatterns.entrySet().stream()
               .sorted(Map.Entry.comparingByKey())
-              .forEachOrdered(
-                  e -> {
-                    gson.toJson(e.getValue(), pw);
-                    pw.println();
-                  });
+              .forEachOrdered(e -> {
+                gson.toJson(e.getValue(), pw);
+                pw.println();
+              });
         }
       } catch (IOException e) {
         throw new UncheckedIOException(e);

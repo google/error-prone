@@ -84,12 +84,11 @@ public class TypeParameterShadowing extends BugChecker
 
     // See if the passed in list typeParameters exist in the enclosingTypeSymbols
     List<TypeVariableSymbol> conflictingTypeSymbols = new ArrayList<>();
-    typeParameters.forEach(
-        param ->
-            enclosingTypeSymbols.stream()
-                .filter(tvs -> tvs.name.contentEquals(param.getName()))
-                .findFirst()
-                .ifPresent(conflictingTypeSymbols::add));
+    typeParameters.forEach(param ->
+        enclosingTypeSymbols.stream()
+            .filter(tvs -> tvs.name.contentEquals(param.getName()))
+            .findFirst()
+            .ifPresent(conflictingTypeSymbols::add));
     if (conflictingTypeSymbols.isEmpty()) {
       return Description.NO_MATCH;
     }
@@ -111,13 +110,12 @@ public class TypeParameterShadowing extends BugChecker
             .collect(toImmutableSet());
     SuggestedFix.Builder fixBuilder = SuggestedFix.builder();
     conflictingTypeSymbols.stream()
-        .map(
-            v ->
-                SuggestedFixes.renameTypeParameter(
-                    typeParameterInList(typeParameters, v),
-                    tree,
-                    replacementTypeVarName(v.name, typeVarsInScope),
-                    state))
+        .map(v ->
+            SuggestedFixes.renameTypeParameter(
+                typeParameterInList(typeParameters, v),
+                tree,
+                replacementTypeVarName(v.name, typeVarsInScope),
+                state))
         .forEach(fixBuilder::merge);
 
     descriptionBuilder.addFix(fixBuilder.build());

@@ -136,11 +136,10 @@ public final class ImmutableMemberCollection extends BugChecker implements Class
 
   private static final Matcher<ExpressionTree> JDK_EMPTY_COLLECTION_CONSTRUCTOR =
       MethodMatchers.constructor()
-          .forClass(
-              (type, state) ->
-                  enclosingPackage(type.asElement())
-                      .map(p -> p.getQualifiedName().contentEquals("java.util"))
-                      .orElse(false))
+          .forClass((type, state) ->
+              enclosingPackage(type.asElement())
+                  .map(p -> p.getQualifiedName().contentEquals("java.util"))
+                  .orElse(false))
           .withNoParameters();
 
   private static final ClassName JAVA_UTIL_MAP = ClassName.of("java.util.Map");
@@ -234,14 +233,12 @@ public final class ImmutableMemberCollection extends BugChecker implements Class
     ImmutableSetMultimap<Symbol, Tree> initTrees = initTreesBuilder.build();
     SuggestedFix.Builder suggestedFix = SuggestedFix.builder();
     replaceableVars.values().stream()
-        .filter(
-            var ->
-                var.areAllInitImmutable(initTrees.get(var.symbol()), state)
-                    || !isPotentiallyMutated.contains(var.symbol()))
-        .forEach(
-            replaceableVar ->
-                suggestedFix.merge(
-                    replaceableVar.getFix(initTrees.get(replaceableVar.symbol()), state)));
+        .filter(var ->
+            var.areAllInitImmutable(initTrees.get(var.symbol()), state)
+                || !isPotentiallyMutated.contains(var.symbol()))
+        .forEach(replaceableVar ->
+            suggestedFix.merge(
+                replaceableVar.getFix(initTrees.get(replaceableVar.symbol()), state)));
     if (suggestedFix.isEmpty()) {
       return Description.NO_MATCH;
     }

@@ -192,47 +192,46 @@ public abstract class ScannerSupplier implements Supplier<Scanner> {
             .inverse();
 
     // Process overrides
-    severityOverrides.forEach(
-        (checkName, newSeverity) -> {
-          if (!checksByAltName.containsKey(checkName)) {
-            if (errorProneOptions.ignoreUnknownChecks()) {
-              return;
+    severityOverrides.forEach((checkName, newSeverity) -> {
+      if (!checksByAltName.containsKey(checkName)) {
+        if (errorProneOptions.ignoreUnknownChecks()) {
+          return;
+        }
+        throw new InvalidCommandLineOptionException(checkName + " is not a valid checker name");
+      }
+      for (BugCheckerInfo check : checksByAltName.get(checkName)) {
+        switch (newSeverity) {
+          case OFF -> {
+            if (!check.disableable()) {
+              throw new InvalidCommandLineOptionException(
+                  check.canonicalName() + " may not be disabled");
             }
-            throw new InvalidCommandLineOptionException(checkName + " is not a valid checker name");
+            severities.remove(check.canonicalName());
+            disabled.add(check.canonicalName());
           }
-          for (BugCheckerInfo check : checksByAltName.get(checkName)) {
-            switch (newSeverity) {
-              case OFF -> {
-                if (!check.disableable()) {
-                  throw new InvalidCommandLineOptionException(
-                      check.canonicalName() + " may not be disabled");
-                }
-                severities.remove(check.canonicalName());
-                disabled.add(check.canonicalName());
-              }
-              case DEFAULT -> {
-                severities.put(check.canonicalName(), check.defaultSeverity());
-                disabled.remove(check.canonicalName());
-              }
-              case WARN -> {
-                // Demoting an enabled check from an error to a warning is a form of disabling
-                if (!disabled().contains(check.canonicalName())
-                    && !check.disableable()
-                    && check.defaultSeverity() == SeverityLevel.ERROR) {
-                  throw new InvalidCommandLineOptionException(
-                      check.canonicalName()
-                          + " is not disableable and may not be demoted to a warning");
-                }
-                severities.put(check.canonicalName(), SeverityLevel.WARNING);
-                disabled.remove(check.canonicalName());
-              }
-              case ERROR -> {
-                severities.put(check.canonicalName(), SeverityLevel.ERROR);
-                disabled.remove(check.canonicalName());
-              }
+          case DEFAULT -> {
+            severities.put(check.canonicalName(), check.defaultSeverity());
+            disabled.remove(check.canonicalName());
+          }
+          case WARN -> {
+            // Demoting an enabled check from an error to a warning is a form of disabling
+            if (!disabled().contains(check.canonicalName())
+                && !check.disableable()
+                && check.defaultSeverity() == SeverityLevel.ERROR) {
+              throw new InvalidCommandLineOptionException(
+                  check.canonicalName()
+                      + " is not disableable and may not be demoted to a warning");
             }
+            severities.put(check.canonicalName(), SeverityLevel.WARNING);
+            disabled.remove(check.canonicalName());
           }
-        });
+          case ERROR -> {
+            severities.put(check.canonicalName(), SeverityLevel.ERROR);
+            disabled.remove(check.canonicalName());
+          }
+        }
+      }
+    });
 
     flagsMap.putAll(errorProneOptions.getFlags().getFlagsMap());
 
@@ -253,32 +252,30 @@ public abstract class ScannerSupplier implements Supplier<Scanner> {
     HashBiMap<String, BugCheckerInfo> combinedAllChecks = HashBiMap.create(this.getAllChecks());
     other
         .getAllChecks()
-        .forEach(
-            (k, v) -> {
-              BugCheckerInfo existing = combinedAllChecks.putIfAbsent(k, v);
-              if (existing != null
-                  && !existing.checkerClass().getName().contentEquals(v.checkerClass().getName())) {
-                throw new IllegalArgumentException(
-                    String.format(
-                        "Cannot combine scanner suppliers with different implementations of"
-                            + " '%s': %s, %s",
-                        k, v.checkerClass().getName(), existing.checkerClass().getName()));
-              }
-            });
+        .forEach((k, v) -> {
+          BugCheckerInfo existing = combinedAllChecks.putIfAbsent(k, v);
+          if (existing != null
+              && !existing.checkerClass().getName().contentEquals(v.checkerClass().getName())) {
+            throw new IllegalArgumentException(
+                String.format(
+                    "Cannot combine scanner suppliers with different implementations of"
+                        + " '%s': %s, %s",
+                    k, v.checkerClass().getName(), existing.checkerClass().getName()));
+          }
+        });
     HashMap<String, SeverityLevel> combinedSeverities = new LinkedHashMap<>(this.severities());
     other
         .severities()
-        .forEach(
-            (k, v) -> {
-              SeverityLevel existing = combinedSeverities.putIfAbsent(k, v);
-              if (existing != null && !existing.equals(v)) {
-                throw new IllegalArgumentException(
-                    String.format(
-                        "Cannot combine scanner suppliers with different severities for"
-                            + " '%s': %s, %s",
-                        k, v, existing));
-              }
-            });
+        .forEach((k, v) -> {
+          SeverityLevel existing = combinedSeverities.putIfAbsent(k, v);
+          if (existing != null && !existing.equals(v)) {
+            throw new IllegalArgumentException(
+                String.format(
+                    "Cannot combine scanner suppliers with different severities for"
+                        + " '%s': %s, %s",
+                    k, v, existing));
+          }
+        });
     ImmutableSet<String> disabled =
         Sets.difference(combinedAllChecks.keySet(), Sets.union(enabled(), other.enabled()))
             .immutableCopy();

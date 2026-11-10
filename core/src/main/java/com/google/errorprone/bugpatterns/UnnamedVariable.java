@@ -76,12 +76,11 @@ public final class UnnamedVariable extends BugChecker implements CompilationUnit
     VariableFinder finder = new VariableFinder(state);
     finder.scan(tree, null);
     Set<Symbol> unusedSymbols = finder.unusedSymbols.keySet();
-    finder.unusedSymbols.forEach(
-        (symbol, path) -> {
-          VariableTree varTree = (VariableTree) path.getLeaf();
-          state.reportMatch(
-              describeMatch(varTree, buildFix(varTree, symbol, path, state, unusedSymbols)));
-        });
+    finder.unusedSymbols.forEach((symbol, path) -> {
+      VariableTree varTree = (VariableTree) path.getLeaf();
+      state.reportMatch(
+          describeMatch(varTree, buildFix(varTree, symbol, path, state, unusedSymbols)));
+    });
     return NO_MATCH;
   }
 

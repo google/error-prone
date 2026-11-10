@@ -83,19 +83,17 @@ public class UnsafeFinalization extends BugChecker implements MethodInvocationTr
             .filter(x -> x != null)
             .collect(toImmutableList());
     if (arguments.stream()
-        .filter(
-            x ->
-                EnumSet.of(TypeKind.INT, TypeKind.LONG)
-                    .contains(state.getTypes().unboxedTypeOrType(x.asType()).getKind()))
+        .filter(x ->
+            EnumSet.of(TypeKind.INT, TypeKind.LONG)
+                .contains(state.getTypes().unboxedTypeOrType(x.asType()).getKind()))
         .noneMatch(arg -> arg.isMemberOf(enclosing.enclClass(), state.getTypes()))) {
       // no instance state is passed to the native method
       return NO_MATCH;
     }
     if (arguments.stream()
-        .anyMatch(
-            arg ->
-                arg.getSimpleName().contentEquals("this")
-                    && arg.isMemberOf(enclosing.enclClass(), state.getTypes()))) {
+        .anyMatch(arg ->
+            arg.getSimpleName().contentEquals("this")
+                && arg.isMemberOf(enclosing.enclClass(), state.getTypes()))) {
       // the instance is passed to the native method
       return NO_MATCH;
     }

@@ -89,11 +89,10 @@ public record AccessPath(@Nullable Element base, ImmutableList<String> path) {
         rcvrType.tsym.getKind() == ElementKind.CLASS
         && // annotated @AutoValue
         rcvrType.tsym.getAnnotationMirrors().stream()
-            .anyMatch(
-                a ->
-                    ((TypeElement) a.getAnnotationType().asElement())
-                        .getQualifiedName()
-                        .contentEquals("com.google.auto.value.AutoValue"));
+            .anyMatch(a ->
+                ((TypeElement) a.getAnnotationType().asElement())
+                    .getQualifiedName()
+                    .contentEquals("com.google.auto.value.AutoValue"));
   }
 
   /**

@@ -120,10 +120,9 @@ public final class UnusedTypeParameter extends BugChecker implements Compilation
             .pos();
     int endPos =
         tokens.stream()
-            .filter(
-                t ->
-                    t.endPos() >= state.getEndPosition(getLast(typeParameters))
-                        && (t.kind().equals(TokenKind.GT) || t.kind().equals(TokenKind.GTGT)))
+            .filter(t ->
+                t.endPos() >= state.getEndPosition(getLast(typeParameters))
+                    && (t.kind().equals(TokenKind.GT) || t.kind().equals(TokenKind.GTGT)))
             .findFirst()
             .get()
             .endPos();

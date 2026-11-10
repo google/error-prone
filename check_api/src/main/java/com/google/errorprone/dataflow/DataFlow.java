@@ -71,51 +71,49 @@ public final class DataFlow {
    */
   private static final LoadingCache<AnalysisParams, Analysis<?, ?, ?>> analysisCache =
       Caffeine.newBuilder()
-          .build(
-              (AnalysisParams key) -> {
-                ControlFlowGraph cfg = key.cfg();
-                ForwardTransferFunction<?, ?> transfer = key.transferFunction();
+          .build((AnalysisParams key) -> {
+            ControlFlowGraph cfg = key.cfg();
+            ForwardTransferFunction<?, ?> transfer = key.transferFunction();
 
-                @SuppressWarnings({"unchecked", "rawtypes"})
-                Analysis<?, ?, ?> analysis = new ForwardAnalysisImpl(transfer);
-                analysis.performAnalysis(cfg);
-                return analysis;
-              });
+            @SuppressWarnings({"unchecked", "rawtypes"})
+            Analysis<?, ?, ?> analysis = new ForwardAnalysisImpl(transfer);
+            analysis.performAnalysis(cfg);
+            return analysis;
+          });
 
   private static final LoadingCache<CfgParams, ControlFlowGraph> cfgCache =
       Caffeine.newBuilder()
           .maximumSize(1)
-          .build(
-              (CfgParams key) -> {
-                TreePath methodPath = key.methodPath();
-                UnderlyingAST ast;
-                ClassTree classTree = null;
-                MethodTree methodTree = null;
-                for (Tree parent : methodPath) {
-                  if (parent instanceof MethodTree m) {
-                    methodTree = m;
-                  }
-                  if (parent instanceof ClassTree c) {
-                    classTree = c;
-                    break;
-                  }
-                }
-                if (methodPath.getLeaf() instanceof LambdaExpressionTree lambdaExpressionTree) {
-                  ast = new UnderlyingAST.CFGLambda(lambdaExpressionTree, classTree, methodTree);
-                } else if (methodPath.getLeaf() instanceof MethodTree mt) {
-                  methodTree = mt;
-                  ast = new UnderlyingAST.CFGMethod(methodTree, classTree);
-                } else {
-                  // must be an initializer per findEnclosingMethodOrLambdaOrInitializer
-                  ast = new UnderlyingAST.CFGStatement(methodPath.getLeaf(), classTree);
-                }
-                ProcessingEnvironment env = key.environment();
+          .build((CfgParams key) -> {
+            TreePath methodPath = key.methodPath();
+            UnderlyingAST ast;
+            ClassTree classTree = null;
+            MethodTree methodTree = null;
+            for (Tree parent : methodPath) {
+              if (parent instanceof MethodTree m) {
+                methodTree = m;
+              }
+              if (parent instanceof ClassTree c) {
+                classTree = c;
+                break;
+              }
+            }
+            if (methodPath.getLeaf() instanceof LambdaExpressionTree lambdaExpressionTree) {
+              ast = new UnderlyingAST.CFGLambda(lambdaExpressionTree, classTree, methodTree);
+            } else if (methodPath.getLeaf() instanceof MethodTree mt) {
+              methodTree = mt;
+              ast = new UnderlyingAST.CFGMethod(methodTree, classTree);
+            } else {
+              // must be an initializer per findEnclosingMethodOrLambdaOrInitializer
+              ast = new UnderlyingAST.CFGStatement(methodPath.getLeaf(), classTree);
+            }
+            ProcessingEnvironment env = key.environment();
 
-                analysisCache.invalidateAll();
-                CompilationUnitTree root = methodPath.getCompilationUnit();
-                // TODO(b/158869538): replace with faster build(bodyPath, env, ast, false, false);
-                return CFGBuilder.build(root, ast, false, false, env);
-              });
+            analysisCache.invalidateAll();
+            CompilationUnitTree root = methodPath.getCompilationUnit();
+            // TODO(b/158869538): replace with faster build(bodyPath, env, ast, false, false);
+            return CFGBuilder.build(root, ast, false, false, env);
+          });
 
   private static @Nullable TreePath findEnclosingMethodOrLambdaOrInitializer(TreePath path) {
     while (path != null) {

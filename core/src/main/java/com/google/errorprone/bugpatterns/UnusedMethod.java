@@ -332,27 +332,24 @@ public final class UnusedMethod extends BugChecker implements CompilationUnitTre
             .findAny()
             // get the annotation value array as a set of Names,
             // normalizing unset value to the empty value
-            .map(
-                a ->
-                    getStrings(a, "value").stream()
-                        .map(state::getName)
-                        .map(Name::toString)
-                        .collect(toImmutableSet()))
+            .map(a ->
+                getStrings(a, "value").stream()
+                    .map(state::getName)
+                    .map(Name::toString)
+                    .collect(toImmutableSet()))
             // if no explicit method sources were specified, use method name instead
             .map(names -> names.isEmpty() ? ImmutableSet.of(sym.name.toString()) : names)
             // remove all potentially unused methods referenced by the @MethodSource
-            .ifPresent(
-                referencedNames ->
-                    unusedMethods
-                        .entrySet()
-                        .removeIf(
-                            e -> {
-                              Symbol unusedSym = e.getKey();
-                              String simpleName = unusedSym.getSimpleName().toString();
-                              return referencedNames.contains(simpleName)
-                                  || referencedNames.contains(
-                                      unusedSym.owner.getQualifiedName() + "#" + simpleName);
-                            }));
+            .ifPresent(referencedNames ->
+                unusedMethods
+                    .entrySet()
+                    .removeIf(e -> {
+                      Symbol unusedSym = e.getKey();
+                      String simpleName = unusedSym.getSimpleName().toString();
+                      return referencedNames.contains(simpleName)
+                          || referencedNames.contains(
+                              unusedSym.owner.getQualifiedName() + "#" + simpleName);
+                    }));
       }
     }
 

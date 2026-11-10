@@ -116,45 +116,41 @@ record UPlaceholderStatement(
       }
       // Consume another statement, or if that fails, fall back to the previous choices...
       choiceToHere =
-          choiceToHere.flatMap(
-              (State<ConsumptionState> consumptionState) ->
-                  visitor
-                      .unifyStatement(targetStatement, consumptionState)
-                      .map(
-                          (State<? extends JCStatement> stmtState) ->
-                              stmtState.withResult(
-                                  consumptionState.result().consume(stmtState.result()))));
+          choiceToHere.flatMap((State<ConsumptionState> consumptionState) ->
+              visitor
+                  .unifyStatement(targetStatement, consumptionState)
+                  .map((State<? extends JCStatement> stmtState) ->
+                      stmtState.withResult(consumptionState.result().consume(stmtState.result()))));
       if (verification.allRequiredMatched()) {
         realOptions = choiceToHere.concat(realOptions);
       }
     }
-    return realOptions.mapIfPresent(
-        (State<ConsumptionState> consumptionState) -> {
-          if (ImmutableSet.copyOf(consumptionState.seenParameters())
-              .containsAll(placeholder().requiredParameters())) {
-            Unifier resultUnifier = consumptionState.unifier().fork();
-            int nConsumedStatements = consumptionState.result().consumedStatements();
-            ImmutableList<? extends StatementTree> remainingStatements =
-                initState
-                    .unconsumedStatements()
-                    .subList(nConsumedStatements, initState.unconsumedStatements().size());
-            UnifierWithUnconsumedStatements result =
-                UnifierWithUnconsumedStatements.create(resultUnifier, remainingStatements);
-            List<JCStatement> impl =
-                consumptionState.result().placeholderImplInReverseOrder().reverse();
-            ControlFlowVisitor.Result implFlow = ControlFlowVisitor.INSTANCE.visitStatements(impl);
-            if (implFlow == implementationFlow()) {
-              List<JCStatement> prevBinding = resultUnifier.getBinding(placeholder().blockKey());
-              if (prevBinding != null && prevBinding.toString().equals(impl.toString())) {
-                return Optional.of(result);
-              } else if (prevBinding == null) {
-                resultUnifier.putBinding(placeholder().blockKey(), impl);
-                return Optional.of(result);
-              }
-            }
+    return realOptions.mapIfPresent((State<ConsumptionState> consumptionState) -> {
+      if (ImmutableSet.copyOf(consumptionState.seenParameters())
+          .containsAll(placeholder().requiredParameters())) {
+        Unifier resultUnifier = consumptionState.unifier().fork();
+        int nConsumedStatements = consumptionState.result().consumedStatements();
+        ImmutableList<? extends StatementTree> remainingStatements =
+            initState
+                .unconsumedStatements()
+                .subList(nConsumedStatements, initState.unconsumedStatements().size());
+        UnifierWithUnconsumedStatements result =
+            UnifierWithUnconsumedStatements.create(resultUnifier, remainingStatements);
+        List<JCStatement> impl =
+            consumptionState.result().placeholderImplInReverseOrder().reverse();
+        ControlFlowVisitor.Result implFlow = ControlFlowVisitor.INSTANCE.visitStatements(impl);
+        if (implFlow == implementationFlow()) {
+          List<JCStatement> prevBinding = resultUnifier.getBinding(placeholder().blockKey());
+          if (prevBinding != null && prevBinding.toString().equals(impl.toString())) {
+            return Optional.of(result);
+          } else if (prevBinding == null) {
+            resultUnifier.putBinding(placeholder().blockKey(), impl);
+            return Optional.of(result);
           }
-          return Optional.empty();
-        });
+        }
+      }
+      return Optional.empty();
+    });
   }
 
   @Override
@@ -166,15 +162,13 @@ record UPlaceholderStatement(
       // and as a bare statement or as a return in the @AfterTemplate, we may need to convert.
       Optional<JCExpression> exprBinding = inliner.getOptionalBinding(placeholder().exprKey());
       binding =
-          binding.or(
-              () ->
-                  exprBinding.map(
-                      (JCExpression expr) ->
-                          switch (implementationFlow()) {
-                            case NEVER_EXITS -> List.of(inliner.maker().Exec(expr));
-                            case ALWAYS_RETURNS -> List.of(inliner.maker().Return(expr));
-                            default -> throw new AssertionError();
-                          }));
+          binding.or(() ->
+              exprBinding.map((JCExpression expr) ->
+                  switch (implementationFlow()) {
+                    case NEVER_EXITS -> List.of(inliner.maker().Exec(expr));
+                    case ALWAYS_RETURNS -> List.of(inliner.maker().Return(expr));
+                    default -> throw new AssertionError();
+                  }));
       return UPlaceholderExpression.copier(arguments(), inliner).copy(binding.get(), inliner);
     } catch (UncheckedCouldNotResolveImportException e) {
       throw e.getCause();

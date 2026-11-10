@@ -72,10 +72,9 @@ public class ThreadLocalUsage extends BugChecker implements NewClassTreeMatcher 
     if (Streams.stream(state.getPath())
         .filter(ClassTree.class::isInstance)
         .map(ClassTree.class::cast)
-        .anyMatch(
-            c ->
-                hasDirectAnnotationWithSimpleName(getSymbol(c), "Singleton")
-                    || isSubtype(getType(c), COM_GOOGLE_INJECT_SCOPE, state))) {
+        .anyMatch(c ->
+            hasDirectAnnotationWithSimpleName(getSymbol(c), "Singleton")
+                || isSubtype(getType(c), COM_GOOGLE_INJECT_SCOPE, state))) {
       // The instance X thread issue doesn't apply if there's only one instance.
       return NO_MATCH;
     }

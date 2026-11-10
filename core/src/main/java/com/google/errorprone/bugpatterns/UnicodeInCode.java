@@ -103,17 +103,14 @@ public final class UnicodeInCode extends BugChecker implements CompilationUnitTr
     return ImmutableRangeSet.unionOf(
         concat(
                 tokens.stream()
-                    .filter(
-                        t ->
-                            t.kind().equals(TokenKind.STRINGLITERAL)
-                                || t.kind().equals(TokenKind.CHARLITERAL))
+                    .filter(t ->
+                        t.kind().equals(TokenKind.STRINGLITERAL)
+                            || t.kind().equals(TokenKind.CHARLITERAL))
                     .map(t -> Range.closed(t.pos(), t.endPos())),
                 tokens.stream()
                     .flatMap(t -> t.comments().stream())
-                    .map(
-                        c ->
-                            Range.closed(
-                                c.getSourcePos(0), c.getSourcePos(0) + c.getText().length())))
+                    .map(c ->
+                        Range.closed(c.getSourcePos(0), c.getSourcePos(0) + c.getText().length())))
             .collect(toImmutableList()));
   }
 }

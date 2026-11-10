@@ -45,19 +45,17 @@ import javax.inject.Inject;
 public final class ExtendsAutoValue extends BugChecker implements ClassTreeMatcher {
 
   private static final Supplier<ImmutableSet<Name>> AUTOS =
-      VisitorState.memoize(
-          s ->
-              ImmutableSet.of(
-                  AUTO_ONE_OF_ANNOTATION.binaryName(s), AUTO_VALUE_ANNOTATION.binaryName(s)));
+      VisitorState.memoize(s ->
+          ImmutableSet.of(
+              AUTO_ONE_OF_ANNOTATION.binaryName(s), AUTO_VALUE_ANNOTATION.binaryName(s)));
 
   private static final Supplier<ImmutableSet<Name>> AUTOS_AND_BUILDERS =
-      VisitorState.memoize(
-          s ->
-              ImmutableSet.of(
-                  AUTO_BUILDER_ANNOTATION.binaryName(s),
-                  AUTO_ONE_OF_ANNOTATION.binaryName(s),
-                  AUTO_VALUE_ANNOTATION.binaryName(s),
-                  AUTO_VALUE_BUILDER_ANNOTATION.binaryName(s)));
+      VisitorState.memoize(s ->
+          ImmutableSet.of(
+              AUTO_BUILDER_ANNOTATION.binaryName(s),
+              AUTO_ONE_OF_ANNOTATION.binaryName(s),
+              AUTO_VALUE_ANNOTATION.binaryName(s),
+              AUTO_VALUE_BUILDER_ANNOTATION.binaryName(s)));
 
   private final boolean testBuilders;
   private final Supplier<ImmutableSet<Name>> autos;
@@ -85,16 +83,14 @@ public final class ExtendsAutoValue extends BugChecker implements ClassTreeMatch
         .filter(annotations -> !annotations.isEmpty())
         .findFirst()
         .filter(unused -> !isInGeneratedCode(state))
-        .map(
-            annotations -> {
-              String name = annotations.iterator().next().toString();
-              name = name.substring(name.lastIndexOf('.') + 1); // Strip package
-              name = name.replace('$', '.'); // AutoValue$Builder -> AutoValue.Builder
-              return buildDescription(tree)
-                  .setMessage(
-                      String.format("Do not extend an @%s class in non-generated code.", name))
-                  .build();
-            })
+        .map(annotations -> {
+          String name = annotations.iterator().next().toString();
+          name = name.substring(name.lastIndexOf('.') + 1); // Strip package
+          name = name.replace('$', '.'); // AutoValue$Builder -> AutoValue.Builder
+          return buildDescription(tree)
+              .setMessage(String.format("Do not extend an @%s class in non-generated code.", name))
+              .build();
+        })
         .orElse(Description.NO_MATCH);
   }
 

@@ -92,19 +92,17 @@ abstract class AbstractAsyncTypeReturnsNull extends BugChecker
     Type asyncType = state.getTypeFromString(asyncClass.getName());
     boolean matches =
         stream(state.getPath())
-            .map(
-                t ->
-                    switch (t) {
-                      case MethodTree methodTree ->
-                          findSuperMethods(getSymbol(methodTree), state.getTypes()).stream()
-                              .anyMatch(
-                                  superMethod ->
-                                      superMethod.owner != null
-                                          && isSameType(superMethod.owner.type, asyncType, state));
-                      case LambdaExpressionTree lambdaTree ->
-                          lambdaOverridesAsyncMethod(lambdaTree, state);
-                      default -> null;
-                    })
+            .map(t ->
+                switch (t) {
+                  case MethodTree methodTree ->
+                      findSuperMethods(getSymbol(methodTree), state.getTypes()).stream()
+                          .anyMatch(superMethod ->
+                              superMethod.owner != null
+                                  && isSameType(superMethod.owner.type, asyncType, state));
+                  case LambdaExpressionTree lambdaTree ->
+                      lambdaOverridesAsyncMethod(lambdaTree, state);
+                  default -> null;
+                })
             .filter(match -> match != null)
             .findFirst()
             .orElse(false);
@@ -124,10 +122,8 @@ abstract class AbstractAsyncTypeReturnsNull extends BugChecker
         && concat(
                 Stream.of(ms),
                 streamSuperMethods((MethodSymbol) descriptorSymbol, state.getTypes()))
-            .anyMatch(
-                superMethod ->
-                    superMethod.owner != null
-                        && isSameType(superMethod.owner.type, asyncType, state));
+            .anyMatch(superMethod ->
+                superMethod.owner != null && isSameType(superMethod.owner.type, asyncType, state));
   }
 
   protected SuggestedFix provideFix(ExpressionTree tree) {

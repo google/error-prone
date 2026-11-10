@@ -46,10 +46,9 @@ public class LockOnNonEnclosingClassLiteral extends BugChecker implements Synchr
   public Description matchSynchronized(SynchronizedTree tree, VisitorState state) {
     ExpressionTree lock = stripParentheses(tree.getExpression());
     Matcher<SynchronizedTree> lockOnEnclosingClassMatcher =
-        Matchers.enclosingClass(
-            (t, s) ->
-                ASTHelpers.getSymbol(t)
-                    .equals(ASTHelpers.getSymbol(((MemberSelectTree) lock).getExpression())));
+        Matchers.enclosingClass((t, s) ->
+            ASTHelpers.getSymbol(t)
+                .equals(ASTHelpers.getSymbol(((MemberSelectTree) lock).getExpression())));
 
     if (isClassLiteral(lock) && !lockOnEnclosingClassMatcher.matches(tree, state)) {
       return describeMatch(tree);

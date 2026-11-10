@@ -66,11 +66,10 @@ public class ImmutableRefactoring extends BugChecker implements CompilationUnitT
             ImmutableSet.of(JSR_305_IMMUTABLE, Immutable.class.getName()));
     Optional<? extends ImportTree> immutableImport =
         tree.getImports().stream()
-            .filter(
-                i -> {
-                  Symbol s = ASTHelpers.getSymbol(i.getQualifiedIdentifier());
-                  return s != null && s.getQualifiedName().contentEquals(JSR_305_IMMUTABLE);
-                })
+            .filter(i -> {
+              Symbol s = ASTHelpers.getSymbol(i.getQualifiedIdentifier());
+              return s != null && s.getQualifiedName().contentEquals(JSR_305_IMMUTABLE);
+            })
             .findFirst();
     if (immutableImport.isEmpty()) {
       return Description.NO_MATCH;
