@@ -104,6 +104,11 @@ public final class FutureReturnValueIgnored extends AbstractReturnValueIgnored
               && ASTHelpers.isSubtype(
                   ASTHelpers.getUpperBound(resultType, state.getTypes()), futureType, state);
         }
+        Type returnType = sym.getReturnType();
+        if (!ASTHelpers.isSubtype(
+            ASTHelpers.getUpperBound(returnType, state.getTypes()), futureType, state)) {
+          return false;
+        }
         if (hasAnnotation(sym, CAN_IGNORE_RETURN_VALUE_ANNOTATION, state)) {
           return false;
         }
@@ -119,12 +124,7 @@ public final class FutureReturnValueIgnored extends AbstractReturnValueIgnored
             return false;
           }
         }
-        if (IGNORED_METHODS.matches(tree, state)) {
-          return false;
-        }
-        Type returnType = sym.getReturnType();
-        return ASTHelpers.isSubtype(
-            ASTHelpers.getUpperBound(returnType, state.getTypes()), futureType, state);
+        return !IGNORED_METHODS.matches(tree, state);
       };
 
   @Inject
