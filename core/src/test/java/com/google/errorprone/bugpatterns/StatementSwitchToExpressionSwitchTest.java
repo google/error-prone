@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.junit.Assert.assertThrows;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.BugCheckerRefactoringTestHelper.FixChoosers;
@@ -2481,11 +2480,10 @@ public final class StatementSwitchToExpressionSwitchTest {
   }
 
   @Test
-  public void switchByEnum_returnSwitchInLoopWithBreak_deletesRequiredReturnAfterLoop() {
-    // BUG: The statement after the switch becomes unreachable and is deleted.  But the `break`
-    // before the switch survives the fix and still exits the loop, so the loop can still complete
-    // normally and the `return` after it is still reachable, and required.  The fix wrongly deletes
-    // it, and the result does not compile ("missing return statement").
+  public void switchByEnum_returnSwitchInLoopWithBreak_keepsReturnAfterLoop() {
+    // The statement after the switch becomes unreachable and is deleted.  The `break` before the
+    // switch survives the fix and still exits the loop, so the loop can still complete normally
+    // and the `return` after it stays reachable, and required.
     refactoringHelper
         .addInputLines(
             "Test.java",
@@ -2526,11 +2524,10 @@ public final class StatementSwitchToExpressionSwitchTest {
                     case CLUB -> 3;
                   };
                 }
+                return 0;
               }
             }
             """)
-        // The fix does not compile.
-        .allowBreakingChanges()
         .setArgs(
             "-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion",
             "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
@@ -2539,11 +2536,10 @@ public final class StatementSwitchToExpressionSwitchTest {
   }
 
   @Test
-  public void switchByEnum_returnSwitchInDoWhileWithContinue_deletesRequiredReturnAfterLoop() {
-    // BUG: The statement after the switch becomes unreachable and is deleted.  But the `continue`
-    // before the switch survives the fix and still reaches the condition of the `do` loop, so the
-    // loop can still complete normally and the `return` after it is still reachable, and required.
-    // The fix wrongly deletes it, and the result does not compile ("missing return statement").
+  public void switchByEnum_returnSwitchInDoWhileWithContinue_keepsReturnAfterLoop() {
+    // The statement after the switch becomes unreachable and is deleted.  The `continue` before
+    // the switch survives the fix and still reaches the condition of the `do` loop, so the loop
+    // can still complete normally and the `return` after it stays reachable, and required.
     refactoringHelper
         .addInputLines(
             "Test.java",
@@ -2584,11 +2580,10 @@ public final class StatementSwitchToExpressionSwitchTest {
                     case CLUB -> 3;
                   };
                 } while (b);
+                return 0;
               }
             }
             """)
-        // The fix does not compile.
-        .allowBreakingChanges()
         .setArgs(
             "-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion",
             "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
@@ -2597,46 +2592,116 @@ public final class StatementSwitchToExpressionSwitchTest {
   }
 
   @Test
-  public void switchByEnum_returnSwitchFollowedByConvertibleSwitch_overlappingFixesThrow() {
-    // BUG: Converting the first switch makes the second one unreachable, so its fix deletes it.
-    // But the second switch gets its own finding, whose fix rewrites it.  The two fixes overlap,
-    // and applying both throws.
-    BugCheckerRefactoringTestHelper bugCheckerRefactoringTestHelper =
-        refactoringHelper
-            .addInputLines(
-                "Test.java",
-                """
-                class Test {
-                  public int foo(Suit suit, Suit other) {
-                    switch (suit) {
-                      case HEART:
-                      case DIAMOND:
-                        return 1;
-                      case SPADE:
-                        return 2;
-                      case CLUB:
-                        return 3;
-                    }
-                    switch (other) {
-                      case HEART:
-                      case DIAMOND:
-                        return 4;
-                      case SPADE:
-                        return 5;
-                      case CLUB:
-                        return 6;
-                    }
-                    return 0;
+  public void switchByEnum_returnSwitchFollowedByConvertibleSwitch_convertsOnlyTheSecond() {
+    // Converting the first switch would make the second one unreachable and delete it, but the
+    // second switch gets its own finding, whose fix rewrites it.  Fixes that overlap like that
+    // cannot both be applied, so the first switch is not converted.
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              public int foo(Suit suit, Suit other) {
+                switch (suit) {
+                  case HEART:
+                  case DIAMOND:
+                    return 1;
+                  case SPADE:
+                    return 2;
+                  case CLUB:
+                    return 3;
+                }
+                switch (other) {
+                  case HEART:
+                  case DIAMOND:
+                    return 4;
+                  case SPADE:
+                    return 5;
+                  case CLUB:
+                    return 6;
+                }
+                return 0;
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              public int foo(Suit suit, Suit other) {
+                switch (suit) {
+                  case HEART:
+                  case DIAMOND:
+                    return 1;
+                  case SPADE:
+                    return 2;
+                  case CLUB:
+                    return 3;
+                }
+                return switch (other) {
+                  case HEART, DIAMOND -> 4;
+                  case SPADE -> 5;
+                  case CLUB -> 6;
+                };
+              }
+            }
+            """)
+        .setArgs(
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion",
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
+        .setFixChooser(StatementSwitchToExpressionSwitchTest::assertOneFixAndChoose)
+        .doTest();
+  }
+
+  @Test
+  public void switchByEnum_returnSwitchInLoop_deadCodeHoldsOnlyBreak_deletesReturnAfterLoop() {
+    // The statements after the switch become unreachable and are deleted.  They hold the only
+    // `break` out of the loop, so once they are gone the loop cannot complete normally, and the
+    // `return` after it is unreachable too and must also be deleted.
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              public int foo(Suit suit, boolean b) {
+                while (true) {
+                  switch (suit) {
+                    case HEART:
+                    case DIAMOND:
+                      return 1;
+                    case SPADE:
+                      return 2;
+                    case CLUB:
+                      return 3;
+                  }
+                  if (b) {
+                    break;
                   }
                 }
-                """)
-            .expectUnchanged()
-            .setArgs(
-                "-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion",
-                "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
-            .setFixChooser(StatementSwitchToExpressionSwitchTest::assertOneFixAndChoose);
-    AssertionError e = assertThrows(AssertionError.class, bugCheckerRefactoringTestHelper::doTest);
-    assertThat(e).hasMessageThat().contains("overlaps with existing replacements");
+                return 0;
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              public int foo(Suit suit, boolean b) {
+                while (true) {
+                  return switch (suit) {
+                    case HEART, DIAMOND -> 1;
+                    case SPADE -> 2;
+                    case CLUB -> 3;
+                  };
+                }
+              }
+            }
+            """)
+        .setArgs(
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion",
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
+        .setFixChooser(StatementSwitchToExpressionSwitchTest::assertOneFixAndChoose)
+        .doTest();
   }
 
   @Test
