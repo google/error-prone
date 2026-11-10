@@ -1602,6 +1602,9 @@ A call to Binder.clearCallingIdentity() should be followed by Binder.restoreCall
 __[BindingToUnqualifiedCommonType](bugpattern/BindingToUnqualifiedCommonType)__<br>
 This code declares a binding for a common value type without a Qualifier annotation.
 
+__[BootclasspathShadowing](bugpattern/BootclasspathShadowing)__<br>
+Top-level class shadows a class on the compilation bootclasspath or platform
+
 __[BuilderReturnThis](bugpattern/BuilderReturnThis)__<br>
 Builder instance method does not return &#39;this&#39;
 
