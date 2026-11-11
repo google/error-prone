@@ -17,12 +17,12 @@
 package com.google.errorprone.bugpatterns.argumentselectiondefects;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
+import static java.util.Objects.requireNonNull;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
-import com.google.common.collect.Streams;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.names.NamingConventions;
 import com.google.errorprone.util.ASTHelpers;
@@ -44,14 +44,14 @@ import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.comp.Check;
 import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
 import java.util.List;
-import java.util.Optional;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Represents either a formal or actual parameter and its position in the argument list.
  *
  * @author andrewrice@google.com (Andrew Rice)
  */
-record Parameter(String name, Type type, int index, String text, Kind kind, boolean constant) {
+final class Parameter {
   private static final ImmutableSet<String> METHODNAME_PREFIXES_TO_REMOVE =
       ImmutableSet.of("get", "set", "is");
 
@@ -61,41 +61,79 @@ record Parameter(String name, Type type, int index, String text, Kind kind, bool
   /** We use this placeholder to indicate a name which we couldn't get a canonical string for. */
   @VisibleForTesting static final String NAME_NOT_PRESENT = "*NOT_PRESENT*";
 
+  private final Type type;
+  private final int index;
+  private final @Nullable VarSymbol symbol;
+  private final @Nullable Tree tree;
+
+  /**
+   * Computed on first use, since most calls are rejected before any names are compared, and the
+   * name of each parameter is used for many pairs once they are.
+   */
+  private @Nullable String name;
+
+  private Parameter(Type type, int index, @Nullable VarSymbol symbol, @Nullable Tree tree) {
+    this.type = type;
+    this.index = index;
+    this.symbol = symbol;
+    this.tree = tree;
+  }
+
   static ImmutableList<Parameter> createListFromVarSymbols(List<VarSymbol> varSymbols) {
-    return Streams.mapWithIndex(
-            varSymbols.stream(),
-            (s, i) ->
-                new Parameter(
-                    s.getSimpleName().toString(),
-                    s.asType(),
-                    (int) i,
-                    s.getSimpleName().toString(),
-                    Kind.IDENTIFIER,
-                    false))
-        .collect(toImmutableList());
+    ImmutableList.Builder<Parameter> result = ImmutableList.builder();
+    int index = 0;
+    for (VarSymbol s : varSymbols) {
+      result.add(new Parameter(s.asType(), index++, s, /* tree= */ null));
+    }
+    return result.build();
   }
 
   static ImmutableList<Parameter> createListFromExpressionTrees(List<? extends Tree> trees) {
-    return Streams.mapWithIndex(
-            trees.stream(),
-            (t, i) ->
-                new Parameter(
-                    getArgumentName(t),
-                    Optional.ofNullable(
-                            t instanceof ExpressionTree expressionTree
-                                ? ASTHelpers.getResultType(expressionTree)
-                                : ASTHelpers.getType(t))
-                        .orElse(Type.noType),
-                    (int) i,
-                    t.toString(),
-                    t.getKind(),
-                    ASTHelpers.constValue(t) != null))
-        .collect(toImmutableList());
+    ImmutableList.Builder<Parameter> result = ImmutableList.builder();
+    int index = 0;
+    for (Tree t : trees) {
+      Type type =
+          t instanceof ExpressionTree expressionTree
+              ? ASTHelpers.getResultType(expressionTree)
+              : ASTHelpers.getType(t);
+      result.add(new Parameter(type != null ? type : Type.noType, index++, /* symbol= */ null, t));
+    }
+    return result.build();
   }
 
   static ImmutableList<Parameter> createListFromVariableTrees(List<? extends VariableTree> trees) {
     return createListFromVarSymbols(
         trees.stream().map(ASTHelpers::getSymbol).collect(toImmutableList()));
+  }
+
+  Type type() {
+    return type;
+  }
+
+  int index() {
+    return index;
+  }
+
+  String name() {
+    if (name == null) {
+      name =
+          symbol != null
+              ? symbol.getSimpleName().toString()
+              : getArgumentName(requireNonNull(tree));
+    }
+    return name;
+  }
+
+  String text() {
+    return tree != null ? tree.toString() : name();
+  }
+
+  Kind kind() {
+    return tree != null ? tree.getKind() : Kind.IDENTIFIER;
+  }
+
+  boolean constant() {
+    return tree != null && ASTHelpers.constValue(tree) != null;
   }
 
   /**

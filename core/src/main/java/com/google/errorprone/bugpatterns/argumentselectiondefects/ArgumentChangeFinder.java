@@ -87,15 +87,22 @@ record ArgumentChangeFinder(
     Costs costs = new Costs(formals, actuals);
 
     /* Set the distance between a pair to Inf if not assignable */
-    costs
-        .viablePairs()
-        .filter(ParameterPair::isAlternativePairing)
-        .filter(p -> !p.actual().isAssignableTo(p.formal(), invocationInfo.state()))
-        .forEach(p -> costs.invalidatePair(p));
+    boolean anyAssignable = false;
+    for (Parameter formal : formals) {
+      for (Parameter actual : actuals) {
+        if (formal.index() != actual.index()) {
+          if (actual.isAssignableTo(formal, invocationInfo.state())) {
+            anyAssignable = true;
+          } else {
+            costs.invalidatePair(ParameterPair.create(formal, actual));
+          }
+        }
+      }
+    }
 
     /* If there are no formal parameters which are assignable to any alternative actual parameters
     then we can stop without trying to look for permutations */
-    if (costs.viablePairs().noneMatch(ParameterPair::isAlternativePairing)) {
+    if (!anyAssignable) {
       return Changes.empty();
     }
 

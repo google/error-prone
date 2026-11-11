@@ -107,4 +107,23 @@ public class NamingConventionsTest {
 
     assertThat(lowerUnderscore).isEqualTo("camel_case");
   }
+
+  @Test
+  public void splitToLowercaseTerms_edgeCases() {
+    assertThat(NamingConventions.splitToLowercaseTerms("")).isEmpty();
+    assertThat(NamingConventions.splitToLowercaseTerms("123")).containsExactly("123");
+    assertThat(NamingConventions.splitToLowercaseTerms("_1")).containsExactly("1");
+    assertThat(NamingConventions.splitToLowercaseTerms("x_")).containsExactly("x");
+    assertThat(NamingConventions.splitToLowercaseTerms("a$1")).containsExactly("a$", "1").inOrder();
+    assertThat(NamingConventions.splitToLowercaseTerms("A1B2"))
+        .containsExactly("a1", "b", "2")
+        .inOrder();
+    assertThat(NamingConventions.splitToLowercaseTerms("aB_C"))
+        .containsExactly("a", "b", "c")
+        .inOrder();
+    assertThat(NamingConventions.splitToLowercaseTerms("HTTPServer")).containsExactly("httpserver");
+    assertThat(NamingConventions.splitToLowercaseTerms("\u00c9t\u00e9A1"))
+        .containsExactly("\u00e9t\u00e9a", "1")
+        .inOrder();
+  }
 }

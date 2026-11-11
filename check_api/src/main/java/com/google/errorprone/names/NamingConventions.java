@@ -16,25 +16,18 @@
 
 package com.google.errorprone.names;
 
-import static com.google.common.collect.ImmutableList.toImmutableList;
-
-import com.google.common.base.Splitter;
+import com.google.common.base.Ascii;
+import com.google.common.base.CharMatcher;
 import com.google.common.collect.ImmutableList;
-import java.util.stream.Collectors;
-import org.safere.Pattern;
+import java.util.Locale;
 
 /** Utility functions for dealing with Java naming conventions */
 public final class NamingConventions {
 
-  private static final Pattern ONLY_UNDERSCORES = Pattern.compile("^_+$");
-
-  private static final String UNDERSCORE = "_";
-  private static final String CASE_TRANSITION = "(?<=[a-z0-9])(?=[A-Z])";
-  private static final String TRAILING_DIGITS = "(?<![0-9_])(?=[0-9]+$)";
-
-  private static final Splitter TERM_SPLITTER =
-      Splitter.onPattern(String.format("%s|%s|%s", UNDERSCORE, CASE_TRANSITION, TRAILING_DIGITS))
-          .omitEmptyStrings();
+  private static final CharMatcher UNDERSCORE = CharMatcher.is('_');
+  private static final CharMatcher ASCII_DIGIT = CharMatcher.inRange('0', '9');
+  private static final CharMatcher NON_ASCII_DIGIT = ASCII_DIGIT.negate();
+  private static final CharMatcher LOWER_OR_DIGIT = CharMatcher.inRange('a', 'z').or(ASCII_DIGIT);
 
   /**
    * Split a Java name into terms based on either Camel Case or Underscores. We also split digits at
@@ -44,18 +37,39 @@ public final class NamingConventions {
    * @return a list of the terms in the name, in order and converted to lowercase
    */
   public static ImmutableList<String> splitToLowercaseTerms(String identifierName) {
-    if (ONLY_UNDERSCORES.matcher(identifierName).matches()) {
+    if (!identifierName.isEmpty() && UNDERSCORE.matchesAllOf(identifierName)) {
       // Degenerate case of names which contain only underscore
       return ImmutableList.of(identifierName);
     }
-    return TERM_SPLITTER
-        .splitToStream(identifierName)
-        .map(String::toLowerCase)
-        .collect(toImmutableList());
+    int trailingDigits = NON_ASCII_DIGIT.lastIndexIn(identifierName) + 1;
+    ImmutableList.Builder<String> terms = ImmutableList.builder();
+    int start = 0;
+    for (int i = 0; i < identifierName.length(); i++) {
+      char c = identifierName.charAt(i);
+      if (c == '_') {
+        addTerm(terms, identifierName, start, i);
+        start = i + 1;
+      } else if (i == trailingDigits
+          || (i > 0
+              && Ascii.isUpperCase(c)
+              && LOWER_OR_DIGIT.matches(identifierName.charAt(i - 1)))) {
+        addTerm(terms, identifierName, start, i);
+        start = i;
+      }
+    }
+    addTerm(terms, identifierName, start, identifierName.length());
+    return terms.build();
+  }
+
+  private static void addTerm(
+      ImmutableList.Builder<String> terms, String name, int start, int end) {
+    if (start < end) {
+      terms.add(name.substring(start, end).toLowerCase(Locale.ROOT));
+    }
   }
 
   public static String convertToLowerUnderscore(String identifierName) {
-    return splitToLowercaseTerms(identifierName).stream().collect(Collectors.joining("_"));
+    return String.join("_", splitToLowercaseTerms(identifierName));
   }
 
   private NamingConventions() {}

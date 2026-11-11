@@ -27,8 +27,4 @@ record ParameterPair(Parameter formal, Parameter actual) {
   static ParameterPair create(Parameter formal, Parameter actual) {
     return new ParameterPair(formal, actual);
   }
-
-  boolean isAlternativePairing() {
-    return formal().index() != actual().index();
-  }
 }

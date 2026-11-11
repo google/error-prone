@@ -19,6 +19,7 @@ package com.google.errorprone.bugpatterns.argumentselectiondefects;
 import static com.google.errorprone.util.ASTHelpers.canonicalConstructor;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 
+import com.google.common.base.CharMatcher;
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.VisitorState;
 import com.sun.source.tree.BindingPatternTree;
@@ -43,6 +44,8 @@ record InvocationInfo(
     ImmutableList<Tree> actualParameters,
     ImmutableList<VarSymbol> formalParameters,
     VisitorState state) {
+  private static final CharMatcher ASCII_DIGIT = CharMatcher.inRange('0', '9');
+
   static InvocationInfo createFromMethodInvocation(
       MethodInvocationTree tree, MethodSymbol symbol, VisitorState state) {
     return new InvocationInfo(
@@ -91,8 +94,7 @@ record InvocationInfo(
     other sources. When it does this for an inner class sometimes it returns the implicit this
     pointer for the outer class as the first name (but not the first type). If we see this, then
     just abort */
-    if (!formalParameters.isEmpty()
-        && formalParameters.getFirst().getSimpleName().toString().matches("this\\$[0-9]+")) {
+    if (!formalParameters.isEmpty() && isOuterThisParameter(formalParameters.getFirst())) {
       return ImmutableList.of();
     }
 
@@ -102,5 +104,13 @@ record InvocationInfo(
         invokedMethodSymbol.isVarArgs() ? formalParameters.size() - 1 : formalParameters.size();
 
     return ImmutableList.copyOf(formalParameters.subList(0, size));
+  }
+
+  private static boolean isOuterThisParameter(VarSymbol parameter) {
+    String prefix = "this$";
+    String name = parameter.getSimpleName().toString();
+    return name.startsWith(prefix)
+        && name.length() > prefix.length()
+        && ASCII_DIGIT.matchesAllOf(name.substring(prefix.length()));
   }
 }
