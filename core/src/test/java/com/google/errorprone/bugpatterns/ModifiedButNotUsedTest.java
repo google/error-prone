@@ -457,4 +457,80 @@ public final class ModifiedButNotUsedTest {
             """)
         .doTest();
   }
+
+  @Test
+  public void parametersLoopsPrimitivesAndResourceVariables() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import java.util.ArrayList;
+            import java.util.List;
+
+            class Test {
+              static class CloseableList extends ArrayList<Integer> implements AutoCloseable {
+                @Override
+                public void close() {}
+              }
+
+              int test(List<Integer> param, final List<Integer> finalParam, List<List<Integer>> all) {
+                param.add(1);
+                finalParam.add(2);
+                int count = param.size();
+                int[] array = new int[count];
+                for (List<Integer> item : all) {
+                  item.add(array.length);
+                }
+                List<Integer> alias = count > 0 ? param : finalParam;
+                alias.add(3);
+                // BUG: Diagnostic contains:
+                try (CloseableList res = new CloseableList()) {
+                  res.add(4);
+                }
+                return count;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void memberReferenceInitializer() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import java.util.ArrayList;
+            import java.util.Collection;
+            import java.util.Iterator;
+
+            class Test {
+              /** A collection that is also a functional interface. */
+              interface CollectionFactory<E> extends Collection<E> {
+                Object create();
+
+                default int size() { return 0; }
+                default boolean isEmpty() { return true; }
+                default boolean contains(Object o) { return false; }
+                default Iterator<E> iterator() { return null; }
+                default Object[] toArray() { return null; }
+                default <T> T[] toArray(T[] a) { return a; }
+                default boolean add(E e) { return false; }
+                default boolean remove(Object o) { return false; }
+                default boolean containsAll(Collection<?> c) { return false; }
+                default boolean addAll(Collection<? extends E> c) { return false; }
+                default boolean removeAll(Collection<?> c) { return false; }
+                default boolean retainAll(Collection<?> c) { return false; }
+                default void clear() {}
+              }
+
+              void test() {
+                // BUG: Diagnostic contains:
+                CollectionFactory<Integer> factory = ArrayList::new;
+                factory.add(1);
+              }
+            }
+            """)
+        .doTest();
+  }
 }

@@ -38,7 +38,6 @@ import static com.google.errorprone.predicates.TypePredicates.isDescendantOfAny;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.isConsideredFinal;
-import static com.google.errorprone.util.ASTHelpers.streamReceivers;
 import static java.util.stream.Collectors.joining;
 
 import com.google.common.collect.ImmutableList;
@@ -54,10 +53,11 @@ import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.SideEffectAnalysis;
 import com.google.errorprone.util.TargetType;
 import com.sun.source.tree.AssignmentTree;
-import com.sun.source.tree.ClassTree;
+import com.sun.source.tree.EnhancedForLoopTree;
 import com.sun.source.tree.ExpressionStatementTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
+import com.sun.source.tree.MemberReferenceTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.NewClassTree;
@@ -69,10 +69,12 @@ import com.sun.source.util.TreePath;
 import com.sun.source.util.TreePathScanner;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
+import com.sun.tools.javac.code.TypeTag;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Stream;
+import javax.lang.model.element.ElementKind;
 import org.safere.Pattern;
 
 /**
@@ -187,18 +189,39 @@ public class ModifiedButNotUsed extends BugChecker
     if (!isConsideredFinal(symbol)) {
       return NO_MATCH;
     }
-    if (state.getPath().getParentPath().getLeaf() instanceof ClassTree) {
+    // Skip fields, parameters, catch parameters, and pattern binding variables: fields are out of
+    // scope, and final/effectively-final parameters or bindings cannot be assigned an initializer.
+    if (symbol.getKind() != ElementKind.LOCAL_VARIABLE
+        && symbol.getKind() != ElementKind.RESOURCE_VARIABLE) {
+      return NO_MATCH;
+    }
+    // Avoid expensive COLLECTION_TYPE / PROTO_TYPE subtype checks on primitives, arrays,
+    // enhanced-for variables (which have no initializer), and other initializers (since
+    // NEW_COLLECTION and newFluentChain only match constructor calls, method invocations, or member
+    // references).
+    if (symbol.type != null && (symbol.type.isPrimitive() || symbol.type.hasTag(TypeTag.ARRAY))) {
+      return NO_MATCH;
+    }
+    if (state.getPath().getParentPath().getLeaf() instanceof EnhancedForLoopTree) {
+      return NO_MATCH;
+    }
+    ExpressionTree initializer = tree.getInitializer();
+    if (initializer != null
+        && !(initializer instanceof NewClassTree
+            || initializer instanceof MethodInvocationTree
+            || initializer instanceof MemberReferenceTree)) {
       return NO_MATCH;
     }
     var name = symbol.getSimpleName().toString();
     if (name.startsWith("unused") || name.equals("ignored")) {
       return NO_MATCH;
     }
-    if (!COLLECTION_TYPE.matches(tree, state) && !PROTO_TYPE.matches(tree, state)) {
+    boolean isCollectionType = COLLECTION_TYPE.matches(tree, state);
+    if (!isCollectionType && !PROTO_TYPE.matches(tree, state)) {
       return NO_MATCH;
     }
     List<TreePath> initializers = new ArrayList<>();
-    if (tree.getInitializer() == null) {
+    if (initializer == null) {
       new TreePathScanner<Void, Void>() {
         @Override
         public Void visitAssignment(AssignmentTree node, Void unused) {
@@ -209,17 +232,17 @@ public class ModifiedButNotUsed extends BugChecker
         }
       }.scan(state.getPath().getParentPath(), null);
     } else {
-      initializers.add(new TreePath(state.getPath(), tree.getInitializer()));
+      initializers.add(new TreePath(state.getPath(), initializer));
     }
     if (initializers.size() != 1) {
       return NO_MATCH;
     }
     TreePath initializerPath = getOnlyElement(initializers);
-    ExpressionTree initializer = (ExpressionTree) initializerPath.getLeaf();
+    initializer = (ExpressionTree) initializerPath.getLeaf();
     if (!NEW_COLLECTION.matches(initializer, state) && !newFluentChain(initializer, state)) {
       return NO_MATCH;
     }
-    UnusedScanner isUnusedScanner = new UnusedScanner(symbol, state, getMatcher(tree, state));
+    UnusedScanner isUnusedScanner = new UnusedScanner(symbol, state, getMatcher(isCollectionType));
     isUnusedScanner.scan(state.getPath().getParentPath(), null);
     if (isUnusedScanner.isUsed) {
       return NO_MATCH;
@@ -231,10 +254,8 @@ public class ModifiedButNotUsed extends BugChecker
     return buildDescription(initializer).addAllFixes(isUnusedScanner.buildFixes(removals)).build();
   }
 
-  private static Matcher<IdentifierTree> getMatcher(Tree tree, VisitorState state) {
-    return COLLECTION_TYPE.matches(tree, state)
-        ? (t, s) -> collectionUsed(s)
-        : (t, s) -> fluentBuilderUsed(s);
+  private static Matcher<IdentifierTree> getMatcher(boolean isCollectionType) {
+    return isCollectionType ? (t, s) -> collectionUsed(s) : (t, s) -> fluentBuilderUsed(s);
   }
 
   private static boolean collectionUsed(VisitorState state) {
@@ -288,11 +309,14 @@ public class ModifiedButNotUsed extends BugChecker
    * Whether this is a chain of method invocations terminating in a new proto or collection builder.
    */
   private static boolean newFluentChain(ExpressionTree tree, VisitorState state) {
-    return concat(Stream.of(tree), streamReceivers(tree))
-        .filter(t -> !FLUENT_CHAIN.matches(t, state))
-        .findFirst()
-        .map(t -> FLUENT_CONSTRUCTOR.matches(t, state))
-        .orElse(false);
+    // getReceiver(cur) is only called when FLUENT_CHAIN matches, which guarantees cur is a method
+    // invocation or member reference.
+    for (ExpressionTree cur = tree; cur != null; cur = getReceiver(cur)) {
+      if (!FLUENT_CHAIN.matches(cur, state)) {
+        return FLUENT_CONSTRUCTOR.matches(cur, state);
+      }
+    }
+    return false;
   }
 
   private static final class UnusedScanner extends TreePathScanner<Void, Void> {
