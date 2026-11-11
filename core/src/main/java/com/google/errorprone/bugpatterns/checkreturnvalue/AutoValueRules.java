@@ -19,19 +19,20 @@ package com.google.errorprone.bugpatterns.checkreturnvalue;
 import static com.google.errorprone.bugpatterns.checkreturnvalue.ResultUsePolicy.EXPECTED;
 import static com.google.errorprone.bugpatterns.checkreturnvalue.ResultUsePolicy.OPTIONAL;
 import static com.google.errorprone.util.ASTHelpers.enclosingClass;
+import static com.google.errorprone.util.ASTHelpers.findSuperMethodInType;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import static com.google.errorprone.util.ASTHelpers.isAbstract;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
-import static com.google.errorprone.util.ASTHelpers.streamSuperMethods;
-import static java.util.stream.Stream.concat;
 
+import com.google.errorprone.ClassName;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.checkreturnvalue.Rules.ErrorProneMethodRule;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
+import com.sun.tools.javac.code.Type;
+import com.sun.tools.javac.code.Types;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 /** Rules for {@code @AutoValue}, {@code @AutoValue.Builder}, and {@code @AutoBuilder} types. */
 public final class AutoValueRules {
@@ -83,11 +84,11 @@ public final class AutoValueRules {
     private static final String PACKAGE = "com.google.auto.value.";
 
     private final String simpleAnnotation;
-    private final String qualifiedAnnotation;
+    private final ClassName qualifiedAnnotation;
 
     AbstractAutoRule(String simpleAnnotation) {
       this.simpleAnnotation = simpleAnnotation;
-      this.qualifiedAnnotation = PACKAGE + simpleAnnotation;
+      this.qualifiedAnnotation = ClassName.of(PACKAGE + simpleAnnotation);
     }
 
     @Override
@@ -112,11 +113,17 @@ public final class AutoValueRules {
        *
        * To handle this, we walk up the type hierarchy.
        */
-      return concat(Stream.of(method), streamSuperMethods(method, state.getTypes()))
-          .filter(
-              m -> isAbstract(m) && hasAnnotation(enclosingClass(m), qualifiedAnnotation, state))
-          .findFirst()
-          .map(methodSymbol -> autoMethodPolicy(methodSymbol, enclosingClass(methodSymbol), state));
+      Types types = state.getTypes();
+      for (Type type : types.closure(method.owner.type)) {
+        if (hasAnnotation(type.tsym, qualifiedAnnotation, state)) {
+          MethodSymbol sym =
+              type.tsym.equals(method.owner) ? method : findSuperMethodInType(method, type, types);
+          if (sym != null && isAbstract(sym)) {
+            return Optional.of(autoMethodPolicy(sym, enclosingClass(sym), state));
+          }
+        }
+      }
+      return Optional.empty();
     }
   }
 }

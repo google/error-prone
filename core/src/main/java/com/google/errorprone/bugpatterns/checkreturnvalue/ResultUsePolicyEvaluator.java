@@ -29,6 +29,7 @@ import com.google.errorprone.bugpatterns.checkreturnvalue.ResultUseRule.Evaluati
 import com.google.errorprone.bugpatterns.checkreturnvalue.ResultUseRule.RuleScope;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Optional;
@@ -116,48 +117,43 @@ public final class ResultUsePolicyEvaluator<C, S, M extends S> {
    * apply to it.
    */
   public ResultUsePolicy evaluate(M method, C state) {
-    return evaluateAcrossScopes(
-            method, state, (rule, scope, symbol, context) -> rule.evaluate(symbol, context))
-        .findFirst()
-        .orElse(UNSPECIFIED);
+    // Equivalent to evaluations(method, state).findFirst().map(Evaluation::policy), but avoids the
+    // overhead of streams, since this is called for every invocation whose result is unused. Rules
+    // are evaluated in the same order, stopping at the first one that returns a policy.
+    for (RuleScope scope : methodInfo.scopes(method)) {
+      ImmutableList<ResultUseRule<C, S>> scopeRules = rules.get(scope);
+      Iterator<S> members = methodInfo.scopeMembers(scope, method, state).iterator();
+      while (members.hasNext()) {
+        S symbol = members.next();
+        for (ResultUseRule<C, S> rule : scopeRules) {
+          Optional<ResultUsePolicy> policy = rule.evaluate(symbol, state);
+          if (policy.isPresent()) {
+            return policy.get();
+          }
+        }
+      }
+    }
+    return UNSPECIFIED;
   }
 
   /**
    * Returns a stream of {@link Evaluation}s made by rules starting from the given {@code method}.
    */
   public Stream<Evaluation<S>> evaluations(M method, C state) {
-    return evaluateAcrossScopes(method, state, ResultUseRule::evaluate);
-  }
-
-  /**
-   * Evaluates all rules for each scope against all members of the scope for scopes appropriate to
-   * the {@code method}.
-   */
-  private <R> Stream<R> evaluateAcrossScopes(
-      M method, C state, ScopeEvaluator<C, S, R> scopeEvaluator) {
     return methodInfo.scopes(method).stream()
-        .flatMap(scope -> evaluateForScope(method, state, scopeEvaluator, scope));
+        .flatMap(scope -> evaluateForScope(method, state, scope));
   }
 
   /**
    * Evaluates all rules in a {@code scope} for each member of the {@code scope} for the {@code
    * method}.
    */
-  private <R> Stream<R> evaluateForScope(
-      M method, C state, ScopeEvaluator<C, S, R> scopeEvaluator, RuleScope scope) {
+  private Stream<Evaluation<S>> evaluateForScope(M method, C state, RuleScope scope) {
     ImmutableList<ResultUseRule<C, S>> scopeRules = rules.get(scope);
     return methodInfo
         .scopeMembers(scope, method, state)
-        .flatMap(symbol ->
-            scopeRules.stream()
-                .map(rule -> scopeEvaluator.evaluateForScope(rule, scope, symbol, state)))
+        .flatMap(symbol -> scopeRules.stream().map(rule -> rule.evaluate(scope, symbol, state)))
         .flatMap(Optional::stream);
-  }
-
-  @FunctionalInterface
-  private interface ScopeEvaluator<C, S, R> {
-    /** Evaluates a {@code rule} on a {@code symbol} that is within a {@code scope} for a method. */
-    Optional<R> evaluateForScope(ResultUseRule<C, S> rule, RuleScope scope, S symbol, C context);
   }
 
   /**
