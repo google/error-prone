@@ -101,6 +101,9 @@ public final class AutoValueRules {
 
     @Override
     public Optional<ResultUsePolicy> evaluateMethod(MethodSymbol method, VisitorState state) {
+      if (method.isStatic() || method.isPrivate() || method.isConstructor()) {
+        return Optional.empty();
+      }
       /*
        * Sometimes, calls are made on an object whose static type is one of the AutoValue generated
        * classes:
