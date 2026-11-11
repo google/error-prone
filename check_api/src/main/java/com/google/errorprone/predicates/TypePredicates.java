@@ -16,14 +16,21 @@
 
 package com.google.errorprone.predicates;
 
+import static com.google.common.collect.ImmutableList.toImmutableList;
+import static com.google.common.collect.Streams.stream;
 import static com.google.errorprone.suppliers.Suppliers.fromStrings;
 import static com.google.errorprone.suppliers.Suppliers.typeFromString;
 
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.ClassName;
+import com.google.errorprone.VisitorState;
 import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.util.ASTHelpers;
+import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Type;
+import com.sun.tools.javac.code.TypeTag;
+import com.sun.tools.javac.util.List;
+import org.jspecify.annotations.Nullable;
 
 /** A collection of {@link TypePredicate}s. */
 public final class TypePredicates {
@@ -122,15 +129,66 @@ public final class TypePredicates {
   }
 
   public static TypePredicate isDescendantOfAny(ImmutableList<Supplier<Type>> types) {
-    return (actual, state) ->
-        types.stream().anyMatch(type -> ASTHelpers.isSubtype(actual, type.get(state), state));
+    return (actual, state) -> isSubtypeOfAny(actual, types, state);
   }
 
   /** Match types that are a sub-type of one of the given classes. */
   public static TypePredicate isDescendantOfAnyOf(Iterable<ClassName> types) {
-    ImmutableList<ClassName> classNames = ImmutableList.copyOf(types);
-    return (actual, state) ->
-        classNames.stream().anyMatch(className -> ASTHelpers.isSubtype(actual, className, state));
+    return isDescendantOfAny(
+        stream(types).map(ClassName::asTypeSupplier).collect(toImmutableList()));
+  }
+
+  /**
+   * Returns true if {@link ASTHelpers#isSubtype} is true for {@code actual} and any of the given
+   * types.
+   *
+   * <p>Checking subtyping is relatively expensive, and the lists of types can be long. So this
+   * first checks whether a type's class is in the (cached) supertype closure of {@code actual}, and
+   * skips it if not, as it can't be a supertype.
+   */
+  private static boolean isSubtypeOfAny(
+      @Nullable Type actual, ImmutableList<Supplier<Type>> types, VisitorState state) {
+    if (actual == null) {
+      return false;
+    }
+    Type erasure = state.getTypes().erasure(actual);
+    // Class types (other than Object) that aren't in the closure can't be supertypes, except for
+    // arrays, the null type, and error types (e.g. from a type variable with a missing bound),
+    // which can be subtypes of classes despite not having a closure.
+    @Nullable List<Type> closure =
+        switch (erasure.getTag()) {
+          case CLASS -> state.getTypes().closure(erasure);
+          case ARRAY, BOT, ERROR -> null;
+          default -> List.nil();
+        };
+    for (Supplier<Type> supplier : types) {
+      Type type = supplier.get(state);
+      if (type == null) {
+        continue;
+      }
+      // Object is excluded because it's missing from the closure if a superclass is missing.
+      if (closure != null
+          && type.hasTag(TypeTag.CLASS)
+          && !type.isCompound()
+          && !type.isUnion()
+          && type.tsym != state.getSymtab().objectType.tsym
+          && !contains(closure, type.tsym)) {
+        continue;
+      }
+      if (ASTHelpers.isSubtype(actual, type, state)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  private static boolean contains(List<Type> types, Symbol sym) {
+    for (Type type : types) {
+      if (type.tsym == sym) {
+        return true;
+      }
+    }
+    return false;
   }
 
   public static TypePredicate allOf(TypePredicate... predicates) {
