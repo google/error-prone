@@ -46,6 +46,7 @@ import com.sun.tools.javac.code.Symbol.TypeSymbol;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -72,27 +73,24 @@ public final class SameNameButDifferent extends BugChecker implements Compilatio
     new SuppressibleTreePathScanner<Void, Void>(state) {
       @Override
       public Void visitMemberSelect(MemberSelectTree memberSelectTree, Void unused) {
-        if (!shouldIgnore()) {
-          handle(memberSelectTree);
+        // Check the symbol first: most member selects are field accesses or method calls.
+        if (getSymbol(memberSelectTree) instanceof ClassSymbol symbol && !shouldIgnore()) {
+          handle(memberSelectTree, symbol);
         }
         return super.visitMemberSelect(memberSelectTree, null);
       }
 
       @Override
       public Void visitIdentifier(IdentifierTree identifierTree, Void unused) {
-        if (shouldIgnore()) {
-          return null;
-        }
-        if (!(getSymbol(identifierTree) instanceof ClassSymbol)) {
+        if (!(getSymbol(identifierTree) instanceof ClassSymbol symbol) || shouldIgnore()) {
           return null;
         }
         TreePath enclosingClass =
             findPathFromEnclosingNodeToTopLevel(getCurrentPath(), ClassTree.class);
-        if (enclosingClass != null
-            && getSymbol(enclosingClass.getLeaf()) == getSymbol(identifierTree)) {
+        if (enclosingClass != null && getSymbol(enclosingClass.getLeaf()) == symbol) {
           return null;
         }
-        handle(identifierTree);
+        handle(identifierTree, symbol);
         return null;
       }
 
@@ -105,9 +103,6 @@ public final class SameNameButDifferent extends BugChecker implements Compilatio
       }
 
       private @Nullable String qualifiedName(Tree tree) {
-        if (!hasExplicitSource(tree, state)) {
-          return null;
-        }
         ArrayDeque<Name> parts = new ArrayDeque<>();
         while (tree instanceof MemberSelectTree) {
           MemberSelectTree select = (MemberSelectTree) tree;
@@ -121,7 +116,7 @@ public final class SameNameButDifferent extends BugChecker implements Compilatio
         return Joiner.on('.').join(parts);
       }
 
-      private void handle(Tree tree) {
+      private void handle(Tree tree, ClassSymbol symbol) {
         if (tree instanceof IdentifierTree identifierTree
             && identifierTree.getName().contentEquals("Builder")) {
           return;
@@ -130,15 +125,12 @@ public final class SameNameButDifferent extends BugChecker implements Compilatio
         if (qualifiedName == null) {
           return;
         }
-        Symbol symbol = getSymbol(tree);
-        if (symbol instanceof ClassSymbol) {
-          List<TreePath> treePaths = table.get(qualifiedName, symbol.type.tsym);
-          if (treePaths == null) {
-            treePaths = new ArrayList<>();
-            table.put(qualifiedName, symbol.type.tsym, treePaths);
-          }
-          treePaths.add(getCurrentPath());
+        List<TreePath> treePaths = table.get(qualifiedName, symbol.type.tsym);
+        if (treePaths == null) {
+          treePaths = new ArrayList<>();
+          table.put(qualifiedName, symbol.type.tsym, treePaths);
         }
+        treePaths.add(getCurrentPath());
       }
     }.scan(state.getPath(), null);
 
@@ -146,7 +138,19 @@ public final class SameNameButDifferent extends BugChecker implements Compilatio
     // class.
     Table<String, TypeSymbol, List<TreePath>> trimmedTable = HashBasedTable.create();
     for (Map.Entry<String, Map<TypeSymbol, List<TreePath>>> row : table.rowMap().entrySet()) {
-      Map<TypeSymbol, List<TreePath>> columns = row.getValue();
+      if (row.getValue().size() <= 1) {
+        continue;
+      }
+      // Synthetic trees are filtered out here rather than while scanning, since looking up end
+      // positions is relatively expensive, and most names only ever refer to a single type.
+      Map<TypeSymbol, List<TreePath>> columns = new LinkedHashMap<>();
+      for (Map.Entry<TypeSymbol, List<TreePath>> cell : row.getValue().entrySet()) {
+        List<TreePath> treePaths = cell.getValue();
+        treePaths.removeIf(treePath -> !hasExplicitSource(treePath.getLeaf(), state));
+        if (!treePaths.isEmpty()) {
+          columns.put(cell.getKey(), treePaths);
+        }
+      }
       if (columns.size() <= 1) {
         continue;
       }
