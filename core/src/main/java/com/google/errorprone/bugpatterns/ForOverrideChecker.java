@@ -16,13 +16,9 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.common.collect.ImmutableList.toImmutableList;
-import static com.google.common.collect.Streams.findLast;
-import static com.google.common.collect.Streams.stream;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.util.ASTHelpers.findSuperMethodInType;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
-import static com.google.errorprone.util.ASTHelpers.streamSuperMethods;
-import static java.util.stream.Stream.concat;
 
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugPattern;
@@ -42,7 +38,7 @@ import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.TypeSymbol;
 import com.sun.tools.javac.code.Type;
-import java.util.stream.Stream;
+import com.sun.tools.javac.code.Types;
 import javax.lang.model.element.Modifier;
 import org.jspecify.annotations.Nullable;
 
@@ -68,9 +64,17 @@ public class ForOverrideChecker extends BugChecker
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
     MethodSymbol method = ASTHelpers.getSymbol(tree);
+    if (method.isStatic() || method.isConstructor()) {
+      return Description.NO_MATCH;
+    }
+    // Check this before walking the path to find the current class, since almost all invoked
+    // methods neither are nor override @ForOverride methods.
+    ImmutableList<MethodSymbol> overriddenMethods = getOverriddenMethods(state, method);
+    if (overriddenMethods.isEmpty()) {
+      return Description.NO_MATCH;
+    }
     Type currentClass = getOutermostClass(state);
-
-    if (method.isStatic() || method.isConstructor() || currentClass == null) {
+    if (currentClass == null) {
       return Description.NO_MATCH;
     }
     // allow super.foo() calls to @ForOverride methods from overriding methods
@@ -88,8 +92,6 @@ public class ForOverrideChecker extends BugChecker
         }
       }
     }
-
-    ImmutableList<MethodSymbol> overriddenMethods = getOverriddenMethods(state, method);
 
     for (Symbol overriddenMethod : overriddenMethods) {
       Type declaringClass = ASTHelpers.outermostClass(overriddenMethod).asType();
@@ -194,17 +196,29 @@ public class ForOverrideChecker extends BugChecker
           "getOverriddenMethods may not be called on a static method");
     }
 
-    return concat(Stream.of(method), streamSuperMethods(method, state.getTypes()))
-        .filter(member -> hasAnnotation(member, FOR_OVERRIDE, state))
-        .collect(toImmutableList());
+    // A loop rather than a stream, since this runs for every method invocation.
+    Types types = state.getTypes();
+    ImmutableList.Builder<MethodSymbol> result = ImmutableList.builder();
+    if (hasAnnotation(method, FOR_OVERRIDE, state)) {
+      result.add(method);
+    }
+    for (Type type : types.closure(method.owner.type)) {
+      MethodSymbol superMethod = findSuperMethodInType(method, type, types);
+      if (superMethod != null && hasAnnotation(superMethod, FOR_OVERRIDE, state)) {
+        result.add(superMethod);
+      }
+    }
+    return result.build();
   }
 
   /** Get the outermost class/interface/enum of an element, or null if none. */
   private static @Nullable Type getOutermostClass(VisitorState state) {
-    return findLast(
-            stream(state.getPath())
-                .filter(t -> t instanceof ClassTree)
-                .map(t -> ASTHelpers.getType(t)))
-        .orElse(null);
+    ClassTree outermostClass = null;
+    for (Tree tree : state.getPath()) {
+      if (tree instanceof ClassTree classTree) {
+        outermostClass = classTree;
+      }
+    }
+    return ASTHelpers.getType(outermostClass);
   }
 }
