@@ -110,6 +110,9 @@ public final class ConstantExpressions {
   /**
    * Scans an {@link ExpressionTree} to find anything guaranteed to be false or true if this
    * expression is true.
+   *
+   * <p>{@link #mayImply} and {@link #factKey(ExpressionTree)} mirror the expressions handled here,
+   * so update them when adding new kinds of facts.
    */
   public Truthiness truthiness(ExpressionTree tree, boolean not, VisitorState state) {
     ImmutableSet.Builder<ConstantExpression> requiredTrue = ImmutableSet.builder();
@@ -188,6 +191,54 @@ public final class ConstantExpressions {
     }
 
     return new Truthiness(requiredTrue.build(), requiredFalse.build());
+  }
+
+  /**
+   * Returns whether {@link #truthiness} of {@code tree} may contain a fact with the given {@link
+   * #factKey(ConstantExpression) key}.
+   *
+   * <p>This mirrors the traversal in {@link #truthiness} without calling {@link
+   * #constantExpression}, which matches each method invocation against the known pure methods.
+   */
+  public static boolean mayImply(ExpressionTree tree, boolean not, Object key) {
+    tree = stripParentheses(tree);
+    if (tree instanceof UnaryTree u && u.getKind() == Kind.LOGICAL_COMPLEMENT) {
+      return mayImply(u.getExpression(), !not, key);
+    }
+    if (tree instanceof BinaryTree b
+        && b.getKind() == (not ? Kind.CONDITIONAL_OR : Kind.CONDITIONAL_AND)) {
+      return mayImply(b.getLeftOperand(), not, key) || mayImply(b.getRightOperand(), not, key);
+    }
+    return key.equals(factKey(tree));
+  }
+
+  /**
+   * Returns the {@link #factKey(ConstantExpression) key} that any fact {@link #truthiness} derives
+   * directly from {@code tree} would have, or {@code null} if {@code tree} cannot yield a fact.
+   *
+   * <p>Keys are opaque, and should only be compared using {@link Object#equals}.
+   */
+  public static @Nullable Object factKey(ExpressionTree tree) {
+    tree = stripParentheses(tree);
+    return switch (tree.getKind()) {
+      case EQUAL_TO, NOT_EQUAL_TO -> ConstantExpression.ConstantEquals.class;
+      case METHOD_INVOCATION -> getSymbol(tree);
+      case IDENTIFIER, MEMBER_SELECT ->
+          getSymbol(tree) instanceof VarSymbol sym && isConsideredFinal(sym) ? sym : null;
+      default -> null;
+    };
+  }
+
+  /**
+   * Returns the key of {@code fact}, which must be from a {@link Truthiness}. Equal facts have
+   * equal keys, which match {@link #factKey(ExpressionTree)} for the trees they're derived from.
+   */
+  public static Object factKey(ConstantExpression fact) {
+    return switch (fact) {
+      case ConstantExpression.PureMethodInvocation p -> p.symbol();
+      case ConstantExpression.ConstantEquals unused -> ConstantExpression.ConstantEquals.class;
+      case ConstantExpression.Literal l -> l;
+    };
   }
 
   /** Represents a constant expression. */

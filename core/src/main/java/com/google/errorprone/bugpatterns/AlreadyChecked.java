@@ -18,6 +18,8 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.common.collect.Multisets.removeOccurrences;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.bugpatterns.threadsafety.ConstantExpressions.factKey;
+import static com.google.errorprone.bugpatterns.threadsafety.ConstantExpressions.mayImply;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
@@ -48,9 +50,9 @@ import com.sun.source.tree.ThrowTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.util.TreePath;
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Deque;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 import javax.inject.Inject;
 import org.jspecify.annotations.Nullable;
 
@@ -75,11 +77,11 @@ public final class AlreadyChecked extends BugChecker implements CompilationUnitT
   /** Scans a compilation unit, keeping track of which things are known to be true and false. */
   private final class IfScanner extends SuppressibleTreePathScanner<Void, Void> {
     private final Deque<TreePath> enclosingMethod = new ArrayDeque<>();
-    private final Deque<Set<ConstantExpression>> truthsInMethod = new ArrayDeque<>();
-    private final Deque<Set<ConstantExpression>> falsehoodsInMethod = new ArrayDeque<>();
+    private final Deque<List<Condition>> conditionsInMethod = new ArrayDeque<>();
 
     private final Multiset<ConstantExpression> truths = HashMultiset.create();
     private final Multiset<ConstantExpression> falsehoods = HashMultiset.create();
+    private final List<Condition> pending = new ArrayList<>();
 
     private IfScanner(VisitorState state) {
       super(state);
@@ -87,15 +89,10 @@ public final class AlreadyChecked extends BugChecker implements CompilationUnitT
 
     @Override
     public Void visitIf(IfTree tree, Void unused) {
-      scan(tree.getCondition(), null);
-      Truthiness truthiness =
-          constantExpressions.truthiness(tree.getCondition(), /* not= */ false, state);
-
-      withinScope(truthiness, tree.getThenStatement());
-
-      withinScope(
-          constantExpressions.truthiness(tree.getCondition(), /* not= */ true, state),
-          tree.getElseStatement());
+      ExpressionTree condition = tree.getCondition();
+      scan(condition, null);
+      withinScope(condition, /* not= */ false, tree.getThenStatement());
+      withinScope(condition, /* not= */ true, tree.getElseStatement());
       return null;
     }
 
@@ -132,12 +129,9 @@ public final class AlreadyChecked extends BugChecker implements CompilationUnitT
 
       if (!enclosingMethod.isEmpty()
           && enclosingMethod.getLast().getLeaf().equals(methodPath.getLeaf())) {
-        Truthiness truthiness =
-            constantExpressions.truthiness(ifTree.getCondition(), /* not= */ then, state);
-        truths.addAll(truthiness.requiredTrue());
-        falsehoods.addAll(truthiness.requiredFalse());
-        truthsInMethod.getLast().addAll(truthiness.requiredTrue());
-        falsehoodsInMethod.getLast().addAll(truthiness.requiredFalse());
+        Condition condition = new Condition(ifTree.getCondition(), /* not= */ then);
+        pending.add(condition);
+        conditionsInMethod.getLast().add(condition);
       }
     }
 
@@ -162,42 +156,46 @@ public final class AlreadyChecked extends BugChecker implements CompilationUnitT
 
     private void withinMethod(Runnable runnable) {
       enclosingMethod.addLast(getCurrentPath());
-      truthsInMethod.addLast(new HashSet<>());
-      falsehoodsInMethod.addLast(new HashSet<>());
+      conditionsInMethod.addLast(new ArrayList<>());
 
       runnable.run();
 
       enclosingMethod.removeLast();
-      removeOccurrences(truths, truthsInMethod.removeLast());
-      removeOccurrences(falsehoods, falsehoodsInMethod.removeLast());
+      conditionsInMethod.removeLast().forEach(this::endScope);
     }
 
-    private void withinScope(Truthiness truthiness, Tree tree) {
-      truths.addAll(truthiness.requiredTrue());
-      falsehoods.addAll(truthiness.requiredFalse());
+    private void withinScope(ExpressionTree conditionTree, boolean not, @Nullable Tree tree) {
+      if (tree == null) {
+        return;
+      }
+      Condition condition = new Condition(conditionTree, not);
+      pending.add(condition);
       scan(tree, null);
-      removeOccurrences(truths, truthiness.requiredTrue());
-      removeOccurrences(falsehoods, truthiness.requiredFalse());
+      endScope(condition);
+    }
+
+    private void endScope(Condition condition) {
+      if (condition.truthiness == null) {
+        pending.remove(condition);
+      } else {
+        removeOccurrences(truths, condition.truthiness.requiredTrue());
+        removeOccurrences(falsehoods, condition.truthiness.requiredFalse());
+      }
     }
 
     @Override
     public Void visitConditionalExpression(ConditionalExpressionTree tree, Void unused) {
-      scan(tree.getCondition(), null);
-      Truthiness truthiness =
-          constantExpressions.truthiness(tree.getCondition(), /* not= */ false, state);
-
-      withinScope(truthiness, tree.getTrueExpression());
-
-      withinScope(
-          constantExpressions.truthiness(tree.getCondition(), /* not= */ true, state),
-          tree.getFalseExpression());
+      ExpressionTree condition = tree.getCondition();
+      scan(condition, null);
+      withinScope(condition, /* not= */ false, tree.getTrueExpression());
+      withinScope(condition, /* not= */ true, tree.getFalseExpression());
       return null;
     }
 
     @Override
     public Void scan(Tree tree, Void unused) {
       // Fast path out if we don't know anything.
-      if (truths.isEmpty() && falsehoods.isEmpty()) {
+      if (truths.isEmpty() && falsehoods.isEmpty() && pending.isEmpty()) {
         return super.scan(tree, null);
       }
       // As a heuristic, it's fairly harmless to do `if (a) { foo(a); }`. It's possibly nicer than
@@ -214,6 +212,23 @@ public final class AlreadyChecked extends BugChecker implements CompilationUnitT
       if (tree instanceof IdentifierTree
           && getCurrentPath().getLeaf() instanceof AssignmentTree assignmentTree
           && assignmentTree.getVariable().equals(tree)) {
+        return super.scan(tree, null);
+      }
+
+      Object key = factKey(expressionTree);
+      if (key == null) {
+        return super.scan(tree, null);
+      }
+      pending.removeIf(c -> {
+        if (!mayImply(c.tree, c.not, key)) {
+          return false;
+        }
+        c.truthiness = constantExpressions.truthiness(c.tree, c.not, state);
+        truths.addAll(c.truthiness.requiredTrue());
+        falsehoods.addAll(c.truthiness.requiredFalse());
+        return true;
+      });
+      if (!hasKey(truths, key) && !hasKey(falsehoods, key)) {
         return super.scan(tree, null);
       }
 
@@ -244,5 +259,26 @@ public final class AlreadyChecked extends BugChecker implements CompilationUnitT
           });
       return super.scan(tree, null);
     }
+  }
+
+  /** A condition whose {@link Truthiness} is computed lazily when needed in its scope. */
+  private static final class Condition {
+    final ExpressionTree tree;
+    final boolean not;
+    @Nullable Truthiness truthiness;
+
+    Condition(ExpressionTree tree, boolean not) {
+      this.tree = tree;
+      this.not = not;
+    }
+  }
+
+  private static boolean hasKey(Multiset<ConstantExpression> facts, Object key) {
+    for (ConstantExpression e : facts.elementSet()) {
+      if (key.equals(factKey(e))) {
+        return true;
+      }
+    }
+    return false;
   }
 }

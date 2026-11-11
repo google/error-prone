@@ -650,4 +650,69 @@ public final class AlreadyCheckedTest {
             """)
         .doTest();
   }
+
+  @Test
+  public void staticFieldAccessedViaClass() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              private static final boolean A = Boolean.getBoolean("a");
+
+              public void test() {
+                if (A) {
+                  // BUG: Diagnostic contains: true
+                  if (Test.A) {}
+                }
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void repeatedEarlyReturns_doNotLeakAcrossMethods() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              private final boolean a = true;
+
+              public void f() {
+                if (a) {
+                  return;
+                }
+                // BUG: Diagnostic contains: false
+                if (a) {
+                  return;
+                }
+              }
+
+              public void g() {
+                if (a) {}
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void disjunctionInElse() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              public void test(boolean a, boolean b) {
+                if (a || b) {
+                  // BUG: Diagnostic contains: false
+                } else if (b) {
+                }
+              }
+            }
+            """)
+        .doTest();
+  }
 }
