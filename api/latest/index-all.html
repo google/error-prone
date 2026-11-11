@@ -4336,6 +4336,15 @@ the method invocation.</div>
 </dl>
 <h2 class="title" id="I:F">F</h2>
 <dl class="index">
+<dt><a href="com/google/errorprone/bugpatterns/threadsafety/ConstantExpressions.html#factKey(com.google.errorprone.bugpatterns.threadsafety.ConstantExpressions.ConstantExpression)" class="member-name-link">factKey(ConstantExpressions.ConstantExpression)</a> - Static method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/ConstantExpressions.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ConstantExpressions</a></dt>
+<dd>
+<div class="block">Returns the key of <code>fact</code>, which must be from a <a href="com/google/errorprone/bugpatterns/threadsafety/ConstantExpressions.Truthiness.html" title="class in com.google.errorprone.bugpatterns.threadsafety"><code>ConstantExpressions.Truthiness</code></a>.</div>
+</dd>
+<dt><a href="com/google/errorprone/bugpatterns/threadsafety/ConstantExpressions.html#factKey(com.sun.source.tree.ExpressionTree)" class="member-name-link">factKey(ExpressionTree)</a> - Static method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/ConstantExpressions.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ConstantExpressions</a></dt>
+<dd>
+<div class="block">Returns the <a href="com/google/errorprone/bugpatterns/threadsafety/ConstantExpressions.html#factKey(com.google.errorprone.bugpatterns.threadsafety.ConstantExpressions.ConstantExpression)"><code>key</code></a> that any fact <a href="com/google/errorprone/bugpatterns/threadsafety/ConstantExpressions.html#truthiness(com.sun.source.tree.ExpressionTree,boolean,com.google.errorprone.VisitorState)"><code>ConstantExpressions.truthiness(ExpressionTree, boolean, VisitorState)</code></a> derives
+directly from <code>tree</code> would have, or <code>null</code> if <code>tree</code> cannot yield a fact.</div>
+</dd>
 <dt><a href="com/google/errorprone/bugpatterns/threadsafety/GuardedByExpression.Factory.html#%3Cinit%3E()" class="member-name-link">Factory()</a> - Constructor for class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/GuardedByExpression.Factory.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByExpression.Factory</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/FallThrough.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">FallThrough</a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
@@ -11015,6 +11024,10 @@ statementMatcher</code>.</div>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/refaster/ControlFlowVisitor.Result.html#MAY_RETURN" class="member-name-link">MAY_RETURN</a> - Enum constant in enum class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/ControlFlowVisitor.Result.html" title="enum class in com.google.errorprone.refaster">ControlFlowVisitor.Result</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/bugpatterns/threadsafety/ConstantExpressions.html#mayImply(com.sun.source.tree.ExpressionTree,boolean,java.lang.Object)" class="member-name-link">mayImply(ExpressionTree, boolean, Object)</a> - Static method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/ConstantExpressions.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ConstantExpressions</a></dt>
+<dd>
+<div class="block">Returns whether <a href="com/google/errorprone/bugpatterns/threadsafety/ConstantExpressions.html#truthiness(com.sun.source.tree.ExpressionTree,boolean,com.google.errorprone.VisitorState)"><code>ConstantExpressions.truthiness(ExpressionTree, boolean, VisitorState)</code></a> of <code>tree</code> may contain a fact with the given <a href="com/google/errorprone/bugpatterns/threadsafety/ConstantExpressions.html#factKey(com.google.errorprone.bugpatterns.threadsafety.ConstantExpressions.ConstantExpression)"><code>key</code></a>.</div>
+</dd>
 <dt><a href="com/google/errorprone/refaster/annotation/MayOptionallyUse.html" class="type-name-link" title="annotation interface in com.google.errorprone.refaster.annotation">MayOptionallyUse</a> - Annotation Interface in <a href="com/google/errorprone/refaster/annotation/package-summary.html">com.google.errorprone.refaster.annotation</a></dt>
 <dd>
 <div class="block">Indicates that a parameter to a placeholder method is not required to be used in the

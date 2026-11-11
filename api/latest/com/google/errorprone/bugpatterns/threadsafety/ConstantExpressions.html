@@ -61,6 +61,9 @@ loadScripts(document, 'script');</script>
 <ol class="toc-list">
 <li><a href="#fromFlags(com.google.errorprone.ErrorProneFlags)" tabindex="0">fromFlags(ErrorProneFlags)</a></li>
 <li><a href="#truthiness(com.sun.source.tree.ExpressionTree,boolean,com.google.errorprone.VisitorState)" tabindex="0">truthiness(ExpressionTree, boolean, VisitorState)</a></li>
+<li><a href="#mayImply(com.sun.source.tree.ExpressionTree,boolean,java.lang.Object)" tabindex="0">mayImply(ExpressionTree, boolean, Object)</a></li>
+<li><a href="#factKey(com.sun.source.tree.ExpressionTree)" tabindex="0">factKey(ExpressionTree)</a></li>
+<li><a href="#factKey(com.google.errorprone.bugpatterns.threadsafety.ConstantExpressions.ConstantExpression)" tabindex="0">factKey(ConstantExpressions.ConstantExpression)</a></li>
 <li><a href="#constantExpression(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)" tabindex="0">constantExpression(ExpressionTree, VisitorState)</a></li>
 <li><a href="#isSame(com.sun.source.tree.ExpressionTree,com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)" tabindex="0">isSame(ExpressionTree, ExpressionTree, VisitorState)</a></li>
 <li><a href="#symbolizeImmutableExpression(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)" tabindex="0">symbolizeImmutableExpression(ExpressionTree, VisitorState)</a></li>
@@ -128,6 +131,17 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#constantExpression(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)" class="member-name-link">constantExpression</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&nbsp;tree,
  <a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#factKey(com.google.errorprone.bugpatterns.threadsafety.ConstantExpressions.ConstantExpression)" class="member-name-link">factKey</a><wbr>(<a href="ConstantExpressions.ConstantExpression.html" title="interface in com.google.errorprone.bugpatterns.threadsafety">ConstantExpressions.ConstantExpression</a>&nbsp;fact)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Returns the key of <code>fact</code>, which must be from a <a href="ConstantExpressions.Truthiness.html" title="class in com.google.errorprone.bugpatterns.threadsafety"><code>ConstantExpressions.Truthiness</code></a>.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static @Nullable <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#factKey(com.sun.source.tree.ExpressionTree)" class="member-name-link">factKey</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&nbsp;tree)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Returns the <a href="#factKey(com.google.errorprone.bugpatterns.threadsafety.ConstantExpressions.ConstantExpression)"><code>key</code></a> that any fact <a href="#truthiness(com.sun.source.tree.ExpressionTree,boolean,com.google.errorprone.VisitorState)"><code>truthiness(ExpressionTree, boolean, VisitorState)</code></a> derives
+directly from <code>tree</code> would have, or <code>null</code> if <code>tree</code> cannot yield a fact.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="ConstantExpressions.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ConstantExpressions</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#fromFlags(com.google.errorprone.ErrorProneFlags)" class="member-name-link">fromFlags</a><wbr>(<a href="../../ErrorProneFlags.html" title="class in com.google.errorprone">ErrorProneFlags</a>&nbsp;flags)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
@@ -138,18 +152,25 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns whether <code>aTree</code> and <code>bTree</code> seem to correspond to the same expression.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a><wbr>&lt;<a href="ConstantExpressions.ConstantExpression.PureMethodInvocation.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ConstantExpressions.ConstantExpression.PureMethodInvocation</a>&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#symbolizeImmutableExpression(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)" class="member-name-link">symbolizeImmutableExpression</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&nbsp;tree,
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#mayImply(com.sun.source.tree.ExpressionTree,boolean,java.lang.Object)" class="member-name-link">mayImply</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&nbsp;tree,
+ boolean&nbsp;not,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;key)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Returns whether <a href="#truthiness(com.sun.source.tree.ExpressionTree,boolean,com.google.errorprone.VisitorState)"><code>truthiness(ExpressionTree, boolean, VisitorState)</code></a> of <code>tree</code> may contain a fact with the given <a href="#factKey(com.google.errorprone.bugpatterns.threadsafety.ConstantExpressions.ConstantExpression)"><code>key</code></a>.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a><wbr>&lt;<a href="ConstantExpressions.ConstantExpression.PureMethodInvocation.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ConstantExpressions.ConstantExpression.PureMethodInvocation</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#symbolizeImmutableExpression(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)" class="member-name-link">symbolizeImmutableExpression</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&nbsp;tree,
  <a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns a list of the methods called to get to this expression, as well as a terminating
 variable if needed.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="ConstantExpressions.Truthiness.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ConstantExpressions.Truthiness</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#truthiness(com.sun.source.tree.ExpressionTree,boolean,com.google.errorprone.VisitorState)" class="member-name-link">truthiness</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&nbsp;tree,
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="ConstantExpressions.Truthiness.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ConstantExpressions.Truthiness</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#truthiness(com.sun.source.tree.ExpressionTree,boolean,com.google.errorprone.VisitorState)" class="member-name-link">truthiness</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&nbsp;tree,
  boolean&nbsp;not,
  <a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Scans an <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link"><code>ExpressionTree</code></a> to find anything guaranteed to be false or true if this
 expression is true.</div>
 </div>
@@ -186,7 +207,45 @@ expression is true.</div>
  boolean&nbsp;not,
  <a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
 <div class="block">Scans an <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link"><code>ExpressionTree</code></a> to find anything guaranteed to be false or true if this
-expression is true.</div>
+expression is true.
+
+<p><a href="#mayImply(com.sun.source.tree.ExpressionTree,boolean,java.lang.Object)"><code>mayImply(ExpressionTree, boolean, Object)</code></a> and <a href="#factKey(com.sun.source.tree.ExpressionTree)"><code>factKey(ExpressionTree)</code></a> mirror the expressions handled here,
+so update them when adding new kinds of facts.</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="mayImply(com.sun.source.tree.ExpressionTree,boolean,java.lang.Object)">
+<h3>mayImply</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">mayImply</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&nbsp;tree,
+ boolean&nbsp;not,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;key)</span></div>
+<div class="block">Returns whether <a href="#truthiness(com.sun.source.tree.ExpressionTree,boolean,com.google.errorprone.VisitorState)"><code>truthiness(ExpressionTree, boolean, VisitorState)</code></a> of <code>tree</code> may contain a fact with the given <a href="#factKey(com.google.errorprone.bugpatterns.threadsafety.ConstantExpressions.ConstantExpression)"><code>key</code></a>.
+
+<p>This mirrors the traversal in <a href="#truthiness(com.sun.source.tree.ExpressionTree,boolean,com.google.errorprone.VisitorState)"><code>truthiness(ExpressionTree, boolean, VisitorState)</code></a> without calling <a href="#constantExpression(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)"><code>constantExpression(ExpressionTree, VisitorState)</code></a>, which matches each method invocation against the known pure methods.</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="factKey(com.sun.source.tree.ExpressionTree)">
+<h3>factKey</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">@Nullable <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span>&nbsp;<span class="element-name">factKey</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&nbsp;tree)</span></div>
+<div class="block">Returns the <a href="#factKey(com.google.errorprone.bugpatterns.threadsafety.ConstantExpressions.ConstantExpression)"><code>key</code></a> that any fact <a href="#truthiness(com.sun.source.tree.ExpressionTree,boolean,com.google.errorprone.VisitorState)"><code>truthiness(ExpressionTree, boolean, VisitorState)</code></a> derives
+directly from <code>tree</code> would have, or <code>null</code> if <code>tree</code> cannot yield a fact.
+
+<p>Keys are opaque, and should only be compared using <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#equals(java.lang.Object)" title="class or interface in java.lang" class="external-link"><code>Object.equals(Object)</code></a>.</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="factKey(com.google.errorprone.bugpatterns.threadsafety.ConstantExpressions.ConstantExpression)">
+<h3>factKey</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span>&nbsp;<span class="element-name">factKey</span><wbr><span class="parameters">(<a href="ConstantExpressions.ConstantExpression.html" title="interface in com.google.errorprone.bugpatterns.threadsafety">ConstantExpressions.ConstantExpression</a>&nbsp;fact)</span></div>
+<div class="block">Returns the key of <code>fact</code>, which must be from a <a href="ConstantExpressions.Truthiness.html" title="class in com.google.errorprone.bugpatterns.threadsafety"><code>ConstantExpressions.Truthiness</code></a>. Equal facts have
+equal keys, which match <a href="#factKey(com.sun.source.tree.ExpressionTree)"><code>factKey(ExpressionTree)</code></a> for the trees they're derived from.</div>
 </div>
 </section>
 </li>
