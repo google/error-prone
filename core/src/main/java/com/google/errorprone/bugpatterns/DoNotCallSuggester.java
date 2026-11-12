@@ -39,7 +39,9 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
+import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.MethodTree;
+import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.ThrowTree;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
@@ -112,8 +114,13 @@ public class DoNotCallSuggester extends BugChecker implements MethodTreeMatcher 
       return NO_MATCH;
     }
 
-    // if the single statement is not a ThrowTree, exit
-    if (!(getOnlyElement(tree.getBody().getStatements()) instanceof ThrowTree throwTree)) {
+    // unwrap nested single-statement blocks to find a ThrowTree
+    StatementTree onlyStatement = getOnlyElement(tree.getBody().getStatements());
+    while (onlyStatement instanceof BlockTree block
+        && block.getStatements().size() == 1) {
+      onlyStatement = getOnlyElement(block.getStatements());
+    }
+    if (!(onlyStatement instanceof ThrowTree throwTree)) {
       return NO_MATCH;
     }
 

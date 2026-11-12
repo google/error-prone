@@ -358,4 +358,93 @@ public class DoNotCallSuggesterTest {
             """)
         .doTest();
   }
+
+  @Test
+  public void throwInsideNestedBlock() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            final class Test {
+              // BUG: Diagnostic contains: Always throws java.lang.RuntimeException
+              public final void foo() {
+                {
+                  throw new RuntimeException();
+                }
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void throwInsideDeeplyNestedBlocks() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            final class Test {
+              // BUG: Diagnostic contains: Always throws java.lang.RuntimeException
+              public final void foo() {
+                {
+                  {
+                    throw new RuntimeException();
+                  }
+                }
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void nestedBlockWithMultipleStatements() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            final class Test {
+              public final void foo() {
+                {
+                  System.out.println("hello");
+                  throw new RuntimeException();
+                }
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void nestedEmptyBlock() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            final class Test {
+              public final void foo() {
+                {}
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void statementBeforeNestedThrowingBlock() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            final class Test {
+              public final void foo() {
+                System.out.println("hello");
+                {
+                  throw new RuntimeException();
+                }
+              }
+            }
+            """)
+        .doTest();
+  }
 }
