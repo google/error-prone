@@ -470,4 +470,55 @@ public class TemplateIntegrationTest extends CompilerBasedTest {
         descriptions::add);
     assertThat(descriptions).hasSize(1);
   }
+
+  @Test
+  public void classCastInStatementContext() throws IOException {
+    CodeTransformer transformer =
+        extractRefasterRule(
+            forSourceString(
+                "ClassCastTemplate",
+                """
+                import com.google.errorprone.refaster.annotation.AfterTemplate;
+                import com.google.errorprone.refaster.annotation.BeforeTemplate;
+
+                public class ClassCastTemplate<T> {
+                  @BeforeTemplate
+                  T before(Class<T> clazz, Object o) {
+                    return clazz.cast(o);
+                  }
+
+                  @AfterTemplate
+                  @SuppressWarnings("unchecked")
+                  T after(Object o) {
+                    return (T) o;
+                  }
+                }
+                """));
+
+    JavaFileObject input =
+        forSourceString(
+            "Example",
+            """
+            class Example {
+              void test(Object o) {
+                // TODO(b/583897256): Do not rewrite clazz.cast(o) to (T) o in statement context.
+                String.class.cast(o);
+              }
+            }
+            """);
+
+    JavaFileObject transformedInput =
+        CodeTransformerTestHelper.create(transformer).transform(input);
+
+    assertThat(transformedInput.getCharContent(false).toString())
+        .isEqualTo(
+            """
+            class Example {
+              void test(Object o) {
+                // TODO(b/583897256): Do not rewrite clazz.cast(o) to (T) o in statement context.
+                (String)o;
+              }
+            }
+            """);
+  }
 }
