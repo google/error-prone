@@ -2198,4 +2198,79 @@ public final class Caller {
             """)
         .doTest();
   }
+
+  @Test
+  public void genericBuilderInferredFromRemovedClassParamOnChainedReceiver() {
+    refactoringTestHelper
+        .allowBreakingChanges()
+        .addInputLines(
+            "Client.java",
+            """
+            import com.google.errorprone.annotations.InlineMe;
+            import java.util.List;
+
+            public final class Client {
+              public static final class Builder<T> {
+                public Builder<T> setItems(List<T> items) {
+                  return this;
+                }
+
+                public Client build() {
+                  return new Client();
+                }
+              }
+
+              @Deprecated
+              @InlineMe(replacement = "Client.newBuilder()", imports = "Client")
+              public static <T> Builder<T> newBuilder(Class<T> clazz) {
+                return newBuilder();
+              }
+
+              public static <T> Builder<T> newBuilder() {
+                return new Builder<>();
+              }
+
+              void test(List<String> items) {
+                // TODO(b/583897336): Preserve inferred type argument <String> on Client.newBuilder()
+                // when inlining drops Class<T> parameter on a chained receiver.
+                Client c = Client.newBuilder(String.class).setItems(items).build();
+              }
+            }
+            """)
+        .addOutputLines(
+            "Client.java",
+            """
+            import com.google.errorprone.annotations.InlineMe;
+            import java.util.List;
+
+            public final class Client {
+              public static final class Builder<T> {
+                public Builder<T> setItems(List<T> items) {
+                  return this;
+                }
+
+                public Client build() {
+                  return new Client();
+                }
+              }
+
+              @Deprecated
+              @InlineMe(replacement = "Client.newBuilder()", imports = "Client")
+              public static <T> Builder<T> newBuilder(Class<T> clazz) {
+                return newBuilder();
+              }
+
+              public static <T> Builder<T> newBuilder() {
+                return new Builder<>();
+              }
+
+              void test(List<String> items) {
+                // TODO(b/583897336): Preserve inferred type argument <String> on Client.newBuilder()
+                // when inlining drops Class<T> parameter on a chained receiver.
+                Client c = Client.newBuilder().setItems(items).build();
+              }
+            }
+            """)
+        .doTest();
+  }
 }
