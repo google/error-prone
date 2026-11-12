@@ -470,4 +470,71 @@ public class TemplateIntegrationTest extends CompilerBasedTest {
         descriptions::add);
     assertThat(descriptions).hasSize(1);
   }
+
+  @Test
+  public void instanceOfTypeVariableDoesNotMatchParameterizedTypes() throws IOException {
+    CodeTransformer transformer =
+        extractRefasterRule(
+            forSourceString(
+                "IsInstanceToClazzTemplate",
+                """
+                import com.google.errorprone.refaster.Refaster;
+                import com.google.errorprone.refaster.annotation.AfterTemplate;
+                import com.google.errorprone.refaster.annotation.BeforeTemplate;
+
+                class IsInstanceToClazzTemplate<T> {
+                  @BeforeTemplate
+                  boolean before(Object o) {
+                    return Refaster.<T>isInstance(o);
+                  }
+
+                  @AfterTemplate
+                  boolean after(Object o) {
+                    return Refaster.<T>clazz().isInstance(o);
+                  }
+                }
+                """));
+
+    JavaFileObject input =
+        forSourceString(
+            "Example",
+            """
+            import java.util.List;
+            import java.util.Map;
+
+            class Example<U> {
+              class Inner {}
+
+              boolean test(Object o) {
+                return o instanceof String
+                    || o instanceof List
+                    || o instanceof List<?>
+                    || o instanceof Map.Entry<?, ?>
+                    || o instanceof Example<?>.Inner
+                    || o instanceof List<?>[];
+              }
+            }
+            """);
+    JavaFileObject expectedOutput =
+        forSourceString(
+            "Example",
+            """
+            import java.util.List;
+            import java.util.Map;
+
+            class Example<U> {
+              class Inner {}
+
+              boolean test(Object o) {
+                return String.class.isInstance(o)
+                    || List.class.isInstance(o)
+                    || o instanceof List<?>
+                    || o instanceof Map.Entry<?, ?>
+                    || o instanceof Example<?>.Inner
+                    || o instanceof List<?>[];
+              }
+            }
+            """);
+    expectTransforms(transformer, input, expectedOutput);
+  }
 }
