@@ -20,7 +20,10 @@ import static com.google.errorprone.refaster.Unifier.unifications;
 
 import com.google.auto.value.AutoValue;
 import com.sun.source.tree.InstanceOfTree;
+import com.sun.source.tree.ParameterizedTypeTree;
+import com.sun.source.tree.Tree;
 import com.sun.source.tree.TreeVisitor;
+import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.tree.JCTree.JCInstanceOf;
 import java.lang.reflect.Proxy;
 import org.jspecify.annotations.Nullable;
@@ -87,8 +90,29 @@ abstract class UInstanceOf extends UExpression {
     if (instanceOf.getPattern() != null) {
       return Choice.none();
     }
+    // Don't bind a template type variable to a parameterized type (such as `Foo<?>`), since the
+    // binding might later be inlined somewhere a parameterized type isn't allowed, such as a class
+    // literal (`Refaster.<T>clazz()`), producing uncompilable code like `Foo<?>.class`.
+    if (getType() instanceof UTypeVarIdent && containsTypeArguments(instanceOf.getType())) {
+      return Choice.none();
+    }
     return getExpression()
         .unify(instanceOf.getExpression(), unifier)
         .flatMap(unifications(getType(), instanceOf.getType()));
+  }
+
+  private static boolean containsTypeArguments(Tree tree) {
+    return Boolean.TRUE.equals(
+        new TreeScanner<Boolean, Void>() {
+          @Override
+          public Boolean visitParameterizedType(ParameterizedTypeTree node, Void unused) {
+            return true;
+          }
+
+          @Override
+          public Boolean reduce(Boolean r1, Boolean r2) {
+            return Boolean.TRUE.equals(r1) || Boolean.TRUE.equals(r2);
+          }
+        }.scan(tree, null));
   }
 }
