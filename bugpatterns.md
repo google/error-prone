@@ -1245,7 +1245,7 @@ __[PatternMatchingInstanceof](bugpattern/PatternMatchingInstanceof)__<br>
 This code can be simplified to use a pattern-matching instanceof.
 
 __[PreconditionsCheckNotNullRepeated](bugpattern/PreconditionsCheckNotNullRepeated)__<br>
-Including the first argument of checkNotNull in the failure message is not useful, as it will always be &#96;null&#96;.
+Including the first argument of checkNotNull (or verifyNotNull) in the failure message is not useful, as it will always be &#96;null&#96;.
 
 __[PreferCharsetOverload](bugpattern/PreferCharsetOverload)__<br>
 Prefer calling overloads that accept a Charset over those that accept a String encoding name.

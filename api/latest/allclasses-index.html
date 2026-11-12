@@ -3080,7 +3080,8 @@ suggested changes.</div>
 </div>
 <div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/google/errorprone/bugpatterns/PreconditionsCheckNotNullRepeated.html" title="class in com.google.errorprone.bugpatterns">PreconditionsCheckNotNullRepeated</a></div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab2">
-<div class="block">Checks that Precondition.checkNotNull is not invoked with same arg twice.</div>
+<div class="block">Checks that Guava's <code>Preconditions.checkNotNull</code> and <code>Verify.verifyNotNull</code> don't
+include the checked reference in the failure message.</div>
 </div>
 <div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/google/errorprone/bugpatterns/PreconditionsInvalidPlaceholder.html" title="class in com.google.errorprone.bugpatterns">PreconditionsInvalidPlaceholder</a></div>
 <div class="col-last odd-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>

@@ -1702,10 +1702,11 @@ won't produce meaningful output.</div>
 <div class="col-last even-row-color">
 <div class="block">A BugPattern; see the summary.</div>
 </div>
-<div class="col-first odd-row-color"><code>class&nbsp;</code></div>
+<div class="col-first odd-row-color"><code>final class&nbsp;</code></div>
 <div class="col-second odd-row-color"><code><a href="../PreconditionsCheckNotNullRepeated.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">PreconditionsCheckNotNullRepeated</a></code></div>
 <div class="col-last odd-row-color">
-<div class="block">Checks that Precondition.checkNotNull is not invoked with same arg twice.</div>
+<div class="block">Checks that Guava's <code>Preconditions.checkNotNull</code> and <code>Verify.verifyNotNull</code> don't
+include the checked reference in the failure message.</div>
 </div>
 <div class="col-first even-row-color"><code>class&nbsp;</code></div>
 <div class="col-second even-row-color"><code><a href="../PreconditionsInvalidPlaceholder.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">PreconditionsInvalidPlaceholder</a></code></div>

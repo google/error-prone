@@ -87,10 +87,11 @@ loadScripts(document, 'script');</script>
 </dl>
 <hr>
 <div class="horizontal-scroll">
-<div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">PreconditionsCheckNotNullRepeated</span>
+<div class="type-signature"><span class="modifiers">public final class </span><span class="element-name type-name-label">PreconditionsCheckNotNullRepeated</span>
 <span class="extends-implements">extends <a href="BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a>
 implements <a href="BugChecker.MethodInvocationTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MethodInvocationTreeMatcher</a></span></div>
-<div class="block">Checks that Precondition.checkNotNull is not invoked with same arg twice.</div>
+<div class="block">Checks that Guava's <code>Preconditions.checkNotNull</code> and <code>Verify.verifyNotNull</code> don't
+include the checked reference in the failure message.</div>
 <dl class="notes">
 <dt>Author:</dt>
 <dd>bhagwani@google.com (Sumit Bhagwani)</dd>
