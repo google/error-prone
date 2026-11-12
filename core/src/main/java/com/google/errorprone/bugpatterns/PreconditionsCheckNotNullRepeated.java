@@ -17,8 +17,8 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
-import static com.google.errorprone.matchers.Matchers.allOf;
-import static com.google.errorprone.matchers.Matchers.staticMethod;
+import static com.google.errorprone.matchers.Matchers.anyOf;
+import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -32,31 +32,31 @@ import com.sun.source.tree.MethodInvocationTree;
 import java.util.List;
 
 /**
- * Checks that Precondition.checkNotNull is not invoked with same arg twice.
+ * Checks that Guava's {@code Preconditions.checkNotNull} and {@code Verify.verifyNotNull} don't
+ * include the checked reference in the failure message.
  *
  * @author bhagwani@google.com (Sumit Bhagwani)
  */
 @BugPattern(
     summary =
-        "Including the first argument of checkNotNull in the failure message is not useful, "
-            + "as it will always be `null`.",
+        "Including the first argument of checkNotNull (or verifyNotNull) in the failure message"
+            + " is not useful, as it will always be `null`.",
     severity = WARNING)
-public class PreconditionsCheckNotNullRepeated extends BugChecker
+public final class PreconditionsCheckNotNullRepeated extends BugChecker
     implements MethodInvocationTreeMatcher {
   private static final String MESSAGE =
       "Including `%s` in the failure message isn't helpful,"
           + " since its value will always be `null`.";
 
-  private static final Matcher<MethodInvocationTree> MATCHER =
-      allOf(staticMethod().onClass("com.google.common.base.Preconditions").named("checkNotNull"));
+  private static final Matcher<ExpressionTree> MATCHER =
+      anyOf(
+          staticMethod().onClass("com.google.common.base.Preconditions").named("checkNotNull"),
+          staticMethod().onClass("com.google.common.base.Verify").named("verifyNotNull"));
 
   @Override
   public Description matchMethodInvocation(
       MethodInvocationTree methodInvocationTree, VisitorState state) {
     if (!MATCHER.matches(methodInvocationTree, state)) {
-      return Description.NO_MATCH;
-    }
-    if (methodInvocationTree.getArguments().size() < 2) {
       return Description.NO_MATCH;
     }
     List<? extends ExpressionTree> args = methodInvocationTree.getArguments();
