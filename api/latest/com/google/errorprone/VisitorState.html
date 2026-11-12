@@ -558,10 +558,10 @@ constant, and use its <a href="ClassName.html#type(com.google.errorprone.Visitor
 <a href="#getSymtab()"><code>getSymtab()</code></a> for primitive and <code>void</code> types). This lookup will be faster,
 improving Error Prone's analysis time.
 
-<p>If this method returns null, the compiler doesn't have access to this type, which means that
-if you are comparing other types to this for equality or the subtype relation, your result
-would always be false even if it could create the type. Thus it might be best to bail out early
-in your matcher if this method returns null on your type of interest.</div>
+<p>If this method returns null, the type has not been entered into the compiler's symbol table,
+which typically means that if you are comparing other types to this for equality or the subtype
+relation, your result would be false (unless the type is an indirect supertype of a class whose
+supertype hierarchy has not been completed yet; see b/138753468 and b/584699307).</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>typeStr</code> - the JLS 13.1 binary name of the class, e.g. <code>"java.util.Map$Entry"</code></dd>
