@@ -2273,4 +2273,71 @@ public final class Caller {
             """)
         .doTest();
   }
+
+  @Test
+  public void droppedArgumentThrowingCheckedExceptionInTryBlock() {
+    refactoringTestHelper
+        .allowBreakingChanges()
+        .addInputLines(
+            "Client.java",
+            """
+            import com.google.errorprone.annotations.InlineMe;
+            import java.io.IOException;
+
+            public final class Client {
+              @Deprecated
+              @InlineMe(replacement = "this.call()")
+              public void call(String unused) {
+                call();
+              }
+
+              public void call() {}
+
+              static String readValue() throws IOException {
+                throw new IOException();
+              }
+
+              void test() {
+                try {
+                  // TODO(b/583897542): Do not drop an argument expression that throws a checked
+                  // exception caught by an enclosing try-catch block (or side-effecting call).
+                  call(readValue());
+                } catch (IOException e) {
+                  throw new RuntimeException(e);
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "Client.java",
+            """
+            import com.google.errorprone.annotations.InlineMe;
+            import java.io.IOException;
+
+            public final class Client {
+              @Deprecated
+              @InlineMe(replacement = "this.call()")
+              public void call(String unused) {
+                call();
+              }
+
+              public void call() {}
+
+              static String readValue() throws IOException {
+                throw new IOException();
+              }
+
+              void test() {
+                try {
+                  // TODO(b/583897542): Do not drop an argument expression that throws a checked
+                  // exception caught by an enclosing try-catch block (or side-effecting call).
+                  call();
+                } catch (IOException e) {
+                  throw new RuntimeException(e);
+                }
+              }
+            }
+            """)
+        .doTest();
+  }
 }
