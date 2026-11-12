@@ -19,11 +19,12 @@ package com.google.errorprone;
 import static com.google.common.base.Preconditions.checkArgument;
 import static java.util.Objects.requireNonNull;
 
-import com.google.errorprone.VisitorState.SharedState;
+import com.google.common.collect.ImmutableList;
 import com.google.errorprone.annotations.Immutable;
 import com.google.errorprone.suppliers.Supplier;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Type;
+import com.sun.tools.javac.util.Convert;
 import com.sun.tools.javac.util.Name;
 import java.lang.ref.SoftReference;
 import org.jspecify.annotations.Nullable;
@@ -48,11 +49,42 @@ public final class ClassName {
     return new ClassName(VisitorState.inferBinaryName(name));
   }
 
+  /**
+   * Per-compilation cached javac state for this class name.
+   *
+   * @param invocation the javac compilation instance that owns the interned {@link Name}s and
+   *     {@link ClassSymbol}
+   * @param binaryName the binary name of the class in this compilation's {@link Name} table
+   * @param enclosingCandidates candidate enclosing class names from {@link
+   *     Convert#enclosingCandidates(Name)} (for example, {@code ["pkg.Outer", "pkg.Outer$Middle"]}
+   *     for {@code "pkg.Outer$Middle$Inner"}), used to complete enclosing classes so that nested
+   *     class symbols are entered into the symbol table before looking up {@code binaryName};
+   *     computed lazily on the first {@link #symbol(VisitorState)} lookup
+   * @param symbol the resolved {@link ClassSymbol}, or {@code null} if it has not been resolved yet
+   *     (or was not found in the compilation)
+   */
   private record CacheEntry(
       JavacInvocationInstance invocation,
       Name binaryName,
-      @Nullable ClassSymbol symbol,
-      @Nullable SharedState lastAbsentSharedState) {}
+      @Nullable ImmutableList<Name> enclosingCandidates,
+      @Nullable ClassSymbol symbol) {
+    static CacheEntry create(JavacInvocationInstance invocation, Name binaryName) {
+      return new CacheEntry(
+          invocation, binaryName, /* enclosingCandidates= */ null, /* symbol= */ null);
+    }
+
+    CacheEntry withEnclosingCandidates() {
+      return new CacheEntry(
+          invocation,
+          binaryName,
+          ImmutableList.copyOf(Convert.enclosingCandidates(binaryName)),
+          symbol);
+    }
+
+    CacheEntry withSymbol(ClassSymbol symbol) {
+      return new CacheEntry(invocation, binaryName, enclosingCandidates, symbol);
+    }
+  }
 
   private final String binaryNameString;
 
@@ -70,17 +102,7 @@ public final class ClassName {
 
   /** Returns the cached javac {@link Name} for the binary name. */
   public Name binaryName(VisitorState state) {
-    JavacInvocationInstance invocation = state.javacInvocationInstance();
-    CacheEntry entry = cache.get();
-    if (entry != null && entry.invocation() == invocation) {
-      return entry.binaryName();
-    }
-    Name binaryName = state.getName(binaryNameString);
-    cache =
-        new SoftReference<>(
-            new CacheEntry(
-                invocation, binaryName, /* symbol= */ null, /* lastAbsentSharedState= */ null));
-    return binaryName;
+    return getOrCreateCacheEntry(state).binaryName();
   }
 
   /**
@@ -88,26 +110,37 @@ public final class ClassName {
    * returns {@code null} if the symbol is not available.
    */
   public @Nullable ClassSymbol symbol(VisitorState state) {
-    JavacInvocationInstance invocation = state.javacInvocationInstance();
-    SharedState sharedState = state.sharedState();
-    CacheEntry entry = cache.get();
-    Name binaryName;
-    if (entry != null && entry.invocation() == invocation) {
-      if (entry.symbol() != null) {
-        return entry.symbol();
-      }
-      if (entry.lastAbsentSharedState() == sharedState) {
-        return null;
-      }
-      binaryName = entry.binaryName();
-    } else {
-      binaryName = state.getName(binaryNameString);
+    CacheEntry entry = getOrCreateCacheEntry(state);
+    if (entry.symbol() != null) {
+      return entry.symbol();
     }
-    ClassSymbol sym = state.getSymbolFromName(binaryName);
-    cache =
-        new SoftReference<>(
-            new CacheEntry(invocation, binaryName, sym, sym == null ? sharedState : null));
+    // getOrCreateCacheEntry leaves enclosingCandidates null so callers that only need
+    // binaryName(state) don't compute it. Populate and cache it on the first symbol lookup in this
+    // compilation so repeated negative lookups don't recompute Convert.enclosingCandidates.
+    if (entry.enclosingCandidates() == null) {
+      entry = entry.withEnclosingCandidates();
+      cache = new SoftReference<>(entry);
+    }
+    // Look up binaryName in Symtab; if it is a nested class whose outer class has been entered but
+    // not yet completed, getSymbolFromName completes enclosingCandidates first so the nested class
+    // is entered into Symtab. Only cache positive results: javac enters supertypes lazily during
+    // the AST scan, so a symbol that returns null now may become available later in the same
+    // compilation unit.
+    ClassSymbol sym = state.getSymbolFromName(entry.binaryName(), entry.enclosingCandidates());
+    if (sym != null) {
+      cache = new SoftReference<>(entry.withSymbol(sym));
+    }
     return sym;
+  }
+
+  private CacheEntry getOrCreateCacheEntry(VisitorState state) {
+    JavacInvocationInstance invocation = state.javacInvocationInstance();
+    CacheEntry entry = cache.get();
+    if (entry == null || entry.invocation() != invocation) {
+      entry = CacheEntry.create(invocation, state.getName(binaryNameString));
+      cache = new SoftReference<>(entry);
+    }
+    return entry;
   }
 
   /**

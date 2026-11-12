@@ -48,12 +48,12 @@ import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Type.ArrayType;
 import com.sun.tools.javac.code.Type.ClassType;
 import com.sun.tools.javac.code.Types;
-import com.sun.tools.javac.comp.Modules;
 import com.sun.tools.javac.model.JavacElements;
 import com.sun.tools.javac.parser.Tokens.Token;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.TreeMaker;
 import com.sun.tools.javac.util.Context;
+import com.sun.tools.javac.util.Convert;
 import com.sun.tools.javac.util.Name;
 import com.sun.tools.javac.util.Names;
 import com.sun.tools.javac.util.Options;
@@ -63,7 +63,6 @@ import java.lang.ref.SoftReference;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import javax.lang.model.util.Elements;
 import javax.tools.JavaFileObject;
 import org.jspecify.annotations.Nullable;
@@ -228,10 +227,6 @@ public final class VisitorState {
     return sharedState.severityMap;
   }
 
-  SharedState sharedState() {
-    return sharedState;
-  }
-
   JavacInvocationInstance javacInvocationInstance() {
     return sharedState.javacInvocationInstance;
   }
@@ -305,19 +300,24 @@ public final class VisitorState {
    * {@link #getSymtab()} for primitive and {@code void} types). This lookup will be faster,
    * improving Error Prone's analysis time.
    *
-   * <p>If this method returns null, the compiler doesn't have access to this type, which means that
-   * if you are comparing other types to this for equality or the subtype relation, your result
-   * would always be false even if it could create the type. Thus it might be best to bail out early
-   * in your matcher if this method returns null on your type of interest.
+   * <p>If this method returns null, the type has not been entered into the compiler's symbol table,
+   * which typically means that if you are comparing other types to this for equality or the subtype
+   * relation, your result would be false (unless the type is an indirect supertype of a class whose
+   * supertype hierarchy has not been completed yet; see b/138753468 and b/584699307).
    *
    * @param typeStr the JLS 13.1 binary name of the class, e.g. {@code "java.util.Map$Entry"}
    * @return the {@link Type}, or null if it cannot be found
    */
   public @Nullable Type getTypeFromString(String typeStr) {
-    return sharedState
-        .typeCache
-        .computeIfAbsent(typeStr, key -> Optional.ofNullable(getTypeFromStringInternal(key)))
-        .orElse(null);
+    Type cached = sharedState.typeCache.get(typeStr);
+    if (cached != null) {
+      return cached;
+    }
+    Type type = getTypeFromStringInternal(typeStr);
+    if (type != null) {
+      sharedState.typeCache.put(typeStr, type);
+    }
+    return type;
   }
 
   private @Nullable Type getTypeFromStringInternal(String typeStr) {
@@ -346,7 +346,20 @@ public final class VisitorState {
    */
   // TODO(cushon): deal with binary compat issues and return ClassSymbol
   public @Nullable Symbol getSymbolFromString(String symStr) {
-    return getSymbolFromName(binaryNameFromClassname(symStr));
+    SharedState.ParsedName parsed = parseClassName(symStr);
+    return getSymbolFromName(parsed.binaryName(), parsed.enclosingCandidates());
+  }
+
+  private SharedState.ParsedName parseClassName(String className) {
+    SharedState.ParsedName parsed = sharedState.parsedNameCache.get(className);
+    if (parsed == null) {
+      Name binaryName = binaryNameFromClassname(className);
+      parsed =
+          new SharedState.ParsedName(
+              binaryName, ImmutableList.copyOf(Convert.enclosingCandidates(binaryName)));
+      sharedState.parsedNameCache.put(className, parsed);
+    }
+    return parsed;
   }
 
   /**
@@ -366,29 +379,31 @@ public final class VisitorState {
    * @param name the name to look up, which must be in binary form (i.e. with $ for nested classes).
    */
   public @Nullable ClassSymbol getSymbolFromName(Name name) {
-    Optional<ClassSymbol> cached = sharedState.symbolCache.get(name);
+    return getSymbolFromName(name, /* enclosingCandidates= */ null);
+  }
+
+  @Nullable ClassSymbol getSymbolFromName(Name name, @Nullable List<Name> enclosingCandidates) {
+    ClassSymbol cached = sharedState.symbolCache.get(name);
     if (cached != null) {
-      return cached.orElse(null);
+      return cached;
     }
-    ClassSymbol sym = getSymbolFromNameInternal(name);
-    sharedState.symbolCache.put(name, Optional.ofNullable(sym));
+    ClassSymbol sym = getSymbolFromNameInternal(name, enclosingCandidates);
+    if (sym != null) {
+      sharedState.symbolCache.put(name, sym);
+    }
     return sym;
   }
 
-  private @Nullable ClassSymbol getSymbolFromNameInternal(Name name) {
+  private @Nullable ClassSymbol getSymbolFromNameInternal(
+      Name name, @Nullable List<Name> enclosingCandidates) {
     ClassSymbol result = lookupSymbolFromName(name);
     if (result != null) {
       return result;
     }
-    String nameStr = name.toString();
-    int firstDollar = nameStr.indexOf('$');
-    if (firstDollar == -1) {
-      return null;
-    }
     boolean completedEnclosing = false;
-    int startIdx = firstDollar == 0 ? nameStr.indexOf('$', 1) : firstDollar;
-    for (int idx = startIdx; idx != -1; idx = nameStr.indexOf('$', idx + 1)) {
-      if (getSymbolFromName(getName(nameStr.substring(0, idx))) != null) {
+    for (Name enclosing :
+        enclosingCandidates != null ? enclosingCandidates : Convert.enclosingCandidates(name)) {
+      if (lookupSymbolFromName(enclosing) != null) {
         completedEnclosing = true;
       }
     }
@@ -396,24 +411,20 @@ public final class VisitorState {
   }
 
   private @Nullable ClassSymbol lookupSymbolFromName(Name name) {
-    boolean modular = sharedState.modules.getDefaultModule() != getSymtab().noModule;
-    if (!modular) {
-      return getSymbolFromString(getSymtab().noModule, name);
-    }
-    for (ModuleSymbol msym : sharedState.modules.allModules()) {
-      ClassSymbol result = getSymbolFromString(msym, name);
-      if (result != null) {
-        // TODO(cushon): the path where we iterate over all modules is probably slow.
-        // Try to learn some lessons from JDK-8189747, and consider disallowing this case and
-        // requiring users to call the getSymbolFromString(ModuleSymbol, Name) overload instead.
-        return result;
+    for (ClassSymbol result : getSymtab().getClassesForName(name)) {
+      ClassSymbol completed = completeSymbol(result);
+      if (completed != null) {
+        return completed;
       }
     }
     return null;
   }
 
   public @Nullable ClassSymbol getSymbolFromString(ModuleSymbol msym, Name name) {
-    ClassSymbol result = getSymtab().getClass(msym, name);
+    return completeSymbol(getSymtab().getClass(msym, name));
+  }
+
+  private static @Nullable ClassSymbol completeSymbol(@Nullable ClassSymbol result) {
     if (result == null || result.kind == Kind.ERR || !result.exists()) {
       return null;
     }
@@ -670,10 +681,11 @@ public final class VisitorState {
   private static final class Cache<T> implements Supplier<T> {
     private final Supplier<T> impl;
     /* Uses T instead of Optional<T> because we don't want to cache null results
-    (b/138753468). These inline caches persist between compilation units, and a type that fails to
-    resolve in one may become available in the next; we want to keep looking it up
-    (relying on the per-file cache in typeCache) if we don't have a result. If you want to cache a
-    computation which can return null, wrap it in an Optional at the call site.*/
+    (b/138753468, b/584699307). A type or symbol that fails to resolve at one point in a
+    compilation may become available later (in the same compilation unit or a subsequent one) once
+    enclosing classes or supertype hierarchies are completed, so we want to keep looking it up if
+    we don't have a result. If you want to cache a computation which can return null, wrap it in an
+    Optional at the call site. */
 
     private SoftReference<T> cache = new SoftReference<>(null);
     private JavacInvocationInstance provenance;
@@ -733,8 +745,7 @@ public final class VisitorState {
    * <p>For the types that are typically stored in {@link Context}, caching the references over
    * {@code SomeClass.instance(context)} has sizable performance improvements in aggregate.
    */
-  static final class SharedState {
-    private final Modules modules;
+  private static final class SharedState {
     private final Names names;
     private final Symtab symtab;
     private final ErrorProneTimings timings;
@@ -748,11 +759,14 @@ public final class VisitorState {
     private final Map<String, SeverityLevel> severityMap;
     private final ErrorProneOptions errorProneOptions;
 
+    private record ParsedName(Name binaryName, ImmutableList<Name> enclosingCandidates) {}
+
     // TODO(ronshapiro): should we presize this with a reasonable size? We can check for the
     // smallest build and see how many types are loaded and use that. Or perhaps a heuristic
     // based on number of files?
-    private final Map<String, Optional<Type>> typeCache = new HashMap<>();
-    private final Map<Name, Optional<ClassSymbol>> symbolCache = new HashMap<>();
+    private final Map<String, Type> typeCache = new HashMap<>();
+    private final Map<String, ParsedName> parsedNameCache = new HashMap<>();
+    private final Map<Name, ClassSymbol> symbolCache = new HashMap<>();
 
     SharedState(
         Context context,
@@ -760,7 +774,6 @@ public final class VisitorState {
         StatisticsCollector statisticsCollector,
         Map<String, SeverityLevel> severityMap,
         ErrorProneOptions errorProneOptions) {
-      this.modules = Modules.instance(context);
       this.names = Names.instance(context);
       this.symtab = Symtab.instance(context);
       this.timings = ErrorProneTimings.instance(context);

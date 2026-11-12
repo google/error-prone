@@ -87,8 +87,11 @@ public final class ClassNameTest {
     assertThat(mapEntryBinary.symbol(state)).isSameInstanceAs(entrySym);
     assertThat(mapEntryCanonical.binaryName(state).toString()).isEqualTo("java.util.Map$Entry");
 
-    // Multi-level nested class (MethodHandles -> Lookup -> ClassOption) when only outer is entered:
+    // Multi-level nested class (MethodHandles -> Lookup -> ClassOption) when only outer is entered,
+    // including when binaryName(state) is called before symbol(state):
     ClassName classOption = ClassName.of("java.lang.invoke.MethodHandles.Lookup.ClassOption");
+    assertThat(classOption.binaryName(state).toString())
+        .isEqualTo("java.lang.invoke.MethodHandles$Lookup$ClassOption");
     assertThat(classOption.symbol(state)).isNotNull();
 
     // Missing top-level class (no '$') and non-existent nested class under an existing outer class:
@@ -112,18 +115,26 @@ public final class ClassNameTest {
     assertThat(spliteratorOfInt.symbol(unit1State)).isNull();
     assertThat(spliteratorOfInt.type(unit1State)).isNull();
     assertThat(spliteratorOfInt.asTypeSupplier().get(unit1State)).isNull();
+    assertThat(unit1State.getSymbolFromString("java.util.Spliterator.OfInt")).isNull();
+    assertThat(unit1State.getTypeFromString("java.util.Spliterator$OfInt")).isNull();
 
-    // Enter Spliterator in Symtab; unit1State keeps its per-unit negative cache, whereas
-    // unit2State (a fresh compilation unit in the same javac invocation) resolves it:
+    // Entering Spliterator in Symtab during unit 1 (e.g. when supertypes are lazily completed)
+    // allows subsequent lookups in the same unit (and later units in the same invocation) to
+    // resolve it without being poisoned by the earlier negative lookup:
     Symtab symtab1 = unit1State.getSymtab();
     var unused1 =
         symtab1.enterClass(
             symtab1.java_base, unit1State.getNames().fromString("java.util.Spliterator"));
-    assertThat(spliteratorOfInt.symbol(unit1State)).isNull();
+    ClassSymbol sym1 = spliteratorOfInt.symbol(unit1State);
+    assertThat(sym1).isNotNull();
+    assertThat(spliteratorOfInt.type(unit1State)).isSameInstanceAs(sym1.asType());
+    assertThat(unit1State.getSymbolFromString("java.util.Spliterator.OfInt"))
+        .isSameInstanceAs(sym1);
+    assertThat(unit1State.getTypeFromString("java.util.Spliterator$OfInt"))
+        .isSameInstanceAs(sym1.asType());
 
     VisitorState unit2State = VisitorState.createForUtilityPurposes(context1);
-    ClassSymbol sym1 = spliteratorOfInt.symbol(unit2State);
-    assertThat(sym1).isNotNull();
+    assertThat(spliteratorOfInt.symbol(unit2State)).isSameInstanceAs(sym1);
     assertThat(spliteratorOfInt.type(unit2State)).isSameInstanceAs(sym1.asType());
 
     // Subsequent compilation invocation gets a fresh symbol from its own Context:
