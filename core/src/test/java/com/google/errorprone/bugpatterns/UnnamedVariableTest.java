@@ -544,4 +544,38 @@ public class UnnamedVariableTest {
             """)
         .doTest();
   }
+
+  @Test
+  public void localVariable_annotated() {
+    refactoringHelper
+        .allowBreakingChanges()
+        .allowFormattingErrors()
+        .addInputLines(
+            "Test.java",
+            """
+            import org.jspecify.annotations.Nullable;
+
+            class Test {
+              void f() {
+                // TODO(b/583896675): Do not emit @Nullable var _ when @Nullable is a TYPE_USE
+                // annotation.
+                @Nullable String unused = "hello";
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            import org.jspecify.annotations.Nullable;
+
+            class Test {
+              void f() {
+                // TODO(b/583896675): Do not emit @Nullable var _ when @Nullable is a TYPE_USE
+                // annotation.
+                @Nullable var _ = "hello";
+              }
+            }
+            """)
+        .doTest();
+  }
 }
