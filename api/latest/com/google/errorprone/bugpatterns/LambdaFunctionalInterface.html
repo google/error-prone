@@ -195,7 +195,7 @@ pre-conditions are met, it refactors them to the primitive specializations.
 (1): The method declaration has to be private (to do a safe refactoring)
 (2): Its parameters have to meet the following conditions:
    2.1 Contain type java.util.function.Function
-   2.2 At least one argument type of the Function must be subtype of Number
+   2.2 At least one argument type of the Function must be Integer, Long, or Double
 (3): All its invocations in the top-level enclosing class have to meet the following
 conditions as well:
    3.1: lambda argument of Kind.LAMBDA_EXPRESSION
