@@ -21,10 +21,15 @@ import static org.mockito.Mockito.mock;
 
 import com.google.common.testing.EqualsTester;
 import com.google.common.testing.SerializableTester;
+import com.google.errorprone.refaster.UTypeVar.TypeWithExpression;
+import com.sun.tools.javac.code.BoundKind;
 import com.sun.tools.javac.code.Symbol.ModuleSymbol;
 import com.sun.tools.javac.code.Symtab;
+import com.sun.tools.javac.tree.JCTree.JCExpression;
+import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
 import com.sun.tools.javac.tree.JCTree.JCIdent;
 import com.sun.tools.javac.tree.TreeMaker;
+import com.sun.tools.javac.util.List;
 import com.sun.tools.javac.util.Names;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -43,6 +48,45 @@ public class UMemberSelectTest extends AbstractUTreeTest {
     UType type = mock(UType.class);
     UMemberSelect memberSelect = UMemberSelect.create(fooLit, "length", type);
     assertInlines("\"foo\".length", memberSelect);
+  }
+
+  @Test
+  public void inlineClassStripsTypeArguments() throws CouldNotResolveImportException {
+    UType type = mock(UType.class);
+    // TODO(b/583393246): should be "List.class"
+    assertInlines(
+        "List<String>.class",
+        UMemberSelect.create(
+            UTypeApply.create(
+                UClassIdent.create("java.util.List"), UClassIdent.create("java.lang.String")),
+            "class",
+            type));
+
+    TreeMaker maker = TreeMaker.instance(context);
+    Names names = Names.instance(context);
+    JCExpression wildcard = maker.Wildcard(maker.TypeBoundKind(BoundKind.UNBOUND), null);
+    JCExpression outerWildcard =
+        maker.TypeApply(maker.Ident(names.fromString("Outer")), List.of(wildcard));
+    JCExpression outerInner = maker.Select(outerWildcard, names.fromString("Inner"));
+
+    UTypeVar.Key key = new UTypeVar.Key(StringName.of("T"));
+    UMemberSelect typeVarClass = UMemberSelect.create(UTypeVarIdent.create("T"), "class", type);
+
+    bind(key, TypeWithExpression.create(Symtab.instance(context).objectType, outerInner));
+    JCFieldAccess inlinedOuterInner = (JCFieldAccess) typeVarClass.inline(inliner);
+    // TODO(b/583393246): should be "Outer.Inner.class"
+    assertThat(inlinedOuterInner.toString()).isEqualTo("Outer<?>.Inner.class");
+    // TODO(b/583393246): should be isNotSameInstanceAs(outerInner)
+    assertThat(inlinedOuterInner.selected).isSameInstanceAs(outerInner);
+
+    JCExpression annotatedArray =
+        maker.TypeArray(
+            maker.AnnotatedType(
+                List.of(maker.Annotation(maker.Ident(names.fromString("Nullable")), List.nil())),
+                maker.TypeApply(maker.Ident(names.fromString("List")), List.of(wildcard))));
+    bind(key, TypeWithExpression.create(Symtab.instance(context).objectType, annotatedArray));
+    // TODO(b/583393246): should be "List[].class"
+    assertInlines("@Nullable List<?>[].class", typeVarClass);
   }
 
   @Test

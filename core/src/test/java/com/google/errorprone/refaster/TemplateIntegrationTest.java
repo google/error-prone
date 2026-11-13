@@ -521,4 +521,75 @@ public class TemplateIntegrationTest extends CompilerBasedTest {
             }
             """);
   }
+
+  @Test
+  public void clazz() throws IOException {
+    CodeTransformer transformer =
+        extractRefasterRule(
+            forSourceString(
+                "IsInstanceToClazzTemplate",
+                """
+                import com.google.errorprone.refaster.Refaster;
+                import com.google.errorprone.refaster.annotation.AfterTemplate;
+                import com.google.errorprone.refaster.annotation.BeforeTemplate;
+
+                class IsInstanceToClazzTemplate<T> {
+                  @BeforeTemplate
+                  boolean before(Object o) {
+                    return Refaster.<T>isInstance(o);
+                  }
+
+                  @AfterTemplate
+                  boolean after(Object o) {
+                    return Refaster.<T>clazz().isInstance(o);
+                  }
+                }
+                """));
+
+    JavaFileObject input =
+        forSourceString(
+            "Example",
+            """
+            import java.util.List;
+            import java.util.Map;
+
+            class Example<U> {
+              class Inner {}
+
+              boolean test(Object o) {
+                return o instanceof String
+                    || o instanceof List<?>
+                    || o instanceof Map.Entry<?, ?>
+                    || o instanceof Example<?>.Inner
+                    || o instanceof List<?>[];
+              }
+            }
+            """);
+    // TODO(b/583393246): Emit compilable output for generic types (e.g., by stripping type
+    // arguments from .class literals, or by not rewriting at all) and use expectTransforms
+    // (currently the transformed output fails to compile).
+    JavaFileObject expectedOutput =
+        forSourceString(
+            "Example",
+            """
+            import java.util.List;
+            import java.util.Map;
+
+            class Example<U> {
+              class Inner {}
+
+              boolean test(Object o) {
+                return String.class.isInstance(o)
+                    || List<?>.class.isInstance(o)
+                    || Map.Entry<?, ?>.class.isInstance(o)
+                    || Example<?>.Inner.class.isInstance(o)
+                    || List<?>[].class.isInstance(o);
+              }
+            }
+            """);
+    JavaFileObject transformedInput =
+        CodeTransformerTestHelper.create(transformer).transform(input);
+    assertThat(transformedInput.getCharContent(false).toString())
+        .isEqualTo(expectedOutput.getCharContent(false).toString());
+  }
 }
