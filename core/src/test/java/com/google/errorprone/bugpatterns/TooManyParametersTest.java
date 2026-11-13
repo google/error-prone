@@ -253,4 +253,79 @@ public class ExampleWithTestParametersTest {
 """)
         .doTest();
   }
+
+  @Test
+  public void testHttpMethods() {
+    compilationHelper
+        .setArgs(ImmutableList.of("-XepOpt:" + TOO_MANY_PARAMETERS_FLAG_NAME + "=3"))
+        .addSourceLines(
+            "HttpMethod.java",
+            """
+            package com.google.apps.framework.request;
+
+            public final class HttpMethod {
+              public @interface All {}
+
+              public @interface Head {}
+
+              public @interface Get {}
+
+              public @interface Post {}
+
+              public @interface Put {}
+
+              public @interface Patch {}
+
+              public @interface Delete {}
+
+              public @interface Options {}
+            }
+            """)
+        .addSourceLines(
+            "SomeAction.java",
+            """
+            public final class SomeAction {
+              @com.google.apps.framework.request.HttpMethod.All
+              public Object executeAll(int a, int b, int c, int d, int e) {
+                return new Object();
+              }
+
+              @com.google.apps.framework.request.HttpMethod.Head
+              public Object executeHead(int a, int b, int c, int d, int e) {
+                return new Object();
+              }
+
+              @com.google.apps.framework.request.HttpMethod.Get
+              public Object executeGet(int a, int b, int c, int d, int e) {
+                return new Object();
+              }
+
+              @com.google.apps.framework.request.HttpMethod.Post
+              public Object executePost(int a, int b, int c, int d, int e) {
+                return new Object();
+              }
+
+              @com.google.apps.framework.request.HttpMethod.Put
+              public Object executePut(int a, int b, int c, int d, int e) {
+                return new Object();
+              }
+
+              @com.google.apps.framework.request.HttpMethod.Patch
+              public Object executePatch(int a, int b, int c, int d, int e) {
+                return new Object();
+              }
+
+              @com.google.apps.framework.request.HttpMethod.Delete
+              public Object executeDelete(int a, int b, int c, int d, int e) {
+                return new Object();
+              }
+
+              @com.google.apps.framework.request.HttpMethod.Options
+              public Object executeOptions(int a, int b, int c, int d, int e) {
+                return new Object();
+              }
+            }
+            """)
+        .doTest();
+  }
 }
