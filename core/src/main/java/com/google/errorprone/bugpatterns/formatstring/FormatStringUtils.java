@@ -93,7 +93,7 @@ public final class FormatStringUtils {
     return ImmutableList.copyOf(args.subList(formatStringIndex, args.size()));
   }
 
-  private static int formatStringIndex(MethodSymbol symbol, VisitorState state) {
+  static int formatStringIndex(MethodSymbol symbol, VisitorState state) {
     Type stringType = state.getSymtab().stringType;
     var params = symbol.getParameters();
     int firstStringIndex = -1;
