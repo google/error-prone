@@ -38,7 +38,13 @@ public class BanSerializableReadTest {
 
   @Test
   public void negativeCase() {
-    compilationHelper.addSourceFile("testdata/BanSerializableReadNegativeCases.java").doTest();
+    // The negative cases use the positive cases' class. Compiling that file as a source lets its
+    // markers assert the diagnostics the check reports there; a file that javac compiles
+    // implicitly from the class path has no markers.
+    compilationHelper
+        .addSourceFile("testdata/BanSerializableReadNegativeCases.java")
+        .addSourceFile("testdata/BanSerializableReadPositiveCases.java")
+        .doTest();
   }
 
   @Test
