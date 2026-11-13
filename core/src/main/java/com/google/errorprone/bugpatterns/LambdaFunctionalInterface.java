@@ -28,6 +28,8 @@ import static java.util.Optional.ofNullable;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMultimap;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Sets;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
@@ -44,6 +46,7 @@ import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
+import com.sun.tools.javac.code.TypeTag;
 import java.util.Optional;
 
 /**
@@ -126,7 +129,7 @@ public class LambdaFunctionalInterface extends BugChecker implements MethodTreeM
    * (1): The method declaration has to be private (to do a safe refactoring)
    * (2): Its parameters have to meet the following conditions:
    *    2.1 Contain type java.util.function.Function
-   *    2.2 At least one argument type of the Function must be subtype of Number
+   *    2.2 At least one argument type of the Function must be Integer, Long, or Double
    * (3): All its invocations in the top-level enclosing class have to meet the following
    * conditions as well:
    *    3.1: lambda argument of Kind.LAMBDA_EXPRESSION
@@ -154,9 +157,7 @@ public class LambdaFunctionalInterface extends BugChecker implements MethodTreeM
     ImmutableList<Tree> params =
         tree.getParameters().stream()
             .filter(param -> hasFunctionAsArg(param, state))
-            .filter(param ->
-                isFunctionArgSubtypeOf(param, 0, JAVA_LANG_NUMBER.get(state), state)
-                    || isFunctionArgSubtypeOf(param, 1, JAVA_LANG_NUMBER.get(state), state))
+            .filter(param -> hasIntLongOrDoubleArg(param, state))
             .collect(toImmutableList());
 
     // preconditions (2) and (3)
@@ -213,9 +214,7 @@ public class LambdaFunctionalInterface extends BugChecker implements MethodTreeM
       if (methodInvocationTree.getArguments().stream()
           .filter(a -> a instanceof LambdaExpressionTree)
           .filter(a -> hasFunctionAsArg(a, state))
-          .noneMatch(a ->
-              isFunctionArgSubtypeOf(a, 0, JAVA_LANG_NUMBER.get(state), state)
-                  || isFunctionArgSubtypeOf(a, 1, JAVA_LANG_NUMBER.get(state), state))) {
+          .noneMatch(a -> hasIntLongOrDoubleArg(a, state))) {
         return false;
       }
     }
@@ -255,10 +254,12 @@ public class LambdaFunctionalInterface extends BugChecker implements MethodTreeM
         ASTHelpers.getType(param), JAVA_UTIL_FUNCTION_FUNCTION.get(state), state);
   }
 
-  private static boolean isFunctionArgSubtypeOf(
-      Tree param, int argIndex, Type type, VisitorState state) {
-    return ASTHelpers.isSubtype(
-        ASTHelpers.getType(param).getTypeArguments().get(argIndex), type, state);
+  private static final ImmutableSet<TypeTag> INT_LONG_DOUBLE =
+      Sets.immutableEnumSet(TypeTag.INT, TypeTag.LONG, TypeTag.DOUBLE);
+
+  private static boolean hasIntLongOrDoubleArg(Tree tree, VisitorState state) {
+    return ASTHelpers.getType(tree).getTypeArguments().stream()
+        .anyMatch(arg -> INT_LONG_DOUBLE.contains(state.getTypes().unboxedType(arg).getTag()));
   }
 
   private static Optional<String> getMappingForFunctionFromTree(Tree param) {
@@ -282,8 +283,6 @@ public class LambdaFunctionalInterface extends BugChecker implements MethodTreeM
 
     return (cutPosition < 0) ? fullyQualifiedName : fullyQualifiedName.substring(0, cutPosition);
   }
-
-  private static final Supplier<Type> JAVA_LANG_NUMBER = typeFromString("java.lang.Number");
 
   private static final Supplier<Type> JAVA_UTIL_FUNCTION_FUNCTION =
       typeFromString(JAVA_UTIL_FUNCTION_FUNCTION_NAME);

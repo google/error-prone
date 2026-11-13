@@ -294,6 +294,14 @@ public class LambdaFunctionalInterfaceNegativeCases {
       return findOptimalMuLambda(mu -> 0L, 3.0);
     }
   }
+
+  private static <O, P extends Number> O applyNumberTypeVar(P value, Function<P, O> fn) {
+    return fn.apply(value);
+  }
+
+  private static String applyFloat(float value, Function<Float, String> fn) {
+    return fn.apply(value);
+  }
 }
 """)
         .doTest();
