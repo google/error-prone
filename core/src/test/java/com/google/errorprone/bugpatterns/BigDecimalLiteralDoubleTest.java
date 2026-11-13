@@ -90,4 +90,30 @@ public class BigDecimalLiteralDoubleTest {
                     && message.contains("new BigDecimal(\"0.99\")"))
         .doTest();
   }
+  
+  @Test
+  public void losesPrecision_boxedFloatingPoint() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import java.math.BigDecimal;
+
+            class Test {
+              void test() {
+                Double boxedD = 0.1;
+                // BUG: Diagnostic contains: new BigDecimal(double) loses precision
+                new BigDecimal(boxedD);
+
+                Float boxedF = 0.1f;
+                // BUG: Diagnostic contains: new BigDecimal(double) loses precision
+                new BigDecimal(boxedF);
+
+                // BUG: Diagnostic contains: new BigDecimal(double) loses precision
+                new BigDecimal((Float) 0.3f);
+              }
+            }
+            """)
+        .doTest();
+  }
 }
