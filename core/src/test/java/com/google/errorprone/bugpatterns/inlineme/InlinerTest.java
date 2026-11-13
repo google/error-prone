@@ -2340,4 +2340,61 @@ public final class Caller {
             """)
         .doTest();
   }
+
+  // TODO(b/584202599): Inlining a poly-expression argument into receiver position drops
+  // the target type, producing uncompilable Stream<Object>.
+  @Test
+  public void receiverInferenceLostForPolyExpressionArgument() {
+    refactoringTestHelper
+        .allowBreakingChanges()
+        .addInputLines(
+            "Client.java",
+            """
+            import com.google.errorprone.annotations.InlineMe;
+            import java.util.Optional;
+            import java.util.stream.Stream;
+
+            public final class Client {
+              @Deprecated
+              @InlineMe(replacement = "optional.stream()")
+              public static <T> Stream<T> stream(Optional<T> optional) {
+                return optional.stream();
+              }
+            }
+            """)
+        .expectUnchanged()
+        .addInputLines(
+            "Test.java",
+            """
+            import java.util.Optional;
+            import java.util.stream.Stream;
+
+            class Test {
+              Stream<String> empty() {
+                return Client.stream(Optional.empty());
+              }
+
+              Stream<String> ternary(boolean cond) {
+                return Client.stream(cond ? Optional.of("a") : Optional.empty());
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            import java.util.Optional;
+            import java.util.stream.Stream;
+
+            class Test {
+              Stream<String> empty() {
+                return Optional.empty().stream();
+              }
+
+              Stream<String> ternary(boolean cond) {
+                return (cond ? Optional.of("a") : Optional.empty()).stream();
+              }
+            }
+            """)
+        .doTest();
+  }
 }
