@@ -15,6 +15,7 @@
  */
 package com.google.errorprone;
 
+import com.google.errorprone.apply.CustomImportOrganizer;
 import com.google.errorprone.apply.ImportOrganizer;
 
 /** Parse import order strings. */
@@ -33,7 +34,11 @@ public final class ImportOrderParser {
       case "android-static-first" -> ImportOrganizer.ANDROID_STATIC_FIRST_ORGANIZER;
       case "android-static-last" -> ImportOrganizer.ANDROID_STATIC_LAST_ORGANIZER;
       case "idea" -> ImportOrganizer.IDEA_ORGANIZER;
-      default -> throw new IllegalStateException("Unknown import order: '" + importOrder + "'");
+      default -> {
+        if (importOrder.startsWith("custom:"))
+          yield new CustomImportOrganizer(importOrder.substring(7));
+        throw new IllegalStateException("Unknown import order: '" + importOrder + "'");
+      }
     };
   }
 
