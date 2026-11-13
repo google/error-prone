@@ -176,6 +176,112 @@ public class LoopConditionCheckerTest {
   }
 
   @Test
+  public void compileTimeConstantBounds_areEquivalentToLiterals() {
+    compilationTestHelper
+        .expectErrorMessage(
+            "ONLY_I",
+            message ->
+                message.contains("condition variable(s) never modified in loop body: i")
+                    && !message.contains("i,"))
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              static final int ZERO = 0;
+              static final int ONE = 1;
+              static final boolean TRUE = true;
+              static final boolean FALSE = false;
+
+              void sink() {}
+
+              void f() {
+                final int localOne = 1;
+                // BUG: Diagnostic matches: ONLY_I
+                for (int i = 0; i < 1; sink()) {}
+                // BUG: Diagnostic matches: ONLY_I
+                for (int i = 0; i < localOne; sink()) {}
+                // BUG: Diagnostic matches: ONLY_I
+                for (int i = 0; i < ONE; sink()) {}
+                // BUG: Diagnostic matches: ONLY_I
+                for (int i = 0; i < ZERO; sink()) {}
+                // BUG: Diagnostic matches: ONLY_I
+                for (int i = 0; TRUE && i < ONE; sink()) {}
+                // BUG: Diagnostic matches: ONLY_I
+                for (int i = 0; FALSE || i < ONE; sink()) {}
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void compileTimeConstantExpressions() {
+    compilationTestHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Bounds {
+              static final int ZERO = 0;
+              static final int ONE = 1;
+              static final int TWO = ONE + 1;
+            }
+
+            class Test {
+              static final boolean TRUE = true;
+
+              void sink() {}
+
+              void f() {
+                // BUG: Diagnostic contains:
+                for (int i = 0; i < Bounds.ONE; sink()) {}
+                // BUG: Diagnostic contains:
+                for (int i = 0; i < Bounds.TWO; sink()) {}
+                // BUG: Diagnostic contains:
+                for (int i = 0; i < Bounds.ONE + 1; sink()) {}
+                // BUG: Diagnostic contains:
+                for (int i = 0; i < (int) Bounds.ONE; sink()) {}
+                // BUG: Diagnostic contains:
+                for (int i = 0; i < (TRUE ? Bounds.ONE : Bounds.ZERO); sink()) {}
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void nonConstantFieldsRemainOutOfScope() {
+    compilationTestHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              static final Integer BOXED_ONE = 1;
+              static final int RUNTIME_ONE = Integer.parseInt("1");
+              static final Boolean BOXED_TRUE = true;
+              static final boolean RUNTIME_TRUE = Boolean.parseBoolean("true");
+              static final boolean RUNTIME_FALSE = Boolean.parseBoolean("false");
+              static int mutableOne = 1;
+              static boolean mutableTrue = true;
+              static boolean mutableFalse = false;
+
+              void sink() {}
+
+              void f() {
+                for (int i = 0; i < BOXED_ONE; sink()) {}
+                for (int i = 0; i < RUNTIME_ONE; sink()) {}
+                for (int i = 0; i < mutableOne; sink()) {}
+                for (int i = 0; BOXED_TRUE && i < 1; sink()) {}
+                for (int i = 0; RUNTIME_TRUE && i < 1; sink()) {}
+                for (int i = 0; RUNTIME_FALSE || i < 1; sink()) {}
+                for (int i = 0; mutableTrue && i < 1; sink()) {}
+                for (int i = 0; mutableFalse || i < 1; sink()) {}
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
   public void negative_field() {
     compilationTestHelper
         .addSourceLines(
