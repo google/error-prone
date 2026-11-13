@@ -58,6 +58,145 @@ public class ReturnAtTheEndOfVoidFunctionTest {
   }
 
   @Test
+  public void lastReturnInTrailingBlockIsDeleted() {
+    helper
+        .addInputLines(
+            "Builder.java",
+            """
+            package com.google.gporeba;
+
+            public final class Builder {
+              public void stuff() {
+                int x = 5;
+                {
+                  return;
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "Builder.java",
+            """
+            package com.google.gporeba;
+
+            public final class Builder {
+              public void stuff() {
+                int x = 5;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void lastReturnInNestedTrailingBlocksIsDeleted() {
+    helper
+        .addInputLines(
+            "Builder.java",
+            """
+            package com.google.gporeba;
+
+            public final class Builder {
+              public void stuff() {
+                int x = 5;
+                {
+                  {
+                    return;
+                  }
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "Builder.java",
+            """
+            package com.google.gporeba;
+
+            public final class Builder {
+              public void stuff() {
+                int x = 5;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void lastReturnInTrailingBlockWithOtherStatementsIsDeleted() {
+    helper
+        .addInputLines(
+            "Builder.java",
+            """
+            package com.google.gporeba;
+
+            public final class Builder {
+              public void stuff() {
+                int x = 5;
+                {
+                  int y = 6;
+                  return;
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "Builder.java",
+            """
+            package com.google.gporeba;
+
+            public final class Builder {
+              public void stuff() {
+                int x = 5;
+                {
+                  int y = 6;
+                }
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void trailingEmptyBlockIsUnchanged() {
+    helper
+        .addInputLines(
+            "Builder.java",
+            """
+            package com.google.gporeba;
+
+            public final class Builder {
+              public void stuff() {
+                int x = 5;
+                {}
+              }
+            }
+            """)
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void returnInTrailingIfIsUnchanged() {
+    helper
+        .addInputLines(
+            "Builder.java",
+            """
+            package com.google.gporeba;
+
+            public final class Builder {
+              public void stuff() {
+                int x = 5;
+                if (x > 2) {
+                  return;
+                }
+              }
+            }
+            """)
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
   public void lastReturnIsNotDeleted() {
     helper
         .addInputLines(

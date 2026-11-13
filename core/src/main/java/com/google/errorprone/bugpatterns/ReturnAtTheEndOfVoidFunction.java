@@ -61,12 +61,29 @@ public final class ReturnAtTheEndOfVoidFunction extends BugChecker implements Me
       return NO_MATCH;
     }
 
-    // last statement is a return
+    // The last statement is a return, unwrapping trailing blocks: a block at the
+    // end of the body ends the method just as its last statement does. If every
+    // block on the way down holds only that statement, the whole outermost block
+    // is deleted; otherwise only the return itself is deleted.
     StatementTree lastStatement = Iterables.getLast(statements);
-    if (!(lastStatement instanceof ReturnTree)) {
+    StatementTree toDelete = lastStatement;
+    StatementTree current = lastStatement;
+    while (current instanceof BlockTree block) {
+      List<? extends StatementTree> blockStatements = block.getStatements();
+      if (blockStatements.isEmpty()) {
+        return NO_MATCH;
+      }
+      if (blockStatements.size() == 1) {
+        current = blockStatements.get(0);
+      } else {
+        current = Iterables.getLast(blockStatements);
+        toDelete = current;
+      }
+    }
+    if (!(current instanceof ReturnTree)) {
       return NO_MATCH;
     }
 
-    return describeMatch(methodTree, SuggestedFix.delete(lastStatement));
+    return describeMatch(methodTree, SuggestedFix.delete(toDelete));
   }
 }
