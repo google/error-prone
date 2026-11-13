@@ -36,6 +36,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Predicate;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import javax.tools.Diagnostic;
 import javax.tools.DiagnosticListener;
@@ -184,9 +185,11 @@ public class DiagnosticTestHelper {
    * line. Multiple expected strings may be separated by newlines, e.g. // BUG: Diagnostic contains:
    * foo.bar() // bar.baz() // baz.foo()
    */
-  private static final String BUG_MARKER_COMMENT_INLINE = "// BUG: Diagnostic contains:";
+  private static final Pattern BUG_MARKER_COMMENT_INLINE_PATTERN =
+      Pattern.compile("// BUG(?:\\[(?<label>[^\\]]+)\\])?: Diagnostic contains:");
 
-  private static final String BUG_MARKER_COMMENT_LOOKUP = "// BUG: Diagnostic matches:";
+  private static final Pattern BUG_MARKER_COMMENT_LOOKUP_PATTERN =
+      Pattern.compile("// BUG(?:\\[(?<label>[^\\]]+)\\])?: Diagnostic matches:");
   private final Set<String> usedLookupKeys = new HashSet<>();
 
   enum LookForCheckNameInDiagnostic {
@@ -250,24 +253,30 @@ public class DiagnosticTestHelper {
       List<Predicate<? super String>> predicates = null;
       // The first expectation this line fails, so that each line gets at most one message.
       String mismatch = null;
-      if (line.contains(BUG_MARKER_COMMENT_INLINE)) {
+      java.util.regex.Matcher inlineMatcher = BUG_MARKER_COMMENT_INLINE_PATTERN.matcher(line);
+      java.util.regex.Matcher lookupMatcher = BUG_MARKER_COMMENT_LOOKUP_PATTERN.matcher(line);
+      String label = null;
+      if (inlineMatcher.find()) {
+        label = inlineMatcher.group("label");
         // Diagnostic must contain all patterns from the bug marker comment.
-        List<String> patterns = extractPatterns(line, reader, BUG_MARKER_COMMENT_INLINE);
+        List<String> patterns = extractPatterns(line, reader, inlineMatcher.group(0));
         predicates = new ArrayList<>(patterns.size());
         for (String pattern : patterns) {
           predicates.add(new SimpleStringContains(pattern));
         }
-      } else if (line.contains(BUG_MARKER_COMMENT_LOOKUP)) {
+      } else if (lookupMatcher.find()) {
+        label = lookupMatcher.group("label");
         int markerLineNumber = reader.getLineNumber();
-        List<String> lookupKeys = extractPatterns(line, reader, BUG_MARKER_COMMENT_LOOKUP);
+        List<String> lookupKeys = extractPatterns(line, reader, lookupMatcher.group(0));
         predicates = new ArrayList<>(lookupKeys.size());
         for (String lookupKey : lookupKeys) {
           if (!expectedErrorMsgs.containsKey(lookupKey)) {
+            String markerDesc = label == null ? String.valueOf(markerLineNumber) : markerLineNumber + " [" + label + "]";
             mismatch =
                 String.format(
                     "No expected error message with key [%s] as expected from line [%s] "
                         + "with diagnostic [%s]",
-                    lookupKey, markerLineNumber, line.trim());
+                    lookupKey, markerDesc, line.trim());
             break;
           }
           predicates.add(expectedErrorMsgs.get(lookupKey));
@@ -277,13 +286,14 @@ public class DiagnosticTestHelper {
 
       if (predicates != null) {
         int lineNumber = reader.getLineNumber();
+        String lineDesc = label == null ? "line " + lineNumber : "line " + lineNumber + " [" + label + "]";
         for (Predicate<? super String> predicate : predicates) {
           Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>> patternMatcher =
               hasItem(diagnosticOnLine(source.toUri(), lineNumber, predicate));
           if (mismatch == null && !patternMatcher.matches(diagnostics)) {
             mismatch =
                 String.format(
-                    "Did not see an error on line %s matching %s.", lineNumber, predicate);
+                    "Did not see an error on %s matching %s.", lineDesc, predicate);
           }
         }
 
@@ -298,7 +308,7 @@ public class DiagnosticTestHelper {
           if (!checkNameMatcher.matches(diagnostics)) {
             mismatch =
                 String.format(
-                    "Did not see an error on line %s containing [%s].", lineNumber, checkName);
+                    "Did not see an error on %s containing [%s].", lineDesc, checkName);
           }
         }
 
