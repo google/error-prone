@@ -98,6 +98,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import javax.lang.model.element.ElementKind;
@@ -282,6 +283,56 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
         return super.visitExpressionStatement(node, state);
       }
     };
+  }
+
+  @Test
+  public void getReceiver_parenthesizedExpressionThrowsIllegalStateException() {
+    assertOnParenthesized(
+        "(\"a\".length())",
+        tree -> {
+          assertThrows(IllegalStateException.class, () -> ASTHelpers.getReceiver(tree));
+          assertThat(ASTHelpers.getReceiver(ASTHelpers.stripParentheses(tree)).toString())
+              .isEqualTo("\"a\"");
+        });
+  }
+
+  @Test
+  public void getReceiverType_parenthesizedExpressionThrowsIllegalArgumentException() {
+    assertOnParenthesized(
+        "(\"a\".length())",
+        tree -> {
+          assertThrows(IllegalArgumentException.class, () -> ASTHelpers.getReceiverType(tree));
+          assertThat(ASTHelpers.getReceiverType(ASTHelpers.stripParentheses(tree)).toString())
+              .isEqualTo("java.lang.String");
+        });
+  }
+
+  @Test
+  public void getReturnType_parenthesizedExpressionThrowsIllegalArgumentException() {
+    assertOnParenthesized(
+        "(\"a\".length())",
+        tree -> {
+          assertThrows(IllegalArgumentException.class, () -> ASTHelpers.getReturnType(tree));
+          assertThat(ASTHelpers.getReturnType(ASTHelpers.stripParentheses(tree)).toString())
+              .isEqualTo("int");
+        });
+  }
+
+  /** Compiles a method that returns {@code expression} and checks its parenthesized expression. */
+  private void assertOnParenthesized(String expression, Consumer<ParenthesizedTree> assertion) {
+    writeFile(
+        "Foo.java", "class Foo {", "  Object f() {", "    return " + expression + ";", "  }", "}");
+    TestScanner scanner =
+        new TestScanner() {
+          @Override
+          public Void visitParenthesized(ParenthesizedTree tree, VisitorState state) {
+            assertion.accept(tree);
+            setAssertionsComplete();
+            return super.visitParenthesized(tree, state);
+          }
+        };
+    tests.add(scanner);
+    assertCompiles(scanner);
   }
 
   @Test

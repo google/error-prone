@@ -550,6 +550,11 @@ public final class ASTHelpers {
    * Gives the return type of an ExpressionTree that represents a method select.
    *
    * <p>TODO(eaftan): Are there other places this could be used?
+   *
+   * @throws IllegalArgumentException if {@code expressionTree} is not a method invocation, an
+   *     identifier, a member select, or a member reference. A parenthesized expression such as
+   *     {@code (a.foo())} is none of these; {@link #stripParentheses(ExpressionTree)} removes the
+   *     parentheses.
    */
   public static Type getReturnType(ExpressionTree expressionTree) {
     return checkNotNull(
@@ -593,6 +598,11 @@ public final class ASTHelpers {
    * TheClass.aStaticMethod() ==> TheClass
    * aStaticMethod() ==> type of class in which method is defined
    * }</pre>
+   *
+   * @throws IllegalArgumentException if {@code expressionTree} is not a method invocation, an
+   *     identifier, a member select, or a member reference. A parenthesized expression such as
+   *     {@code (a.foo())} is none of these; {@link #stripParentheses(ExpressionTree)} removes the
+   *     parentheses.
    */
   public static Type getReceiverType(ExpressionTree expressionTree) {
     return checkNotNull(
@@ -626,6 +636,10 @@ public final class ASTHelpers {
    * aStaticMethod() ==> null
    * aStaticallyImportedMethod() ==> null
    * }</pre>
+   *
+   * @throws IllegalStateException if {@code expressionTree} is not a method invocation, a member
+   *     select, or a member reference. A parenthesized expression such as {@code (a.foo())} is none
+   *     of these; {@link #stripParentheses(ExpressionTree)} removes the parentheses.
    */
   public static @Nullable ExpressionTree getReceiver(ExpressionTree expressionTree) {
     return switch (expressionTree) {
