@@ -724,4 +724,167 @@ public class Test {
             """)
         .doTest();
   }
+
+  @Test
+  public void objectsMethods_refactoring() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import static java.util.Objects.isNull;
+            import static java.util.Objects.nonNull;
+
+            import com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage;
+            import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;
+            import java.util.Objects;
+            import java.util.Optional;
+
+            class Test {
+              void test(TestProtoMessage message, Optional<String> o) {
+                TestFieldProtoMessage field = message.getMessage();
+                if (Objects.equals(message.getMessage(), null)) {}
+                if (Objects.equals(null, message.getMessage())) {}
+                if (!Objects.equals(message.getMessage(), null)) {}
+                if (!Objects.equals(null, message.getMessage())) {}
+                if (com.google.common.base.Objects.equal(message.getMessage(), null)) {}
+                if (Objects.isNull(message.getMessage())) {}
+                if (!Objects.isNull(message.getMessage())) {}
+                if (Objects.nonNull(message.getMessage())) {}
+                if (!Objects.nonNull(message.getMessage())) {}
+                if (isNull(field)) {}
+                if (nonNull(field)) {}
+                if (Objects.equals(message.getMultiField(1), null)) {}
+                if (!Objects.equals(message.getMultiField(1), null)) {}
+                if (Objects.nonNull(message.getMultiField(1))) {}
+                if (!Objects.nonNull(message.getMultiField(1))) {}
+                if (Objects.isNull(message.getMultiFieldList())) {}
+                if (Objects.nonNull(message.getMultiFieldList())) {}
+                if (Objects.isNull(o.get())) {}
+                if (!Objects.isNull(o.get())) {}
+                if (Objects.nonNull(o.get())) {}
+                if (!Objects.nonNull(o.get())) {}
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            import static java.util.Objects.isNull;
+            import static java.util.Objects.nonNull;
+
+            import com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage;
+            import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;
+            import java.util.Objects;
+            import java.util.Optional;
+
+            class Test {
+              void test(TestProtoMessage message, Optional<String> o) {
+                TestFieldProtoMessage field = message.getMessage();
+                if (!message.hasMessage()) {}
+                if (!message.hasMessage()) {}
+                if (message.hasMessage()) {}
+                if (message.hasMessage()) {}
+                if (!message.hasMessage()) {}
+                if (!message.hasMessage()) {}
+                if (message.hasMessage()) {}
+                if (message.hasMessage()) {}
+                if (!message.hasMessage()) {}
+                if (!message.hasMessage()) {}
+                if (message.hasMessage()) {}
+                if (message.getMultiFieldCount() <= 1) {}
+                if (message.getMultiFieldCount() > 1) {}
+                if (message.getMultiFieldCount() > 1) {}
+                if (message.getMultiFieldCount() <= 1) {}
+                if (message.getMultiFieldList().isEmpty()) {}
+                if (!message.getMultiFieldList().isEmpty()) {}
+                if (o.isEmpty()) {}
+                if (o.isPresent()) {}
+                if (o.isPresent()) {}
+                if (o.isEmpty()) {}
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void objectsMethods_diagnostics() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import com.google.errorprone.bugpatterns.proto.Proto3Test.TestProto3Message;
+            import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;
+            import java.util.Objects;
+
+            class Test {
+              void test(
+                  int i,
+                  int j,
+                  Integer boxed,
+                  String s,
+                  Object other,
+                  TestProtoMessage message,
+                  TestProto3Message proto3Message)
+                  throws Exception {
+                // BUG: Diagnostic contains:
+                if (Objects.equals(i, null)) {}
+                // BUG: Diagnostic contains:
+                if (Objects.equals(null, i)) {}
+                // BUG: Diagnostic contains:
+                if (!Objects.equals(i, null)) {}
+                // BUG: Diagnostic contains:
+                if (com.google.common.base.Objects.equal(i, null)) {}
+                // BUG: Diagnostic contains:
+                if (Objects.isNull(i)) {}
+                // BUG: Diagnostic contains:
+                if (Objects.nonNull(i)) {}
+                // BUG: Diagnostic contains:
+                if (Objects.equals(1, null)) {}
+                // BUG: Diagnostic contains:
+                if (Objects.equals(Class.forName(s), null)) {}
+                // BUG: Diagnostic contains:
+                if (Objects.isNull(Integer.valueOf(s))) {}
+                // BUG: Diagnostic contains:
+                if (Objects.nonNull(proto3Message.getMyString())) {}
+                if (Objects.equals(boxed, null)) {}
+                if (Objects.equals(null, boxed)) {}
+                if (Objects.isNull(boxed)) {}
+                if (Objects.nonNull(boxed)) {}
+                if (Objects.equals(null, null)) {}
+                if (Objects.equals(i, j)) {}
+                if (Objects.equals(message.getMessage(), other)) {}
+                if (Objects.equals(other, message.getMessage())) {}
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void objectsMethods_flagDisabled() {
+    compilationHelper
+        .setArgs("-XepOpt:ImpossibleNullComparison:CheckObjectsMethods=false")
+        .addSourceLines(
+            "Test.java",
+            """
+            import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;
+            import java.util.Objects;
+
+            class Test {
+              void test(int i, TestProtoMessage message) {
+                if (Objects.equals(i, null)) {}
+                if (Objects.equals(null, i)) {}
+                if (com.google.common.base.Objects.equal(message.getMessage(), null)) {}
+                if (Objects.isNull(message.getMessage())) {}
+                if (Objects.nonNull(message.getMessage())) {}
+                if (Objects.isNull(i)) {}
+                if (Objects.nonNull(i)) {}
+                // BUG: Diagnostic contains: !message.hasMessage()
+                if (message.getMessage() == null) {}
+              }
+            }
+            """)
+        .doTest();
+  }
 }

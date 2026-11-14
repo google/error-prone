@@ -23,6 +23,7 @@ import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
 import static com.google.errorprone.matchers.Matchers.receiverOfInvocation;
+import static com.google.errorprone.matchers.Matchers.staticEqualsInvocation;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
 import static com.google.errorprone.matchers.ProtobufMatchers.EXTENDABLE_MESSAGE;
 import static com.google.errorprone.matchers.ProtobufMatchers.EXTENDABLE_MESSAGE_LITE;
@@ -149,6 +150,18 @@ public final class ImpossibleNullComparison extends BugChecker
           staticMethod().onClass("java.util.Optional").named("ofNullable"),
           staticMethod().onClass("com.google.common.base.Optional").named("fromNullable"));
 
+  private static final Matcher<ExpressionTree> OBJECTS_IS_NULL =
+      staticMethod()
+          .onClass("java.util.Objects")
+          .named("isNull")
+          .withParameters("java.lang.Object");
+
+  private static final Matcher<ExpressionTree> OBJECTS_NON_NULL =
+      staticMethod()
+          .onClass("java.util.Objects")
+          .named("nonNull")
+          .withParameters("java.lang.Object");
+
   private static boolean isNull(ExpressionTree tree) {
     return tree.getKind() == Kind.NULL_LITERAL;
   }
@@ -166,6 +179,7 @@ public final class ImpossibleNullComparison extends BugChecker
   private final boolean checkPrimitives;
   private final boolean checkValueOf;
   private final boolean checkOrBuilder;
+  private final boolean checkObjectsMethods;
 
   @Inject
   ImpossibleNullComparison(ErrorProneFlags flags) {
@@ -174,6 +188,8 @@ public final class ImpossibleNullComparison extends BugChecker
     this.checkPrimitives = flags.getBoolean("ImmutableNullComparison:CheckPrimitives").orElse(true);
     this.checkValueOf = flags.getBoolean("ImpossibleNullComparison:CheckValueOf").orElse(true);
     this.checkOrBuilder = flags.getBoolean("ImpossibleNullComparison:CheckOrBuilder").orElse(true);
+    this.checkObjectsMethods =
+        flags.getBoolean("ImpossibleNullComparison:CheckObjectsMethods").orElse(true);
   }
 
   @Override
@@ -298,6 +314,23 @@ public final class ImpossibleNullComparison extends BugChecker
       } else if (matchTestAssertions && TRUTH_NOT_NULL.matches(node, subState)) {
         argument = getOnlyElement(((MethodInvocationTree) getReceiver(node)).getArguments());
         problemType = ProblemUsage.TRUTH;
+      } else if (checkObjectsMethods && staticEqualsInvocation().matches(node, subState)) {
+        var arg0 = node.getArguments().get(0);
+        var arg1 = node.getArguments().get(1);
+        if (isNull(arg0)) {
+          argument = arg1;
+        } else if (isNull(arg1)) {
+          argument = arg0;
+        } else {
+          return super.visitMethodInvocation(node, null);
+        }
+        problemType = ProblemUsage.IS_NULL;
+      } else if (checkObjectsMethods && OBJECTS_IS_NULL.matches(node, subState)) {
+        argument = getOnlyElement(node.getArguments());
+        problemType = ProblemUsage.IS_NULL;
+      } else if (checkObjectsMethods && OBJECTS_NON_NULL.matches(node, subState)) {
+        argument = getOnlyElement(node.getArguments());
+        problemType = ProblemUsage.NON_NULL;
       } else {
         return super.visitMethodInvocation(node, null);
       }
@@ -717,7 +750,34 @@ public final class ImpossibleNullComparison extends BugChecker
         MethodInvocationTree methodInvocationTree = (MethodInvocationTree) tree;
         return SuggestedFixes.renameMethodInvocation(methodInvocationTree, "of", state);
       }
+    },
+    /** Matches null checks returning {@code true} when null, like {@code Objects.isNull(x)}. */
+    IS_NULL {
+      @Override
+      SuggestedFix fix(Fixer fixer, ExpressionTree tree, VisitorState state) {
+        return fixNullCheckMethod(fixer, tree, /* isNullCheck= */ true, state);
+      }
+    },
+    /**
+     * Matches null checks returning {@code true} when non-null, like {@code Objects.nonNull(x)}.
+     */
+    NON_NULL {
+      @Override
+      SuggestedFix fix(Fixer fixer, ExpressionTree tree, VisitorState state) {
+        return fixNullCheckMethod(fixer, tree, /* isNullCheck= */ false, state);
+      }
     };
+
+    private static SuggestedFix fixNullCheckMethod(
+        Fixer fixer, ExpressionTree tree, boolean isNullCheck, VisitorState state) {
+      var parent = state.getPath().getParentPath().getLeaf();
+      boolean parentNegated = parent.getKind() == Kind.LOGICAL_COMPLEMENT;
+      var treeToReplace = parentNegated ? parent : tree;
+      return fixer
+          .getReplacement(isNullCheck ^ parentNegated, state)
+          .map(r -> SuggestedFix.replace(treeToReplace, r))
+          .orElse(SuggestedFix.emptyFix());
+    }
 
     abstract SuggestedFix fix(Fixer fixer, ExpressionTree tree, VisitorState state);
   }
