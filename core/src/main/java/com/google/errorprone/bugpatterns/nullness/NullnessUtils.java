@@ -30,6 +30,7 @@ import static com.google.errorprone.util.ASTHelpers.enclosingElements;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
+import static com.google.errorprone.util.ASTHelpers.isRecord;
 import static com.google.errorprone.util.ASTHelpers.stripParentheses;
 import static com.google.errorprone.util.AnnotationNames.NULL_MARKED_ANNOTATION;
 import static com.google.errorprone.util.AnnotationNames.NULL_UNMARKED_ANNOTATION;
@@ -64,6 +65,8 @@ import com.sun.source.tree.IfTree;
 import com.sun.source.tree.LambdaExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
+import com.sun.source.tree.ModuleTree;
+import com.sun.source.tree.PackageTree;
 import com.sun.source.tree.ParameterizedTypeTree;
 import com.sun.source.tree.ParenthesizedTree;
 import com.sun.source.tree.StatementTree;
@@ -127,7 +130,7 @@ public final class NullnessUtils {
               case MethodSymbol m -> isPublicOrProtected(m);
               case VarSymbol v ->
                   switch (v.getKind()) {
-                    case FIELD, ENUM_CONSTANT -> isPublicOrProtected(v);
+                    case FIELD, ENUM_CONSTANT -> isPublicOrProtected(v) || isRecord(v);
                     case RECORD_COMPONENT -> true;
                     case PARAMETER ->
                         /*
@@ -150,7 +153,7 @@ public final class NullnessUtils {
         return false;
       }
       if (tree instanceof VariableTree variableTree) {
-        return child != variableTree.getInitializer()
+        return (child == null || child != variableTree.getInitializer())
             && isLikelyToBePublicApi(getSymbol(variableTree));
       }
       if (tree instanceof MethodTree methodTree) {
@@ -163,11 +166,14 @@ public final class NullnessUtils {
          * like `(Class<@NonNull Foo>) Foo.class` in an annotation default value is forbidden by
          * javac.
          */
-        return child != methodTree.getDefaultValue()
+        return (child == null || child != methodTree.getDefaultValue())
             && isLikelyToBePublicApi(getSymbol(methodTree));
       }
       if (tree instanceof ClassTree) {
         return isLikelyToBePublicApi(getSymbol(tree));
+      }
+      if (tree instanceof PackageTree || tree instanceof ModuleTree) {
+        return true;
       }
       child = tree;
     }
