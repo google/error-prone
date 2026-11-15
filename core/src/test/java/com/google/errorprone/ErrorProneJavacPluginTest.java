@@ -115,6 +115,51 @@ public class ErrorProneJavacPluginTest {
     assertThat(diagnostic.getMessage(ENGLISH)).contains("[CollectionIncompatibleType]");
   }
 
+  private static JavacTask maxWarningsTask(String maxWarningsFlag, DiagnosticCollector<JavaFileObject> diagnosticCollector) throws IOException {
+    FileSystem fileSystem = Jimfs.newFileSystem(Configuration.unix());
+    Path source = fileSystem.getPath("Test.java");
+    Files.write(
+        source,
+        ImmutableList.of(
+            "package test;", //
+            "class Test implements Runnable {",
+            "  public void run() {}",
+            "}"),
+        UTF_8);
+    JavacFileManager fileManager = new JavacFileManager(new Context(), false, UTF_8);
+    return JavacTool.create()
+        .getTask(
+            null,
+            fileManager,
+            diagnosticCollector,
+            ImmutableList.of(
+                "-Xplugin:ErrorProne -XepDisableAllChecks -Xep:MissingOverride:WARN "
+                    + maxWarningsFlag,
+                "-XDcompilePolicy=byfile",
+                "--should-stop=ifError=FLOW",
+                "-XDaddTypeAnnotationsToSymbol=true"),
+            ImmutableList.of(),
+            fileManager.getJavaFileObjects(source));
+  }
+
+  @Test
+  public void maxWarnings_exceeded_failsCompilation() throws IOException {
+    DiagnosticCollector<JavaFileObject> diagnosticCollector = new DiagnosticCollector<>();
+    assertThat(maxWarningsTask("-XepMaxWarnings:0", diagnosticCollector).call()).isFalse();
+    Diagnostic<? extends JavaFileObject> diagnostic =
+        diagnosticCollector.getDiagnostics().stream()
+            .filter(d -> d.getKind() == Diagnostic.Kind.ERROR)
+            .collect(onlyElement());
+    assertThat(diagnostic.getMessage(ENGLISH)).contains("Error Prone reported 1 warning, which exceeds the maximum of 0");
+  }
+
+  @Test
+  public void maxWarnings_notExceeded_passes() throws IOException {
+    DiagnosticCollector<JavaFileObject> diagnosticCollector = new DiagnosticCollector<>();
+    assertThat(maxWarningsTask("-XepMaxWarnings:1", diagnosticCollector).call()).isTrue();
+    assertThat(diagnosticCollector.getDiagnostics().stream().anyMatch(d -> d.getMessage(ENGLISH).contains("[MissingOverride]"))).isTrue();
+  }
+
   @Test
   public void applyFixes() throws IOException {
     // TODO(b/63064865): Test is broken on Windows.  Disable for now.
