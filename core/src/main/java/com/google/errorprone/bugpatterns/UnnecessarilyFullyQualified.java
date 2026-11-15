@@ -90,11 +90,22 @@ public final class UnnecessarilyFullyQualified extends BugChecker
 
   private final boolean batchFindings;
 
+  /**
+   * Whether to skip {@code package-info.java} files.
+   *
+   * <p>Defaults to {@code true}: in {@code package-info.java} the import added by the fix would
+   * appear <em>after</em> the package annotation that uses it, which some find less readable than
+   * a single fully qualified name. See https://github.com/google/error-prone/issues/1652.
+   */
+  private final boolean exemptPackageInfo;
+
   @Inject
   UnnecessarilyFullyQualified(ErrorProneFlags errorProneFlags) {
     this.exemptedEnclosingTypes = errorProneFlags.getSetOrEmpty("BadImport:BadEnclosingTypes");
     this.batchFindings =
         errorProneFlags.getBoolean("UnnecessarilyFullyQualified:BatchFindings").orElse(false);
+    this.exemptPackageInfo =
+        errorProneFlags.getBoolean("UnnecessarilyFullyQualified:ExemptPackageInfo").orElse(true);
   }
 
   @Override
@@ -103,7 +114,7 @@ public final class UnnecessarilyFullyQualified extends BugChecker
         .anyMatch(t -> getSymbol(tree) != null && !getGeneratedBy(getSymbol(tree)).isEmpty())) {
       return NO_MATCH;
     }
-    if (isPackageInfo(tree)) {
+    if (exemptPackageInfo && isPackageInfo(tree)) {
       return NO_MATCH;
     }
     Table<Name, TypeSymbol, List<TreePath>> table = HashBasedTable.create();
