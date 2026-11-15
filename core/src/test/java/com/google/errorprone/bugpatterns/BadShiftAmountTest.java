@@ -43,6 +43,9 @@ public class BadShiftAmountTest {
              */
             public class BadShiftAmountPositiveCases {
 
+              private static final int BITS = 32;
+              private static final int TOO_LARGE = 100;
+
               public void foo() {
                 int x = 0;
                 long result = 0;
@@ -77,6 +80,11 @@ public class BadShiftAmountTest {
                 result += c >> 32;
                 // BUG: Diagnostic contains: (long) c >>> 32
                 result += c >>> 32;
+
+                // BUG: Diagnostic contains: (long) x >> BITS
+                result += x >> BITS;
+                // BUG: Diagnostic contains: x >> 4
+                result += x >> TOO_LARGE;
               }
             }
             """)
@@ -96,6 +104,8 @@ public class BadShiftAmountTest {
              */
             public class BadShiftAmountNegativeCases {
 
+              private static final int BITS = 3;
+
               public void foo() {
                 int x = 0;
                 long result = 0;
@@ -104,6 +114,7 @@ public class BadShiftAmountTest {
                 result += x << 3;
                 result += x >>> 3;
                 result += (long) (x & 0xff) >> 40;
+                result += x >> BITS;
               }
             }
             """)
