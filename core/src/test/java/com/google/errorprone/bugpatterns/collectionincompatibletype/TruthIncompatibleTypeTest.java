@@ -21,10 +21,13 @@ import static com.google.common.truth.Truth.assertThat;
 import static com.google.common.truth.TruthJUnit.assume;
 import static java.lang.String.format;
 import static java.util.Arrays.stream;
+import static java.util.Collections.nCopies;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Table.Cell;
 import com.google.common.truth.IterableSubject;
 import com.google.common.truth.Subject;
+import com.google.common.truth.TableSubject;
 import com.google.common.truth.extensions.proto.IterableOfProtosSubject;
 import com.google.common.truth.extensions.proto.ProtoSubject;
 import com.google.errorprone.CompilationTestHelper;
@@ -741,9 +744,269 @@ public class Test {
   }
 
   @Test
+  public void table_containsAndDoesNotContain() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import static com.google.common.truth.Truth.assertThat;
+
+            import com.google.common.collect.Table;
+
+            public class Test {
+              public void f(Table<String, Integer, Long> t) {
+                assertThat(t).contains("r", 1);
+                assertThat(t).doesNotContain("r", 1);
+                assertThat(t).contains(null, null);
+                assertThat(t).doesNotContain(null, null);
+                // BUG: Diagnostic contains: `int` is not compatible with `String`
+                assertThat(t).contains(1, 2);
+                // BUG: Diagnostic contains: `String` is not compatible with `Integer`
+                assertThat(t).contains("r", "c");
+                // BUG: Diagnostic contains: `long` is not compatible with `String`
+                assertThat(t).doesNotContain(1L, 2);
+                // BUG: Diagnostic contains: `long` is not compatible with `Integer`
+                assertThat(t).doesNotContain("r", 2L);
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void table_containsAndDoesNotContain_bothIncompatible() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import static com.google.common.truth.Truth.assertThat;
+
+            import com.google.common.collect.Table;
+
+            public class Test {
+              public void f(Table<String, Integer, Long> t) {
+                assertThat(t)
+                    .contains(
+                        // BUG: Diagnostic contains: `int` is not compatible with `String`
+                        1,
+                        // BUG: Diagnostic contains: `String` is not compatible with `Integer`
+                        "c");
+                assertThat(t)
+                    .doesNotContain(
+                        // BUG: Diagnostic contains: `long` is not compatible with `String`
+                        1L,
+                        // BUG: Diagnostic contains: `String` is not compatible with `Integer`
+                        "c");
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void table_containsCell_threeArgs() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import static com.google.common.truth.Truth.assertThat;
+
+            import com.google.common.collect.Table;
+
+            public class Test {
+              public void f(Table<String, Integer, Long> t) {
+                assertThat(t).containsCell("r", 1, 2L);
+                assertThat(t).doesNotContainCell("r", 1, 2L);
+                assertThat(t).containsCell(null, null, null);
+                assertThat(t).doesNotContainCell(null, null, null);
+                // BUG: Diagnostic contains: `int` is not compatible with `String`
+                assertThat(t).containsCell(1, 2, 3L);
+                // BUG: Diagnostic contains: `String` is not compatible with `Integer`
+                assertThat(t).containsCell("r", "c", 3L);
+                // BUG: Diagnostic contains: `int` is not compatible with `Long`
+                assertThat(t).containsCell("r", 2, 3);
+                // BUG: Diagnostic contains: `long` is not compatible with `String`
+                assertThat(t).doesNotContainCell(1L, 2, 3L);
+                // BUG: Diagnostic contains: `long` is not compatible with `Integer`
+                assertThat(t).doesNotContainCell("r", 2L, 3L);
+                // BUG: Diagnostic contains: `String` is not compatible with `Long`
+                assertThat(t).doesNotContainCell("r", 2, "v");
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void table_containsCell_cellArg() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import static com.google.common.truth.Truth.assertThat;
+
+            import com.google.common.collect.Table;
+            import com.google.common.collect.Table.Cell;
+            import com.google.common.collect.Tables;
+
+            public class Test {
+              interface MyCell<V> extends Cell<String, Integer, V> {}
+
+              @SuppressWarnings("rawtypes")
+              public void f(
+                  Table<String, Integer, Long> t,
+                  Cell<String, Integer, Long> goodCell,
+                  Cell<Long, Integer, Long> badRowCell,
+                  Cell<String, String, Long> badColCell,
+                  Cell<String, Integer, String> badValCell,
+                  Cell<?, ?, ?> wildcardCell,
+                  Cell rawCell,
+                  MyCell<Long> goodSubCell,
+                  MyCell<String> badSubCell) {
+                assertThat(t).containsCell(goodCell);
+                assertThat(t).doesNotContainCell(goodCell);
+                assertThat(t).containsCell(wildcardCell);
+                assertThat(t).containsCell(rawCell);
+                assertThat(t).containsCell(null);
+                assertThat(t).doesNotContainCell(null);
+                assertThat(t).containsCell(goodSubCell);
+                assertThat(t).containsCell(Tables.immutableCell("r", 1, 2L));
+                // BUG: Diagnostic contains: `Long` is not compatible with `String`
+                assertThat(t).containsCell(badRowCell);
+                // BUG: Diagnostic contains: `String` is not compatible with `Integer`
+                assertThat(t).containsCell(badColCell);
+                // BUG: Diagnostic contains: `String` is not compatible with `Long`
+                assertThat(t).containsCell(badValCell);
+                // BUG: Diagnostic contains: `Long` is not compatible with `String`
+                assertThat(t).doesNotContainCell(badRowCell);
+                // BUG: Diagnostic contains: `String` is not compatible with `Integer`
+                assertThat(t).doesNotContainCell(badColCell);
+                // BUG: Diagnostic contains: `String` is not compatible with `Long`
+                assertThat(t).doesNotContainCell(badValCell);
+                // BUG: Diagnostic contains: `String` is not compatible with `Long`
+                assertThat(t).containsCell(badSubCell);
+                // BUG: Diagnostic contains: `Integer` is not compatible with `Long`
+                assertThat(t).doesNotContainCell(Tables.immutableCell("r", 1, 2));
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void table_containsRowColumnValue() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import static com.google.common.truth.Truth.assertThat;
+
+            import com.google.common.collect.Table;
+
+            public class Test {
+              public void f(Table<String, Integer, Long> t) {
+                assertThat(t).containsRow("r");
+                assertThat(t).containsColumn(1);
+                assertThat(t).containsValue(2L);
+                // BUG: Diagnostic contains: `int` is not compatible with `String`
+                assertThat(t).containsRow(1);
+                // BUG: Diagnostic contains: `long` is not compatible with `String`
+                assertThat(t).containsRow(2L);
+                // BUG: Diagnostic contains: `String` is not compatible with `Integer`
+                assertThat(t).containsColumn("r");
+                // BUG: Diagnostic contains: `long` is not compatible with `Integer`
+                assertThat(t).containsColumn(2L);
+                // BUG: Diagnostic contains: `String` is not compatible with `Long`
+                assertThat(t).containsValue("r");
+                // BUG: Diagnostic contains: `int` is not compatible with `Long`
+                assertThat(t).containsValue(1);
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void table_subtypesWildcardsCastsAndStandardSubjectBuilder() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import static com.google.common.truth.Truth.assertThat;
+            import static com.google.common.truth.Truth.assertWithMessage;
+            import static com.google.common.truth.TruthJUnit.assume;
+
+            import com.google.common.collect.HashBasedTable;
+            import com.google.common.collect.Table;
+
+            public class Test {
+              interface MyTable<V> extends Table<String, Integer, V> {}
+
+              @SuppressWarnings("rawtypes")
+              public void f(
+                  HashBasedTable<String, Integer, Long> hashTable,
+                  MyTable<Long> customTable,
+                  Table<? extends Number, ? extends CharSequence, ?> wildcardTable,
+                  Table rawTable) {
+                // BUG: Diagnostic contains: `int` is not compatible with `String`
+                assertThat(hashTable).containsRow(1);
+                // BUG: Diagnostic contains: `String` is not compatible with `Long`
+                assertThat(customTable).containsValue("v");
+                assertThat(wildcardTable).contains(1L, "c");
+                // BUG: Diagnostic contains: `String` is not compatible with `? extends Number`
+                assertThat(wildcardTable).containsRow("r");
+                // BUG: Diagnostic contains: `int` is not compatible with `? extends CharSequence`
+                assertThat(wildcardTable).containsColumn(1);
+                assertThat(wildcardTable).containsValue("anything");
+                assertThat(rawTable).containsRow(1);
+                assertThat((Table<String, Integer, Long>) null).containsRow(1);
+                // BUG: Diagnostic contains: `int` is not compatible with `String`
+                assertThat((Table<?, ?, ?>) hashTable).containsRow(1);
+                // BUG: Diagnostic contains: `int` is not compatible with `String`
+                assertWithMessage("msg").that(hashTable).containsRow(1);
+                // BUG: Diagnostic contains: `String` is not compatible with `Integer`
+                assume().that(hashTable).containsColumn("c");
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void table_flagDisabled() {
+    compilationHelper
+        .setArgs("-XepOpt:TruthIncompatibleType:CheckTableSubject=false")
+        .addSourceLines(
+            "Test.java",
+            """
+            import static com.google.common.truth.Truth.assertThat;
+
+            import com.google.common.collect.Table;
+            import com.google.common.collect.Table.Cell;
+
+            public class Test {
+              public void f(Table<String, Integer, Long> t, Cell<Long, String, Integer> cell) {
+                assertThat(t).contains(1, "c");
+                assertThat(t).doesNotContain(1, "c");
+                assertThat(t).containsCell(1, "c", "v");
+                assertThat(t).doesNotContainCell(1, "c", "v");
+                assertThat(t).containsCell(cell);
+                assertThat(t).doesNotContainCell(cell);
+                assertThat(t).containsRow(1);
+                assertThat(t).containsColumn("c");
+                assertThat(t).containsValue("v");
+                // BUG: Diagnostic contains:
+                assertThat(t).isEqualTo("not a table");
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
   public void subjectExhaustiveness(
       @TestParameter(valuesProvider = SubjectMethods.class) Method method) {
-    // TODO(ghm): isNotSameInstanceAs might be worth flagging, but the check can be even stricter.
+    // Covered by AssertSameIncompatible instead.
     assume().that(method.getName()).isNoneOf("isSameInstanceAs", "isNotSameInstanceAs");
 
     compilationHelper
@@ -796,6 +1059,24 @@ public class Test {
   }
 
   @Test
+  public void tableSubjectExhaustiveness(
+      @TestParameter(valuesProvider = TableSubjectMethods.class) Method method) {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import static com.google.common.truth.Truth.assertThat;",
+            "import com.google.common.collect.Table;",
+            "import com.google.common.collect.Tables;",
+            "class Test {",
+            "  public void test(Table<String, String, String> a, Long b) {",
+            "    // BUG: Diagnostic contains:",
+            getOffensiveLine(method),
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void protoTruthIterableSubjectExhaustiveness() {
     // There are no additional methods on IterableOfProtosSubject, otherwise we'd want to test that.
     // This test just makes sure that remains true.
@@ -805,8 +1086,12 @@ public class Test {
   private static String getOffensiveLine(Method method) {
     if (stream(method.getParameterTypes()).allMatch(p -> p.equals(Iterable.class))) {
       return format("    assertThat(a).%s(ImmutableList.of(b));", method.getName());
+    } else if (stream(method.getParameterTypes()).allMatch(p -> p.equals(Cell.class))) {
+      return format("    assertThat(a).%s(Tables.immutableCell(b, b, b));", method.getName());
     } else if (stream(method.getParameterTypes()).allMatch(p -> p.equals(Object.class))) {
-      return format("    assertThat(a).%s(b);", method.getName());
+      return format(
+          "    assertThat(a).%s(%s);",
+          method.getName(), String.join(", ", nCopies(method.getParameterCount(), "b")));
     } else if (stream(method.getParameterTypes()).allMatch(p -> p.isArray())) {
       return format("    assertThat(a).%s(new Long[]{b, b, b});", method.getName());
     } else if (stream(method.getParameterTypes())
@@ -833,6 +1118,13 @@ public class Test {
     }
   }
 
+  private static final class TableSubjectMethods extends TestParameterValuesProvider {
+    @Override
+    public ImmutableList<Method> provideValues(Context context) {
+      return getAssertionMethods(TableSubject.class);
+    }
+  }
+
   private static final class ProtoTruthSubjectMethods extends TestParameterValuesProvider {
     @Override
     public ImmutableList<Method> provideValues(Context context) {
@@ -851,6 +1143,7 @@ public class Test {
                 // We can identify them by looking for a mangled name.
                 && !m.getName().contains("$")
                 && (stream(m.getParameterTypes()).allMatch(p -> p.equals(Iterable.class))
+                    || stream(m.getParameterTypes()).allMatch(p -> p.equals(Cell.class))
                     || stream(m.getParameterTypes())
                         .allMatch(p -> p.equals(Object.class) || p.isArray())
                     || stream(m.getParameterTypes()).allMatch(Class::isArray)))

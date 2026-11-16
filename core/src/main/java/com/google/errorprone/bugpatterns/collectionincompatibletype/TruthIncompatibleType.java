@@ -36,6 +36,8 @@ import static java.util.stream.Stream.concat;
 
 import com.google.common.collect.Streams;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.ClassName;
+import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
@@ -52,6 +54,7 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.TypeSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Type.ArrayType;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import javax.inject.Inject;
 
@@ -158,14 +161,40 @@ public class TruthIncompatibleType extends BugChecker implements MethodInvocatio
                   "containsNoneIn"),
           not(VECTOR_CONTAINS));
 
+  private static final Matcher<ExpressionTree> TABLE_CONTAINS_CELL =
+      instanceMethod()
+          .onDescendantOf("com.google.common.truth.TableSubject")
+          .namedAnyOf("containsCell", "doesNotContainCell")
+          .withParameters("com.google.common.collect.Table.Cell");
+
+  private static final Matcher<ExpressionTree> TABLE_SCALAR_CONTAINS =
+      anyOf(
+          instanceMethod()
+              .onDescendantOf("com.google.common.truth.TableSubject")
+              .namedAnyOf("contains", "doesNotContain")
+              .withParameters("java.lang.Object", "java.lang.Object"),
+          instanceMethod()
+              .onDescendantOf("com.google.common.truth.TableSubject")
+              .namedAnyOf("containsCell", "doesNotContainCell")
+              .withParameters("java.lang.Object", "java.lang.Object", "java.lang.Object"),
+          instanceMethod()
+              .onDescendantOf("com.google.common.truth.TableSubject")
+              .namedAnyOf("containsRow", "containsColumn", "containsValue")
+              .withParameters("java.lang.Object"));
+
   private static final Supplier<Type> CORRESPONDENCE =
       typeFromString("com.google.common.truth.Correspondence");
 
+  private static final ClassName TABLE = ClassName.of("com.google.common.collect.Table");
+
   private final TypeCompatibility typeCompatibility;
+  private final boolean checkTableSubject;
 
   @Inject
-  TruthIncompatibleType(TypeCompatibility typeCompatibility) {
+  TruthIncompatibleType(TypeCompatibility typeCompatibility, ErrorProneFlags flags) {
     this.typeCompatibility = typeCompatibility;
+    this.checkTableSubject =
+        flags.getBoolean("TruthIncompatibleType:CheckTableSubject").orElse(true);
   }
 
   @Override
@@ -181,7 +210,9 @@ public class TruthIncompatibleType extends BugChecker implements MethodInvocatio
             matchMapVectorContains(tree, state),
             matchMapScalarContains(tree, state),
             matchMapContainsKey(tree, state),
-            matchHasCount(tree, state))
+            matchHasCount(tree, state),
+            matchTableContainsCell(tree, state),
+            matchTableScalarContains(tree, state))
         .forEach(state::reportMatch);
     return NO_MATCH;
   }
@@ -464,6 +495,65 @@ public class TruthIncompatibleType extends BugChecker implements MethodInvocatio
             ignoringCasts(assertee, state), assertionType, /* typeArgIndex= */ 0, state.getTypes());
     var argument = tree.getArguments().getFirst();
     return checkCompatibility(argument, targetKeyType, getType(argument), state);
+  }
+
+  private Stream<Description> matchTableContainsCell(
+      MethodInvocationTree tree, VisitorState state) {
+    if (!checkTableSubject || !TABLE_CONTAINS_CELL.matches(tree, state)) {
+      return Stream.empty();
+    }
+    var receiver = getReceiver(tree);
+    if (!START_OF_ASSERTION.matches(receiver, state)) {
+      return Stream.empty();
+    }
+
+    var assertee = getOnlyElement(((MethodInvocationTree) receiver).getArguments());
+    var targetTableType = ignoringCasts(assertee, state);
+    var tableType = TABLE.symbol(state);
+    var cellArg = getOnlyElement(tree.getArguments());
+    var sourceCellType = getType(cellArg);
+    var cellType = getOnlyElement(getSymbol(tree).getParameters()).type.tsym;
+    return IntStream.range(0, 3)
+        .mapToObj(i ->
+            checkCompatibility(
+                cellArg,
+                extractTypeArgAsMemberOfSupertype(targetTableType, tableType, i, state),
+                extractTypeArgAsMemberOfSupertype(sourceCellType, cellType, i, state),
+                state))
+        .flatMap(x -> x);
+  }
+
+  private Stream<Description> matchTableScalarContains(
+      MethodInvocationTree tree, VisitorState state) {
+    if (!checkTableSubject || !TABLE_SCALAR_CONTAINS.matches(tree, state)) {
+      return Stream.empty();
+    }
+    var receiver = getReceiver(tree);
+    if (!START_OF_ASSERTION.matches(receiver, state)) {
+      return Stream.empty();
+    }
+
+    var assertee = getOnlyElement(((MethodInvocationTree) receiver).getArguments());
+    var targetTableType = ignoringCasts(assertee, state);
+    var tableType = TABLE.symbol(state);
+    int firstTypeArgIndex =
+        switch (getSymbol(tree).getSimpleName().toString()) {
+          case "containsColumn" -> 1;
+          case "containsValue" -> 2;
+          default -> 0;
+        };
+    var arguments = tree.getArguments();
+    return IntStream.range(0, arguments.size())
+        .mapToObj(i -> {
+          var arg = arguments.get(i);
+          return checkCompatibility(
+              arg,
+              extractTypeArgAsMemberOfSupertype(
+                  targetTableType, tableType, firstTypeArgIndex + i, state),
+              getType(arg),
+              state);
+        })
+        .flatMap(x -> x);
   }
 
   /** Whether this is a varargs method being invoked in a non-varargs way. */
