@@ -68,6 +68,23 @@ public final class AssignmentExpressionTest {
   }
 
   @Test
+  public void chainedAssignmentInVariableInitializer_noFinding() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              void test() {
+                int a;
+                int b = a = 0;
+                System.out.println(a + b);
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
   public void multipleAssignments_sure() {
     helper
         .addSourceLines(
