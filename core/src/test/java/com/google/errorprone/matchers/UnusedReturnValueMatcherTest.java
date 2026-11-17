@@ -123,6 +123,12 @@ public final class UnusedReturnValueMatcherTest {
                 run(() -> instanceMethod());
                 // BUG: Diagnostic contains: bad
                 run(() -> this.instanceMethod());
+                // BUG: Diagnostic contains: bad
+                new Test();
+                // BUG: Diagnostic contains: bad
+                run(Test::new);
+                // BUG: Diagnostic contains: bad
+                run(() -> new Test());
               }
             }
             """)
@@ -140,6 +146,14 @@ public final class UnusedReturnValueMatcherTest {
             import java.util.function.Supplier;
 
             public class Test {
+              Test() {
+                super();
+              }
+
+              Test(int x) {
+                this();
+              }
+
               interface Foo {
                 String bar();
 

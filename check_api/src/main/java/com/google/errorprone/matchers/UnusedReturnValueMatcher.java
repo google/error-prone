@@ -51,6 +51,7 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.LambdaExpressionTree;
 import com.sun.source.tree.MemberReferenceTree;
 import com.sun.source.tree.MemberReferenceTree.ReferenceMode;
+import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
@@ -101,8 +102,14 @@ public final class UnusedReturnValueMatcher implements Matcher<ExpressionTree> {
     return isReturnValueUnused(tree, state) && !isAllowed(tree, state);
   }
 
-  private static boolean isVoidMethod(MethodSymbol symbol) {
-    return !symbol.isConstructor() && isVoid(symbol.getReturnType());
+  private static boolean isVoid(ExpressionTree tree, MethodSymbol symbol) {
+    if (symbol.isConstructor()) {
+      // Explicit constructor invocations (`this(...)`, `super(...)`) are MethodInvocationTrees
+      // and do not produce a value, unlike `new Foo()` (NewClassTree) and `Foo::new`
+      // (MemberReferenceTree).
+      return tree instanceof MethodInvocationTree;
+    }
+    return isVoid(symbol.getReturnType());
   }
 
   private static boolean isVoid(Type type) {
@@ -119,7 +126,7 @@ public final class UnusedReturnValueMatcher implements Matcher<ExpressionTree> {
    */
   public static boolean isReturnValueUnused(ExpressionTree tree, VisitorState state) {
     Symbol sym = getSymbol(tree);
-    if (!(sym instanceof MethodSymbol methodSymbol) || isVoidMethod(methodSymbol)) {
+    if (!(sym instanceof MethodSymbol methodSymbol) || isVoid(tree, methodSymbol)) {
       return false;
     }
     if (tree instanceof MemberReferenceTree) {
