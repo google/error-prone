@@ -53,7 +53,7 @@ public final class JavaInstantGetSecondsGetNano extends BugChecker
   private static final Matcher<ExpressionTree> GET_NANO =
       allOf(
           instanceMethod().onExactClass("java.time.Instant").named("getNano"),
-          Matchers.not(Matchers.packageStartsWith("java.")));
+          Matchers.not(Matchers.packageStartsWith("java")));
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {

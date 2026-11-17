@@ -53,7 +53,7 @@ public final class LocalDateTemporalAmount extends BugChecker
           // TODO(kak): If the parameter is equal to Duration.ZERO, then technically this call will
           // work, but that's a very small corner case to worry about.
           argument(0, isSameType("java.time.Duration")),
-          not(packageStartsWith("java.")));
+          not(packageStartsWith("java")));
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {

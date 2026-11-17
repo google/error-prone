@@ -193,4 +193,21 @@ public class InvalidJavaTimeConstantTest {
             """)
         .doTest();
   }
+
+  @Test
+  public void tckJavaPackageExempt() {
+    compilationHelper
+        .addSourceLines(
+            "tck/java/time/TestCase.java",
+            """
+            package tck.java.time;
+
+            import java.time.DayOfWeek;
+
+            public class TestCase {
+              private static final DayOfWeek DOW = DayOfWeek.of(8);
+            }
+            """)
+        .doTest();
+  }
 }

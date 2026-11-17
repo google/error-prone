@@ -43,11 +43,11 @@ public final class JavaDurationGetSecondsToToSeconds extends BugChecker
     implements MethodInvocationTreeMatcher {
 
   private static final Matcher<ExpressionTree> GET_SECONDS =
-      instanceMethod().onExactClass("java.time.Duration").named("getSeconds");
-  private static final Matcher<ExpressionTree> GET_NANO =
       allOf(
-          instanceMethod().onExactClass("java.time.Duration").named("getNano"),
-          Matchers.not(Matchers.packageStartsWith("java.")));
+          instanceMethod().onExactClass("java.time.Duration").named("getSeconds"),
+          Matchers.not(Matchers.packageStartsWith("java")));
+  private static final Matcher<ExpressionTree> GET_NANO =
+      instanceMethod().onExactClass("java.time.Duration").named("getNano");
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {

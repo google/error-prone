@@ -51,7 +51,7 @@ public final class ZoneIdOfZ extends BugChecker implements MethodInvocationTreeM
   private static final Matcher<ExpressionTree> ZONE_ID_OF =
       allOf(
           staticMethod().onClass("java.time.ZoneId").named("of"),
-          not(anyOf(packageStartsWith("java."), packageStartsWith("tck.java."))));
+          not(anyOf(packageStartsWith("java"), packageStartsWith("tck.java"))));
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {

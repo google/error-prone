@@ -105,6 +105,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
+import javax.lang.model.SourceVersion;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.NestingKind;
@@ -1623,10 +1624,12 @@ public final class Matchers {
    * </ul>
    *
    * but it will <b>not</b> match {@code com.googlebutnotreallygoogle}.
+   *
+   * @throws IllegalArgumentException if {@code packageName} is not a valid package name
    */
   // TODO(kak): Consider renaming this to something like packageOrSubpackageOf()?
   public static <T extends Tree> Matcher<T> packageStartsWith(String packageName) {
-    checkArgument(!packageName.isEmpty(), "Package name cannot be empty");
+    checkArgument(SourceVersion.isName(packageName), "Invalid package name: %s", packageName);
     return (tree, state) -> {
       String packageFullName = getPackageFullName(state);
       return packageFullName.startsWith(packageName)

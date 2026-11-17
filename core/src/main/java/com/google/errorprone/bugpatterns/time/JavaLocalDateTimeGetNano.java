@@ -49,7 +49,7 @@ public final class JavaLocalDateTimeGetNano extends BugChecker
   private static final Matcher<ExpressionTree> GET_NANO =
       allOf(
           instanceMethod().onExactClass("java.time.LocalDateTime").named("getNano"),
-          not(packageStartsWith("java.")));
+          not(packageStartsWith("java")));
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {

@@ -65,7 +65,7 @@ public final class InstantTemporalUnit extends BugChecker implements MethodInvoc
                   .onExactClass(INSTANT)
                   .named("until")
                   .withParameters("java.time.temporal.Temporal", TEMPORAL_UNIT)),
-          Matchers.not(Matchers.packageStartsWith("java.")));
+          Matchers.not(Matchers.packageStartsWith("java")));
 
   // This definition comes from Instant.isSupported(TemporalUnit)
   static final ImmutableSet<ChronoUnit> INVALID_TEMPORAL_UNITS =

@@ -104,4 +104,21 @@ public class ZoneIdOfZTest {
             """)
         .doTest();
   }
+
+  @Test
+  public void tckJavaPackageExempt() {
+    helper
+        .addSourceLines(
+            "tck/java/time/TestClass.java",
+            """
+            package tck.java.time;
+
+            import java.time.ZoneId;
+
+            public class TestClass {
+              private static final ZoneId UTC = ZoneId.of("Z");
+            }
+            """)
+        .doTest();
+  }
 }

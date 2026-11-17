@@ -65,7 +65,7 @@ public final class DurationTemporalUnit extends BugChecker implements MethodInvo
                   .onExactClass(DURATION)
                   .named("plus")
                   .withParameters("long", TEMPORAL_UNIT)),
-          Matchers.not(Matchers.packageStartsWith("java.")));
+          Matchers.not(Matchers.packageStartsWith("java")));
 
   private static final ImmutableSet<ChronoUnit> INVALID_TEMPORAL_UNITS =
       Arrays.stream(ChronoUnit.values())

@@ -51,7 +51,7 @@ public final class JavaPeriodGetDays extends BugChecker implements MethodInvocat
   private static final Matcher<ExpressionTree> PERIOD_GET_DAYS =
       allOf(
           instanceMethod().onExactClass("java.time.Period").named("getDays"),
-          Matchers.not(Matchers.packageStartsWith("java.")));
+          Matchers.not(Matchers.packageStartsWith("java")));
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {

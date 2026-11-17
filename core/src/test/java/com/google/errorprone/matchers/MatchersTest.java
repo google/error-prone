@@ -510,6 +510,12 @@ public class MatchersTest {
   public void packageStartsWith() {
     assertThrows(NullPointerException.class, () -> Matchers.packageStartsWith(null));
     assertThrows(IllegalArgumentException.class, () -> Matchers.packageStartsWith(""));
+    assertThrows(IllegalArgumentException.class, () -> Matchers.packageStartsWith("."));
+    assertThrows(IllegalArgumentException.class, () -> Matchers.packageStartsWith(".test.foo"));
+    assertThrows(IllegalArgumentException.class, () -> Matchers.packageStartsWith("test.foo."));
+    assertThrows(IllegalArgumentException.class, () -> Matchers.packageStartsWith("test..foo"));
+    assertThrows(IllegalArgumentException.class, () -> Matchers.packageStartsWith("test/foo"));
+    assertThrows(IllegalArgumentException.class, () -> Matchers.packageStartsWith("test.foo*"));
 
     CompilationTestHelper.newInstance(PackageNameChecker.class, getClass())
         .addSourceLines(

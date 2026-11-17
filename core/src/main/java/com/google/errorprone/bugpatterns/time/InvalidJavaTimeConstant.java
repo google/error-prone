@@ -282,7 +282,7 @@ public final class InvalidJavaTimeConstant extends BugChecker
           JavaTimeType::className);
 
   private static final Matcher<ExpressionTree> JAVA_MATCHER =
-      anyOf(packageStartsWith("java."), packageStartsWith("tck.java."));
+      anyOf(packageStartsWith("java"), packageStartsWith("tck.java"));
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {

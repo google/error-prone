@@ -48,7 +48,7 @@ public final class JavaLocalTimeGetNano extends BugChecker implements MethodInvo
   private static final Matcher<ExpressionTree> GET_NANO =
       allOf(
           instanceMethod().onExactClass("java.time.LocalTime").named("getNano"),
-          not(packageStartsWith("java.")));
+          not(packageStartsWith("java")));
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
