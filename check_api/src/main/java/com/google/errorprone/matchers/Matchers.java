@@ -1713,6 +1713,22 @@ public final class Matchers {
     return INSTANCE_HASHCODE;
   }
 
+  private static final Matcher<ExpressionTree> STRING_FORMAT =
+      staticMethod().onClass("java.lang.String").named("format");
+
+  /** Matches calls to the static method {@link String#format} (with or without a locale). */
+  public static Matcher<ExpressionTree> stringFormatInvocation() {
+    return STRING_FORMAT;
+  }
+
+  private static final Matcher<ExpressionTree> STRING_FORMATTED =
+      instanceMethod().onExactClass("java.lang.String").named("formatted");
+
+  /** Matches calls to the instance method {@link String#formatted}. */
+  public static Matcher<ExpressionTree> stringFormattedInvocation() {
+    return STRING_FORMATTED;
+  }
+
   private static final Matcher<ExpressionTree> ASSERT_EQUALS =
       staticMethod()
           .onClassAny("org.junit.Assert", "junit.framework.Assert", "junit.framework.TestCase")

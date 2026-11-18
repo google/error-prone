@@ -21,6 +21,7 @@ import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.constructor;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
+import static com.google.errorprone.matchers.Matchers.stringFormatInvocation;
 import static com.google.errorprone.util.ASTHelpers.containsComments;
 import static com.google.errorprone.util.ASTHelpers.findEnclosingMethod;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
@@ -402,7 +403,7 @@ public final class PreferPreconditions extends BugChecker implements IfTreeMatch
 
   private static final Matcher<ExpressionTree> STRING_FORMAT =
       anyOf(
-          staticMethod().onClass("java.lang.String").named("format"),
+          stringFormatInvocation(),
           staticMethod().onClass("com.google.common.base.Strings").named("lenientFormat"));
 
   private static final Matcher<ExpressionTree> NEW_NPE =

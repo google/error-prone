@@ -18,8 +18,8 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
-import static com.google.errorprone.matchers.Matchers.instanceMethod;
-import static com.google.errorprone.matchers.Matchers.staticMethod;
+import static com.google.errorprone.matchers.Matchers.stringFormatInvocation;
+import static com.google.errorprone.matchers.Matchers.stringFormattedInvocation;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 
 import com.google.common.collect.ImmutableList;
@@ -28,7 +28,6 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
-import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.SourceCodeEscapers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.LiteralTree;
@@ -43,17 +42,11 @@ import org.safere.Pattern;
 public final class StringFormatWithLiteral extends BugChecker
     implements MethodInvocationTreeMatcher {
 
-  private static final Matcher<ExpressionTree> STRING_FORMAT_METHOD_MATCHER =
-      staticMethod().onClass("java.lang.String").named("format");
-
-  private static final Matcher<ExpressionTree> FORMATTED =
-      instanceMethod().onExactClass("java.lang.String").named("formatted");
-
   private static final Pattern SPECIFIER_ALLOW_LIST_REGEX = Pattern.compile("%(d|s|S|c|b|B)");
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
-    if (STRING_FORMAT_METHOD_MATCHER.matches(tree, state)) {
+    if (stringFormatInvocation().matches(tree, state)) {
       ImmutableList<ExpressionTree> arguments =
           tree.getArguments().stream().skip(1).collect(toImmutableList());
       if (shouldRefactorStringFormat(tree.getArguments().getFirst(), arguments)) {
@@ -63,7 +56,7 @@ public final class StringFormatWithLiteral extends BugChecker
                 tree, getFormattedUnifiedString(tree.getArguments().getFirst(), arguments)));
       }
     }
-    if (FORMATTED.matches(tree, state)) {
+    if (stringFormattedInvocation().matches(tree, state)) {
       if (shouldRefactorStringFormat(getReceiver(tree), tree.getArguments())) {
         return describeMatch(
             tree,

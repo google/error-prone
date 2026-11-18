@@ -17,8 +17,9 @@
 package com.google.errorprone.bugpatterns.formatstring;
 
 import static com.google.errorprone.matchers.Matchers.anyOf;
+import static com.google.errorprone.matchers.Matchers.stringFormatInvocation;
+import static com.google.errorprone.matchers.Matchers.stringFormattedInvocation;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
-import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 import static com.google.errorprone.predicates.TypePredicates.isExactType;
 import static com.google.errorprone.suppliers.Suppliers.OBJECT_TYPE;
 import static com.google.errorprone.suppliers.Suppliers.STRING_TYPE;
@@ -57,7 +58,7 @@ public final class FormatStringUtils {
                   "java.util.Formatter",
                   "java.io.Console")
               .namedAnyOf("format", "printf"),
-          staticMethod().onClass("java.lang.String").named("format"),
+          stringFormatInvocation(),
           // Exclude zero-arg java.io.Console.readPassword from format methods.
           instanceMethod()
               .onExactClass("java.io.Console")
@@ -72,9 +73,6 @@ public final class FormatStringUtils {
               .withParametersMatching(
                   ParameterPredicates.of(isExactType(STRING_TYPE)),
                   ParameterPredicates.varargsOf(ParameterPredicates.of(isExactType(OBJECT_TYPE)))));
-
-  private static final Matcher<ExpressionTree> FORMATTED_METHOD =
-      instanceMethod().onExactClass("java.lang.String").named("formatted");
 
   public static ImmutableList<ExpressionTree> formatMethodAnnotationArguments(
       MethodInvocationTree tree, VisitorState state) {
@@ -112,7 +110,7 @@ public final class FormatStringUtils {
   public static ImmutableList<ExpressionTree> formatMethodArguments(
       MethodInvocationTree tree, VisitorState state) {
 
-    if (FORMATTED_METHOD.matches(tree, state)) {
+    if (stringFormattedInvocation().matches(tree, state)) {
       /*
         Java 15 and greater supports the formatted method on an instance of string. If found
         then use the string value as the pattern and all-of-the arguments and send directly to

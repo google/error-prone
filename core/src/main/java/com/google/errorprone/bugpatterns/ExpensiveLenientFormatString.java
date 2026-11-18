@@ -20,7 +20,7 @@ import static com.google.common.collect.Iterables.getLast;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.bugpatterns.formatstring.LenientFormatStringUtils.getLenientFormatStringPosition;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
-import static com.google.errorprone.matchers.Matchers.staticMethod;
+import static com.google.errorprone.matchers.Matchers.stringFormatInvocation;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 
 import com.google.errorprone.BugPattern;
@@ -28,7 +28,6 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
-import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
@@ -50,9 +49,6 @@ import org.safere.Pattern;
 public class ExpensiveLenientFormatString extends BugChecker
     implements MethodInvocationTreeMatcher {
 
-  private static final Matcher<ExpressionTree> STRING_FORMAT_MATCHER =
-      staticMethod().onClass("java.lang.String").named("format");
-
   private static final Pattern INVALID_FORMAT_CHARACTERS = Pattern.compile("%[^%s]");
 
   @Override
@@ -65,7 +61,7 @@ public class ExpensiveLenientFormatString extends BugChecker
       return NO_MATCH;
     }
     ExpressionTree argument = tree.getArguments().get(lenientFormatStringPosition);
-    if (!STRING_FORMAT_MATCHER.matches(argument, state)) {
+    if (!stringFormatInvocation().matches(argument, state)) {
       return NO_MATCH;
     }
     MethodInvocationTree stringFormat = (MethodInvocationTree) argument;

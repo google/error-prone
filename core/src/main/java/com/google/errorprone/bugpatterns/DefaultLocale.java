@@ -24,6 +24,7 @@ import static com.google.errorprone.matchers.Matchers.constructor;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
 import static com.google.errorprone.matchers.Matchers.receiverOfInvocation;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
+import static com.google.errorprone.matchers.Matchers.stringFormattedInvocation;
 import static com.google.errorprone.matchers.field.FieldMatchers.staticField;
 
 import com.google.common.annotations.VisibleForTesting;
@@ -136,9 +137,6 @@ public class DefaultLocale extends BugChecker
 
   private static final Matcher<MethodInvocationTree> SYSTEM_OUT_RECEIVER =
       receiverOfInvocation(staticField().onClass(System.class.getName()).namedAnyOf("out", "err"));
-
-  private static final Matcher<ExpressionTree> STRING_FORMATTED =
-      instanceMethod().onExactClass(Suppliers.STRING_TYPE).named("formatted");
 
   private static final Matcher<ExpressionTree> DISPLAY_METHODS =
       instanceMethod().onExactClass("java.util.Currency").named("getSymbol").withNoParameters();
@@ -286,7 +284,7 @@ public class DefaultLocale extends BugChecker
           LocaleFix.DEFAULT_LOCALE_FIX,
           LocaleFix.DEFAULT_FORMAT_LOCALE_FIX);
     }
-    if (STRING_FORMATTED.matches(tree, state)) {
+    if (stringFormattedInvocation().matches(tree, state)) {
       return handleStringFormatted(tree, state);
     }
     if (DISPLAY_METHODS.matches(tree, state)) {

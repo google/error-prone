@@ -21,6 +21,8 @@ import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
+import static com.google.errorprone.matchers.Matchers.stringFormatInvocation;
+import static com.google.errorprone.matchers.Matchers.stringFormattedInvocation;
 import static com.google.errorprone.matchers.Matchers.symbolHasAnnotation;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
@@ -142,9 +144,7 @@ public abstract class AbstractToString extends BugChecker
       symbolHasAnnotation(FormatMethod.class);
 
   private static final Matcher<ExpressionTree> STRING_FORMAT =
-      anyOf(
-          staticMethod().onClass("java.lang.String").named("format"),
-          instanceMethod().onExactClass("java.lang.String").named("formatted"));
+      anyOf(stringFormatInvocation(), stringFormattedInvocation());
 
   private static final Matcher<ExpressionTree> VALUE_OF =
       staticMethod()

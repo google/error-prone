@@ -19,7 +19,8 @@ package com.google.errorprone.bugpatterns.nullness;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.argument;
-import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
+import static com.google.errorprone.matchers.Matchers.stringFormatInvocation;
+import static com.google.errorprone.matchers.Matchers.stringFormattedInvocation;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
@@ -83,9 +84,7 @@ public class UnnecessaryCheckNotNull extends BugChecker implements MethodInvocat
 
   /** Matches methods that construct a new (and hence non-null) formatted string. */
   private static final Matcher<ExpressionTree> STRING_FORMAT_MATCHER =
-      anyOf(
-          staticMethod().onClass("java.lang.String").named("format"),
-          instanceMethod().onExactClass("java.lang.String").named("formatted"));
+      anyOf(stringFormatInvocation(), stringFormattedInvocation());
 
   private static final Matcher<MethodInvocationTree> PRIMITIVE_ARG_MATCHER =
       argument(0, Matchers.<ExpressionTree>isPrimitiveType());
