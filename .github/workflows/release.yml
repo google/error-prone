@@ -88,7 +88,7 @@ jobs:
         uses: softprops/action-gh-release@efb35369e0ad2afab669f228072c1b0d510eae64 # v3.0.3
         with:
           draft: true
-          name: Error Prone ${{ github.event.input.version }} 
+          name: Error Prone ${{ github.event.inputs.version }} 
           generate_release_notes: true
           tag_name: "v${{ github.event.inputs.version }}"
           target_commitish: ${{ env.TARGET_COMMITISH }}
