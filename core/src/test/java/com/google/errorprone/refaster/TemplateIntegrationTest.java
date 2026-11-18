@@ -302,6 +302,14 @@ public class TemplateIntegrationTest extends CompilerBasedTest {
   }
 
   @Test
+  public void shadowedImport() throws IOException {
+    // TODO(b/587330629): The output should use `new java.util.ArrayList<>()` without importing
+    // java.util.ArrayList, since the inherited Base.ArrayList shadows that import (the rewrite
+    // currently binds to Base.ArrayList).
+    runTest("ShadowedImportTemplate");
+  }
+
+  @Test
   public void ifFallthrough() throws IOException {
     runTest("IfFallthroughTemplate");
   }
