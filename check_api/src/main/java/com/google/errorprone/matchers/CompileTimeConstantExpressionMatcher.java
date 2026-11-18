@@ -25,8 +25,6 @@ import static com.google.errorprone.matchers.Matchers.typeCast;
 import static com.google.errorprone.util.ASTHelpers.constValue;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.isConsideredFinal;
-import static javax.lang.model.element.ElementKind.FIELD;
-import static javax.lang.model.element.ElementKind.PARAMETER;
 
 import com.google.errorprone.ClassName;
 import com.google.errorprone.VisitorState;
@@ -54,13 +52,12 @@ import com.sun.tools.javac.code.Symbol.VarSymbol;
  * <ol>
  *   <li>Any expression for which the Java compiler can determine a constant value at compile time.
  *   <li>The expression consisting of the literal {@code null}.
- *   <li>An expression consisting of a single identifier, where the identifier has the {@link
- *       CompileTimeConstant} annotation and is either:
- *       <ul>
- *         <li>A class field that is declared {@code final}.
- *         <li>A formal parameter of a method or constructor, which is declared {@code final} or is
- *             effectively final.
- *       </ul>
+ *   <li>An enum constant.
+ *   <li>A class literal (e.g. {@code String.class}).
+ *   <li>A field of a class or record, which is declared {@code final} and is annotated with {@link
+ *       CompileTimeConstant}.
+ *   <li>A formal parameter of a method or constructor, which is effectively {@code final} (either
+ *       inferred or explicitly declared) and is annotated with {@link CompileTimeConstant}.
  *   <li>A {@link String} which is formed from the concatenation of other compile-time-constant
  *       {@link String}s.
  *   <li>A switch expression where all case bodies are compile-time constants.
@@ -181,19 +178,19 @@ public class CompileTimeConstantExpressionMatcher implements Matcher<ExpressionT
         if (!(getSymbol(node) instanceof VarSymbol varSymbol)) {
           return false;
         }
-        // Check that the symbol is a formal method/constructor parameter or a field.
-        if (varSymbol.getKind() != PARAMETER && varSymbol.getKind() != FIELD) {
-          return false;
-        }
-        // Check that the symbol is final
-        if (!isConsideredFinal(varSymbol)) {
-          return false;
-        }
-        // Check if the symbol has the @CompileTimeConstant annotation.
-        if (hasCompileTimeConstantAnnotation(state, varSymbol)) {
+
+        // Class literals are always compile-time constants. (Not allowed to call .class on a
+        // runtime Class<?> value.)
+        if (varSymbol.getSimpleName().contentEquals("class")) {
           return true;
         }
-        return false;
+
+        return switch (varSymbol.getKind()) {
+          case ENUM_CONSTANT -> true;
+          case PARAMETER, FIELD ->
+              isConsideredFinal(varSymbol) && hasCompileTimeConstantAnnotation(state, varSymbol);
+          default -> false;
+        };
       }
     }
   }

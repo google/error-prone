@@ -309,6 +309,49 @@ public class CompileTimeConstantExpressionMatcherTest {
         .doTest();
   }
 
+  @Test
+  public void classLiteralsAndEnumConstants() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            package test;
+
+            import com.google.common.collect.ImmutableList;
+            import java.math.RoundingMode;
+            import java.time.DayOfWeek;
+
+            public class Test {
+              enum CustomEnum {
+                FIRST,
+                SECOND
+              }
+
+              public void m() {
+                // BUG: Diagnostic contains: true
+                Class<?> c1 = String.class;
+                // BUG: Diagnostic contains: true
+                Class<?> c2 = int.class;
+                // BUG: Diagnostic contains: true
+                Class<?> c3 = void.class;
+                // BUG: Diagnostic contains: true
+                Class<?> c4 = String[].class;
+                // BUG: Diagnostic contains: true
+                ImmutableList<Class<?>> classes = ImmutableList.of(String.class, int.class);
+                // BUG: Diagnostic contains: true
+                DayOfWeek d = DayOfWeek.MONDAY;
+                // BUG: Diagnostic contains: true
+                RoundingMode r = RoundingMode.HALF_UP;
+                // BUG: Diagnostic contains: true
+                CustomEnum e = CustomEnum.FIRST;
+                // BUG: Diagnostic contains: false
+                String enumToString = CustomEnum.FIRST.toString();
+              }
+            }
+            """)
+        .doTest();
+  }
+
   /** A test-only bugpattern for testing {@link CompileTimeConstantExpressionMatcher}. */
   @BugPattern(severity = WARNING, summary = "")
   public static final class CompileTimeConstantExpressionMatcherTester extends BugChecker

@@ -1108,4 +1108,54 @@ public class Test {
 """)
         .doTest();
   }
+
+  @Test
+  public void classLiteralsAndEnumConstants() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            package test;
+
+            import com.google.common.collect.ImmutableList;
+            import com.google.errorprone.annotations.CompileTimeConstant;
+            import java.time.DayOfWeek;
+
+            public class Test {
+              enum MyEnum {
+                A,
+                B
+              }
+
+              @CompileTimeConstant final Class<?> clazz = String.class;
+              @CompileTimeConstant final Class<?> primitiveClazz = int.class;
+              @CompileTimeConstant final MyEnum enumConst = MyEnum.A;
+
+              // BUG: Diagnostic contains: Non-compile-time constant expression
+              @CompileTimeConstant final String enumToString = MyEnum.A.toString();
+
+              public static void acceptObject(@CompileTimeConstant Object obj) {}
+
+              public static void testSuccess() {
+                acceptObject(String.class);
+                acceptObject(int.class);
+                acceptObject(void.class);
+                acceptObject(String[].class);
+                acceptObject(ImmutableList.of(String.class, int.class));
+                acceptObject(DayOfWeek.MONDAY);
+                acceptObject(MyEnum.B);
+              }
+
+              public static void testFailure(Class<?> runtimeClass, MyEnum runtimeEnum) {
+                // BUG: Diagnostic contains: Non-compile-time constant expression passed
+                acceptObject(runtimeClass);
+                // BUG: Diagnostic contains: Non-compile-time constant expression passed
+                acceptObject(runtimeEnum);
+                // BUG: Diagnostic contains: Non-compile-time constant expression passed
+                acceptObject(MyEnum.B.toString());
+              }
+            }
+            """)
+        .doTest();
+  }
 }
