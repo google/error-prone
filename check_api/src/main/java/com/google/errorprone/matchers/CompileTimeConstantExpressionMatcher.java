@@ -22,6 +22,7 @@ import static com.google.errorprone.matchers.Matchers.nullLiteral;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
 import static com.google.errorprone.matchers.Matchers.toType;
 import static com.google.errorprone.matchers.Matchers.typeCast;
+import static com.google.errorprone.matchers.field.FieldMatchers.staticField;
 import static com.google.errorprone.util.ASTHelpers.constValue;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.isConsideredFinal;
@@ -54,8 +55,12 @@ import com.sun.tools.javac.code.Symbol.VarSymbol;
  *   <li>The expression consisting of the literal {@code null}.
  *   <li>An enum constant.
  *   <li>A class literal (e.g. {@code String.class}).
- *   <li>A field of a class or record, which is declared {@code final} and is annotated with {@link
- *       CompileTimeConstant}.
+ *   <li>A field of a class or record, which is declared {@code final} and is either:
+ *       <ul>
+ *         <li>Explicitly annotated with {@link CompileTimeConstant}.
+ *         <li>A well-known compatible field, e.g. from the Java standard library. (See {@link
+ *             #COMPATIBLE_FIELDS} below for the complete list.)
+ *       </ul>
  *   <li>A formal parameter of a method or constructor, which is effectively {@code final} (either
  *       inferred or explicitly declared) and is annotated with {@link CompileTimeConstant}.
  *   <li>A {@link String} which is formed from the concatenation of other compile-time-constant
@@ -188,7 +193,9 @@ public class CompileTimeConstantExpressionMatcher implements Matcher<ExpressionT
         return switch (varSymbol.getKind()) {
           case ENUM_CONSTANT -> true;
           case PARAMETER, FIELD ->
-              isConsideredFinal(varSymbol) && hasCompileTimeConstantAnnotation(state, varSymbol);
+              isConsideredFinal(varSymbol)
+                  && (hasCompileTimeConstantAnnotation(state, varSymbol)
+                      || isWellKnownCompatibleField(state, node));
           default -> false;
         };
       }
@@ -201,4 +208,126 @@ public class CompileTimeConstantExpressionMatcher implements Matcher<ExpressionT
     // be present on a Symbol we're inspecting.
     return annotation != null && symbol.attribute(annotation) != null;
   }
+
+  public static boolean isWellKnownCompatibleField(VisitorState state, Tree node) {
+    return node instanceof ExpressionTree expressionTree
+        && COMPATIBLE_FIELDS.matches(expressionTree, state);
+  }
+
+  /**
+   * Matches static final fields that are known to be compile-time constants, but are "upstream" of
+   * this check and therefore cannot be annotated {@code @CompileTimeConstant} themselves.
+   *
+   * <p>Note that {@code static final} fields of primitive or {@link String} type initialized with a
+   * constant expression (JLS §4.12.4 "constant variables", such as {@link Integer#MAX_VALUE} or
+   * {@link Math#PI}) already have their constant value computed by {@code javac} and are matched
+   * via {@link ASTHelpers#constValue}, so only non-primitive, non-{@link String} constant fields
+   * need to be listed here.
+   */
+  private static final Matcher<ExpressionTree> COMPATIBLE_FIELDS =
+      anyOf(
+          // java.lang
+          staticField().onClass("java.lang.Boolean").namedAnyOf("FALSE", "TRUE", "TYPE"),
+          staticField().onClass("java.lang.Byte").named("TYPE"),
+          staticField().onClass("java.lang.Character").named("TYPE"),
+          staticField().onClass("java.lang.Double").named("TYPE"),
+          staticField().onClass("java.lang.Float").named("TYPE"),
+          staticField().onClass("java.lang.Integer").named("TYPE"),
+          staticField().onClass("java.lang.Long").named("TYPE"),
+          staticField().onClass("java.lang.Short").named("TYPE"),
+          staticField().onClass("java.lang.Void").named("TYPE"),
+          staticField().onClass("java.lang.String").named("CASE_INSENSITIVE_ORDER"),
+
+          // java.math
+          staticField().onClass("java.math.BigDecimal").namedAnyOf("ONE", "TEN", "TWO", "ZERO"),
+          staticField().onClass("java.math.BigInteger").namedAnyOf("ONE", "TEN", "TWO", "ZERO"),
+          staticField()
+              .onClass("java.math.MathContext")
+              .namedAnyOf("DECIMAL128", "DECIMAL32", "DECIMAL64", "UNLIMITED"),
+
+          // java.time
+          staticField().onClass("java.time.Duration").named("ZERO"),
+          staticField().onClass("java.time.Instant").namedAnyOf("EPOCH", "MAX", "MIN"),
+          staticField().onClass("java.time.LocalDate").namedAnyOf("EPOCH", "MAX", "MIN"),
+          staticField().onClass("java.time.LocalDateTime").namedAnyOf("MAX", "MIN"),
+          staticField().onClass("java.time.LocalTime").namedAnyOf("MAX", "MIDNIGHT", "MIN", "NOON"),
+          staticField().onClass("java.time.OffsetDateTime").namedAnyOf("MAX", "MIN"),
+          staticField().onClass("java.time.OffsetTime").namedAnyOf("MAX", "MIN"),
+          staticField().onClass("java.time.Period").named("ZERO"),
+          staticField().onClass("java.time.ZoneOffset").namedAnyOf("MAX", "MIN", "UTC"),
+          staticField()
+              .onClass("java.time.format.DateTimeFormatter")
+              .namedAnyOf(
+                  "BASIC_ISO_DATE",
+                  "ISO_DATE",
+                  "ISO_DATE_TIME",
+                  "ISO_INSTANT",
+                  "ISO_LOCAL_DATE",
+                  "ISO_LOCAL_DATE_TIME",
+                  "ISO_LOCAL_TIME",
+                  "ISO_OFFSET_DATE",
+                  "ISO_OFFSET_DATE_TIME",
+                  "ISO_OFFSET_TIME",
+                  "ISO_ORDINAL_DATE",
+                  "ISO_TIME",
+                  "ISO_WEEK_DATE",
+                  "ISO_ZONED_DATE_TIME",
+                  "RFC_1123_DATE_TIME"),
+          staticField()
+              .onClass("java.time.temporal.IsoFields")
+              .namedAnyOf(
+                  "DAY_OF_QUARTER",
+                  "QUARTER_OF_YEAR",
+                  "QUARTER_YEARS",
+                  "WEEK_BASED_YEAR",
+                  "WEEK_BASED_YEARS",
+                  "WEEK_OF_WEEK_BASED_YEAR"),
+          staticField()
+              .onClass("java.time.temporal.JulianFields")
+              .namedAnyOf("JULIAN_DAY", "MODIFIED_JULIAN_DAY", "RATA_DIE"),
+          staticField().onClass("java.time.temporal.WeekFields").namedAnyOf("ISO", "SUNDAY_START"),
+
+          // java.util
+          staticField()
+              .onClass("java.util.Collections")
+              .namedAnyOf("EMPTY_LIST", "EMPTY_MAP", "EMPTY_SET"),
+          staticField()
+              .onClass("java.util.Locale")
+              .namedAnyOf(
+                  "CANADA",
+                  "CANADA_FRENCH",
+                  "CHINA",
+                  "CHINESE",
+                  "ENGLISH",
+                  "FRANCE",
+                  "FRENCH",
+                  "GERMAN",
+                  "GERMANY",
+                  "ITALIAN",
+                  "ITALY",
+                  "JAPAN",
+                  "JAPANESE",
+                  "KOREA",
+                  "KOREAN",
+                  "PRC",
+                  "ROOT",
+                  "SIMPLIFIED_CHINESE",
+                  "TAIWAN",
+                  "TRADITIONAL_CHINESE",
+                  "UK",
+                  "US"),
+
+          // java.nio.charset
+          staticField()
+              .onClass("java.nio.charset.StandardCharsets")
+              .namedAnyOf(
+                  "ISO_8859_1",
+                  "US_ASCII",
+                  "UTF_16",
+                  "UTF_16BE",
+                  "UTF_16LE",
+                  "UTF_32",
+                  "UTF_32BE",
+                  "UTF_32LE",
+                  "UTF_8"));
 }

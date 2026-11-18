@@ -352,6 +352,97 @@ public class CompileTimeConstantExpressionMatcherTest {
         .doTest();
   }
 
+  @Test
+  public void compatibleFields() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            package test;
+
+            import java.io.PrintStream;
+            import java.math.BigDecimal;
+            import java.math.BigInteger;
+            import java.math.MathContext;
+            import java.nio.charset.Charset;
+            import java.nio.charset.StandardCharsets;
+            import java.time.Duration;
+            import java.time.Instant;
+            import java.time.LocalDate;
+            import java.time.LocalDateTime;
+            import java.time.LocalTime;
+            import java.time.OffsetDateTime;
+            import java.time.OffsetTime;
+            import java.time.Period;
+            import java.time.ZoneOffset;
+            import java.time.format.DateTimeFormatter;
+            import java.time.temporal.IsoFields;
+            import java.time.temporal.JulianFields;
+            import java.time.temporal.TemporalField;
+            import java.time.temporal.WeekFields;
+            import java.util.Collections;
+            import java.util.Comparator;
+            import java.util.List;
+            import java.util.Locale;
+
+            public class Test {
+              private static final Object UNANNOTATED_STATIC_FINAL = new Object();
+
+              public void m() {
+                // BUG: Diagnostic contains: true
+                Boolean b = Boolean.TRUE;
+                // BUG: Diagnostic contains: true
+                Class<Integer> intType = Integer.TYPE;
+                // BUG: Diagnostic contains: true
+                Comparator<String> cmp = String.CASE_INSENSITIVE_ORDER;
+                // BUG: Diagnostic contains: true
+                BigInteger bi = BigInteger.TEN;
+                // BUG: Diagnostic contains: true
+                BigDecimal bd = BigDecimal.ZERO;
+                // BUG: Diagnostic contains: true
+                MathContext mc = MathContext.DECIMAL128;
+                // BUG: Diagnostic contains: true
+                Duration d = Duration.ZERO;
+                // BUG: Diagnostic contains: true
+                Instant inst = Instant.EPOCH;
+                // BUG: Diagnostic contains: true
+                LocalDate ld = LocalDate.EPOCH;
+                // BUG: Diagnostic contains: true
+                LocalDateTime ldt = LocalDateTime.MIN;
+                // BUG: Diagnostic contains: true
+                LocalTime lt = LocalTime.MIDNIGHT;
+                // BUG: Diagnostic contains: true
+                OffsetDateTime odt = OffsetDateTime.MAX;
+                // BUG: Diagnostic contains: true
+                OffsetTime ot = OffsetTime.MIN;
+                // BUG: Diagnostic contains: true
+                Period p = Period.ZERO;
+                // BUG: Diagnostic contains: true
+                ZoneOffset zo = ZoneOffset.UTC;
+                // BUG: Diagnostic contains: true
+                DateTimeFormatter dtf = DateTimeFormatter.ISO_INSTANT;
+                // BUG: Diagnostic contains: true
+                TemporalField tf1 = IsoFields.DAY_OF_QUARTER;
+                // BUG: Diagnostic contains: true
+                TemporalField tf2 = JulianFields.JULIAN_DAY;
+                // BUG: Diagnostic contains: true
+                WeekFields wf = WeekFields.ISO;
+                // BUG: Diagnostic contains: true
+                List<?> emptyList = Collections.EMPTY_LIST;
+                // BUG: Diagnostic contains: true
+                Locale root = Locale.ROOT;
+                // BUG: Diagnostic contains: true
+                Charset utf8 = StandardCharsets.UTF_8;
+                // BUG: Diagnostic contains: false
+                PrintStream out = System.out;
+                // BUG: Diagnostic contains: false
+                Object unannotated = UNANNOTATED_STATIC_FINAL;
+              }
+            }
+            """)
+        .doTest();
+  }
+
   /** A test-only bugpattern for testing {@link CompileTimeConstantExpressionMatcher}. */
   @BugPattern(severity = WARNING, summary = "")
   public static final class CompileTimeConstantExpressionMatcherTester extends BugChecker

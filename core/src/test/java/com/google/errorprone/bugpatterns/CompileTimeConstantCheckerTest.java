@@ -1158,4 +1158,61 @@ public class Test {
             """)
         .doTest();
   }
+
+  @Test
+  public void compatibleFields() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            package test;
+
+            import com.google.errorprone.annotations.CompileTimeConstant;
+            import java.math.BigDecimal;
+            import java.math.BigInteger;
+            import java.math.MathContext;
+            import java.nio.charset.Charset;
+            import java.nio.charset.StandardCharsets;
+            import java.time.Duration;
+            import java.time.Instant;
+            import java.time.LocalDate;
+            import java.time.ZoneOffset;
+            import java.time.format.DateTimeFormatter;
+            import java.util.Collections;
+            import java.util.Locale;
+
+            public class Test {
+              private static final Object UNANNOTATED_STATIC_FINAL = new Object();
+
+              @CompileTimeConstant final Charset utf8 = StandardCharsets.UTF_8;
+              @CompileTimeConstant final Instant epoch = Instant.EPOCH;
+              @CompileTimeConstant final Locale rootLocale = Locale.ROOT;
+
+              public static void acceptObject(@CompileTimeConstant Object obj) {}
+
+              public static void testSuccess() {
+                acceptObject(Boolean.TRUE);
+                acceptObject(Integer.TYPE);
+                acceptObject(String.CASE_INSENSITIVE_ORDER);
+                acceptObject(BigInteger.ZERO);
+                acceptObject(BigDecimal.TEN);
+                acceptObject(MathContext.DECIMAL64);
+                acceptObject(Duration.ZERO);
+                acceptObject(LocalDate.EPOCH);
+                acceptObject(ZoneOffset.UTC);
+                acceptObject(DateTimeFormatter.ISO_INSTANT);
+                acceptObject(Collections.EMPTY_LIST);
+                acceptObject(StandardCharsets.UTF_8);
+              }
+
+              public static void testFailure() {
+                // BUG: Diagnostic contains: Non-compile-time constant expression passed
+                acceptObject(System.out);
+                // BUG: Diagnostic contains: Non-compile-time constant expression passed
+                acceptObject(UNANNOTATED_STATIC_FINAL);
+              }
+            }
+            """)
+        .doTest();
+  }
 }
