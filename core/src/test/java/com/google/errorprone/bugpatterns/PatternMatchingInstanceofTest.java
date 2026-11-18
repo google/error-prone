@@ -817,6 +817,109 @@ public final class PatternMatchingInstanceofTest {
   }
 
   @Test
+  public void generics_rawType_castToTypeVariable_noFinding() {
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test<T extends Test<T>> {
+              @SuppressWarnings("unchecked")
+              T f(Object o) {
+                if (o instanceof Test) {
+                  return (T) o;
+                }
+                return null;
+              }
+            }
+            """)
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void generics_rawType_wildcardCastAndTypeVariableCast() {
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test<T extends Test<T>> {
+              String val;
+
+              @SuppressWarnings("unchecked")
+              T f(Object o) {
+                if (o instanceof Test) {
+                  Test<?> other = (Test<?>) o;
+                  System.err.println(other.val);
+                  return (T) o;
+                }
+                return null;
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test<T extends Test<T>> {
+              String val;
+
+              @SuppressWarnings("unchecked")
+              T f(Object o) {
+                if (o instanceof Test<?> other) {
+
+                  System.err.println(other.val);
+                  return (T) o;
+                }
+                return null;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  // TODO: Consider supporting raw array types cast to wildcard-parameterized array types, e.g.
+  // `o instanceof Enum[]` -> `o instanceof Enum<?>[] e`.
+  @Test
+  public void generics_rawArray_wildcardArrayCast_noFinding() {
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              Enum<?>[] f(Object o) {
+                if (o instanceof Enum[]) {
+                  return (Enum<?>[]) o;
+                }
+                return null;
+              }
+            }
+            """)
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void generics_rawType_intersectionCast_noFinding() {
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            import java.io.Serializable;
+            import java.util.List;
+
+            class Test {
+              Serializable f(Object o) {
+                if (o instanceof List) {
+                  return (List & Serializable) o;
+                }
+                return null;
+              }
+            }
+            """)
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
   public void returnTarget() {
     helper
         .addInputLines(

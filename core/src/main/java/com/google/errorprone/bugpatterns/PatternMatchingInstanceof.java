@@ -115,9 +115,9 @@ public final class PatternMatchingInstanceof extends BugChecker implements Insta
     if (constant == null) {
       return NO_MATCH;
     }
-    Type targetType = getType(instanceOfTree.getType());
+    Type instanceOfType = getType(instanceOfTree.getType());
 
-    var allCasts = findAllCasts(constant, impliedStatements, targetType, state);
+    var allCasts = findAllCasts(constant, impliedStatements, instanceOfType, state);
     if (allCasts.isEmpty()) {
       return NO_MATCH;
     }
@@ -187,7 +187,7 @@ public final class PatternMatchingInstanceof extends BugChecker implements Insta
         fix.delete(variableToDelete);
       }
       if (name == null) {
-        name = generateVariableName(targetType, state, impliedStatements);
+        name = generateVariableName(instanceOfType, state, impliedStatements);
       }
       // For generic types without type arguments in the instanceof check, add unbounded wildcards
       // e.g. `instanceof List` -> `instanceof List<?> list` per Java pattern matching rules.
@@ -359,10 +359,11 @@ public final class PatternMatchingInstanceof extends BugChecker implements Insta
   }
 
   /**
-   * Finds all casts of {@code symbol} which are cast to {@code targetType} within {@code trees}.
+   * Finds all casts of {@code symbol} which are cast to {@code instanceOfType} within {@code
+   * trees}.
    */
   private ImmutableSet<TreePath> findAllCasts(
-      ConstantExpression symbol, Iterable<Tree> trees, Type targetType, VisitorState state) {
+      ConstantExpression symbol, Iterable<Tree> trees, Type instanceOfType, VisitorState state) {
     var usages = ImmutableSet.<TreePath>builder();
     var scanner =
         new TreePathScanner<Void, Void>() {
@@ -371,7 +372,7 @@ public final class PatternMatchingInstanceof extends BugChecker implements Insta
             var castee = constantExpressions.constantExpression(node.getExpression(), state);
             if (castee.isPresent()
                 && castee.get().equals(symbol)
-                && isSameOrWildcardParameterized(getType(node.getType()), targetType, state)) {
+                && isSameOrWildcardParameterized(getType(node.getType()), instanceOfType, state)) {
               usages.add(getUsage(getCurrentPath()));
             }
             return super.visitTypeCast(node, null);
@@ -384,14 +385,19 @@ public final class PatternMatchingInstanceof extends BugChecker implements Insta
   }
 
   private static boolean isSameOrWildcardParameterized(
-      Type type, Type targetType, VisitorState state) {
-    if (state.getTypes().isSameType(type, targetType)) {
+      Type castType, Type instanceOfType, VisitorState state) {
+    if (state.getTypes().isSameType(castType, instanceOfType)) {
       return true;
     }
-    if (targetType.isRaw()
-        && isSameType(type, targetType, state)
-        && state.getTypes().isSameType(type.getEnclosingType(), targetType.getEnclosingType())) {
-      return type.getTypeArguments().stream()
+    if (castType.hasTag(TypeTag.CLASS)
+        && instanceOfType.hasTag(TypeTag.CLASS)
+        && !castType.isCompound()
+        && instanceOfType.isRaw()
+        && isSameType(castType, instanceOfType, state)
+        && state
+            .getTypes()
+            .isSameType(castType.getEnclosingType(), instanceOfType.getEnclosingType())) {
+      return castType.getTypeArguments().stream()
           .allMatch(PatternMatchingInstanceof::isUnboundedWildcard);
     }
     return false;
