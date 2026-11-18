@@ -96,12 +96,11 @@ implements <a href="Matcher.html" title="interface in com.google.errorprone.matc
 <ol>
   <li>Any expression for which the Java compiler can determine a constant value at compile time.
   <li>The expression consisting of the literal <code>null</code>.
-  <li>An expression consisting of a single identifier, where the identifier has the <a href="../annotations/CompileTimeConstant.html" title="annotation interface in com.google.errorprone.annotations"><code>CompileTimeConstant</code></a> annotation and is either:
-      <ul>
-        <li>A class field that is declared <code>final</code>.
-        <li>A formal parameter of a method or constructor, which is declared <code>final</code> or is
-            effectively final.
-      </ul>
+  <li>An enum constant.
+  <li>A class literal (e.g. <code>String.class</code>).
+  <li>A field of a class or record, which is declared <code>final</code> and is annotated with <a href="../annotations/CompileTimeConstant.html" title="annotation interface in com.google.errorprone.annotations"><code>CompileTimeConstant</code></a>.
+  <li>A formal parameter of a method or constructor, which is effectively <code>final</code> (either
+      inferred or explicitly declared) and is annotated with <a href="../annotations/CompileTimeConstant.html" title="annotation interface in com.google.errorprone.annotations"><code>CompileTimeConstant</code></a>.
   <li>A <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link"><code>String</code></a> which is formed from the concatenation of other compile-time-constant
       <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link"><code>String</code></a>s.
   <li>A switch expression where all case bodies are compile-time constants.
