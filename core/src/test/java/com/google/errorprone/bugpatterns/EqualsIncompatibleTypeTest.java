@@ -16,11 +16,23 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.common.truth.Truth.assertThat;
 import static com.google.common.truth.TruthJUnit.assume;
+import static com.sun.tools.javac.main.Main.Result.OK;
+import static java.nio.file.Files.delete;
+import static java.nio.file.Files.writeString;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.errorprone.CompilationTestHelper;
+import com.sun.tools.javac.api.JavacTool;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Map;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
@@ -29,6 +41,8 @@ import org.junit.runners.JUnit4;
  */
 @RunWith(JUnit4.class)
 public class EqualsIncompatibleTypeTest {
+  @Rule public final TemporaryFolder tempFolder = new TemporaryFolder();
+
   private final CompilationTestHelper compilationHelper =
       CompilationTestHelper.newInstance(EqualsIncompatibleType.class, getClass());
 
@@ -1287,5 +1301,106 @@ public class Test {
             }
             """)
         .doTest();
+  }
+
+  @Test
+  public void missingInterfaceOnClasspath() throws Exception {
+    var classesDir =
+        compileWithMissingClass(
+            "MissingInterface.class",
+            ImmutableMap.of(
+                "MissingInterface.java",
+                "public interface MissingInterface {}",
+                "ImplOfMissingInterface.java",
+                "public final class ImplOfMissingInterface implements MissingInterface {}",
+                "MissingInterfaceList.java",
+                """
+                import java.util.AbstractList;
+
+                public abstract class MissingInterfaceList
+                    extends AbstractList<MissingInterface> {}
+                """));
+
+    compilationHelper
+        .setArgs("-cp", classesDir.toString())
+        .addSourceLines(
+            "Test.java",
+            """
+            import java.util.List;
+            import java.util.Objects;
+
+            class Test {
+              void test(MissingInterfaceList missingList, List<ImplOfMissingInterface> list) {
+                var unused1 = Objects.equals(missingList, list);
+                var unused2 = Objects.equals(list, missingList);
+                var unused3 = list.equals(missingList);
+                var unused4 = missingList.equals(list);
+                // BUG: Diagnostic contains: incompatible types
+                var unused5 = Objects.equals(missingList, "not a list");
+              }
+            }
+            """)
+        .expectResult(OK)
+        .doTest();
+  }
+
+  @Test
+  public void missingWildcardBoundInterfaceOnClasspath() throws Exception {
+    var classesDir =
+        compileWithMissingClass(
+            "MissingInterface.class",
+            ImmutableMap.of(
+                "MissingInterface.java",
+                "public interface MissingInterface {}",
+                "ImplOfMissingInterface.java",
+                "public final class ImplOfMissingInterface implements MissingInterface {}",
+                "MissingWildcardHolder.java",
+                """
+                import java.util.List;
+
+                public interface MissingWildcardHolder {
+                  List<? extends MissingInterface> getList();
+                }
+                """));
+
+    compilationHelper
+        .setArgs("-cp", classesDir.toString())
+        .addSourceLines(
+            "Test.java",
+            """
+            import java.util.List;
+            import java.util.Objects;
+
+            class Test {
+              void test(MissingWildcardHolder holder, List<ImplOfMissingInterface> list) {
+                var unused1 = Objects.equals(holder.getList(), list);
+                var unused2 = Objects.equals(list, holder.getList());
+                // BUG: Diagnostic contains: incompatible types
+                var unused3 = Objects.equals(holder.getList(), "not a list");
+              }
+            }
+            """)
+        .expectResult(OK)
+        .doTest();
+  }
+
+  private Path compileWithMissingClass(
+      String classFileToDelete, Map<String, String> sourcesByFileName) throws IOException {
+    var srcDir = tempFolder.newFolder("src").toPath();
+    var classesDir = tempFolder.newFolder("classes").toPath();
+    var args = new ArrayList<String>();
+    args.add("-d");
+    args.add(classesDir.toString());
+    for (var entry : sourcesByFileName.entrySet()) {
+      var sourceFile = srcDir.resolve(entry.getKey());
+      writeString(sourceFile, entry.getValue());
+      args.add(sourceFile.toString());
+    }
+    assertThat(
+            JavacTool.create()
+                .run(/* in= */ null, /* out= */ null, /* err= */ null, args.toArray(String[]::new)))
+        .isEqualTo(0);
+    delete(classesDir.resolve(classFileToDelete));
+    return classesDir;
   }
 }

@@ -103,6 +103,11 @@ public final class TypeCompatibility {
     Types types = state.getTypes();
     Type leftUpperBound = getUpperBound(leftType, types);
     Type rightUpperBound = getUpperBound(rightType, types);
+    // Avoid false positives and CompletionFailures when a type (or its upper bound) is missing
+    // from the classpath.
+    if (leftUpperBound.getKind() == TypeKind.ERROR || rightUpperBound.getKind() == TypeKind.ERROR) {
+      return TypeCompatibilityReport.compatible();
+    }
     if (types.isSameType(leftUpperBound, rightUpperBound)) {
       // As a special case, consider Builder classes without an equals implementation to not be
       // comparable to themselves. It would be reasonable to mistake Builders as having value
