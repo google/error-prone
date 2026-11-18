@@ -7,5 +7,5 @@ JUnit4 runs `@BeforeClass` and `@AfterClass` methods without making an instance
 of the test class, meaning that the methods must be `static`. JUnit4 will fail
 to run any `@BeforeClass` or `@AfterClass` method that isn't also `static`.
 
-[beforeclass]: https://junit.sourceforge.net/javadoc/org/junit/BeforeClass.html
-[afterclass]: https://junit.sourceforge.net/javadoc/org/junit/AfterClass.html
+[beforeclass]: https://junit.org/junit4/javadoc/latest/org/junit/BeforeClass.html
+[afterclass]: https://junit.org/junit4/javadoc/latest/org/junit/AfterClass.html
