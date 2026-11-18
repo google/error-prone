@@ -129,66 +129,72 @@ public class CompileTimeConstantExpressionMatcher implements Matcher<ExpressionT
 
     @Override
     public boolean matches(ExpressionTree tree, VisitorState state) {
-      return tree.accept(
-          new SimpleTreeVisitor<Boolean, Void>() {
-            @Override
-            public Boolean visitConditionalExpression(ConditionalExpressionTree tree, Void unused) {
-              return tree.getTrueExpression().accept(this, null)
-                  && tree.getFalseExpression().accept(this, null);
-            }
+      return tree.accept(new TreeVisitor(state), null);
+    }
 
-            @Override
-            public Boolean visitSwitchExpression(SwitchExpressionTree tree, Void unused) {
-              // This is intentionally quite restrictive: only accept bare values and throws.
-              return tree.getCases().stream()
-                  .allMatch(c ->
-                      c.getCaseKind().equals(CaseKind.RULE)
-                          && (c.getBody().accept(this, null) || c.getBody() instanceof ThrowTree));
-            }
+    private static final class TreeVisitor extends SimpleTreeVisitor<Boolean, Void> {
+      final VisitorState state;
 
-            @Override
-            public Boolean visitMethodInvocation(MethodInvocationTree tree, Void unused) {
-              return IMMUTABLE_FACTORY.matches(tree, state)
-                  && tree.getArguments().stream().allMatch(a -> a.accept(this, null));
-            }
+      private TreeVisitor(VisitorState state) {
+        this.state = state;
+      }
 
-            @Override
-            public Boolean visitBinary(BinaryTree tree, Void unused) {
-              return defaultAction(tree, null)
-                  || (tree.getKind().equals(Kind.PLUS)
-                      && tree.getLeftOperand().accept(this, null)
-                      && tree.getRightOperand().accept(this, null));
-            }
+      @Override
+      public Boolean visitConditionalExpression(ConditionalExpressionTree tree, Void unused) {
+        return tree.getTrueExpression().accept(this, null)
+            && tree.getFalseExpression().accept(this, null);
+      }
 
-            @Override
-            public Boolean visitParenthesized(ParenthesizedTree tree, Void unused) {
-              return tree.getExpression().accept(this, null);
-            }
+      @Override
+      public Boolean visitSwitchExpression(SwitchExpressionTree tree, Void unused) {
+        // This is intentionally quite restrictive: only accept bare values and throws.
+        return tree.getCases().stream()
+            .allMatch(c ->
+                c.getCaseKind().equals(CaseKind.RULE)
+                    && (c.getBody().accept(this, null) || c.getBody() instanceof ThrowTree));
+      }
 
-            @Override
-            protected Boolean defaultAction(Tree node, Void unused) {
-              if (constValue(node) != null) {
-                return true;
-              }
-              if (!(getSymbol(node) instanceof VarSymbol varSymbol)) {
-                return false;
-              }
-              // Check that the symbol is a formal method/constructor parameter or a field.
-              if (varSymbol.getKind() != PARAMETER && varSymbol.getKind() != FIELD) {
-                return false;
-              }
-              // Check that the symbol is final
-              if (!isConsideredFinal(varSymbol)) {
-                return false;
-              }
-              // Check if the symbol has the @CompileTimeConstant annotation.
-              if (hasCompileTimeConstantAnnotation(state, varSymbol)) {
-                return true;
-              }
-              return false;
-            }
-          },
-          null);
+      @Override
+      public Boolean visitMethodInvocation(MethodInvocationTree tree, Void unused) {
+        return IMMUTABLE_FACTORY.matches(tree, state)
+            && tree.getArguments().stream().allMatch(a -> a.accept(this, null));
+      }
+
+      @Override
+      public Boolean visitBinary(BinaryTree tree, Void unused) {
+        return defaultAction(tree, null)
+            || (tree.getKind().equals(Kind.PLUS)
+                && tree.getLeftOperand().accept(this, null)
+                && tree.getRightOperand().accept(this, null));
+      }
+
+      @Override
+      public Boolean visitParenthesized(ParenthesizedTree tree, Void unused) {
+        return tree.getExpression().accept(this, null);
+      }
+
+      @Override
+      protected Boolean defaultAction(Tree node, Void unused) {
+        if (constValue(node) != null) {
+          return true;
+        }
+        if (!(getSymbol(node) instanceof VarSymbol varSymbol)) {
+          return false;
+        }
+        // Check that the symbol is a formal method/constructor parameter or a field.
+        if (varSymbol.getKind() != PARAMETER && varSymbol.getKind() != FIELD) {
+          return false;
+        }
+        // Check that the symbol is final
+        if (!isConsideredFinal(varSymbol)) {
+          return false;
+        }
+        // Check if the symbol has the @CompileTimeConstant annotation.
+        if (hasCompileTimeConstantAnnotation(state, varSymbol)) {
+          return true;
+        }
+        return false;
+      }
     }
   }
 
