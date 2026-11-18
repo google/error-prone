@@ -26,8 +26,10 @@ expressions, specifically:
 *   a literal `null`, or
 *   an enum constant, or
 *   a class literal (e.g. `String.class`), or
-*   a field of a class or record, which is declared `final` and is annotated
-    with `@CompileTimeConstant`
+*   a field of a class or record, which is declared `final` and is either:
+    *   explicitly annotated with `@CompileTimeConstant`, or
+    *   a well-known compatible constant field, e.g. from the Java standard
+        library, or
 *   a formal parameter of a method or constructor, which is effectively `final`
     (whether inferred or explicitly declared) and is annotated with
     `@CompileTimeConstant`, or
