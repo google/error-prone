@@ -25,9 +25,45 @@ public class ShadowedImportTemplateExample {
     static class ArrayList<E> extends java.util.ArrayList<E> {}
   }
 
-  static class Sub extends Base {
+  static class InheritedMemberType extends Base {
     List<String> example() {
       return Lists.newArrayList();
     }
+  }
+
+  <ArrayList> List<String> methodTypeVariable() {
+    return Lists.newArrayList();
+  }
+
+  static class ClassTypeVariableInStaticMethod<ArrayList> {
+    static List<String> example() {
+      return Lists.newArrayList();
+    }
+  }
+
+  static class GenericOuter<T> {
+    class ArrayList<E> extends java.util.ArrayList<E> {}
+
+    static List<String> memberTypeInStaticContext() {
+      return Lists.newArrayList();
+    }
+  }
+
+  interface I1 {
+    class ArrayList<E> extends java.util.ArrayList<E> {}
+  }
+
+  interface I2 {
+    class ArrayList<E> extends java.util.ArrayList<E> {}
+  }
+
+  static class AmbiguousMemberType implements I1, I2 {
+    List<String> example() {
+      return Lists.newArrayList();
+    }
+  }
+
+  List<String> unrelated() {
+    return Lists.newLinkedList();
   }
 }

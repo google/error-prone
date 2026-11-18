@@ -46,7 +46,7 @@ public abstract class TemplateMatch {
   }
 
   public Inliner createInliner() {
-    return unifier.createInliner();
+    return unifier.createInliner(location);
   }
 
   public String getRange(JCCompilationUnit unit) {

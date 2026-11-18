@@ -303,10 +303,115 @@ public class TemplateIntegrationTest extends CompilerBasedTest {
 
   @Test
   public void shadowedImport() throws IOException {
-    // TODO(b/587330629): The output should use `new java.util.ArrayList<>()` without importing
-    // java.util.ArrayList, since the inherited Base.ArrayList shadows that import (the rewrite
-    // currently binds to Base.ArrayList).
     runTest("ShadowedImportTemplate");
+  }
+
+  @Test
+  public void shadowedJavaLangImport() throws IOException {
+    runTest("ShadowedJavaLangImportTemplate");
+  }
+
+  @Test
+  public void shadowedNestedImport() throws IOException {
+    runTest("ShadowedNestedImportTemplate");
+  }
+
+  @Test
+  public void shadowedImportClassDirectly() throws IOException {
+    runTest("ShadowedImportClassDirectlyTemplate");
+  }
+
+  @Test
+  public void importClassDirectlyConflict() throws IOException {
+    runTest("ImportClassDirectlyConflictTemplate");
+  }
+
+  @Test
+  public void shadowedImportSiblingTopLevelClass() throws IOException {
+    CodeTransformer transformer =
+        extractRefasterRule(
+            forResource(String.format("%s/ShadowedImportTemplate.java", TEMPLATE_DIR)));
+    JavaFileObject input =
+        forSourceString(
+            "Example",
+            """
+            import com.google.common.collect.Lists;
+            import java.util.List;
+
+            class Example {
+              List<String> example() {
+                return Lists.newArrayList();
+              }
+
+              List<String> unrelated() {
+                return Lists.newLinkedList();
+              }
+            }
+
+            class ArrayList<E> extends java.util.ArrayList<E> {}
+            """);
+    JavaFileObject expectedOutput =
+        forSourceString(
+            "Example",
+            """
+            import com.google.common.collect.Lists;
+            import java.util.List;
+
+            class Example {
+              List<String> example() {
+                return new java.util.ArrayList<>();
+              }
+
+              List<String> unrelated() {
+                return Lists.newLinkedList();
+              }
+            }
+
+            class ArrayList<E> extends java.util.ArrayList<E> {}
+            """);
+    expectTransforms(transformer, input, expectedOutput);
+  }
+
+  @Test
+  public void shadowedImportTopLevelClassInSameFile() throws IOException {
+    CodeTransformer transformer =
+        extractRefasterRule(
+            forResource(String.format("%s/ShadowedImportTemplate.java", TEMPLATE_DIR)));
+    JavaFileObject input =
+        forSourceString(
+            "ArrayList",
+            """
+            import com.google.common.collect.Lists;
+            import java.util.List;
+
+            class ArrayList<E> extends java.util.ArrayList<E> {
+              List<String> example() {
+                return Lists.newArrayList();
+              }
+
+              List<String> unrelated() {
+                return Lists.newLinkedList();
+              }
+            }
+            """);
+    JavaFileObject expectedOutput =
+        forSourceString(
+            "ArrayList",
+            """
+            import com.google.common.collect.Lists;
+            import java.util.List;
+
+            class ArrayList<E> extends java.util.ArrayList<E> {
+              List<String> example() {
+                return new java.util.ArrayList<>();
+              }
+
+              List<String> unrelated() {
+                return Lists.newLinkedList();
+              }
+            }
+            """);
+    expectTransforms(transformer, input, expectedOutput);
   }
 
   @Test

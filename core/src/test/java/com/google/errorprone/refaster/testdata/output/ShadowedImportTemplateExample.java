@@ -17,7 +17,6 @@
 package com.google.errorprone.refaster.testdata;
 
 import com.google.common.collect.Lists;
-import java.util.ArrayList;
 import java.util.List;
 
 /** Test data for {@code ShadowedImportTemplate}. */
@@ -26,9 +25,45 @@ public class ShadowedImportTemplateExample {
     static class ArrayList<E> extends java.util.ArrayList<E> {}
   }
 
-  static class Sub extends Base {
+  static class InheritedMemberType extends Base {
     List<String> example() {
-      return new ArrayList<>();
+      return new java.util.ArrayList<>();
     }
+  }
+
+  <ArrayList> List<String> methodTypeVariable() {
+    return new java.util.ArrayList<>();
+  }
+
+  static class ClassTypeVariableInStaticMethod<ArrayList> {
+    static List<String> example() {
+      return new java.util.ArrayList<>();
+    }
+  }
+
+  static class GenericOuter<T> {
+    class ArrayList<E> extends java.util.ArrayList<E> {}
+
+    static List<String> memberTypeInStaticContext() {
+      return new java.util.ArrayList<>();
+    }
+  }
+
+  interface I1 {
+    class ArrayList<E> extends java.util.ArrayList<E> {}
+  }
+
+  interface I2 {
+    class ArrayList<E> extends java.util.ArrayList<E> {}
+  }
+
+  static class AmbiguousMemberType implements I1, I2 {
+    List<String> example() {
+      return new java.util.ArrayList<>();
+    }
+  }
+
+  List<String> unrelated() {
+    return Lists.newLinkedList();
   }
 }

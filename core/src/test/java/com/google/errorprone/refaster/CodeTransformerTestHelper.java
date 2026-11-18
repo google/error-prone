@@ -76,7 +76,8 @@ public abstract class CodeTransformerTestHelper {
       diff.applyDifferences(sourceFile);
 
       return forSourceString(
-          Iterables.getOnlyElement(Iterables.filter(tree.getTypeDecls(), JCClassDecl.class))
+          // Name the result after the first top-level class.
+          Iterables.get(Iterables.filter(tree.getTypeDecls(), JCClassDecl.class), 0)
               .sym
               .getQualifiedName()
               .toString(),

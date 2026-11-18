@@ -24,8 +24,17 @@ import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Streams;
+import com.google.errorprone.VisitorState;
+import com.google.errorprone.util.ASTHelpers;
+import com.google.errorprone.util.FindIdentifiers;
+import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.ImportTree;
+import com.sun.source.util.TreePath;
+import com.sun.tools.javac.code.Kinds.Kind;
+import com.sun.tools.javac.code.Kinds.KindSelector;
+import com.sun.tools.javac.code.Symbol;
+import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.PackageSymbol;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
@@ -66,8 +75,10 @@ public enum ImportPolicy {
       }
       ImmutableSet<String> allImports = getAllImports(inliner, WhichImports.NON_STATIC);
       /*
-       * Check if topLevelClazz or fullyQualifiedClazz is already imported.
-       * If fullyQualifiedClazz is imported, return the class name.
+       * If fullyQualifiedClazz is imported and its simple name isn't shadowed at the replacement
+       * site, return the class name.
+       * If the simple name of topLevelClazz refers to some other type at the replacement site (e.g.
+       * an inherited member type), return the fully qualified name.
        * If topLevelClazz is imported, return the name from the top level class to the class name.
        * If there are imports whose names conflict with topLevelClazz, return fully qualified name.
        * Otherwise, import toplevelClazz, and return the name from the top level class
@@ -81,13 +92,19 @@ public enum ImportPolicy {
       List<String> topLevelPath = Splitter.on('.').splitToList(topLevelClazz);
       String topClazz = Iterables.getLast(topLevelPath);
       List<String> qualifiedPath = Splitter.on('.').splitToList(fullyQualifiedClazz);
+      if (allImports.contains(fullyQualifiedClazz.toString())
+          && !isShadowedInScope(inliner, Iterables.getLast(qualifiedPath), fullyQualifiedClazz)) {
+        // fullyQualifiedClazz already imported
+        return makeSelectExpression(inliner, qualifiedPath, qualifiedPath.size() - 1);
+      }
+      if (isShadowedInScope(inliner, topClazz, topLevelClazz)) {
+        // The simple name of the top-level class refers to something else (e.g. an inherited member
+        // type) at the replacement site, which an import can't override.
+        return makeSelectExpression(inliner, qualifiedPath, 0);
+      }
       boolean importTopLevelClazz = false;
       boolean conflictTopLevelClazz = false;
       for (String importName : allImports) {
-        if (importName.contentEquals(fullyQualifiedClazz)) {
-          // fullyQualifiedClazz already imported
-          return makeSelectExpression(inliner, qualifiedPath, qualifiedPath.size() - 1);
-        }
         importTopLevelClazz |= importName.contentEquals(topLevelClazz);
         if (!importTopLevelClazz) {
           conflictTopLevelClazz |=
@@ -125,17 +142,6 @@ public enum ImportPolicy {
           .Select(
               classReference(inliner, topLevelClazz, fullyQualifiedClazz), inliner.asName(member));
     }
-
-    private JCExpression makeSelectExpression(
-        Inliner inliner, List<String> qualifiedPath, int start) {
-      Iterator<String> selects = qualifiedPath.listIterator(start);
-      TreeMaker maker = inliner.maker();
-      JCExpression select = maker.Ident(inliner.asName(selects.next()));
-      while (selects.hasNext()) {
-        select = maker.Select(select, inliner.asName(selects.next()));
-      }
-      return select;
-    }
   },
   /** Import nested classes directly, and qualify static references from the class level. */
   IMPORT_CLASS_DIRECTLY {
@@ -146,6 +152,14 @@ public enum ImportPolicy {
         // Special handling to ensure that the pretty-printer always recognizes Refaster references
         return inliner.maker().Ident(inliner.asName("Refaster"));
       }
+      List<String> qualifiedPath = Splitter.on('.').splitToList(fullyQualifiedClazz);
+      String simpleName = Iterables.getLast(qualifiedPath);
+      if (isShadowedInScope(inliner, simpleName, fullyQualifiedClazz)
+          || hasConflictingImport(inliner, simpleName, fullyQualifiedClazz)) {
+        // The simple name refers to something else at the replacement site (e.g. an inherited
+        // member type or another imported class), so importing it wouldn't work.
+        return makeSelectExpression(inliner, qualifiedPath, 0);
+      }
       String packge = topLevelClazz.toString();
       int lastDot = packge.lastIndexOf('.');
       packge = (lastDot >= 0) ? packge.substring(0, lastDot) : "";
@@ -155,8 +169,6 @@ public enum ImportPolicy {
         // don't import classes from the same package as the class we're refactoring
         inliner.addImport(fullyQualifiedClazz.toString());
       }
-      String simpleName = fullyQualifiedClazz.toString();
-      simpleName = simpleName.substring(simpleName.lastIndexOf('.') + 1);
       return inliner.maker().Ident(inliner.asName(simpleName));
     }
 
@@ -224,6 +236,79 @@ public enum ImportPolicy {
       CharSequence topLevelClazz,
       CharSequence fullyQualifiedClazz,
       CharSequence member);
+
+  private static JCExpression makeSelectExpression(
+      Inliner inliner, List<String> qualifiedPath, int start) {
+    Iterator<String> selects = qualifiedPath.listIterator(start);
+    TreeMaker maker = inliner.maker();
+    JCExpression select = maker.Ident(inliner.asName(selects.next()));
+    while (selects.hasNext()) {
+      select = maker.Select(select, inliner.asName(selects.next()));
+    }
+    return select;
+  }
+
+  /**
+   * Returns true if, at the replacement site, {@code simpleName} refers to a type other than {@code
+   * qualifiedName} that a single-type import of {@code qualifiedName} would not override, so the
+   * reference has to be qualified instead. That covers member types (declared or inherited) and
+   * type variables in scope (JLS 6.4.1), and top-level types declared in the same compilation unit,
+   * which can't be imported over (JLS 7.5.1).
+   *
+   * <p>Top-level types from other files in the same package, or from on-demand imports (including
+   * {@code java.lang}), are overridden by a single-type import, so they don't count, unless {@code
+   * qualifiedName} is a {@code java.lang} type, which {@link Inliner#addImport} never imports.
+   * Existing single-type imports of other top-level types don't count either; callers check those
+   * against the import list.
+   *
+   * <p>Local classes declared in a method body aren't detected, because {@link
+   * FindIdentifiers#findIdent} doesn't see them. {@code SuggestedFixes.qualifyType} makes the same
+   * tradeoff.
+   */
+  private static boolean isShadowedInScope(
+      Inliner inliner, String simpleName, CharSequence qualifiedName) {
+    TreePath path = inliner.path();
+    if (path == null) {
+      return false;
+    }
+    VisitorState state = VisitorState.createForUtilityPurposes(inliner.getContext()).withPath(path);
+    Symbol sym = FindIdentifiers.findIdent(simpleName, state, KindSelector.TYP);
+    if (sym == null) {
+      return false;
+    }
+    if (sym.kind == Kind.STATICERR || sym.kind == Kind.AMBIGUOUS) {
+      // e.g. a type variable or a non-static member type of a generic class referenced from a
+      // static context, or a member type inherited from two supertypes. javac reports these before
+      // consulting imports.
+      return true;
+    }
+    if (sym.kind != Kind.TYP) {
+      return false;
+    }
+    if (sym instanceof ClassSymbol classSymbol
+        && classSymbol.getQualifiedName().contentEquals(qualifiedName)) {
+      return false;
+    }
+    // Inliner.addImport doesn't add imports for java.lang types, so a same-package or on-demand
+    // type would win.
+    return sym.owner == null
+        || sym.owner.kind != Kind.PCK
+        || qualifiedName.toString().startsWith("java.lang.")
+        || inliner.compilationUnit().getTypeDecls().stream()
+            .anyMatch(t -> t instanceof ClassTree c && sym.equals(ASTHelpers.getSymbol(c)));
+  }
+
+  /**
+   * Returns true if a class other than {@code qualifiedName} with the same simple name is already
+   * imported, or is about to be.
+   */
+  private static boolean hasConflictingImport(
+      Inliner inliner, String simpleName, CharSequence qualifiedName) {
+    return getAllImports(inliner, WhichImports.NON_STATIC).stream()
+        .anyMatch(i ->
+            !i.contentEquals(qualifiedName)
+                && simpleName.equals(Iterables.getLast(Splitter.on('.').split(i))));
+  }
 
   private enum WhichImports {
     STATIC {

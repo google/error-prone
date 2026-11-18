@@ -23,6 +23,7 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.google.errorprone.refaster.UTypeVar.TypeWithExpression;
 import com.google.errorprone.util.ASTHelpers;
+import com.sun.source.util.TreePath;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.PackageSymbol;
@@ -49,6 +50,7 @@ import com.sun.tools.javac.util.Names;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import org.jspecify.annotations.Nullable;
 
 /**
  * A context representing all the dependencies necessary to reconstruct a pretty-printable source
@@ -65,14 +67,24 @@ public final class Inliner {
   private final Map<String, TypeVar> typeVarCache;
   private ImportPolicy importPolicy = ImportPolicy.IMPORT_TOP_LEVEL;
   private final JCCompilationUnit compilationUnit;
+  private final @Nullable TreePath path;
 
   Inliner(Context context, Bindings bindings, JCCompilationUnit compilationUnit) {
+    this(context, bindings, compilationUnit, /* path= */ null);
+  }
+
+  Inliner(
+      Context context,
+      Bindings bindings,
+      JCCompilationUnit compilationUnit,
+      @Nullable TreePath path) {
     this.context = checkNotNull(context);
     this.bindings = Bindings.create(bindings);
     this.importsToAdd = Sets.newHashSet();
     this.staticImportsToAdd = Sets.newHashSet();
     this.typeVarCache = Maps.newHashMap();
     this.compilationUnit = checkNotNull(compilationUnit);
+    this.path = path;
   }
 
   public void addImport(String qualifiedImport) {
@@ -106,6 +118,14 @@ public final class Inliner {
 
   public JCCompilationUnit compilationUnit() {
     return compilationUnit;
+  }
+
+  /**
+   * Returns the path to the location where the inlined code will be placed, if known. This can be
+   * used to check which names are in scope at that location.
+   */
+  @Nullable TreePath path() {
+    return path;
   }
 
   public PackageSymbol packageSymbol() {

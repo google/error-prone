@@ -20,6 +20,7 @@ import static com.sun.tools.javac.util.List.nil;
 
 import com.google.common.base.Function;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
+import com.sun.source.util.TreePath;
 import com.sun.tools.javac.code.Symtab;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Types;
@@ -100,6 +101,15 @@ public final class Unifier {
 
   public Inliner createInliner() {
     return new Inliner(context, bindings, compilationUnit);
+  }
+
+  /**
+   * Returns an {@link Inliner} for code that will replace {@code location}, which lets the inliner
+   * check which names are in scope there.
+   */
+  Inliner createInliner(JCTree location) {
+    return new Inliner(
+        context, bindings, compilationUnit, TreePath.getPath(compilationUnit, location));
   }
 
   public <V> @Nullable V getBinding(Bindings.Key<V> key) {
