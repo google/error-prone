@@ -22,6 +22,8 @@ import com.google.common.base.Functions;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
+import com.google.errorprone.BugCheckerRefactoringTestHelper;
+import com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode;
 import com.google.errorprone.CompilationTestHelper;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
@@ -46,6 +48,114 @@ public class UnnecessaryCheckNotNullTest extends CompilerBasedAbstractTest {
 
   private final CompilationTestHelper compilationHelper =
       CompilationTestHelper.newInstance(UnnecessaryCheckNotNull.class, getClass());
+  private final BugCheckerRefactoringTestHelper refactoringHelper =
+      BugCheckerRefactoringTestHelper.newInstance(UnnecessaryCheckNotNull.class, getClass());
+
+  @Test
+  public void positive_constructedString() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import static com.google.common.base.Preconditions.checkNotNull;
+
+            import com.google.common.base.Verify;
+            import java.util.Objects;
+
+            class Test {
+              void f(String key, Object value, int i) {
+                // BUG: Diagnostic contains: UnnecessaryCheckNotNull
+                checkNotNull("Missing value for " + key, value);
+                // BUG: Diagnostic contains: UnnecessaryCheckNotNull
+                Verify.verifyNotNull(key + " is missing", "%s", value);
+                // BUG: Diagnostic contains: UnnecessaryCheckNotNull
+                Objects.requireNonNull("count: " + i, "message");
+                // BUG: Diagnostic contains: UnnecessaryCheckNotNull
+                checkNotNull(String.format("%s", key));
+                // BUG: Diagnostic contains: UnnecessaryCheckNotNull
+                checkNotNull("%s".formatted(key), value);
+                // BUG: Diagnostic contains: UnnecessaryCheckNotNull
+                checkNotNull("Missing value for " + key, "%s", value);
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void constructedString_standaloneFormat_noFix() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import static com.google.common.base.Preconditions.checkNotNull;
+
+            class Test {
+              void f(String format) {
+                // Validates the format string.
+                checkNotNull(String.format(format, 0));
+              }
+            }
+            """)
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void negative_constructedString() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import static com.google.common.base.Preconditions.checkNotNull;
+
+            class Test {
+              void f(String key, Object value) {
+                checkNotNull(value, "Missing value for " + key);
+                checkNotNull(value, String.format("Missing value for %s", key));
+                checkNotNull(value, "Missing value for %s", key);
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void constructedString_fixes() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import static com.google.common.base.Preconditions.checkNotNull;
+
+            class Test {
+              private final String name;
+
+              Test(String key, Object value, String format, Object... args) {
+                checkNotNull("Missing value for " + key, value);
+                checkNotNull(key + ":" + format);
+                this.name = checkNotNull(String.format(format, args));
+                String target = checkNotNull(key + ":" + format, "target");
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            import static com.google.common.base.Preconditions.checkNotNull;
+
+            class Test {
+              private final String name;
+
+              Test(String key, Object value, String format, Object... args) {
+                checkNotNull(value, "Missing value for " + key);
+                this.name = String.format(format, args);
+                String target = key + ":" + format;
+              }
+            }
+            """)
+        .doTest(TestMode.AST_MATCH);
+  }
 
   @Test
   public void positive_newClass() {

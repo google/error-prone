@@ -17,8 +17,12 @@
 package com.google.errorprone.bugpatterns.nullness;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.argument;
+import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
+import static com.google.errorprone.util.ASTHelpers.getType;
+import static com.google.errorprone.util.ASTHelpers.isSameType;
 import static com.sun.source.tree.Tree.Kind.STRING_LITERAL;
 
 import com.google.common.collect.ImmutableSet;
@@ -77,6 +81,12 @@ public class UnnecessaryCheckNotNull extends BugChecker implements MethodInvocat
   private static final Matcher<MethodInvocationTree> STRING_LITERAL_ARG_MATCHER =
       argument(0, Matchers.<ExpressionTree>kindIs(STRING_LITERAL));
 
+  /** Matches methods that construct a new (and hence non-null) formatted string. */
+  private static final Matcher<ExpressionTree> STRING_FORMAT_MATCHER =
+      anyOf(
+          staticMethod().onClass("java.lang.String").named("format"),
+          instanceMethod().onExactClass("java.lang.String").named("formatted"));
+
   private static final Matcher<MethodInvocationTree> PRIMITIVE_ARG_MATCHER =
       argument(0, Matchers.<ExpressionTree>isPrimitiveType());
 
@@ -91,10 +101,60 @@ public class UnnecessaryCheckNotNull extends BugChecker implements MethodInvocat
     if (STRING_LITERAL_ARG_MATCHER.matches(tree, state)) {
       return matchStringLiteral(tree, state);
     }
+    if (isConstructedString(tree.getArguments().get(0), state)) {
+      return matchConstructedString(tree, state);
+    }
     if (PRIMITIVE_ARG_MATCHER.matches(tree, state)) {
       return describePrimitiveMatch(tree, state);
     }
     return Description.NO_MATCH;
+  }
+
+  /**
+   * Returns true if {@code tree} is a newly constructed string (a string concatenation or a call to
+   * {@code String.format}/{@code formatted}), which can never be null.
+   *
+   * <p>Concatenations of compile-time constants are folded into a single string literal by javac,
+   * and are handled by {@link #matchStringLiteral}.
+   */
+  private static boolean isConstructedString(ExpressionTree tree, VisitorState state) {
+    if (tree.getKind() == Kind.PLUS) {
+      return isSameType(getType(tree), state.getSymtab().stringType, state);
+    }
+    return STRING_FORMAT_MATCHER.matches(tree, state);
+  }
+
+  /**
+   * Handles a newly constructed string as the first argument, e.g. {@code checkNotNull("Missing " +
+   * key, value)} (the arguments were likely swapped) or {@code checkNotNull(String.format(...))}
+   * (the null check is a no-op).
+   */
+  private Description matchConstructedString(MethodInvocationTree tree, VisitorState state) {
+    List<? extends ExpressionTree> arguments = tree.getArguments();
+    ExpressionTree first = arguments.get(0);
+    if (arguments.size() == 1
+        || (arguments.size() == 2 && arguments.get(1).getKind() == STRING_LITERAL)) {
+      // e.g. checkNotNull(String.format(...)) or checkNotNull(a + b, "message"): the null check is
+      // a no-op, so remove it.
+      Tree parent = state.getPath().getParentPath().getLeaf();
+      if (!(parent instanceof ExpressionStatementTree)) {
+        // checkNotNull is part of a larger expression, so replace it with its argument.
+        return describeMatch(first, SuggestedFix.replace(tree, state.getSourceForNode(first)));
+      }
+      if (STRING_FORMAT_MATCHER.matches(first, state)) {
+        // A standalone checkNotNull(String.format(...)) may be intended to validate the format
+        // string, so deleting it could change behavior.
+        return describeMatch(first);
+      }
+      return describeMatch(first, SuggestedFix.delete(parent));
+    }
+    if (arguments.size() == 2) {
+      // e.g. checkNotNull("Missing value for " + key, value): the arguments were likely swapped.
+      return describeMatch(first, SuggestedFix.swap(first, arguments.get(1), state));
+    }
+    // The intent isn't clear (e.g. a message template followed by format args), so don't suggest a
+    // fix.
+    return describeMatch(first);
   }
 
   private Description matchNewInstance(MethodInvocationTree tree, VisitorState state) {
