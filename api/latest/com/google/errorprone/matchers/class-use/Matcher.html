@@ -1317,6 +1317,16 @@ statement with expression matching the passed <code>expressionTreeMatcher</code>
 <div class="block">Matches an AST node which is an expression yielding the indicated static field access.</div>
 </div>
 <div class="col-first even-row-color"><code>static <a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">Matchers.</span><code><a href="../Matchers.html#stringFormatInvocation()" class="member-name-link">stringFormatInvocation</a>()</code></div>
+<div class="col-last even-row-color">
+<div class="block">Matches calls to the static method <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html#format(java.lang.String,java.lang.Object...)" title="class or interface in java.lang" class="external-link"><code>String.format(String, Object...)</code></a> (with or without a locale).</div>
+</div>
+<div class="col-first odd-row-color"><code>static <a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">Matchers.</span><code><a href="../Matchers.html#stringFormattedInvocation()" class="member-name-link">stringFormattedInvocation</a>()</code></div>
+<div class="col-last odd-row-color">
+<div class="block">Matches calls to the instance method <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html#formatted(java.lang.Object...)" title="class or interface in java.lang" class="external-link"><code>String.formatted(Object...)</code></a>.</div>
+</div>
+<div class="col-first even-row-color"><code>static <a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;</code></div>
 <div class="col-second even-row-color"><span class="type-name-label">Matchers.</span><code><a href="../Matchers.html#stringLiteral(java.lang.String)" class="member-name-link">stringLiteral</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;value)</code></div>
 <div class="col-last even-row-color">
 <div class="block">Matches a Literal AST node if it is a string literal with the given value.</div>

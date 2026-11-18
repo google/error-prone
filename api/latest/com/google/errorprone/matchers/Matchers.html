@@ -218,6 +218,8 @@ loadScripts(document, 'script');</script>
 <li><a href="#staticEqualsInvocation()" tabindex="0">staticEqualsInvocation()</a></li>
 <li><a href="#instanceEqualsInvocation()" tabindex="0">instanceEqualsInvocation()</a></li>
 <li><a href="#instanceHashCodeInvocation()" tabindex="0">instanceHashCodeInvocation()</a></li>
+<li><a href="#stringFormatInvocation()" tabindex="0">stringFormatInvocation()</a></li>
+<li><a href="#stringFormattedInvocation()" tabindex="0">stringFormattedInvocation()</a></li>
 <li><a href="#assertEqualsInvocation()" tabindex="0">assertEqualsInvocation()</a></li>
 <li><a href="#assertNotEqualsInvocation()" tabindex="0">assertNotEqualsInvocation()</a></li>
 <li><a href="#equalsMethodDeclaration()" tabindex="0">equalsMethodDeclaration()</a></li>
@@ -1052,6 +1054,16 @@ statement with expression matching the passed <code>expressionTreeMatcher</code>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#staticMethod()" class="member-name-link">staticMethod</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Matches a static method.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#stringFormatInvocation()" class="member-name-link">stringFormatInvocation</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Matches calls to the static method <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html#format(java.lang.String,java.lang.Object...)" title="class or interface in java.lang" class="external-link"><code>String.format(String, Object...)</code></a> (with or without a locale).</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#stringFormattedInvocation()" class="member-name-link">stringFormattedInvocation</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Matches calls to the instance method <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html#formatted(java.lang.Object...)" title="class or interface in java.lang" class="external-link"><code>String.formatted(Object...)</code></a>.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#stringLiteral(java.lang.String)" class="member-name-link">stringLiteral</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;value)</code></div>
@@ -2894,6 +2906,24 @@ for either argument.</div>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;</span>&nbsp;<span class="element-name">instanceHashCodeInvocation</span>()</div>
 <div class="block">Matches calls to the method <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#hashCode()" title="class or interface in java.lang" class="external-link"><code>Object.hashCode()</code></a> or any override of that method.</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="stringFormatInvocation()">
+<h3>stringFormatInvocation</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;</span>&nbsp;<span class="element-name">stringFormatInvocation</span>()</div>
+<div class="block">Matches calls to the static method <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html#format(java.lang.String,java.lang.Object...)" title="class or interface in java.lang" class="external-link"><code>String.format(String, Object...)</code></a> (with or without a locale).</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="stringFormattedInvocation()">
+<h3>stringFormattedInvocation</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;</span>&nbsp;<span class="element-name">stringFormattedInvocation</span>()</div>
+<div class="block">Matches calls to the instance method <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html#formatted(java.lang.Object...)" title="class or interface in java.lang" class="external-link"><code>String.formatted(Object...)</code></a>.</div>
 </div>
 </section>
 </li>
