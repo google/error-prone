@@ -17,6 +17,7 @@
 package com.google.errorprone.matchers;
 
 import static com.google.common.collect.Iterables.getOnlyElement;
+import static com.google.errorprone.matchers.JUnitMatchers.JUNIT4_TEST_ANNOTATION;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.enclosingMethod;
@@ -62,6 +63,7 @@ import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Type.MethodType;
 import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
 import com.sun.tools.javac.tree.JCTree.JCMethodInvocation;
+import com.sun.tools.javac.util.Name;
 import java.util.stream.Stream;
 import javax.lang.model.type.TypeKind;
 
@@ -223,8 +225,9 @@ public final class UnusedReturnValueMatcher implements Matcher<ExpressionTree> {
       return false;
     }
 
+    Name testAnnotation = JUNIT4_TEST_ANNOTATION.binaryName(state);
     return getSymbol(tree).getAnnotationMirrors().stream()
-        .filter(am -> am.type.tsym.getQualifiedName().contentEquals("org.junit.Test"))
+        .filter(am -> am.type.tsym.flatName().equals(testAnnotation))
         .findFirst()
         .flatMap(testAm -> MoreAnnotations.getTypeValue(testAm, "expected"))
         .filter(tv -> !tv.toString().equals("org.junit.Test.None"))

@@ -17,14 +17,11 @@
 package com.google.errorprone.matchers;
 
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
-import static com.google.errorprone.matchers.ChildMultiMatcher.MatchType.AT_LEAST_ONE;
-import static com.google.errorprone.matchers.Matchers.annotations;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.enclosingClass;
 import static com.google.errorprone.matchers.Matchers.hasAnnotation;
 import static com.google.errorprone.matchers.Matchers.hasAnyAnnotationOf;
 import static com.google.errorprone.matchers.Matchers.isSubtypeOf;
-import static com.google.errorprone.matchers.Matchers.isType;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Streams;
@@ -63,17 +60,15 @@ public final class InjectMatchers {
           "com.google.inject.multibindings.ProvidesIntoOptional");
 
   private static final Matcher<Tree> HAS_PROVIDES_ANNOTATION =
-      annotations(
-          AT_LEAST_ONE,
-          anyOf(
-              Streams.concat(
-                      PROVIDES_ANNOTATIONS.stream(),
-                      MULTIBINDINGS_ANNOTATIONS.stream(),
-                      Stream.of(
-                          "com.google.inject.throwingproviders.CheckedProvides",
-                          DAGGER_PRODUCES_ANNOTATION.toString()))
-                  .map(annotation -> isType(ClassName.of(annotation)))
-                  .collect(toImmutableSet())));
+      hasAnyAnnotationOf(
+          Streams.concat(
+                  Stream.of(
+                      GUICE_PROVIDES_ANNOTATION,
+                      DAGGER_PROVIDES_ANNOTATION,
+                      DAGGER_PRODUCES_ANNOTATION,
+                      ClassName.of("com.google.inject.throwingproviders.CheckedProvides")),
+                  MULTIBINDINGS_ANNOTATIONS.stream().map(ClassName::of))
+              .collect(toImmutableSet()));
 
   @SuppressWarnings("unchecked") // Safe contravariant cast
   public static <T extends Tree> Matcher<T> hasProvidesAnnotation() {

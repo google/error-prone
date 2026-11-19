@@ -26,8 +26,8 @@ import static com.google.errorprone.matchers.field.FieldMatchers.staticField;
 import static com.google.errorprone.util.ASTHelpers.constValue;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.isConsideredFinal;
+import static com.google.errorprone.util.AnnotationNames.COMPILE_TIME_CONSTANT_ANNOTATION;
 
-import com.google.errorprone.ClassName;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.CompileTimeConstant;
 import com.sun.source.tree.BinaryTree;
@@ -83,9 +83,6 @@ import com.sun.tools.javac.code.Symbol.VarSymbol;
  * </ol>
  */
 public class CompileTimeConstantExpressionMatcher implements Matcher<ExpressionTree> {
-
-  private static final ClassName COMPILE_TIME_CONSTANT_ANNOTATION =
-      ClassName.of(CompileTimeConstant.class.getName());
 
   private static final Matcher<ExpressionTree> INSTANCE =
       anyOf(

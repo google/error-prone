@@ -2367,7 +2367,7 @@ public final class ASTHelpers {
 
   /** Returns {@code true} if this symbol was declared in Kotlin source. */
   public static boolean isKotlin(Symbol symbol, VisitorState state) {
-    return hasAnnotation(symbol.enclClass(), "kotlin.Metadata", state);
+    return hasAnnotation(symbol.enclClass(), AnnotationNames.KOTLIN_METADATA_ANNOTATION, state);
   }
 
   /**
