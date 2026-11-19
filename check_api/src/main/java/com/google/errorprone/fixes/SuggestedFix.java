@@ -17,6 +17,7 @@
 package com.google.errorprone.fixes;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static java.util.Objects.requireNonNull;
 
 import com.google.auto.value.AutoValue;
 import com.google.auto.value.extension.memoized.Memoized;
@@ -350,6 +351,18 @@ public abstract class SuggestedFix implements Fix {
     }
 
     /**
+     * Add a static import statement for {@code memberName} on {@code className} as part of this
+     * SuggestedFix.
+     */
+    @CanIgnoreReturnValue
+    public Builder addStaticImport(ClassName className, String memberName) {
+      requireNonNull(className);
+      requireNonNull(memberName);
+      checkArgument(!memberName.isEmpty(), "member name must be non-empty");
+      return addStaticImport(className.toString().replace('$', '.') + "." + memberName);
+    }
+
+    /**
      * Remove an import statement as part of this SuggestedFix. Import string should be of the form
      * "foo.bar.SomeClass".
      */
@@ -373,6 +386,18 @@ public abstract class SuggestedFix implements Fix {
     public Builder removeStaticImport(String importString) {
       importsToRemove.add("import static " + importString);
       return this;
+    }
+
+    /**
+     * Remove a static import statement for {@code memberName} on {@code className} as part of this
+     * SuggestedFix.
+     */
+    @CanIgnoreReturnValue
+    public Builder removeStaticImport(ClassName className, String memberName) {
+      requireNonNull(className);
+      requireNonNull(memberName);
+      checkArgument(!memberName.isEmpty(), "member name must be non-empty");
+      return removeStaticImport(className.toString().replace('$', '.') + "." + memberName);
     }
 
     /**

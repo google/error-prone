@@ -33,6 +33,7 @@ import static com.google.errorprone.util.ASTHelpers.isRecord;
 import static com.sun.tools.javac.code.TypeTag.CLASS;
 import static com.sun.tools.javac.util.Position.NOPOS;
 import static java.lang.Math.max;
+import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toCollection;
 
@@ -40,7 +41,6 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Joiner;
 import com.google.common.base.Objects;
 import com.google.common.base.Splitter;
-import com.google.common.base.Verify;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
@@ -532,10 +532,36 @@ public final class SuggestedFixes {
    */
   public static String qualifyStaticImport(
       String qualifiedName, SuggestedFix.Builder fix, VisitorState state) {
-    String name = qualifiedName.substring(qualifiedName.lastIndexOf(".") + 1);
+    int lastDot = qualifiedName.lastIndexOf('.');
+    checkArgument(
+        lastDot > 0 && lastDot < qualifiedName.length() - 1,
+        "invalid qualified static import: %s",
+        qualifiedName);
+    return qualifyStaticImport(
+        ClassName.of(qualifiedName.substring(0, lastDot)),
+        qualifiedName.substring(lastDot + 1),
+        fix,
+        state);
+  }
+
+  /**
+   * Provides a name to use for the static member {@code memberName} on {@code className}, trying to
+   * static import it if possible. Adds imports to {@code fix} as appropriate.
+   *
+   * <p>The heuristic is quite conservative: it won't add a static import if an identifier with the
+   * same name is referenced anywhere in the class. Otherwise, we'd have to implement overload
+   * resolution, and ensure that adding a new static import doesn't change the semantics of existing
+   * code.
+   */
+  public static String qualifyStaticImport(
+      ClassName className, String memberName, SuggestedFix.Builder fix, VisitorState state) {
+    requireNonNull(className);
+    requireNonNull(memberName);
+    checkArgument(!memberName.isEmpty(), "member name must be non-empty");
     AtomicBoolean foundConflict = new AtomicBoolean(false);
     AtomicBoolean alreadyInScope = new AtomicBoolean(false);
-    var identifierName = state.getName(name);
+    var identifierName = state.getName(memberName);
+    var ownerBinaryName = className.binaryName(state);
     stream(state.getPath())
         .filter(ClassTree.class::isInstance)
         .map(ClassTree.class::cast)
@@ -547,8 +573,8 @@ public final class SuggestedFixes {
                     .membersClosure(enclosingClass.type, /* skipInterface= */ false)
                     .getSymbolsByName(identifierName)))
         .forEach(sym -> {
-          var identifierQualifiedName = sym.owner.getQualifiedName() + "." + sym.getSimpleName();
-          if (qualifiedName.equals(identifierQualifiedName)) {
+          if (sym.getSimpleName().equals(identifierName)
+              && sym.owner.flatName().equals(ownerBinaryName)) {
             alreadyInScope.set(true);
           } else {
             foundConflict.set(true);
@@ -568,28 +594,26 @@ public final class SuggestedFixes {
       }
 
       private void process(Tree tree, Name identifier) {
-        if (!identifier.contentEquals(name)) {
+        if (!identifier.contentEquals(memberName)) {
           return;
         }
         Symbol symbol = getSymbol(tree);
         if (symbol == null) {
           return;
         }
-        String identifierQualifiedName =
-            symbol.owner.getQualifiedName() + "." + symbol.getSimpleName();
-        if (!qualifiedName.equals(identifierQualifiedName)) {
+        if (!(symbol.getSimpleName().equals(identifierName)
+            && symbol.owner.flatName().equals(ownerBinaryName))) {
           foundConflict.set(true);
         }
       }
     }.scan(state.getPath().getCompilationUnit(), null);
     if (foundConflict.get()) {
-      String className = qualifiedName.substring(0, qualifiedName.lastIndexOf("."));
-      return qualifyType(state, fix, className) + "." + name;
+      return qualifyType(state, fix, className) + "." + memberName;
     }
     if (!alreadyInScope.get()) {
-      fix.addStaticImport(qualifiedName);
+      fix.addStaticImport(className, memberName);
     }
-    return name;
+    return memberName;
   }
 
   /** Replaces the leaf doctree in the given path with {@code replacement}. */
@@ -1690,6 +1714,9 @@ public final class SuggestedFixes {
         null);
   }
 
+  private static final ClassName DONT_SUGGEST_FIXES =
+      ClassName.of("com.google.errorprone.annotations.DontSuggestFixes");
+
   /**
    * Create a fix to add a suppression annotation on the surrounding class.
    *
@@ -1700,27 +1727,30 @@ public final class SuggestedFixes {
    */
   public static Optional<SuggestedFix> suggestExemptingAnnotation(
       String exemptingAnnotation, TreePath where, VisitorState state) {
+    return suggestExemptingAnnotation(ClassName.of(exemptingAnnotation), where, state);
+  }
+
+  /**
+   * Create a fix to add a suppression annotation on the surrounding class.
+   *
+   * <p>No suggested fix is produced if the suppression annotation cannot be used on classes, i.e.
+   * the annotation has a {@code @Target} but does not include {@code @Target(TYPE)}.
+   *
+   * <p>If the suggested annotation is {@code DontSuggestFixes}, return empty.
+   */
+  public static Optional<SuggestedFix> suggestExemptingAnnotation(
+      ClassName exemptingAnnotation, TreePath where, VisitorState state) {
     // TODO(bangert): Support annotations that do not have @Target(CLASS).
-    if (exemptingAnnotation.equals("com.google.errorprone.annotations.DontSuggestFixes")) {
+    if (exemptingAnnotation.equals(DONT_SUGGEST_FIXES)) {
       return Optional.empty();
     }
     SuggestedFix.Builder builder = SuggestedFix.builder();
-    Type exemptingAnnotationType = state.getTypeFromString(exemptingAnnotation);
-    ImmutableSet<Class<? extends Tree>> supportedExemptingAnnotationLocationTypes;
-    String annotationName;
-
-    if (exemptingAnnotationType != null) {
-      supportedExemptingAnnotationLocationTypes =
-          supportedTreeTypes(exemptingAnnotationType.asElement());
-      annotationName = qualifyType(state, builder, exemptingAnnotationType);
-    } else {
-      // If we can't resolve the type, fall back to an approximation.
-      int idx = exemptingAnnotation.lastIndexOf('.');
-      Verify.verify(idx > 0 && idx + 1 < exemptingAnnotation.length());
-      supportedExemptingAnnotationLocationTypes = TREE_TYPE_UNKNOWN_ANNOTATION;
-      annotationName = exemptingAnnotation.substring(idx + 1);
-      builder.addImport(exemptingAnnotation);
-    }
+    ClassSymbol exemptingAnnotationSymbol = exemptingAnnotation.symbol(state);
+    ImmutableSet<Class<? extends Tree>> supportedExemptingAnnotationLocationTypes =
+        exemptingAnnotationSymbol != null
+            ? supportedTreeTypes(exemptingAnnotationSymbol)
+            : TREE_TYPE_UNKNOWN_ANNOTATION;
+    String annotationName = qualifyType(state, builder, exemptingAnnotation);
     Optional<Tree> exemptingAnnotationLocation =
         stream(where)
             .filter(tree ->

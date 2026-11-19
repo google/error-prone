@@ -27,6 +27,7 @@ import static com.google.errorprone.matchers.Matchers.methodReturns;
 import static com.google.errorprone.suppliers.Suppliers.typeFromString;
 import static org.junit.Assert.assertThrows;
 
+import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.ClassName;
 import com.google.errorprone.CompilationTestHelper;
@@ -760,6 +761,50 @@ public class MatchersTest {
 
               void unannotated() {}
             }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void hasAnyAnnotationOf_className() {
+    assertMatcher(
+            ClassTree.class,
+            Matchers.hasAnyAnnotationOf(
+                ImmutableList.of(
+                    ClassName.of("com.example.Absent$Anno"),
+                    ClassName.of("pkg.Outer$InheritedAnno"),
+                    ClassName.of("pkg.Outer.DirectAnno"))))
+        .addSourceLines(
+            "pkg/Outer.java",
+            """
+            package pkg;
+
+            import java.lang.annotation.Inherited;
+
+            public class Outer {
+              @Inherited
+              public @interface InheritedAnno {}
+
+              public @interface DirectAnno {}
+            }
+            """)
+        .addSourceLines(
+            "pkg/Test.java",
+            """
+            package pkg;
+
+            @Outer.InheritedAnno
+            // BUG: Diagnostic contains:
+            class Base {}
+
+            // BUG: Diagnostic contains:
+            class Sub extends Base {}
+
+            @Outer.DirectAnno
+            // BUG: Diagnostic contains:
+            class Direct {}
+
+            class Unannotated {}
             """)
         .doTest();
   }

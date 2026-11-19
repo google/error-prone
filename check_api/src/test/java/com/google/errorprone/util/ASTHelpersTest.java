@@ -43,6 +43,7 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.SeverityLevel;
+import com.google.errorprone.ClassName;
 import com.google.errorprone.CompilationTestHelper;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
@@ -845,6 +846,84 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
               assertThat(ASTHelpers.hasDirectAnnotationWithSimpleName(sym, "Nullable")).isFalse();
             }
             return super.visitMethod(tree, state);
+          }
+        };
+    tests.add(scanner);
+    assertCompiles(scanner);
+  }
+
+  @Test
+  public void hasDirectAnnotation_classNameAndString() {
+    writeFile(
+        "Outer.java",
+        """
+        package pkg;
+
+        import java.lang.annotation.ElementType;
+        import java.lang.annotation.Inherited;
+        import java.lang.annotation.Target;
+
+        public class Outer {
+          public @interface NestedAnno {}
+
+          @Target(ElementType.TYPE_USE)
+          public @interface TypeUseAnno {}
+
+          @Inherited
+          public @interface InheritedAnno {}
+
+          @InheritedAnno
+          public static class Base {}
+
+          public static class Sub extends Base {
+            @NestedAnno
+            public @TypeUseAnno String doIt(@TypeUseAnno String param) {
+              return param;
+            }
+          }
+        }
+        """);
+    ClassName nestedAnno = ClassName.of("pkg.Outer$NestedAnno");
+    ClassName typeUseAnno = ClassName.of("pkg.Outer.TypeUseAnno");
+    ClassName inheritedAnno = ClassName.of("pkg.Outer$InheritedAnno");
+    TestScanner scanner =
+        new TestScanner() {
+          @Override
+          public Void visitClass(ClassTree tree, VisitorState state) {
+            ClassSymbol sym = ASTHelpers.getSymbol(tree);
+            if (sym.getSimpleName().contentEquals("Base")) {
+              assertThat(ASTHelpers.hasDirectAnnotation(sym, inheritedAnno)).isTrue();
+            } else if (sym.getSimpleName().contentEquals("Sub")) {
+              // Does not consider @Inherited annotations from superclasses.
+              assertThat(ASTHelpers.hasDirectAnnotation(sym, inheritedAnno)).isFalse();
+            }
+            return super.visitClass(tree, state);
+          }
+
+          @Override
+          public Void visitMethod(MethodTree tree, VisitorState state) {
+            if (tree.getName().contentEquals("doIt")) {
+              setAssertionsComplete();
+              MethodSymbol sym = ASTHelpers.getSymbol(tree);
+              assertThat(ASTHelpers.hasDirectAnnotation(sym, nestedAnno)).isTrue();
+              assertThat(ASTHelpers.hasDirectAnnotation(sym, typeUseAnno)).isTrue();
+              assertThat(ASTHelpers.hasDirectAnnotation(sym, inheritedAnno)).isFalse();
+              assertThat(ASTHelpers.hasDirectAnnotation(sym, "pkg.Outer$NestedAnno")).isTrue();
+              assertThat(ASTHelpers.hasDirectAnnotation(sym, "pkg.Outer.TypeUseAnno")).isTrue();
+              assertThat(ASTHelpers.hasDirectAnnotation((Symbol) null, nestedAnno)).isFalse();
+            }
+            return super.visitMethod(tree, state);
+          }
+
+          @Override
+          public Void visitVariable(VariableTree tree, VisitorState state) {
+            if (tree.getName().contentEquals("param")) {
+              assertThat(ASTHelpers.hasDirectAnnotation(ASTHelpers.getSymbol(tree), typeUseAnno))
+                  .isTrue();
+              assertThat(ASTHelpers.hasDirectAnnotation(ASTHelpers.getSymbol(tree), nestedAnno))
+                  .isFalse();
+            }
+            return super.visitVariable(tree, state);
           }
         };
     tests.add(scanner);

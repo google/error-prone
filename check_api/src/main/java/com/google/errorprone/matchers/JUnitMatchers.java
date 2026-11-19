@@ -69,6 +69,8 @@ public final class JUnitMatchers {
   public static final ClassName JUNIT4_TEST_ANNOTATION = ClassName.of("org.junit.Test");
   public static final ClassName JUNIT4_THEORY_ANNOTATION =
       ClassName.of("org.junit.experimental.theories.Theory");
+  public static final ClassName JUNIT4_DATA_POINTS_ANNOTATION =
+      ClassName.of("org.junit.experimental.theories.DataPoints");
   public static final ClassName JUNIT_BEFORE_ANNOTATION = ClassName.of("org.junit.Before");
   public static final ClassName JUNIT_AFTER_ANNOTATION = ClassName.of("org.junit.After");
   public static final ClassName JUNIT_BEFORE_CLASS_ANNOTATION =
@@ -76,11 +78,21 @@ public final class JUnitMatchers {
   public static final ClassName JUNIT_AFTER_CLASS_ANNOTATION = ClassName.of("org.junit.AfterClass");
   public static final ClassName JUNIT4_RUN_WITH_ANNOTATION =
       ClassName.of("org.junit.runner.RunWith");
+  public static final ClassName JUNIT4_RULE_ANNOTATION = ClassName.of("org.junit.Rule");
   public static final String JUNIT4_ASSERT_CLASS = "org.junit.Assert";
+  public static final ClassName JUNIT4_ASSERT = ClassName.of(JUNIT4_ASSERT_CLASS);
   public static final String JUNIT3_TEST_CASE_CLASS = "junit.framework.TestCase";
+  public static final ClassName JUNIT3_TEST_CASE = ClassName.of(JUNIT3_TEST_CASE_CLASS);
   public static final ClassName JUNIT4_IGNORE_ANNOTATION = ClassName.of("org.junit.Ignore");
   public static final ClassName JUNIT4_RUNNER_CLASS = ClassName.of("org.junit.runners.JUnit4");
+  public static final ClassName JUNIT4_PARAMETERIZED_CLASS =
+      ClassName.of("org.junit.runners.Parameterized");
+  public static final ClassName JUNIT4_PARAMETERIZED_PARAMETER_ANNOTATION =
+      ClassName.of("org.junit.runners.Parameterized.Parameter");
+  public static final ClassName JUNIT4_PARAMETERIZED_PARAMETERS_ANNOTATION =
+      ClassName.of("org.junit.runners.Parameterized.Parameters");
   public static final String JUNIT3_ASSERT_CLASS = "junit.framework.Assert";
+  public static final ClassName JUNIT3_ASSERT = ClassName.of(JUNIT3_ASSERT_CLASS);
 
   /**
    * Checks if a method, or any overridden method, is annotated with any annotation from the
@@ -111,8 +123,7 @@ public final class JUnitMatchers {
           hasAnnotation(JUNIT_AFTER_CLASS_ANNOTATION));
 
   /** Matches a class that inherits from TestCase. */
-  public static final Matcher<ClassTree> isTestCaseDescendant =
-      isSubtypeOf(ClassName.of(JUNIT3_TEST_CASE_CLASS));
+  public static final Matcher<ClassTree> isTestCaseDescendant = isSubtypeOf(JUNIT3_TEST_CASE);
 
   /**
    * Match a class which appears to be missing a @RunWith annotation.

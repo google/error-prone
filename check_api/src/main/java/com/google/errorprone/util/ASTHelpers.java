@@ -156,7 +156,6 @@ import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 import javax.lang.model.element.AnnotationMirror;
-import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.type.TypeKind;
@@ -1107,20 +1106,40 @@ public final class ASTHelpers {
    * or its type. (If the given symbol is a method symbol, the type searched for annotations is its
    * return type.)
    *
-   * <p>This method looks only a annotations that are directly present. It does <b>not</b> consider
+   * <p>This method looks only at annotations that are directly present. It does <b>not</b> consider
    * annotation inheritance (see JLS 9.6.4.3).
+   *
+   * <p>Prefer {@link #hasDirectAnnotation(Symbol, ClassName)}.
    */
   public static boolean hasDirectAnnotation(MethodSymbol sym, String qualifiedName) {
-    return hasDirectAnnotation(
-        Streams.concat(
-            sym.getAnnotationMirrors().stream(),
-            sym.getReturnType().getAnnotationMirrors().stream()),
-        element -> ((Symbol) element).getQualifiedName().contentEquals(qualifiedName));
+    return hasDirectAnnotation(sym, ClassName.of(qualifiedName));
   }
 
-  private static boolean hasDirectAnnotation(
-      Stream<? extends AnnotationMirror> annotations, Predicate<Element> matcher) {
-    return annotations.anyMatch(annotation -> matcher.test(MoreAnnotations.asElement(annotation)));
+  /**
+   * Check for the presence of an annotation with the given class name directly on this symbol or
+   * its type. (If the given symbol is a method symbol, the type searched for annotations is its
+   * return type; if a variable symbol, its type.)
+   *
+   * <p>This method looks only at annotations that are directly present. It does <b>not</b> consider
+   * annotation inheritance (see JLS 9.6.4.3).
+   */
+  public static boolean hasDirectAnnotation(@Nullable Symbol sym, ClassName annotationClass) {
+    requireNonNull(annotationClass);
+    Stream<? extends AnnotationMirror> annotations =
+        switch (sym) {
+          case MethodSymbol methodSymbol ->
+              Streams.concat(
+                  methodSymbol.getAnnotationMirrors().stream(),
+                  methodSymbol.getReturnType().getAnnotationMirrors().stream());
+          case VarSymbol varSymbol ->
+              Streams.concat(
+                  varSymbol.getAnnotationMirrors().stream(),
+                  varSymbol.asType().getAnnotationMirrors().stream());
+          case null -> Stream.empty();
+          default -> sym.getAnnotationMirrors().stream();
+        };
+    return annotations.anyMatch(annotation ->
+        MoreAnnotations.asElement(annotation).flatName().contentEquals(annotationClass.toString()));
   }
 
   /**

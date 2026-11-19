@@ -1423,14 +1423,14 @@ public final class Matchers {
    * Determines whether a tree has any of the given annotations. This includes annotations inherited
    * from superclasses due to {@code @Inherited}.
    *
-   * <p>Prefer {@link #hasAnyAnnotation(ClassName...)}.
+   * <p>Prefer {@link #hasAnyAnnotation(ClassName...)} or {@link #hasAnyAnnotationOf(Iterable)}.
    */
   @SafeVarargs
   public static Matcher<Tree> hasAnyAnnotation(Class<? extends Annotation>... annotations) {
-    return hasAnyAnnotation(
+    return hasAnyAnnotationOf(
         Arrays.stream(annotations)
             .map(annotation -> ClassName.of(annotation.getName()))
-            .toArray(ClassName[]::new));
+            .collect(toImmutableList()));
   }
 
   /**
@@ -1438,6 +1438,14 @@ public final class Matchers {
    * from superclasses due to {@code @Inherited}.
    */
   public static <T extends Tree> Matcher<T> hasAnyAnnotation(ClassName... annotations) {
+    return hasAnyAnnotationOf(ImmutableList.copyOf(annotations));
+  }
+
+  /**
+   * Determines whether a tree has any of the given annotations. This includes annotations inherited
+   * from superclasses due to {@code @Inherited}.
+   */
+  public static <T extends Tree> Matcher<T> hasAnyAnnotationOf(Iterable<ClassName> annotations) {
     ImmutableList<ClassName> classNames = ImmutableList.copyOf(annotations);
     Supplier<ImmutableSet<Name>> names =
         VisitorState.memoize(

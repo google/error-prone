@@ -143,6 +143,9 @@ public final class Suppliers {
   public static final Supplier<Type> JAVA_LANG_LONG_TYPE =
       ClassName.of("java.lang.Long").asTypeSupplier();
 
+  public static final Supplier<Type> JAVA_LANG_DOUBLE_TYPE =
+      ClassName.of("java.lang.Double").asTypeSupplier();
+
   public static final Supplier<Type> STRING_TYPE = state -> state.getSymtab().stringType;
 
   public static final Supplier<Type> BOOLEAN_TYPE = state -> state.getSymtab().booleanType;

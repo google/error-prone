@@ -94,6 +94,24 @@ public class AppliedFixTest {
   }
 
   @Test
+  public void addAndRemoveStaticImportWithClassName() {
+    SuggestedFix fix =
+        SuggestedFix.builder()
+            .addStaticImport(ClassName.of("foo.bar.Outer$Inner"), "myMethod")
+            .removeStaticImport(ClassName.of("foo.bar.Old$Nested"), "OLD_FIELD")
+            .build();
+    assertThat(fix.getImportsToAdd()).containsExactly("import static foo.bar.Outer.Inner.myMethod");
+    assertThat(fix.getImportsToRemove())
+        .containsExactly("import static foo.bar.Old.Nested.OLD_FIELD");
+    assertThrows(
+        IllegalArgumentException.class,
+        () -> SuggestedFix.builder().addStaticImport(ClassName.of("foo.bar.Baz"), ""));
+    assertThrows(
+        IllegalArgumentException.class,
+        () -> SuggestedFix.builder().removeStaticImport(ClassName.of("foo.bar.Baz"), ""));
+  }
+
+  @Test
   public void shouldThrowExceptionOnIllegalRange() {
     assertThrows(IllegalArgumentException.class, () -> SuggestedFix.replace(0, -1, ""));
     assertThrows(IllegalArgumentException.class, () -> SuggestedFix.replace(-1, -1, ""));

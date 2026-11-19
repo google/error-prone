@@ -1447,6 +1447,245 @@ public class SuggestedFixesTest {
         .doTest();
   }
 
+  /** A test check that replaces checkNotNull using {@code qualifyStaticImport(ClassName, ...)}. */
+  @BugPattern(
+      summary = "Replaces checkNotNull with pkg.Outer$Inner.verifyNotNull",
+      severity = ERROR)
+  public static class ReplaceMethodInvocationsWithNestedClassName extends BugChecker
+      implements BugChecker.MethodInvocationTreeMatcher {
+    private static final Matcher<ExpressionTree> CHECK_NOT_NULL =
+        staticMethod().onClass("com.google.common.base.Preconditions").named("checkNotNull");
+    private static final ClassName NESTED_OWNER = ClassName.of("pkg.Outer$Inner");
+
+    @Override
+    public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
+      if (!CHECK_NOT_NULL.matches(tree, state)) {
+        return NO_MATCH;
+      }
+      SuggestedFix.Builder builder = SuggestedFix.builder();
+      String qualifiedName =
+          SuggestedFixes.qualifyStaticImport(NESTED_OWNER, "verifyNotNull", builder, state);
+      return describeMatch(
+          tree,
+          builder
+              .replace(
+                  tree,
+                  String.format(
+                      "%s(%s)", qualifiedName, state.getSourceForNode(tree.getArguments().get(0))))
+              .build());
+    }
+  }
+
+  @Test
+  public void qualifyStaticImport_className_nestedClass() {
+    BugCheckerRefactoringTestHelper.newInstance(
+            ReplaceMethodInvocationsWithNestedClassName.class, getClass())
+        .addInputLines(
+            "pkg/Outer.java",
+            """
+            package pkg;
+
+            public class Outer {
+              public static class Inner {
+                public static void verifyNotNull(Object o) {}
+              }
+            }
+            """)
+        .expectUnchanged()
+        .addInputLines(
+            "Test.java",
+            """
+            import static com.google.common.base.Preconditions.checkNotNull;
+
+            class Test {
+              void test() {
+                checkNotNull(1);
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            import static com.google.common.base.Preconditions.checkNotNull;
+            import static pkg.Outer.Inner.verifyNotNull;
+
+            class Test {
+              void test() {
+                verifyNotNull(1);
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void qualifyStaticImport_className_nestedClassConflict() {
+    BugCheckerRefactoringTestHelper.newInstance(
+            ReplaceMethodInvocationsWithNestedClassName.class, getClass())
+        .addInputLines(
+            "pkg/Outer.java",
+            """
+            package pkg;
+
+            public class Outer {
+              public static class Inner {
+                public static void verifyNotNull(Object o) {}
+              }
+            }
+            """)
+        .expectUnchanged()
+        .addInputLines(
+            "Test.java",
+            """
+            import static com.google.common.base.Preconditions.checkNotNull;
+
+            class Test {
+              void test() {
+                checkNotNull(1);
+              }
+
+              void verifyNotNull(int a) {}
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            import static com.google.common.base.Preconditions.checkNotNull;
+
+            import pkg.Outer;
+
+            class Test {
+              void test() {
+                Outer.Inner.verifyNotNull(1);
+              }
+
+              void verifyNotNull(int a) {}
+            }
+            """)
+        .doTest();
+  }
+
+  /** A test check that suggests an exempting annotation using {@link ClassName}. */
+  @BugPattern(summary = "Suggests an exempting annotation", severity = ERROR)
+  public static class SuggestExemptingAnnotationClassNameChecker extends BugChecker
+      implements BugChecker.MethodInvocationTreeMatcher {
+    private final ClassName exemptingAnnotation;
+
+    public SuggestExemptingAnnotationClassNameChecker(ClassName exemptingAnnotation) {
+      this.exemptingAnnotation = exemptingAnnotation;
+    }
+
+    @Override
+    public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
+      Optional<SuggestedFix> fix =
+          SuggestedFixes.suggestExemptingAnnotation(exemptingAnnotation, state.getPath(), state);
+      return fix.map(f -> describeMatch(tree, f)).orElse(NO_MATCH);
+    }
+  }
+
+  @Test
+  public void suggestExemptingAnnotation_className_loadedNested() {
+    BugCheckerRefactoringTestHelper.newInstance(
+            new SuggestExemptingAnnotationClassNameChecker(ClassName.of("pkg.Outer$Exempt")),
+            getClass())
+        .addInputLines(
+            "pkg/Outer.java",
+            """
+            package pkg;
+
+            import java.lang.annotation.ElementType;
+            import java.lang.annotation.Target;
+
+            public class Outer {
+              @Target(ElementType.METHOD)
+              public @interface Exempt {}
+            }
+            """)
+        .expectUnchanged()
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              void helper() {}
+
+              void test() {
+                helper();
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            import pkg.Outer;
+
+            class Test {
+              void helper() {}
+
+              @Outer.Exempt
+              void test() {
+                helper();
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void suggestExemptingAnnotation_className_unloadedNested() {
+    BugCheckerRefactoringTestHelper.newInstance(
+            new SuggestExemptingAnnotationClassNameChecker(
+                ClassName.of("com.example.Unloaded$Exempt")),
+            getClass())
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              void helper() {}
+
+              void test() {
+                helper();
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            import com.example.Unloaded;
+
+            class Test {
+              void helper() {}
+
+              @Unloaded.Exempt
+              void test() {
+                helper();
+              }
+            }
+            """)
+        .allowBreakingChanges()
+        .doTest();
+  }
+
+  @Test
+  public void suggestExemptingAnnotation_className_dontSuggestFixes() {
+    BugCheckerRefactoringTestHelper.newInstance(
+            new SuggestExemptingAnnotationClassNameChecker(
+                ClassName.of("com.google.errorprone.annotations.DontSuggestFixes")),
+            getClass())
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              void helper() {}
+
+              void test() {
+                helper();
+              }
+            }
+            """)
+        .expectUnchanged()
+        .doTest();
+  }
+
   /** A test check that qualifies javadoc link. */
   @BugPattern(summary = "all javadoc links should be qualified", severity = ERROR)
   public static class JavadocQualifier extends BugChecker implements BugChecker.ClassTreeMatcher {

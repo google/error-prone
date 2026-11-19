@@ -22,26 +22,26 @@ import static com.google.errorprone.matchers.Matchers.annotations;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.enclosingClass;
 import static com.google.errorprone.matchers.Matchers.hasAnnotation;
+import static com.google.errorprone.matchers.Matchers.hasAnyAnnotationOf;
 import static com.google.errorprone.matchers.Matchers.isSubtypeOf;
 import static com.google.errorprone.matchers.Matchers.isType;
-import static com.google.errorprone.util.ASTHelpers.annotationsAmong;
-import static com.google.errorprone.util.ASTHelpers.getDeclaredSymbol;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Streams;
 import com.google.errorprone.ClassName;
-import com.google.errorprone.VisitorState;
-import com.google.errorprone.suppliers.Supplier;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.Tree;
-import com.sun.tools.javac.util.Name;
 import java.util.stream.Stream;
 
 /** Utility constants and matchers related to dependency injection. */
 public final class InjectMatchers {
 
-  private static final ClassName GUICE_MODULE = ClassName.of("com.google.inject.Module");
+  public static final ClassName GUICE_MODULE = ClassName.of("com.google.inject.Module");
+  public static final ClassName GUICE_ABSTRACT_MODULE =
+      ClassName.of("com.google.inject.AbstractModule");
+  public static final ClassName GUICE_BIND_ANNOTATION =
+      ClassName.of("com.google.inject.testing.fieldbinder.Bind");
 
   public static final Matcher<Tree> INSIDE_GUICE_MODULE = enclosingClass(isSubtypeOf(GUICE_MODULE));
 
@@ -111,7 +111,7 @@ public final class InjectMatchers {
           IS_APPLICATION_OF_JAKARTA_INJECT);
 
   public static final Matcher<Tree> HAS_INJECT_ANNOTATION =
-      hasAnyOfAnnotations(
+      hasAnyAnnotationOf(
           ImmutableSet.of(
               GUICE_INJECT_ANNOTATION, JAVAX_INJECT_ANNOTATION, JAKARTA_INJECT_ANNOTATION));
 
@@ -133,7 +133,7 @@ public final class InjectMatchers {
           SCOPE_ANNOTATIONS.stream().map(Matchers::symbolHasAnnotation).collect(toImmutableSet()));
 
   public static final Matcher<ClassTree> HAS_SCOPE_ANNOTATION =
-      hasAnyOfAnnotations(SCOPE_ANNOTATIONS);
+      hasAnyAnnotationOf(SCOPE_ANNOTATIONS);
 
   public static final ClassName GUICE_BINDING_ANNOTATION =
       ClassName.of("com.google.inject.BindingAnnotation");
@@ -152,14 +152,23 @@ public final class InjectMatchers {
               .collect(toImmutableSet()));
 
   public static final Matcher<ClassTree> HAS_QUALIFIER_ANNOTATION =
-      hasAnyOfAnnotations(QUALIFIER_ANNOTATIONS);
+      hasAnyAnnotationOf(QUALIFIER_ANNOTATIONS);
 
   public static final ClassName GUICE_MAP_KEY_ANNOTATION =
       ClassName.of("com.google.inject.multibindings.MapKey");
   public static final ClassName DAGGER_MAP_KEY_ANNOTATION = ClassName.of("dagger.MapKey");
 
+  public static final ClassName DAGGER_COMPONENT_BUILDER_ANNOTATION =
+      ClassName.of("dagger.Component.Builder");
+  public static final ClassName DAGGER_SUBCOMPONENT_BUILDER_ANNOTATION =
+      ClassName.of("dagger.Subcomponent.Builder");
+  public static final ClassName DAGGER_PRODUCTION_COMPONENT_BUILDER_ANNOTATION =
+      ClassName.of("dagger.producers.ProductionComponent.Builder");
+  public static final ClassName DAGGER_PRODUCTION_SUBCOMPONENT_BUILDER_ANNOTATION =
+      ClassName.of("dagger.producers.ProductionSubcomponent.Builder");
+
   public static final Matcher<ClassTree> IS_DAGGER_COMPONENT =
-      hasAnyOfAnnotations(
+      hasAnyAnnotationOf(
           ImmutableSet.of(
               ClassName.of("dagger.Component"),
               ClassName.of("dagger.Subcomponent"),
@@ -171,13 +180,4 @@ public final class InjectMatchers {
 
   public static final Matcher<ClassTree> IS_DAGGER_COMPONENT_OR_MODULE =
       anyOf(IS_DAGGER_COMPONENT, hasAnnotation(DAGGER_MODULE));
-
-  private static <T extends Tree> Matcher<T> hasAnyOfAnnotations(
-      ImmutableSet<ClassName> annotationClasses) {
-    Supplier<ImmutableSet<Name>> name =
-        VisitorState.memoize(state ->
-            annotationClasses.stream().map(c -> c.binaryName(state)).collect(toImmutableSet()));
-    return (T tree, VisitorState state) ->
-        !annotationsAmong(getDeclaredSymbol(tree), name.get(state), state).isEmpty();
-  }
 }

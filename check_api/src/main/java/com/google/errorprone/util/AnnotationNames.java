@@ -45,6 +45,8 @@ public final class AnnotationNames {
       ClassName.of("com.google.errorprone.annotations.CheckReturnValue");
   public static final ClassName COMPATIBLE_WITH_ANNOTATION =
       ClassName.of("com.google.errorprone.annotations.CompatibleWith");
+  public static final ClassName COMPILE_TIME_CONSTANT_ANNOTATION =
+      ClassName.of("com.google.errorprone.annotations.CompileTimeConstant");
   public static final ClassName DEPRECATED_ANNOTATION = ClassName.of("java.lang.Deprecated");
   public static final ClassName DO_NOT_CALL_ANNOTATION =
       ClassName.of("com.google.errorprone.annotations.DoNotCall");
@@ -52,6 +54,8 @@ public final class AnnotationNames {
       ClassName.of("com.google.errorprone.annotations.FormatMethod");
   public static final ClassName FORMAT_STRING_ANNOTATION =
       ClassName.of("com.google.errorprone.annotations.FormatString");
+  public static final ClassName FOR_OVERRIDE_ANNOTATION =
+      ClassName.of("com.google.errorprone.annotations.ForOverride");
   public static final ClassName IMMUTABLE_ANNOTATION =
       ClassName.of("com.google.errorprone.annotations.Immutable");
   public static final ClassName INCOMPATIBLE_MODIFIERS_ANNOTATION =
@@ -60,6 +64,7 @@ public final class AnnotationNames {
       ClassName.of("com.google.errorprone.annotations.InlineMe");
   public static final ClassName INLINE_ME_VALIDATION_DISABLED_ANNOTATION =
       ClassName.of("com.google.errorprone.annotations.InlineMeValidationDisabled");
+  public static final ClassName KOTLIN_METADATA_ANNOTATION = ClassName.of("kotlin.Metadata");
   public static final ClassName LAZY_INIT_ANNOTATION =
       ClassName.of("com.google.errorprone.annotations.concurrent.LazyInit");
   public static final ClassName LENIENT_FORMAT_STRING_ANNOTATION =
@@ -87,6 +92,8 @@ public final class AnnotationNames {
       ClassName.of("com.google.errorprone.annotations.RequiredModifiers");
   public static final ClassName RESTRICTED_API_ANNOTATION =
       ClassName.of("com.google.errorprone.annotations.RestrictedApi");
+  public static final ClassName RESTRICT_TO_ANNOTATION =
+      ClassName.of("androidx.annotation.RestrictTo");
   public static final ClassName RETENTION_ANNOTATION =
       ClassName.of("java.lang.annotation.Retention");
   public static final ClassName SUPPRESS_WARNINGS_ANNOTATION =
