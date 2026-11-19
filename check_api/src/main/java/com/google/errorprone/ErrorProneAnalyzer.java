@@ -271,7 +271,11 @@ public final class ErrorProneAnalyzer implements TaskListener {
     } catch (LinkageError e) {
       // similar to ErrorProneError
       String version = ErrorProneVersion.loadVersionFromPom().or("unknown version");
-      log.error("error.prone.crash", getStackTraceAsString(e), version, "(see stack trace)");
+      log.error(
+          ErrorProneError.crashKey(context),
+          getStackTraceAsString(e),
+          version,
+          "(see stack trace)");
       throw e;
     } catch (CompletionFailure e) {
       // A CompletionFailure can be triggered when error-prone tries to complete a symbol

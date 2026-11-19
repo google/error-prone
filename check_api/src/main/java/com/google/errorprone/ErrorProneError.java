@@ -20,12 +20,15 @@ import static java.util.Objects.requireNonNull;
 
 import com.google.common.base.Strings;
 import com.google.common.base.Throwables;
+import com.sun.tools.javac.code.Symtab;
 import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.DiagnosticSource;
 import com.sun.tools.javac.util.JCDiagnostic;
 import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
 import com.sun.tools.javac.util.JCDiagnostic.DiagnosticType;
 import com.sun.tools.javac.util.Log;
+import com.sun.tools.javac.util.Names;
+import javax.tools.JavaFileManager;
 import javax.tools.JavaFileObject;
 
 /**
@@ -62,13 +65,27 @@ public class ErrorProneError extends Error {
               DiagnosticType.ERROR,
               log.currentSource(),
               pos,
-              "error.prone.crash",
+              crashKey(context),
               Throwables.getStackTraceAsString(cause),
               version,
               checkName));
     } finally {
       log.useSource(originalSource);
     }
+  }
+
+  static String crashKey(Context context) {
+    return isLombokPresent(context) ? "error.prone.crash.lombok" : "error.prone.crash";
+  }
+
+  private static boolean isLombokPresent(Context context) {
+    JavaFileManager fileManager = context.get(JavaFileManager.class);
+    if (fileManager != null && fileManager.getClass().getName().startsWith("lombok.")) {
+      return true;
+    }
+    Symtab symtab = Symtab.instance(context);
+    Names names = Names.instance(context);
+    return symtab.getClassesForName(names.fromString("lombok.Generated")).iterator().hasNext();
   }
 
   private static String formatMessage(

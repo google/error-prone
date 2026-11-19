@@ -909,4 +909,46 @@ public class ErrorProneCompilerIntegrationTest {
         .contains(
             "com.google.errorprone.SourcePositionException: invalid source position: [35, 29)");
   }
+
+  @Test
+  public void invalidSourceRangeLombok() throws Exception {
+    compilerBuilder.report(ScannerSupplier.fromBugCheckerClasses(InvalidSourceRange.class));
+    compiler = compilerBuilder.build();
+    Result exitCode =
+        compiler.compile(
+            new String[] {
+              "-XepDisableAllChecks", "-Xep:InvalidSourceRange:ERROR", "-XDcompilePolicy=byfile"
+            },
+            ImmutableList.of(
+                forSourceLines(
+                    "lombok/Generated.java",
+                    """
+                    package lombok;
+                    @SuppressWarnings("InvalidSourceRange")
+                    public @interface Generated {}
+                    """),
+                forSourceLines(
+                    "Test.java",
+                    """
+                    package test;
+                    @lombok.Generated
+                    class Test {
+                      int x, y;;
+                      int z;
+                    }
+                    """)));
+    outputStream.flush();
+    assertWithMessage(outputStream.toString()).that(exitCode).isEqualTo(Result.ERROR);
+    assertThat(diagnosticHelper.getDiagnostics()).hasSize(1);
+    Diagnostic<? extends JavaFileObject> diag = getOnlyElement(diagnosticHelper.getDiagnostics());
+    assertThat(diag.getCode()).isEqualTo("compiler.err.error.prone.crash.lombok");
+    assertThat(diag.toString())
+        .contains(
+            """
+            Test.java:4: error: An unhandled exception was thrown by the Error Prone static analysis plugin.
+              int x, y;;
+                    ^
+              This crash occurred in a compilation using Lombok, which modifies the javac AST in ways that may produce invalid source positions.
+            """);
+  }
 }
