@@ -20,6 +20,7 @@ import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.MoreCollectors.onlyElement;
 import static com.google.common.truth.Truth.assertThat;
 import static com.google.common.truth.Truth.assertWithMessage;
+import static com.google.common.truth.TruthJUnit.assume;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Locale.ENGLISH;
 import static org.junit.Assert.assertThrows;
@@ -47,6 +48,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -444,5 +447,55 @@ public class ErrorProneJavacPluginTest {
                 fileManager.getJavaFileObjects(source));
     RuntimeException expected = assertThrows(RuntimeException.class, task::call);
     assertThat(expected).hasMessageThat().contains("--should-stop=ifError=INIT is not supported");
+  }
+
+  // https://github.com/google/error-prone/issues/6225
+  @Test
+  public void markdownDocCommentsWithContextClassLoaderHidingJdkProviders() throws IOException {
+    assume().that(Runtime.version().feature()).isAtLeast(23);
+    FileSystem fileSystem = Jimfs.newFileSystem(Configuration.unix());
+    Path source = fileSystem.getPath("Test.java");
+    Files.write(
+        source,
+        ImmutableList.of(
+            "package test;",
+            "import java.util.List;",
+            "/// Wraps a [List].",
+            "class Test {",
+            "  /// See [#missing()].",
+            "  void f() {}",
+            "}"),
+        UTF_8);
+    JavacFileManager fileManager = new JavacFileManager(new Context(), false, UTF_8);
+    DiagnosticCollector<JavaFileObject> diagnosticCollector = new DiagnosticCollector<>();
+    JavacTask task =
+        JavacTool.create()
+            .getTask(
+                null,
+                fileManager,
+                diagnosticCollector,
+                ImmutableList.of(
+                    "-Xplugin:ErrorProne -XepDisableAllChecks"
+                        + " -Xep:RemoveUnusedImports:ERROR -Xep:InvalidLink:ERROR",
+                    "-XDcompilePolicy=byfile",
+                    "--should-stop=ifError=FLOW",
+                    "-XDaddTypeAnnotationsToSymbol=true"),
+                ImmutableList.of(),
+                fileManager.getJavaFileObjects(source));
+    // Like Maven's in-process compiler, which runs javac with a context class loader that can't
+    // see the JDK's Markdown doc comment transformer.
+    Thread thread = Thread.currentThread();
+    ClassLoader contextClassLoader = thread.getContextClassLoader();
+    try (URLClassLoader loader = new URLClassLoader(new URL[0], null)) {
+      thread.setContextClassLoader(loader);
+      assertThat(task.call()).isFalse();
+    } finally {
+      thread.setContextClassLoader(contextClassLoader);
+    }
+    Diagnostic<? extends JavaFileObject> diagnostic =
+        diagnosticCollector.getDiagnostics().stream()
+            .filter(d -> d.getKind() == Diagnostic.Kind.ERROR)
+            .collect(onlyElement());
+    assertThat(diagnostic.getMessage(ENGLISH)).contains("[InvalidLink]");
   }
 }
