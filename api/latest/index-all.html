@@ -437,6 +437,11 @@ otherMembers</code>) to the end of the class referenced by <code>classTree</code
 <dd>
 <div class="block">Adds a source file to the test compilation, from the string content of the file.</div>
 </dd>
+<dt><a href="com/google/errorprone/fixes/SuggestedFix.Builder.html#addStaticImport(com.google.errorprone.ClassName,java.lang.String)" class="member-name-link">addStaticImport(ClassName, String)</a> - Method in class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a></dt>
+<dd>
+<div class="block">Add a static import statement for <code>memberName</code> on <code>className</code> as part of this
+SuggestedFix.</div>
+</dd>
 <dt><a href="com/google/errorprone/fixes/SuggestedFix.Builder.html#addStaticImport(java.lang.String)" class="member-name-link">addStaticImport(String)</a> - Method in class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a></dt>
 <dd>
 <div class="block">Add a static import statement as part of this SuggestedFix.</div>
@@ -2511,6 +2516,8 @@ method's enclosing class, or on the method itself.</div>
 <div class="block">Constructs a Matcher that matches for method invocations (including constructor invocations)
 satisfying at least one of the given Rule specifications.</div>
 </dd>
+<dt><a href="com/google/errorprone/util/AnnotationNames.html#COMPILE_TIME_CONSTANT_ANNOTATION" class="member-name-link">COMPILE_TIME_CONSTANT_ANNOTATION</a> - Static variable in class com.google.errorprone.util.<a href="com/google/errorprone/util/AnnotationNames.html" title="class in com.google.errorprone.util">AnnotationNames</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/fixes/SuggestedFixes.html#compilesWithFix(com.google.errorprone.fixes.Fix,com.google.errorprone.VisitorState)" class="member-name-link">compilesWithFix(Fix, VisitorState)</a> - Static method in class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/SuggestedFixes.html" title="class in com.google.errorprone.fixes">SuggestedFixes</a></dt>
 <dd>
 <div class="block">Returns true if the current compilation would succeed with the given fix applied.</div>
@@ -3023,11 +3030,19 @@ empty result for <a href="com/google/errorprone/StatisticsCollector.html#counter
 <dl class="index">
 <dt><a href="com/google/errorprone/annotations/DoNotCall.html#-donotcall-and-deprecation-heading" class="search-tag-link">@DoNotCall and deprecation</a> - Section in annotation interface com.google.errorprone.annotations.DoNotCall</dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/matchers/InjectMatchers.html#DAGGER_COMPONENT_BUILDER_ANNOTATION" class="member-name-link">DAGGER_COMPONENT_BUILDER_ANNOTATION</a> - Static variable in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/InjectMatchers.html" title="class in com.google.errorprone.matchers">InjectMatchers</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/matchers/InjectMatchers.html#DAGGER_MAP_KEY_ANNOTATION" class="member-name-link">DAGGER_MAP_KEY_ANNOTATION</a> - Static variable in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/InjectMatchers.html" title="class in com.google.errorprone.matchers">InjectMatchers</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/matchers/InjectMatchers.html#DAGGER_PRODUCES_ANNOTATION" class="member-name-link">DAGGER_PRODUCES_ANNOTATION</a> - Static variable in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/InjectMatchers.html" title="class in com.google.errorprone.matchers">InjectMatchers</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/matchers/InjectMatchers.html#DAGGER_PRODUCTION_COMPONENT_BUILDER_ANNOTATION" class="member-name-link">DAGGER_PRODUCTION_COMPONENT_BUILDER_ANNOTATION</a> - Static variable in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/InjectMatchers.html" title="class in com.google.errorprone.matchers">InjectMatchers</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/matchers/InjectMatchers.html#DAGGER_PRODUCTION_SUBCOMPONENT_BUILDER_ANNOTATION" class="member-name-link">DAGGER_PRODUCTION_SUBCOMPONENT_BUILDER_ANNOTATION</a> - Static variable in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/InjectMatchers.html" title="class in com.google.errorprone.matchers">InjectMatchers</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/matchers/InjectMatchers.html#DAGGER_PROVIDES_ANNOTATION" class="member-name-link">DAGGER_PROVIDES_ANNOTATION</a> - Static variable in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/InjectMatchers.html" title="class in com.google.errorprone.matchers">InjectMatchers</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/matchers/InjectMatchers.html#DAGGER_SUBCOMPONENT_BUILDER_ANNOTATION" class="member-name-link">DAGGER_SUBCOMPONENT_BUILDER_ANNOTATION</a> - Static variable in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/InjectMatchers.html" title="class in com.google.errorprone.matchers">InjectMatchers</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/inject/dagger/DaggerAnnotations.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.inject.dagger">DaggerAnnotations</a> - Class in <a href="com/google/errorprone/bugpatterns/inject/dagger/package-summary.html">com.google.errorprone.bugpatterns.inject.dagger</a></dt>
 <dd>
@@ -4693,6 +4708,8 @@ every</code>, or <code>onAverageEvery</code> in the same logging chain.</div>
 <dd>
 <div class="block">This is being used by the immutability bug checker</div>
 </dd>
+<dt><a href="com/google/errorprone/util/AnnotationNames.html#FOR_OVERRIDE_ANNOTATION" class="member-name-link">FOR_OVERRIDE_ANNOTATION</a> - Static variable in class com.google.errorprone.util.<a href="com/google/errorprone/util/AnnotationNames.html" title="class in com.google.errorprone.util">AnnotationNames</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Purpose.html#FOR_THREAD_SAFE_CHECKER" class="member-name-link">FOR_THREAD_SAFE_CHECKER</a> - Enum constant in enum class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Purpose.html" title="enum class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Purpose</a></dt>
 <dd>
 <div class="block">This is being used by the thread-safety bug checker</div>
@@ -6467,11 +6484,17 @@ constructors.</div>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/threadsafety/GuardedByExpression.Erroneous.html#guardString()" class="member-name-link">guardString()</a> - Method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/GuardedByExpression.Erroneous.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByExpression.Erroneous</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/matchers/InjectMatchers.html#GUICE_ABSTRACT_MODULE" class="member-name-link">GUICE_ABSTRACT_MODULE</a> - Static variable in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/InjectMatchers.html" title="class in com.google.errorprone.matchers">InjectMatchers</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/matchers/InjectMatchers.html#GUICE_BIND_ANNOTATION" class="member-name-link">GUICE_BIND_ANNOTATION</a> - Static variable in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/InjectMatchers.html" title="class in com.google.errorprone.matchers">InjectMatchers</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/matchers/InjectMatchers.html#GUICE_BINDING_ANNOTATION" class="member-name-link">GUICE_BINDING_ANNOTATION</a> - Static variable in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/InjectMatchers.html" title="class in com.google.errorprone.matchers">InjectMatchers</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/matchers/InjectMatchers.html#GUICE_INJECT_ANNOTATION" class="member-name-link">GUICE_INJECT_ANNOTATION</a> - Static variable in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/InjectMatchers.html" title="class in com.google.errorprone.matchers">InjectMatchers</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/matchers/InjectMatchers.html#GUICE_MAP_KEY_ANNOTATION" class="member-name-link">GUICE_MAP_KEY_ANNOTATION</a> - Static variable in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/InjectMatchers.html" title="class in com.google.errorprone.matchers">InjectMatchers</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/matchers/InjectMatchers.html#GUICE_MODULE" class="member-name-link">GUICE_MODULE</a> - Static variable in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/InjectMatchers.html" title="class in com.google.errorprone.matchers">InjectMatchers</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/matchers/InjectMatchers.html#GUICE_PROVIDES_ANNOTATION" class="member-name-link">GUICE_PROVIDES_ANNOTATION</a> - Static variable in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/InjectMatchers.html" title="class in com.google.errorprone.matchers">InjectMatchers</a></dt>
 <dd>&nbsp;</dd>
@@ -6598,6 +6621,10 @@ constructors.</div>
 </dd>
 <dt><a href="com/google/errorprone/matchers/Matchers.html#hasAnyAnnotation(java.util.List)" class="member-name-link">hasAnyAnnotation(List)</a> - Static method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/Matchers.html" title="class in com.google.errorprone.matchers">Matchers</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/matchers/Matchers.html#hasAnyAnnotationOf(java.lang.Iterable)" class="member-name-link">hasAnyAnnotationOf(Iterable)</a> - Static method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/Matchers.html" title="class in com.google.errorprone.matchers">Matchers</a></dt>
+<dd>
+<div class="block">Determines whether a tree has any of the given annotations.</div>
+</dd>
 <dt><a href="com/google/errorprone/matchers/Matchers.html#hasArguments(com.google.errorprone.matchers.ChildMultiMatcher.MatchType,com.google.errorprone.matchers.Matcher)" class="member-name-link">hasArguments(ChildMultiMatcher.MatchType, Matcher)</a> - Static method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/Matchers.html" title="class in com.google.errorprone.matchers">Matchers</a></dt>
 <dd>
 <div class="block">Matches if the given matcher matches all of/any of the arguments to this method invocation.</div>
@@ -6623,6 +6650,11 @@ value which matches the given matcher.</div>
 least one execution branch (for example, explicit <code>null</code> literals, conditional/ternary
 branches returning <code>null</code>, known-null variables, or calls to methods like <code>
 Optional.orNull()</code>).</div>
+</dd>
+<dt><a href="com/google/errorprone/util/ASTHelpers.html#hasDirectAnnotation(com.sun.tools.javac.code.Symbol,com.google.errorprone.ClassName)" class="member-name-link">hasDirectAnnotation(Symbol, ClassName)</a> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/ASTHelpers.html" title="class in com.google.errorprone.util">ASTHelpers</a></dt>
+<dd>
+<div class="block">Check for the presence of an annotation with the given class name directly on this symbol or
+its type.</div>
 </dd>
 <dt><a href="com/google/errorprone/util/ASTHelpers.html#hasDirectAnnotation(com.sun.tools.javac.code.Symbol.MethodSymbol,java.lang.String)" class="member-name-link">hasDirectAnnotation(Symbol.MethodSymbol, String)</a> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/ASTHelpers.html" title="class in com.google.errorprone.util">ASTHelpers</a></dt>
 <dd>
@@ -8293,6 +8325,8 @@ underneath a class or method that is marked as TestNG test code.</div>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/suppliers/Suppliers.html#JAVA_LANG_BOOLEAN_TYPE" class="member-name-link">JAVA_LANG_BOOLEAN_TYPE</a> - Static variable in class com.google.errorprone.suppliers.<a href="com/google/errorprone/suppliers/Suppliers.html" title="class in com.google.errorprone.suppliers">Suppliers</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/suppliers/Suppliers.html#JAVA_LANG_DOUBLE_TYPE" class="member-name-link">JAVA_LANG_DOUBLE_TYPE</a> - Static variable in class com.google.errorprone.suppliers.<a href="com/google/errorprone/suppliers/Suppliers.html" title="class in com.google.errorprone.suppliers">Suppliers</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/suppliers/Suppliers.html#JAVA_LANG_INTEGER_TYPE" class="member-name-link">JAVA_LANG_INTEGER_TYPE</a> - Static variable in class com.google.errorprone.suppliers.<a href="com/google/errorprone/suppliers/Suppliers.html" title="class in com.google.errorprone.suppliers">Suppliers</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/suppliers/Suppliers.html#JAVA_LANG_LONG_TYPE" class="member-name-link">JAVA_LANG_LONG_TYPE</a> - Static variable in class com.google.errorprone.suppliers.<a href="com/google/errorprone/suppliers/Suppliers.html" title="class in com.google.errorprone.suppliers">Suppliers</a></dt>
@@ -8475,7 +8509,11 @@ to <code>period.getYears(), period.getMonths(), or period.getTotalMonths()</code
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/matchers/JUnitMatchers.html#JUNIT_BEFORE_CLASS_ANNOTATION" class="member-name-link">JUNIT_BEFORE_CLASS_ANNOTATION</a> - Static variable in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/JUnitMatchers.html" title="class in com.google.errorprone.matchers">JUnitMatchers</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/matchers/JUnitMatchers.html#JUNIT3_ASSERT" class="member-name-link">JUNIT3_ASSERT</a> - Static variable in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/JUnitMatchers.html" title="class in com.google.errorprone.matchers">JUnitMatchers</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/matchers/JUnitMatchers.html#JUNIT3_ASSERT_CLASS" class="member-name-link">JUNIT3_ASSERT_CLASS</a> - Static variable in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/JUnitMatchers.html" title="class in com.google.errorprone.matchers">JUnitMatchers</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/matchers/JUnitMatchers.html#JUNIT3_TEST_CASE" class="member-name-link">JUNIT3_TEST_CASE</a> - Static variable in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/JUnitMatchers.html" title="class in com.google.errorprone.matchers">JUnitMatchers</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/matchers/JUnitMatchers.html#JUNIT3_TEST_CASE_CLASS" class="member-name-link">JUNIT3_TEST_CASE_CLASS</a> - Static variable in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/JUnitMatchers.html" title="class in com.google.errorprone.matchers">JUnitMatchers</a></dt>
 <dd>&nbsp;</dd>
@@ -8491,9 +8529,21 @@ to <code>period.getYears(), period.getMonths(), or period.getTotalMonths()</code
 </dd>
 <dt><a href="com/google/errorprone/bugpatterns/JUnit3TestNotRun.html#%3Cinit%3E()" class="member-name-link">JUnit3TestNotRun()</a> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/JUnit3TestNotRun.html" title="class in com.google.errorprone.bugpatterns">JUnit3TestNotRun</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/matchers/JUnitMatchers.html#JUNIT4_ASSERT" class="member-name-link">JUNIT4_ASSERT</a> - Static variable in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/JUnitMatchers.html" title="class in com.google.errorprone.matchers">JUnitMatchers</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/matchers/JUnitMatchers.html#JUNIT4_ASSERT_CLASS" class="member-name-link">JUNIT4_ASSERT_CLASS</a> - Static variable in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/JUnitMatchers.html" title="class in com.google.errorprone.matchers">JUnitMatchers</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/matchers/JUnitMatchers.html#JUNIT4_DATA_POINTS_ANNOTATION" class="member-name-link">JUNIT4_DATA_POINTS_ANNOTATION</a> - Static variable in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/JUnitMatchers.html" title="class in com.google.errorprone.matchers">JUnitMatchers</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/matchers/JUnitMatchers.html#JUNIT4_IGNORE_ANNOTATION" class="member-name-link">JUNIT4_IGNORE_ANNOTATION</a> - Static variable in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/JUnitMatchers.html" title="class in com.google.errorprone.matchers">JUnitMatchers</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/matchers/JUnitMatchers.html#JUNIT4_PARAMETERIZED_CLASS" class="member-name-link">JUNIT4_PARAMETERIZED_CLASS</a> - Static variable in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/JUnitMatchers.html" title="class in com.google.errorprone.matchers">JUnitMatchers</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/matchers/JUnitMatchers.html#JUNIT4_PARAMETERIZED_PARAMETER_ANNOTATION" class="member-name-link">JUNIT4_PARAMETERIZED_PARAMETER_ANNOTATION</a> - Static variable in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/JUnitMatchers.html" title="class in com.google.errorprone.matchers">JUnitMatchers</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/matchers/JUnitMatchers.html#JUNIT4_PARAMETERIZED_PARAMETERS_ANNOTATION" class="member-name-link">JUNIT4_PARAMETERIZED_PARAMETERS_ANNOTATION</a> - Static variable in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/JUnitMatchers.html" title="class in com.google.errorprone.matchers">JUnitMatchers</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/matchers/JUnitMatchers.html#JUNIT4_RULE_ANNOTATION" class="member-name-link">JUNIT4_RULE_ANNOTATION</a> - Static variable in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/JUnitMatchers.html" title="class in com.google.errorprone.matchers">JUnitMatchers</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/matchers/JUnitMatchers.html#JUNIT4_RUN_WITH_ANNOTATION" class="member-name-link">JUNIT4_RUN_WITH_ANNOTATION</a> - Static variable in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/JUnitMatchers.html" title="class in com.google.errorprone.matchers">JUnitMatchers</a></dt>
 <dd>&nbsp;</dd>
@@ -8644,6 +8694,8 @@ specially.</div>
 <dd>
 <div class="block">Information about known types and whether they're known to be safe or unsafe.</div>
 </dd>
+<dt><a href="com/google/errorprone/util/AnnotationNames.html#KOTLIN_METADATA_ANNOTATION" class="member-name-link">KOTLIN_METADATA_ANNOTATION</a> - Static variable in class com.google.errorprone.util.<a href="com/google/errorprone/util/AnnotationNames.html" title="class in com.google.errorprone.util">AnnotationNames</a></dt>
+<dd>&nbsp;</dd>
 </dl>
 <h2 class="title" id="I:L">L</h2>
 <dl class="index">
@@ -13333,6 +13385,11 @@ proto.</div>
 <div class="block">Fully qualifies a javadoc reference, e.g. for replacing <code>{&#64;link List}</code> with
 <code>{&#64;link java.util.List}</code>.</div>
 </dd>
+<dt><a href="com/google/errorprone/fixes/SuggestedFixes.html#qualifyStaticImport(com.google.errorprone.ClassName,java.lang.String,com.google.errorprone.fixes.SuggestedFix.Builder,com.google.errorprone.VisitorState)" class="member-name-link">qualifyStaticImport(ClassName, String, SuggestedFix.Builder, VisitorState)</a> - Static method in class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/SuggestedFixes.html" title="class in com.google.errorprone.fixes">SuggestedFixes</a></dt>
+<dd>
+<div class="block">Provides a name to use for the static member <code>memberName</code> on <code>className</code>, trying to
+static import it if possible.</div>
+</dd>
 <dt><a href="com/google/errorprone/fixes/SuggestedFixes.html#qualifyStaticImport(java.lang.String,com.google.errorprone.fixes.SuggestedFix.Builder,com.google.errorprone.VisitorState)" class="member-name-link">qualifyStaticImport(String, SuggestedFix.Builder, VisitorState)</a> - Static method in class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/SuggestedFixes.html" title="class in com.google.errorprone.fixes">SuggestedFixes</a></dt>
 <dd>
 <div class="block">Provides a name to use for the (fully qualified) method provided in <code>qualifiedName</code>,
@@ -13615,6 +13672,11 @@ comma-separated list of expressions containing <code>tree</code>.</div>
 <dd>
 <div class="block">Removes modifiers from the given class, method, or field declaration.</div>
 </dd>
+<dt><a href="com/google/errorprone/fixes/SuggestedFix.Builder.html#removeStaticImport(com.google.errorprone.ClassName,java.lang.String)" class="member-name-link">removeStaticImport(ClassName, String)</a> - Method in class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a></dt>
+<dd>
+<div class="block">Remove a static import statement for <code>memberName</code> on <code>className</code> as part of this
+SuggestedFix.</div>
+</dd>
 <dt><a href="com/google/errorprone/fixes/SuggestedFix.Builder.html#removeStaticImport(java.lang.String)" class="member-name-link">removeStaticImport(String)</a> - Method in class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a></dt>
 <dd>
 <div class="block">Remove a static import statement as part of this SuggestedFix.</div>
@@ -13846,6 +13908,8 @@ argTypes</code> and <code>tyargTypes</code> and return its MethodSymbol.</div>
 <dt><a href="com/google/errorprone/bugpatterns/threadsafety/GuardedByBinder.Resolver.html#resolveTypeLiteral(com.sun.source.tree.ExpressionTree)" class="member-name-link">resolveTypeLiteral(ExpressionTree)</a> - Method in interface com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/GuardedByBinder.Resolver.html" title="interface in com.google.errorprone.bugpatterns.threadsafety">GuardedByBinder.Resolver</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/threadsafety/GuardedBySymbolResolver.html#resolveTypeLiteral(com.sun.source.tree.ExpressionTree)" class="member-name-link">resolveTypeLiteral(ExpressionTree)</a> - Method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/GuardedBySymbolResolver.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedBySymbolResolver</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/util/AnnotationNames.html#RESTRICT_TO_ANNOTATION" class="member-name-link">RESTRICT_TO_ANNOTATION</a> - Static variable in class com.google.errorprone.util.<a href="com/google/errorprone/util/AnnotationNames.html" title="class in com.google.errorprone.util">AnnotationNames</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/util/AnnotationNames.html#RESTRICTED_API_ANNOTATION" class="member-name-link">RESTRICTED_API_ANNOTATION</a> - Static variable in class com.google.errorprone.util.<a href="com/google/errorprone/util/AnnotationNames.html" title="class in com.google.errorprone.util">AnnotationNames</a></dt>
 <dd>&nbsp;</dd>
@@ -14862,6 +14926,10 @@ currently-processed one; the files can then be recompiled.</div>
 <dt><a href="com/google/errorprone/bugpatterns/inlineme/Suggester.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.inlineme">Suggester</a> - Class in <a href="com/google/errorprone/bugpatterns/inlineme/package-summary.html">com.google.errorprone.bugpatterns.inlineme</a></dt>
 <dd>
 <div class="block">Checker that recommends using <code>@InlineMe</code> on single-statement deprecated APIs.</div>
+</dd>
+<dt><a href="com/google/errorprone/fixes/SuggestedFixes.html#suggestExemptingAnnotation(com.google.errorprone.ClassName,com.sun.source.util.TreePath,com.google.errorprone.VisitorState)" class="member-name-link">suggestExemptingAnnotation(ClassName, TreePath, VisitorState)</a> - Static method in class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/SuggestedFixes.html" title="class in com.google.errorprone.fixes">SuggestedFixes</a></dt>
+<dd>
+<div class="block">Create a fix to add a suppression annotation on the surrounding class.</div>
 </dd>
 <dt><a href="com/google/errorprone/fixes/SuggestedFixes.html#suggestExemptingAnnotation(java.lang.String,com.sun.source.util.TreePath,com.google.errorprone.VisitorState)" class="member-name-link">suggestExemptingAnnotation(String, TreePath, VisitorState)</a> - Static method in class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/SuggestedFixes.html" title="class in com.google.errorprone.fixes">SuggestedFixes</a></dt>
 <dd>

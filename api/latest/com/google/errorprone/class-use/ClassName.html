@@ -137,6 +137,22 @@ individual AST nodes, a supplier gives contextual information from the traversal
 <div class="col-last even-row-color">
 <div class="block">Add an import statement for <code>className</code> as part of this SuggestedFix.</div>
 </div>
+<div class="col-first odd-row-color"><code><a href="../fixes/SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a></code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">SuggestedFix.Builder.</span><code><a href="../fixes/SuggestedFix.Builder.html#addStaticImport(com.google.errorprone.ClassName,java.lang.String)" class="member-name-link">addStaticImport</a><wbr>(<a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a>&nbsp;className,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;memberName)</code></div>
+<div class="col-last odd-row-color">
+<div class="block">Add a static import statement for <code>memberName</code> on <code>className</code> as part of this
+SuggestedFix.</div>
+</div>
+<div class="col-first even-row-color"><code>static <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color"><span class="type-name-label">SuggestedFixes.</span><code><a href="../fixes/SuggestedFixes.html#qualifyStaticImport(com.google.errorprone.ClassName,java.lang.String,com.google.errorprone.fixes.SuggestedFix.Builder,com.google.errorprone.VisitorState)" class="member-name-link">qualifyStaticImport</a><wbr>(<a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a>&nbsp;className,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;memberName,
+ <a href="../fixes/SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a>&nbsp;fix,
+ <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
+<div class="col-last even-row-color">
+<div class="block">Provides a name to use for the static member <code>memberName</code> on <code>className</code>, trying to
+static import it if possible.</div>
+</div>
 <div class="col-first odd-row-color"><code>static <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second odd-row-color"><span class="type-name-label">SuggestedFixes.</span><code><a href="../fixes/SuggestedFixes.html#qualifyType(com.google.errorprone.VisitorState,com.google.errorprone.fixes.SuggestedFix.Builder,com.google.errorprone.ClassName)" class="member-name-link">qualifyType</a><wbr>(<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
  <a href="../fixes/SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a>&nbsp;fix,
@@ -148,6 +164,20 @@ individual AST nodes, a supplier gives contextual information from the traversal
 <div class="col-second even-row-color"><span class="type-name-label">SuggestedFix.Builder.</span><code><a href="../fixes/SuggestedFix.Builder.html#removeImport(com.google.errorprone.ClassName)" class="member-name-link">removeImport</a><wbr>(<a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a>&nbsp;className)</code></div>
 <div class="col-last even-row-color">
 <div class="block">Remove an import statement for <code>className</code> as part of this SuggestedFix.</div>
+</div>
+<div class="col-first odd-row-color"><code><a href="../fixes/SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a></code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">SuggestedFix.Builder.</span><code><a href="../fixes/SuggestedFix.Builder.html#removeStaticImport(com.google.errorprone.ClassName,java.lang.String)" class="member-name-link">removeStaticImport</a><wbr>(<a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a>&nbsp;className,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;memberName)</code></div>
+<div class="col-last odd-row-color">
+<div class="block">Remove a static import statement for <code>memberName</code> on <code>className</code> as part of this
+SuggestedFix.</div>
+</div>
+<div class="col-first even-row-color"><code>static <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a><wbr>&lt;<a href="../fixes/SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a>&gt;</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">SuggestedFixes.</span><code><a href="../fixes/SuggestedFixes.html#suggestExemptingAnnotation(com.google.errorprone.ClassName,com.sun.source.util.TreePath,com.google.errorprone.VisitorState)" class="member-name-link">suggestExemptingAnnotation</a><wbr>(<a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a>&nbsp;exemptingAnnotation,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/util/TreePath.html" title="class or interface in com.sun.source.util" class="external-link">TreePath</a>&nbsp;where,
+ <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
+<div class="col-last even-row-color">
+<div class="block">Create a fix to add a suppression annotation on the surrounding class.</div>
 </div>
 </div>
 </section>
@@ -173,13 +203,25 @@ individual AST nodes, a supplier gives contextual information from the traversal
 <div class="col-second odd-row-color"><span class="type-name-label">ProtobufMatchers.</span><code><a href="../matchers/ProtobufMatchers.html#BYTE_STRING" class="member-name-link">BYTE_STRING</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><code>static final <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a></code></div>
-<div class="col-second even-row-color"><span class="type-name-label">InjectMatchers.</span><code><a href="../matchers/InjectMatchers.html#DAGGER_MAP_KEY_ANNOTATION" class="member-name-link">DAGGER_MAP_KEY_ANNOTATION</a></code></div>
+<div class="col-second even-row-color"><span class="type-name-label">InjectMatchers.</span><code><a href="../matchers/InjectMatchers.html#DAGGER_COMPONENT_BUILDER_ANNOTATION" class="member-name-link">DAGGER_COMPONENT_BUILDER_ANNOTATION</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><code>static final <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a></code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">InjectMatchers.</span><code><a href="../matchers/InjectMatchers.html#DAGGER_PRODUCES_ANNOTATION" class="member-name-link">DAGGER_PRODUCES_ANNOTATION</a></code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">InjectMatchers.</span><code><a href="../matchers/InjectMatchers.html#DAGGER_MAP_KEY_ANNOTATION" class="member-name-link">DAGGER_MAP_KEY_ANNOTATION</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><code>static final <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a></code></div>
-<div class="col-second even-row-color"><span class="type-name-label">InjectMatchers.</span><code><a href="../matchers/InjectMatchers.html#DAGGER_PROVIDES_ANNOTATION" class="member-name-link">DAGGER_PROVIDES_ANNOTATION</a></code></div>
+<div class="col-second even-row-color"><span class="type-name-label">InjectMatchers.</span><code><a href="../matchers/InjectMatchers.html#DAGGER_PRODUCES_ANNOTATION" class="member-name-link">DAGGER_PRODUCES_ANNOTATION</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code>static final <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a></code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">InjectMatchers.</span><code><a href="../matchers/InjectMatchers.html#DAGGER_PRODUCTION_COMPONENT_BUILDER_ANNOTATION" class="member-name-link">DAGGER_PRODUCTION_COMPONENT_BUILDER_ANNOTATION</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code>static final <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a></code></div>
+<div class="col-second even-row-color"><span class="type-name-label">InjectMatchers.</span><code><a href="../matchers/InjectMatchers.html#DAGGER_PRODUCTION_SUBCOMPONENT_BUILDER_ANNOTATION" class="member-name-link">DAGGER_PRODUCTION_SUBCOMPONENT_BUILDER_ANNOTATION</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code>static final <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a></code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">InjectMatchers.</span><code><a href="../matchers/InjectMatchers.html#DAGGER_PROVIDES_ANNOTATION" class="member-name-link">DAGGER_PROVIDES_ANNOTATION</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code>static final <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a></code></div>
+<div class="col-second even-row-color"><span class="type-name-label">InjectMatchers.</span><code><a href="../matchers/InjectMatchers.html#DAGGER_SUBCOMPONENT_BUILDER_ANNOTATION" class="member-name-link">DAGGER_SUBCOMPONENT_BUILDER_ANNOTATION</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><code>static final <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a></code></div>
 <div class="col-second odd-row-color"><span class="type-name-label">ProtobufMatchers.</span><code><a href="../matchers/ProtobufMatchers.html#DESCRIPTOR" class="member-name-link">DESCRIPTOR</a></code></div>
@@ -227,6 +269,12 @@ individual AST nodes, a supplier gives contextual information from the traversal
 <div class="col-second odd-row-color"><span class="type-name-label">ProtobufMatchers.</span><code><a href="../matchers/ProtobufMatchers.html#GENERATED_MESSAGE_LITE_BUILDER" class="member-name-link">GENERATED_MESSAGE_LITE_BUILDER</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><code>static final <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a></code></div>
+<div class="col-second even-row-color"><span class="type-name-label">InjectMatchers.</span><code><a href="../matchers/InjectMatchers.html#GUICE_ABSTRACT_MODULE" class="member-name-link">GUICE_ABSTRACT_MODULE</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code>static final <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a></code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">InjectMatchers.</span><code><a href="../matchers/InjectMatchers.html#GUICE_BIND_ANNOTATION" class="member-name-link">GUICE_BIND_ANNOTATION</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code>static final <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a></code></div>
 <div class="col-second even-row-color"><span class="type-name-label">InjectMatchers.</span><code><a href="../matchers/InjectMatchers.html#GUICE_BINDING_ANNOTATION" class="member-name-link">GUICE_BINDING_ANNOTATION</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><code>static final <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a></code></div>
@@ -236,125 +284,152 @@ individual AST nodes, a supplier gives contextual information from the traversal
 <div class="col-second even-row-color"><span class="type-name-label">InjectMatchers.</span><code><a href="../matchers/InjectMatchers.html#GUICE_MAP_KEY_ANNOTATION" class="member-name-link">GUICE_MAP_KEY_ANNOTATION</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><code>static final <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a></code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">InjectMatchers.</span><code><a href="../matchers/InjectMatchers.html#GUICE_PROVIDES_ANNOTATION" class="member-name-link">GUICE_PROVIDES_ANNOTATION</a></code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">InjectMatchers.</span><code><a href="../matchers/InjectMatchers.html#GUICE_MODULE" class="member-name-link">GUICE_MODULE</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><code>static final <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a></code></div>
-<div class="col-second even-row-color"><span class="type-name-label">InjectMatchers.</span><code><a href="../matchers/InjectMatchers.html#GUICE_SCOPE_ANNOTATION" class="member-name-link">GUICE_SCOPE_ANNOTATION</a></code></div>
+<div class="col-second even-row-color"><span class="type-name-label">InjectMatchers.</span><code><a href="../matchers/InjectMatchers.html#GUICE_PROVIDES_ANNOTATION" class="member-name-link">GUICE_PROVIDES_ANNOTATION</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><code>static final <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a></code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">ProtobufMatchers.</span><code><a href="../matchers/ProtobufMatchers.html#INTERNAL_ONE_OF_ENUM" class="member-name-link">INTERNAL_ONE_OF_ENUM</a></code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">InjectMatchers.</span><code><a href="../matchers/InjectMatchers.html#GUICE_SCOPE_ANNOTATION" class="member-name-link">GUICE_SCOPE_ANNOTATION</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><code>static final <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a></code></div>
-<div class="col-second even-row-color"><span class="type-name-label">InjectMatchers.</span><code><a href="../matchers/InjectMatchers.html#JAKARTA_INJECT_ANNOTATION" class="member-name-link">JAKARTA_INJECT_ANNOTATION</a></code></div>
+<div class="col-second even-row-color"><span class="type-name-label">ProtobufMatchers.</span><code><a href="../matchers/ProtobufMatchers.html#INTERNAL_ONE_OF_ENUM" class="member-name-link">INTERNAL_ONE_OF_ENUM</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><code>static final <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a></code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">InjectMatchers.</span><code><a href="../matchers/InjectMatchers.html#JAVAX_INJECT_ANNOTATION" class="member-name-link">JAVAX_INJECT_ANNOTATION</a></code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">InjectMatchers.</span><code><a href="../matchers/InjectMatchers.html#JAKARTA_INJECT_ANNOTATION" class="member-name-link">JAKARTA_INJECT_ANNOTATION</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><code>static final <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a></code></div>
-<div class="col-second even-row-color"><span class="type-name-label">InjectMatchers.</span><code><a href="../matchers/InjectMatchers.html#JAVAX_QUALIFIER_ANNOTATION" class="member-name-link">JAVAX_QUALIFIER_ANNOTATION</a></code></div>
+<div class="col-second even-row-color"><span class="type-name-label">InjectMatchers.</span><code><a href="../matchers/InjectMatchers.html#JAVAX_INJECT_ANNOTATION" class="member-name-link">JAVAX_INJECT_ANNOTATION</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><code>static final <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a></code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">InjectMatchers.</span><code><a href="../matchers/InjectMatchers.html#JAVAX_SCOPE_ANNOTATION" class="member-name-link">JAVAX_SCOPE_ANNOTATION</a></code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">InjectMatchers.</span><code><a href="../matchers/InjectMatchers.html#JAVAX_QUALIFIER_ANNOTATION" class="member-name-link">JAVAX_QUALIFIER_ANNOTATION</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><code>static final <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a></code></div>
-<div class="col-second even-row-color"><span class="type-name-label">RegexMatchers.</span><code><a href="../matchers/RegexMatchers.html#JDK_MATCHER_CLASS" class="member-name-link">JDK_MATCHER_CLASS</a></code></div>
+<div class="col-second even-row-color"><span class="type-name-label">InjectMatchers.</span><code><a href="../matchers/InjectMatchers.html#JAVAX_SCOPE_ANNOTATION" class="member-name-link">JAVAX_SCOPE_ANNOTATION</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><code>static final <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a></code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">RegexMatchers.</span><code><a href="../matchers/RegexMatchers.html#JDK_PATTERN_CLASS" class="member-name-link">JDK_PATTERN_CLASS</a></code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">RegexMatchers.</span><code><a href="../matchers/RegexMatchers.html#JDK_MATCHER_CLASS" class="member-name-link">JDK_MATCHER_CLASS</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><code>static final <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a></code></div>
-<div class="col-second even-row-color"><span class="type-name-label">JUnitMatchers.</span><code><a href="../matchers/JUnitMatchers.html#JUNIT_AFTER_ANNOTATION" class="member-name-link">JUNIT_AFTER_ANNOTATION</a></code></div>
+<div class="col-second even-row-color"><span class="type-name-label">RegexMatchers.</span><code><a href="../matchers/RegexMatchers.html#JDK_PATTERN_CLASS" class="member-name-link">JDK_PATTERN_CLASS</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><code>static final <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a></code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">JUnitMatchers.</span><code><a href="../matchers/JUnitMatchers.html#JUNIT_AFTER_CLASS_ANNOTATION" class="member-name-link">JUNIT_AFTER_CLASS_ANNOTATION</a></code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">JUnitMatchers.</span><code><a href="../matchers/JUnitMatchers.html#JUNIT_AFTER_ANNOTATION" class="member-name-link">JUNIT_AFTER_ANNOTATION</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><code>static final <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a></code></div>
-<div class="col-second even-row-color"><span class="type-name-label">JUnitMatchers.</span><code><a href="../matchers/JUnitMatchers.html#JUNIT_BEFORE_ANNOTATION" class="member-name-link">JUNIT_BEFORE_ANNOTATION</a></code></div>
+<div class="col-second even-row-color"><span class="type-name-label">JUnitMatchers.</span><code><a href="../matchers/JUnitMatchers.html#JUNIT_AFTER_CLASS_ANNOTATION" class="member-name-link">JUNIT_AFTER_CLASS_ANNOTATION</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><code>static final <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a></code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">JUnitMatchers.</span><code><a href="../matchers/JUnitMatchers.html#JUNIT_BEFORE_CLASS_ANNOTATION" class="member-name-link">JUNIT_BEFORE_CLASS_ANNOTATION</a></code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">JUnitMatchers.</span><code><a href="../matchers/JUnitMatchers.html#JUNIT_BEFORE_ANNOTATION" class="member-name-link">JUNIT_BEFORE_ANNOTATION</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><code>static final <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a></code></div>
-<div class="col-second even-row-color"><span class="type-name-label">JUnitMatchers.</span><code><a href="../matchers/JUnitMatchers.html#JUNIT4_IGNORE_ANNOTATION" class="member-name-link">JUNIT4_IGNORE_ANNOTATION</a></code></div>
+<div class="col-second even-row-color"><span class="type-name-label">JUnitMatchers.</span><code><a href="../matchers/JUnitMatchers.html#JUNIT_BEFORE_CLASS_ANNOTATION" class="member-name-link">JUNIT_BEFORE_CLASS_ANNOTATION</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><code>static final <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a></code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">JUnitMatchers.</span><code><a href="../matchers/JUnitMatchers.html#JUNIT4_RUN_WITH_ANNOTATION" class="member-name-link">JUNIT4_RUN_WITH_ANNOTATION</a></code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">JUnitMatchers.</span><code><a href="../matchers/JUnitMatchers.html#JUNIT3_ASSERT" class="member-name-link">JUNIT3_ASSERT</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><code>static final <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a></code></div>
-<div class="col-second even-row-color"><span class="type-name-label">JUnitMatchers.</span><code><a href="../matchers/JUnitMatchers.html#JUNIT4_RUNNER_CLASS" class="member-name-link">JUNIT4_RUNNER_CLASS</a></code></div>
+<div class="col-second even-row-color"><span class="type-name-label">JUnitMatchers.</span><code><a href="../matchers/JUnitMatchers.html#JUNIT3_TEST_CASE" class="member-name-link">JUNIT3_TEST_CASE</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><code>static final <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a></code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">JUnitMatchers.</span><code><a href="../matchers/JUnitMatchers.html#JUNIT4_TEST_ANNOTATION" class="member-name-link">JUNIT4_TEST_ANNOTATION</a></code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">JUnitMatchers.</span><code><a href="../matchers/JUnitMatchers.html#JUNIT4_ASSERT" class="member-name-link">JUNIT4_ASSERT</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><code>static final <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a></code></div>
-<div class="col-second even-row-color"><span class="type-name-label">JUnitMatchers.</span><code><a href="../matchers/JUnitMatchers.html#JUNIT4_THEORY_ANNOTATION" class="member-name-link">JUNIT4_THEORY_ANNOTATION</a></code></div>
+<div class="col-second even-row-color"><span class="type-name-label">JUnitMatchers.</span><code><a href="../matchers/JUnitMatchers.html#JUNIT4_DATA_POINTS_ANNOTATION" class="member-name-link">JUNIT4_DATA_POINTS_ANNOTATION</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><code>static final <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a></code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">ProtobufMatchers.</span><code><a href="../matchers/ProtobufMatchers.html#MESSAGE" class="member-name-link">MESSAGE</a></code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">JUnitMatchers.</span><code><a href="../matchers/JUnitMatchers.html#JUNIT4_IGNORE_ANNOTATION" class="member-name-link">JUNIT4_IGNORE_ANNOTATION</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><code>static final <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a></code></div>
-<div class="col-second even-row-color"><span class="type-name-label">ProtobufMatchers.</span><code><a href="../matchers/ProtobufMatchers.html#MESSAGE_BUILDER" class="member-name-link">MESSAGE_BUILDER</a></code></div>
+<div class="col-second even-row-color"><span class="type-name-label">JUnitMatchers.</span><code><a href="../matchers/JUnitMatchers.html#JUNIT4_PARAMETERIZED_CLASS" class="member-name-link">JUNIT4_PARAMETERIZED_CLASS</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><code>static final <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a></code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">ProtobufMatchers.</span><code><a href="../matchers/ProtobufMatchers.html#MESSAGE_LITE" class="member-name-link">MESSAGE_LITE</a></code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">JUnitMatchers.</span><code><a href="../matchers/JUnitMatchers.html#JUNIT4_PARAMETERIZED_PARAMETER_ANNOTATION" class="member-name-link">JUNIT4_PARAMETERIZED_PARAMETER_ANNOTATION</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><code>static final <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a></code></div>
-<div class="col-second even-row-color"><span class="type-name-label">ProtobufMatchers.</span><code><a href="../matchers/ProtobufMatchers.html#MESSAGE_LITE_BUILDER" class="member-name-link">MESSAGE_LITE_BUILDER</a></code></div>
+<div class="col-second even-row-color"><span class="type-name-label">JUnitMatchers.</span><code><a href="../matchers/JUnitMatchers.html#JUNIT4_PARAMETERIZED_PARAMETERS_ANNOTATION" class="member-name-link">JUNIT4_PARAMETERIZED_PARAMETERS_ANNOTATION</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><code>static final <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a></code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">ProtobufMatchers.</span><code><a href="../matchers/ProtobufMatchers.html#MESSAGE_LITE_OR_BUILDER" class="member-name-link">MESSAGE_LITE_OR_BUILDER</a></code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">JUnitMatchers.</span><code><a href="../matchers/JUnitMatchers.html#JUNIT4_RULE_ANNOTATION" class="member-name-link">JUNIT4_RULE_ANNOTATION</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><code>static final <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a></code></div>
-<div class="col-second even-row-color"><span class="type-name-label">ProtobufMatchers.</span><code><a href="../matchers/ProtobufMatchers.html#MESSAGE_OR_BUILDER" class="member-name-link">MESSAGE_OR_BUILDER</a></code></div>
+<div class="col-second even-row-color"><span class="type-name-label">JUnitMatchers.</span><code><a href="../matchers/JUnitMatchers.html#JUNIT4_RUN_WITH_ANNOTATION" class="member-name-link">JUNIT4_RUN_WITH_ANNOTATION</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><code>static final <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a></code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">ProtobufMatchers.</span><code><a href="../matchers/ProtobufMatchers.html#MUTABLE_MESSAGE_LITE" class="member-name-link">MUTABLE_MESSAGE_LITE</a></code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">JUnitMatchers.</span><code><a href="../matchers/JUnitMatchers.html#JUNIT4_RUNNER_CLASS" class="member-name-link">JUNIT4_RUNNER_CLASS</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><code>static final <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a></code></div>
-<div class="col-second even-row-color"><span class="type-name-label">ProtobufMatchers.</span><code><a href="../matchers/ProtobufMatchers.html#ONEOF_DESCRIPTOR" class="member-name-link">ONEOF_DESCRIPTOR</a></code></div>
+<div class="col-second even-row-color"><span class="type-name-label">JUnitMatchers.</span><code><a href="../matchers/JUnitMatchers.html#JUNIT4_TEST_ANNOTATION" class="member-name-link">JUNIT4_TEST_ANNOTATION</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><code>static final <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a></code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">ProtobufMatchers.</span><code><a href="../matchers/ProtobufMatchers.html#PROTO_DURATION" class="member-name-link">PROTO_DURATION</a></code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">JUnitMatchers.</span><code><a href="../matchers/JUnitMatchers.html#JUNIT4_THEORY_ANNOTATION" class="member-name-link">JUNIT4_THEORY_ANNOTATION</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><code>static final <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a></code></div>
-<div class="col-second even-row-color"><span class="type-name-label">ProtobufMatchers.</span><code><a href="../matchers/ProtobufMatchers.html#PROTO_DURATIONS_UTIL" class="member-name-link">PROTO_DURATIONS_UTIL</a></code></div>
+<div class="col-second even-row-color"><span class="type-name-label">ProtobufMatchers.</span><code><a href="../matchers/ProtobufMatchers.html#MESSAGE" class="member-name-link">MESSAGE</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><code>static final <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a></code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">ProtobufMatchers.</span><code><a href="../matchers/ProtobufMatchers.html#PROTO_FIELD_MASK_UTIL" class="member-name-link">PROTO_FIELD_MASK_UTIL</a></code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">ProtobufMatchers.</span><code><a href="../matchers/ProtobufMatchers.html#MESSAGE_BUILDER" class="member-name-link">MESSAGE_BUILDER</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><code>static final <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a></code></div>
-<div class="col-second even-row-color"><span class="type-name-label">ProtobufMatchers.</span><code><a href="../matchers/ProtobufMatchers.html#PROTO_TIMESTAMP" class="member-name-link">PROTO_TIMESTAMP</a></code></div>
+<div class="col-second even-row-color"><span class="type-name-label">ProtobufMatchers.</span><code><a href="../matchers/ProtobufMatchers.html#MESSAGE_LITE" class="member-name-link">MESSAGE_LITE</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><code>static final <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a></code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">ProtobufMatchers.</span><code><a href="../matchers/ProtobufMatchers.html#PROTO_TIMESTAMPS_UTIL" class="member-name-link">PROTO_TIMESTAMPS_UTIL</a></code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">ProtobufMatchers.</span><code><a href="../matchers/ProtobufMatchers.html#MESSAGE_LITE_BUILDER" class="member-name-link">MESSAGE_LITE_BUILDER</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><code>static final <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a></code></div>
-<div class="col-second even-row-color"><span class="type-name-label">ProtobufMatchers.</span><code><a href="../matchers/ProtobufMatchers.html#PROTOCOL_MESSAGE_ENUM" class="member-name-link">PROTOCOL_MESSAGE_ENUM</a></code></div>
+<div class="col-second even-row-color"><span class="type-name-label">ProtobufMatchers.</span><code><a href="../matchers/ProtobufMatchers.html#MESSAGE_LITE_OR_BUILDER" class="member-name-link">MESSAGE_LITE_OR_BUILDER</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><code>static final <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a></code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">ProtobufMatchers.</span><code><a href="../matchers/ProtobufMatchers.html#PROTOCOL_STRING_LIST" class="member-name-link">PROTOCOL_STRING_LIST</a></code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">ProtobufMatchers.</span><code><a href="../matchers/ProtobufMatchers.html#MESSAGE_OR_BUILDER" class="member-name-link">MESSAGE_OR_BUILDER</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><code>static final <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a></code></div>
-<div class="col-second even-row-color"><span class="type-name-label">RegexMatchers.</span><code><a href="../matchers/RegexMatchers.html#RE2J_MATCHER_CLASS" class="member-name-link">RE2J_MATCHER_CLASS</a></code></div>
+<div class="col-second even-row-color"><span class="type-name-label">ProtobufMatchers.</span><code><a href="../matchers/ProtobufMatchers.html#MUTABLE_MESSAGE_LITE" class="member-name-link">MUTABLE_MESSAGE_LITE</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><code>static final <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a></code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">RegexMatchers.</span><code><a href="../matchers/RegexMatchers.html#RE2J_PATTERN_CLASS" class="member-name-link">RE2J_PATTERN_CLASS</a></code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">ProtobufMatchers.</span><code><a href="../matchers/ProtobufMatchers.html#ONEOF_DESCRIPTOR" class="member-name-link">ONEOF_DESCRIPTOR</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><code>static final <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a></code></div>
-<div class="col-second even-row-color"><span class="type-name-label">RegexMatchers.</span><code><a href="../matchers/RegexMatchers.html#SAFERE_CROSSCHECK_MATCHER_CLASS" class="member-name-link">SAFERE_CROSSCHECK_MATCHER_CLASS</a></code></div>
+<div class="col-second even-row-color"><span class="type-name-label">ProtobufMatchers.</span><code><a href="../matchers/ProtobufMatchers.html#PROTO_DURATION" class="member-name-link">PROTO_DURATION</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><code>static final <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a></code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">RegexMatchers.</span><code><a href="../matchers/RegexMatchers.html#SAFERE_MATCHER_CLASS" class="member-name-link">SAFERE_MATCHER_CLASS</a></code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">ProtobufMatchers.</span><code><a href="../matchers/ProtobufMatchers.html#PROTO_DURATIONS_UTIL" class="member-name-link">PROTO_DURATIONS_UTIL</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><code>static final <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a></code></div>
-<div class="col-second even-row-color"><span class="type-name-label">RegexMatchers.</span><code><a href="../matchers/RegexMatchers.html#SAFERE_PATTERN_CLASS" class="member-name-link">SAFERE_PATTERN_CLASS</a></code></div>
+<div class="col-second even-row-color"><span class="type-name-label">ProtobufMatchers.</span><code><a href="../matchers/ProtobufMatchers.html#PROTO_FIELD_MASK_UTIL" class="member-name-link">PROTO_FIELD_MASK_UTIL</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><code>static final <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a></code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">ProtobufMatchers.</span><code><a href="../matchers/ProtobufMatchers.html#SERVICE_DESCRIPTOR" class="member-name-link">SERVICE_DESCRIPTOR</a></code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">ProtobufMatchers.</span><code><a href="../matchers/ProtobufMatchers.html#PROTO_TIMESTAMP" class="member-name-link">PROTO_TIMESTAMP</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><code>static final <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a></code></div>
-<div class="col-second even-row-color"><span class="type-name-label">ProtobufMatchers.</span><code><a href="../matchers/ProtobufMatchers.html#UNKNOWN_FIELD_SET" class="member-name-link">UNKNOWN_FIELD_SET</a></code></div>
+<div class="col-second even-row-color"><span class="type-name-label">ProtobufMatchers.</span><code><a href="../matchers/ProtobufMatchers.html#PROTO_TIMESTAMPS_UTIL" class="member-name-link">PROTO_TIMESTAMPS_UTIL</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code>static final <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a></code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">ProtobufMatchers.</span><code><a href="../matchers/ProtobufMatchers.html#PROTOCOL_MESSAGE_ENUM" class="member-name-link">PROTOCOL_MESSAGE_ENUM</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code>static final <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a></code></div>
+<div class="col-second even-row-color"><span class="type-name-label">ProtobufMatchers.</span><code><a href="../matchers/ProtobufMatchers.html#PROTOCOL_STRING_LIST" class="member-name-link">PROTOCOL_STRING_LIST</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code>static final <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a></code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">RegexMatchers.</span><code><a href="../matchers/RegexMatchers.html#RE2J_MATCHER_CLASS" class="member-name-link">RE2J_MATCHER_CLASS</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code>static final <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a></code></div>
+<div class="col-second even-row-color"><span class="type-name-label">RegexMatchers.</span><code><a href="../matchers/RegexMatchers.html#RE2J_PATTERN_CLASS" class="member-name-link">RE2J_PATTERN_CLASS</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code>static final <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a></code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">RegexMatchers.</span><code><a href="../matchers/RegexMatchers.html#SAFERE_CROSSCHECK_MATCHER_CLASS" class="member-name-link">SAFERE_CROSSCHECK_MATCHER_CLASS</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code>static final <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a></code></div>
+<div class="col-second even-row-color"><span class="type-name-label">RegexMatchers.</span><code><a href="../matchers/RegexMatchers.html#SAFERE_MATCHER_CLASS" class="member-name-link">SAFERE_MATCHER_CLASS</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code>static final <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a></code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">RegexMatchers.</span><code><a href="../matchers/RegexMatchers.html#SAFERE_PATTERN_CLASS" class="member-name-link">SAFERE_PATTERN_CLASS</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code>static final <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a></code></div>
+<div class="col-second even-row-color"><span class="type-name-label">ProtobufMatchers.</span><code><a href="../matchers/ProtobufMatchers.html#SERVICE_DESCRIPTOR" class="member-name-link">SERVICE_DESCRIPTOR</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code>static final <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a></code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">ProtobufMatchers.</span><code><a href="../matchers/ProtobufMatchers.html#UNKNOWN_FIELD_SET" class="member-name-link">UNKNOWN_FIELD_SET</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
 </div>
 <div class="caption"><span>Fields in <a href="../matchers/package-summary.html">com.google.errorprone.matchers</a> with type parameters of type <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a></span></div>
 <div class="summary-table three-column-summary">
@@ -461,9 +536,14 @@ meta-annotation.</div>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color"><code>static <a href="../matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">JUnitMatchers.</span><code><a href="../matchers/JUnitMatchers.html#isJUnit4TestRunnerOfClasses(java.lang.Iterable)" class="member-name-link">isJUnit4TestRunnerOfClasses</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;<a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a>&gt;&nbsp;runnerTypes)</code></div>
+<div class="col-first even-row-color"><code>static &lt;T extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;<br><a href="../matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;T&gt;</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">Matchers.</span><code><a href="../matchers/Matchers.html#hasAnyAnnotationOf(java.lang.Iterable)" class="member-name-link">hasAnyAnnotationOf</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;<a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a>&gt;&nbsp;annotations)</code></div>
 <div class="col-last even-row-color">
+<div class="block">Determines whether a tree has any of the given annotations.</div>
+</div>
+<div class="col-first odd-row-color"><code>static <a href="../matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">JUnitMatchers.</span><code><a href="../matchers/JUnitMatchers.html#isJUnit4TestRunnerOfClasses(java.lang.Iterable)" class="member-name-link">isJUnit4TestRunnerOfClasses</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;<a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a>&gt;&nbsp;runnerTypes)</code></div>
+<div class="col-last odd-row-color">
 <div class="block">Matches an argument of type <code>Class&lt;T&gt;</code>, where <code>T</code> is a subtype of one of the given
 <code>runnerTypes</code>.</div>
 </div>
@@ -706,10 +786,16 @@ available in the current compilation.</div>
 <div class="col-second even-row-color"><span class="type-name-label">AnnotationNames.</span><code><a href="../util/AnnotationNames.html#COMPATIBLE_WITH_ANNOTATION" class="member-name-link">COMPATIBLE_WITH_ANNOTATION</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><code>static final <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a></code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">AnnotationNames.</span><code><a href="../util/AnnotationNames.html#DEPRECATED_ANNOTATION" class="member-name-link">DEPRECATED_ANNOTATION</a></code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">AnnotationNames.</span><code><a href="../util/AnnotationNames.html#COMPILE_TIME_CONSTANT_ANNOTATION" class="member-name-link">COMPILE_TIME_CONSTANT_ANNOTATION</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><code>static final <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a></code></div>
-<div class="col-second even-row-color"><span class="type-name-label">AnnotationNames.</span><code><a href="../util/AnnotationNames.html#DO_NOT_CALL_ANNOTATION" class="member-name-link">DO_NOT_CALL_ANNOTATION</a></code></div>
+<div class="col-second even-row-color"><span class="type-name-label">AnnotationNames.</span><code><a href="../util/AnnotationNames.html#DEPRECATED_ANNOTATION" class="member-name-link">DEPRECATED_ANNOTATION</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code>static final <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a></code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">AnnotationNames.</span><code><a href="../util/AnnotationNames.html#DO_NOT_CALL_ANNOTATION" class="member-name-link">DO_NOT_CALL_ANNOTATION</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code>static final <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a></code></div>
+<div class="col-second even-row-color"><span class="type-name-label">AnnotationNames.</span><code><a href="../util/AnnotationNames.html#FOR_OVERRIDE_ANNOTATION" class="member-name-link">FOR_OVERRIDE_ANNOTATION</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><code>static final <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a></code></div>
 <div class="col-second odd-row-color"><span class="type-name-label">AnnotationNames.</span><code><a href="../util/AnnotationNames.html#FORMAT_METHOD_ANNOTATION" class="member-name-link">FORMAT_METHOD_ANNOTATION</a></code></div>
@@ -730,43 +816,49 @@ available in the current compilation.</div>
 <div class="col-second even-row-color"><span class="type-name-label">AnnotationNames.</span><code><a href="../util/AnnotationNames.html#INLINE_ME_VALIDATION_DISABLED_ANNOTATION" class="member-name-link">INLINE_ME_VALIDATION_DISABLED_ANNOTATION</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><code>static final <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a></code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">AnnotationNames.</span><code><a href="../util/AnnotationNames.html#LAZY_INIT_ANNOTATION" class="member-name-link">LAZY_INIT_ANNOTATION</a></code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">AnnotationNames.</span><code><a href="../util/AnnotationNames.html#KOTLIN_METADATA_ANNOTATION" class="member-name-link">KOTLIN_METADATA_ANNOTATION</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><code>static final <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a></code></div>
-<div class="col-second even-row-color"><span class="type-name-label">AnnotationNames.</span><code><a href="../util/AnnotationNames.html#LENIENT_FORMAT_STRING_ANNOTATION" class="member-name-link">LENIENT_FORMAT_STRING_ANNOTATION</a></code></div>
+<div class="col-second even-row-color"><span class="type-name-label">AnnotationNames.</span><code><a href="../util/AnnotationNames.html#LAZY_INIT_ANNOTATION" class="member-name-link">LAZY_INIT_ANNOTATION</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><code>static final <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a></code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">AnnotationNames.</span><code><a href="../util/AnnotationNames.html#MATCHES_ANNOTATION" class="member-name-link">MATCHES_ANNOTATION</a></code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">AnnotationNames.</span><code><a href="../util/AnnotationNames.html#LENIENT_FORMAT_STRING_ANNOTATION" class="member-name-link">LENIENT_FORMAT_STRING_ANNOTATION</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><code>static final <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a></code></div>
-<div class="col-second even-row-color"><span class="type-name-label">AnnotationNames.</span><code><a href="../util/AnnotationNames.html#MUST_BE_CLOSED_ANNOTATION" class="member-name-link">MUST_BE_CLOSED_ANNOTATION</a></code></div>
+<div class="col-second even-row-color"><span class="type-name-label">AnnotationNames.</span><code><a href="../util/AnnotationNames.html#MATCHES_ANNOTATION" class="member-name-link">MATCHES_ANNOTATION</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><code>static final <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a></code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">AnnotationNames.</span><code><a href="../util/AnnotationNames.html#NOT_MATCHES_ANNOTATION" class="member-name-link">NOT_MATCHES_ANNOTATION</a></code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">AnnotationNames.</span><code><a href="../util/AnnotationNames.html#MUST_BE_CLOSED_ANNOTATION" class="member-name-link">MUST_BE_CLOSED_ANNOTATION</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><code>static final <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a></code></div>
-<div class="col-second even-row-color"><span class="type-name-label">AnnotationNames.</span><code><a href="../util/AnnotationNames.html#NULL_MARKED_ANNOTATION" class="member-name-link">NULL_MARKED_ANNOTATION</a></code></div>
+<div class="col-second even-row-color"><span class="type-name-label">AnnotationNames.</span><code><a href="../util/AnnotationNames.html#NOT_MATCHES_ANNOTATION" class="member-name-link">NOT_MATCHES_ANNOTATION</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><code>static final <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a></code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">AnnotationNames.</span><code><a href="../util/AnnotationNames.html#NULL_UNMARKED_ANNOTATION" class="member-name-link">NULL_UNMARKED_ANNOTATION</a></code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">AnnotationNames.</span><code><a href="../util/AnnotationNames.html#NULL_MARKED_ANNOTATION" class="member-name-link">NULL_MARKED_ANNOTATION</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><code>static final <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a></code></div>
-<div class="col-second even-row-color"><span class="type-name-label">AnnotationNames.</span><code><a href="../util/AnnotationNames.html#OF_KIND_ANNOTATION" class="member-name-link">OF_KIND_ANNOTATION</a></code></div>
+<div class="col-second even-row-color"><span class="type-name-label">AnnotationNames.</span><code><a href="../util/AnnotationNames.html#NULL_UNMARKED_ANNOTATION" class="member-name-link">NULL_UNMARKED_ANNOTATION</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><code>static final <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a></code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">AnnotationNames.</span><code><a href="../util/AnnotationNames.html#OVERRIDE_ANNOTATION" class="member-name-link">OVERRIDE_ANNOTATION</a></code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">AnnotationNames.</span><code><a href="../util/AnnotationNames.html#OF_KIND_ANNOTATION" class="member-name-link">OF_KIND_ANNOTATION</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><code>static final <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a></code></div>
-<div class="col-second even-row-color"><span class="type-name-label">AnnotationNames.</span><code><a href="../util/AnnotationNames.html#PLACEHOLDER_ANNOTATION" class="member-name-link">PLACEHOLDER_ANNOTATION</a></code></div>
+<div class="col-second even-row-color"><span class="type-name-label">AnnotationNames.</span><code><a href="../util/AnnotationNames.html#OVERRIDE_ANNOTATION" class="member-name-link">OVERRIDE_ANNOTATION</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><code>static final <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a></code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">AnnotationNames.</span><code><a href="../util/AnnotationNames.html#REPEATABLE_ANNOTATION" class="member-name-link">REPEATABLE_ANNOTATION</a></code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">AnnotationNames.</span><code><a href="../util/AnnotationNames.html#PLACEHOLDER_ANNOTATION" class="member-name-link">PLACEHOLDER_ANNOTATION</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><code>static final <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a></code></div>
-<div class="col-second even-row-color"><span class="type-name-label">AnnotationNames.</span><code><a href="../util/AnnotationNames.html#REPEATED_ANNOTATION" class="member-name-link">REPEATED_ANNOTATION</a></code></div>
+<div class="col-second even-row-color"><span class="type-name-label">AnnotationNames.</span><code><a href="../util/AnnotationNames.html#REPEATABLE_ANNOTATION" class="member-name-link">REPEATABLE_ANNOTATION</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><code>static final <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a></code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">AnnotationNames.</span><code><a href="../util/AnnotationNames.html#REQUIRED_MODIFIERS_ANNOTATION" class="member-name-link">REQUIRED_MODIFIERS_ANNOTATION</a></code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">AnnotationNames.</span><code><a href="../util/AnnotationNames.html#REPEATED_ANNOTATION" class="member-name-link">REPEATED_ANNOTATION</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code>static final <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a></code></div>
+<div class="col-second even-row-color"><span class="type-name-label">AnnotationNames.</span><code><a href="../util/AnnotationNames.html#REQUIRED_MODIFIERS_ANNOTATION" class="member-name-link">REQUIRED_MODIFIERS_ANNOTATION</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code>static final <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a></code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">AnnotationNames.</span><code><a href="../util/AnnotationNames.html#RESTRICT_TO_ANNOTATION" class="member-name-link">RESTRICT_TO_ANNOTATION</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><code>static final <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a></code></div>
 <div class="col-second even-row-color"><span class="type-name-label">AnnotationNames.</span><code><a href="../util/AnnotationNames.html#RESTRICTED_API_ANNOTATION" class="member-name-link">RESTRICTED_API_ANNOTATION</a></code></div>
@@ -857,17 +949,24 @@ element.</div>
 <div class="block">Determines whether a symbol has an annotation of the given type.</div>
 </div>
 <div class="col-first even-row-color"><code>static boolean</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">ASTHelpers.</span><code><a href="../util/ASTHelpers.html#isSameType(com.sun.tools.javac.code.Type,com.google.errorprone.ClassName,com.google.errorprone.VisitorState)" class="member-name-link">isSameType</a><wbr>(com.sun.tools.javac.code.Type&nbsp;s,
- <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a>&nbsp;t,
- <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">ASTHelpers.</span><code><a href="../util/ASTHelpers.html#hasDirectAnnotation(com.sun.tools.javac.code.Symbol,com.google.errorprone.ClassName)" class="member-name-link">hasDirectAnnotation</a><wbr>(@Nullable com.sun.tools.javac.code.Symbol&nbsp;sym,
+ <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a>&nbsp;annotationClass)</code></div>
 <div class="col-last even-row-color">
-<div class="block">Returns true if <code>erasure(s) == erasure(t)</code>.</div>
+<div class="block">Check for the presence of an annotation with the given class name directly on this symbol or
+its type.</div>
 </div>
 <div class="col-first odd-row-color"><code>static boolean</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">ASTHelpers.</span><code><a href="../util/ASTHelpers.html#isSubtype(com.sun.tools.javac.code.Type,com.google.errorprone.ClassName,com.google.errorprone.VisitorState)" class="member-name-link">isSubtype</a><wbr>(com.sun.tools.javac.code.Type&nbsp;s,
+<div class="col-second odd-row-color"><span class="type-name-label">ASTHelpers.</span><code><a href="../util/ASTHelpers.html#isSameType(com.sun.tools.javac.code.Type,com.google.errorprone.ClassName,com.google.errorprone.VisitorState)" class="member-name-link">isSameType</a><wbr>(com.sun.tools.javac.code.Type&nbsp;s,
  <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a>&nbsp;t,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last odd-row-color">
+<div class="block">Returns true if <code>erasure(s) == erasure(t)</code>.</div>
+</div>
+<div class="col-first even-row-color"><code>static boolean</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">ASTHelpers.</span><code><a href="../util/ASTHelpers.html#isSubtype(com.sun.tools.javac.code.Type,com.google.errorprone.ClassName,com.google.errorprone.VisitorState)" class="member-name-link">isSubtype</a><wbr>(com.sun.tools.javac.code.Type&nbsp;s,
+ <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a>&nbsp;t,
+ <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
+<div class="col-last even-row-color">
 <div class="block">Returns true if <code>erasure(s) &lt;: erasure(t)</code>.</div>
 </div>
 </div>
