@@ -513,7 +513,8 @@ getC()</code> method invocation, then this supplier gives the expression <code>a
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;com.sun.tools.javac.code.Type&gt;</span>&nbsp;<span class="element-name">typeFromString</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;typeString)</span></div>
 <div class="block">Given the string representation of a type, supplies the corresponding type.
 
-<p>Prefer <a href="../ClassName.html#of(java.lang.String)"><code>ClassName.of(String)</code></a> for class and interface types.</div>
+<p>Prefer <a href="../ClassName.html#of(java.lang.String)"><code>ClassName.of(String)</code></a> for class and interface types, or the primitive and
+<code>void</code> constants on this class (e.g. <a href="#INT_TYPE"><code>INT_TYPE</code></a>, <a href="#VOID_TYPE"><code>VOID_TYPE</code></a>).</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>typeString</code> - a string representation of a type, e.g., "java.util.List"</dd>
@@ -528,7 +529,8 @@ getC()</code> method invocation, then this supplier gives the expression <code>a
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;com.sun.tools.javac.code.Type&gt;</span>&nbsp;<span class="element-name">typeFromClass</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;inputClass)</span></div>
 <div class="block">Given the class representation of a type, supplies the corresponding type.
 
-<p>Prefer <a href="../ClassName.html#of(java.lang.String)"><code>ClassName.of(String)</code></a> for class and interface types.</div>
+<p>Prefer <a href="../ClassName.html#of(java.lang.String)"><code>ClassName.of(String)</code></a> for class and interface types, or the primitive and
+<code>void</code> constants on this class (e.g. <a href="#INT_TYPE"><code>INT_TYPE</code></a>, <a href="#VOID_TYPE"><code>VOID_TYPE</code></a>).</div>
 </div>
 </section>
 </li>

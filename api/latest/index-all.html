@@ -769,9 +769,13 @@ node.</div>
 <dt><a href="com/google/errorprone/matchers/AnnotationType.html" class="type-name-link" title="class in com.google.errorprone.matchers">AnnotationType</a> - Class in <a href="com/google/errorprone/matchers/package-summary.html">com.google.errorprone.matchers</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/matchers/AnnotationType.html#%3Cinit%3E(com.google.errorprone.ClassName)" class="member-name-link">AnnotationType(ClassName)</a> - Constructor for class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/AnnotationType.html" title="class in com.google.errorprone.matchers">AnnotationType</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Matches an <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/AnnotationTree.html" title="class or interface in com.sun.source.tree" class="external-link"><code>AnnotationTree</code></a> with the given annotation <a href="com/google/errorprone/ClassName.html" title="class in com.google.errorprone"><code>ClassName</code></a>.</div>
+</dd>
 <dt><a href="com/google/errorprone/matchers/AnnotationType.html#%3Cinit%3E(java.lang.String)" class="member-name-link">AnnotationType(String)</a> - Constructor for class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/AnnotationType.html" title="class in com.google.errorprone.matchers">AnnotationType</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Matches an <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/AnnotationTree.html" title="class or interface in com.sun.source.tree" class="external-link"><code>AnnotationTree</code></a> with the given annotation class name.</div>
+</dd>
 <dt><a href="com/google/errorprone/bugpatterns/AnnotationValueToString.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">AnnotationValueToString</a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>
 <div class="block">A <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>; see the associated <a href="com/google/errorprone/BugPattern.html" title="annotation interface in com.google.errorprone"><code>BugPattern</code></a> annotation for details.</div>
@@ -6531,7 +6535,7 @@ constructors.</div>
 <dt><a href="com/google/errorprone/util/ASTHelpers.html#hasAnnotation(com.sun.source.tree.Tree,java.lang.Class,com.google.errorprone.VisitorState)" class="member-name-link">hasAnnotation(Tree, Class, VisitorState)</a> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/ASTHelpers.html" title="class in com.google.errorprone.util">ASTHelpers</a></dt>
 <dd>
 <div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
-<div class="deprecation-comment">prefer <a href="com/google/errorprone/util/ASTHelpers.html#hasAnnotation(com.sun.tools.javac.code.Symbol,com.google.errorprone.ClassName,com.google.errorprone.VisitorState)"><code>ASTHelpers.hasAnnotation(Symbol, ClassName, VisitorState)</code></a> to avoid needing a
+<div class="deprecation-comment">prefer <a href="com/google/errorprone/util/ASTHelpers.html#hasAnnotation(com.sun.source.tree.Tree,com.google.errorprone.ClassName,com.google.errorprone.VisitorState)"><code>ASTHelpers.hasAnnotation(Tree, ClassName, VisitorState)</code></a> to avoid needing a
     runtime dependency on the annotation class, and to prevent issues if there is skew between
     the definition of the annotation on the runtime and compile-time classpaths</div>
 </div>
@@ -6544,6 +6548,10 @@ constructors.</div>
 <dd>
 <div class="block">Determines whether a symbol has an annotation of the given type.</div>
 </dd>
+<dt><a href="com/google/errorprone/util/ASTHelpers.html#hasAnnotation(com.sun.tools.javac.code.Symbol,java.lang.String,com.google.errorprone.VisitorState)" class="member-name-link">hasAnnotation(Symbol, String, VisitorState)</a> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/ASTHelpers.html" title="class in com.google.errorprone.util">ASTHelpers</a></dt>
+<dd>
+<div class="block">Determines whether a symbol has an annotation of the given type.</div>
+</dd>
 <dt><a href="com/google/errorprone/util/ASTHelpers.html#hasAnnotation(com.sun.tools.javac.code.Symbol,java.lang.Class,com.google.errorprone.VisitorState)" class="member-name-link">hasAnnotation(Symbol, Class, VisitorState)</a> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/ASTHelpers.html" title="class in com.google.errorprone.util">ASTHelpers</a></dt>
 <dd>
 <div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
@@ -6551,10 +6559,6 @@ constructors.</div>
     runtime dependency on the annotation class, and to prevent issues if there is skew between
     the definition of the annotation on the runtime and compile-time classpaths</div>
 </div>
-</dd>
-<dt><a href="com/google/errorprone/util/ASTHelpers.html#hasAnnotation(com.sun.tools.javac.code.Symbol,java.lang.String,com.google.errorprone.VisitorState)" class="member-name-link">hasAnnotation(Symbol, String, VisitorState)</a> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/ASTHelpers.html" title="class in com.google.errorprone.util">ASTHelpers</a></dt>
-<dd>
-<div class="block">Determines whether a symbol has an annotation of the given type.</div>
 </dd>
 <dt><a href="com/google/errorprone/matchers/Matchers.html#hasAnnotation(java.lang.Class)" class="member-name-link">hasAnnotation(Class)</a> - Static method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/Matchers.html" title="class in com.google.errorprone.matchers">Matchers</a></dt>
 <dd>
@@ -6589,7 +6593,9 @@ constructors.</div>
 <div class="block">Determines whether a tree has any of the given annotations.</div>
 </dd>
 <dt><a href="com/google/errorprone/matchers/Matchers.html#hasAnyAnnotation(java.lang.Class...)" class="member-name-link">hasAnyAnnotation(Class...)</a> - Static method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/Matchers.html" title="class in com.google.errorprone.matchers">Matchers</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Determines whether a tree has any of the given annotations.</div>
+</dd>
 <dt><a href="com/google/errorprone/matchers/Matchers.html#hasAnyAnnotation(java.util.List)" class="member-name-link">hasAnyAnnotation(List)</a> - Static method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/Matchers.html" title="class in com.google.errorprone.matchers">Matchers</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/matchers/Matchers.html#hasArguments(com.google.errorprone.matchers.ChildMultiMatcher.MatchType,com.google.errorprone.matchers.Matcher)" class="member-name-link">hasArguments(ChildMultiMatcher.MatchType, Matcher)</a> - Static method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/Matchers.html" title="class in com.google.errorprone.matchers">Matchers</a></dt>

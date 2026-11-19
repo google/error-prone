@@ -440,7 +440,9 @@ set.</div>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;com.sun.tools.javac.code.Attribute.Compound&gt;</span>&nbsp;<span class="element-name">getAnnotation</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.compiler/javax/lang/model/element/Element.html" title="class or interface in javax.lang.model.element" class="external-link">Element</a>&nbsp;sym,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;qualifiedName)</span></div>
 <div class="block">Returns the annotation on the given element with the specified qualified binary or canonical
-name.</div>
+name.
+
+<p>Prefer <a href="#getAnnotation(javax.lang.model.element.Element,com.google.errorprone.ClassName)"><code>getAnnotation(Element, ClassName)</code></a>.</div>
 </div>
 </section>
 </li>
@@ -518,7 +520,9 @@ set.</div>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</span>&nbsp;<span class="element-name">getStringValue</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.compiler/javax/lang/model/element/Element.html" title="class or interface in javax.lang.model.element" class="external-link">Element</a>&nbsp;sym,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;annotationName)</span></div>
-<div class="block">Shorthand for extracting the "value" string of a named annotation on an element.</div>
+<div class="block">Shorthand for extracting the "value" string of a named annotation on an element.
+
+<p>Prefer <a href="#getStringValue(javax.lang.model.element.Element,com.google.errorprone.ClassName)"><code>getStringValue(Element, ClassName)</code></a>.</div>
 </div>
 </section>
 </li>
@@ -548,7 +552,9 @@ set.</div>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Boolean.html" title="class or interface in java.lang" class="external-link">Boolean</a>&gt;</span>&nbsp;<span class="element-name">getBooleanValue</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.compiler/javax/lang/model/element/Element.html" title="class or interface in javax.lang.model.element" class="external-link">Element</a>&nbsp;sym,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;annotationName)</span></div>
-<div class="block">Shorthand for extracting the "value" boolean of a named annotation on an element.</div>
+<div class="block">Shorthand for extracting the "value" boolean of a named annotation on an element.
+
+<p>Prefer <a href="#getBooleanValue(javax.lang.model.element.Element,com.google.errorprone.ClassName)"><code>getBooleanValue(Element, ClassName)</code></a>.</div>
 </div>
 </section>
 </li>
@@ -578,7 +584,9 @@ set.</div>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;com.sun.tools.javac.code.Symbol.VarSymbol&gt;</span>&nbsp;<span class="element-name">getEnumValue</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.compiler/javax/lang/model/element/Element.html" title="class or interface in javax.lang.model.element" class="external-link">Element</a>&nbsp;sym,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;annotationName)</span></div>
-<div class="block">Shorthand for extracting the "value" enum of a named annotation on an element.</div>
+<div class="block">Shorthand for extracting the "value" enum of a named annotation on an element.
+
+<p>Prefer <a href="#getEnumValue(javax.lang.model.element.Element,com.google.errorprone.ClassName)"><code>getEnumValue(Element, ClassName)</code></a>.</div>
 </div>
 </section>
 </li>
@@ -608,7 +616,9 @@ set.</div>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">com.google.common.collect.ImmutableList&lt;com.sun.tools.javac.code.Symbol.VarSymbol&gt;</span>&nbsp;<span class="element-name">getEnumValues</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.compiler/javax/lang/model/element/Element.html" title="class or interface in javax.lang.model.element" class="external-link">Element</a>&nbsp;sym,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;annotationName)</span></div>
-<div class="block">Shorthand for extracting the "value" enum values of a named annotation on an element.</div>
+<div class="block">Shorthand for extracting the "value" enum values of a named annotation on an element.
+
+<p>Prefer <a href="#getEnumValues(javax.lang.model.element.Element,com.google.errorprone.ClassName)"><code>getEnumValues(Element, ClassName)</code></a>.</div>
 </div>
 </section>
 </li>
@@ -639,7 +649,9 @@ set.</div>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">com.google.common.collect.ImmutableList&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</span>&nbsp;<span class="element-name">getStrings</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.compiler/javax/lang/model/element/Element.html" title="class or interface in javax.lang.model.element" class="external-link">Element</a>&nbsp;sym,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;annotationName)</span></div>
 <div class="block">Shorthand for extracting a list of strings from the "value" element of a named annotation on an
-element.</div>
+element.
+
+<p>Prefer <a href="#getStrings(javax.lang.model.element.Element,com.google.errorprone.ClassName)"><code>getStrings(Element, ClassName)</code></a>.</div>
 </div>
 </section>
 </li>
@@ -671,7 +683,9 @@ element.</div>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">com.google.common.collect.ImmutableList&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.compiler/javax/lang/model/type/TypeMirror.html" title="class or interface in javax.lang.model.type" class="external-link">TypeMirror</a>&gt;</span>&nbsp;<span class="element-name">getTypes</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.compiler/javax/lang/model/element/Element.html" title="class or interface in javax.lang.model.element" class="external-link">Element</a>&nbsp;sym,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;annotationName)</span></div>
 <div class="block">Shorthand for extracting a list of types from the "value" element of a named annotation on an
-element.</div>
+element.
+
+<p>Prefer <a href="#getTypes(javax.lang.model.element.Element,com.google.errorprone.ClassName)"><code>getTypes(Element, ClassName)</code></a>.</div>
 </div>
 </section>
 </li>
@@ -702,7 +716,9 @@ element.</div>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.compiler/javax/lang/model/type/TypeMirror.html" title="class or interface in javax.lang.model.type" class="external-link">TypeMirror</a>&gt;</span>&nbsp;<span class="element-name">getTypeValue</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.compiler/javax/lang/model/element/Element.html" title="class or interface in javax.lang.model.element" class="external-link">Element</a>&nbsp;sym,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;annotationName)</span></div>
-<div class="block">Shorthand for extracting the "value" type of a named annotation on an element.</div>
+<div class="block">Shorthand for extracting the "value" type of a named annotation on an element.
+
+<p>Prefer <a href="#getTypeValue(javax.lang.model.element.Element,com.google.errorprone.ClassName)"><code>getTypeValue(Element, ClassName)</code></a>.</div>
 </div>
 </section>
 </li>

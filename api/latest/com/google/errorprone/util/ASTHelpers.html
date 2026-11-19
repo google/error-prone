@@ -676,7 +676,7 @@ determined.</div>
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4 method-summary-table-tab6">
 <div class="block"><span class="deprecated-label">Deprecated.</span>
-<div class="deprecation-comment">prefer <a href="#hasAnnotation(com.sun.tools.javac.code.Symbol,com.google.errorprone.ClassName,com.google.errorprone.VisitorState)"><code>hasAnnotation(Symbol, ClassName, VisitorState)</code></a> to avoid needing a
+<div class="deprecation-comment">prefer <a href="#hasAnnotation(com.sun.source.tree.Tree,com.google.errorprone.ClassName,com.google.errorprone.VisitorState)"><code>hasAnnotation(Tree, ClassName, VisitorState)</code></a> to avoid needing a
     runtime dependency on the annotation class, and to prevent issues if there is skew between
     the definition of the annotation on the runtime and compile-time classpaths</div>
 </div>
@@ -695,23 +695,23 @@ determined.</div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Determines whether a symbol has an annotation of the given type.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4 method-summary-table-tab6"><code>static boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4 method-summary-table-tab6"><code><a href="#hasAnnotation(com.sun.tools.javac.code.Symbol,java.lang.Class,com.google.errorprone.VisitorState)" class="member-name-link">hasAnnotation</a><wbr>(com.sun.tools.javac.code.Symbol&nbsp;sym,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#hasAnnotation(com.sun.tools.javac.code.Symbol,java.lang.String,com.google.errorprone.VisitorState)" class="member-name-link">hasAnnotation</a><wbr>(@Nullable com.sun.tools.javac.code.Symbol&nbsp;sym,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;annotationClass,
+ <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Determines whether a symbol has an annotation of the given type.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4 method-summary-table-tab6"><code>static boolean</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4 method-summary-table-tab6"><code><a href="#hasAnnotation(com.sun.tools.javac.code.Symbol,java.lang.Class,com.google.errorprone.VisitorState)" class="member-name-link">hasAnnotation</a><wbr>(com.sun.tools.javac.code.Symbol&nbsp;sym,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;? extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/annotation/Annotation.html" title="class or interface in java.lang.annotation" class="external-link">Annotation</a>&gt;&nbsp;annotationClass,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4 method-summary-table-tab6">
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4 method-summary-table-tab6">
 <div class="block"><span class="deprecated-label">Deprecated.</span>
 <div class="deprecation-comment">prefer <a href="#hasAnnotation(com.sun.tools.javac.code.Symbol,com.google.errorprone.ClassName,com.google.errorprone.VisitorState)"><code>hasAnnotation(Symbol, ClassName, VisitorState)</code></a> to avoid needing a
     runtime dependency on the annotation class, and to prevent issues if there is skew between
     the definition of the annotation on the runtime and compile-time classpaths</div>
 </div>
-</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#hasAnnotation(com.sun.tools.javac.code.Symbol,java.lang.String,com.google.errorprone.VisitorState)" class="member-name-link">hasAnnotation</a><wbr>(com.sun.tools.javac.code.Symbol&nbsp;sym,
- <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;annotationClass,
- <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Determines whether a symbol has an annotation of the given type.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#hasDirectAnnotation(com.sun.tools.javac.code.Symbol.MethodSymbol,java.lang.String)" class="member-name-link">hasDirectAnnotation</a><wbr>(com.sun.tools.javac.code.Symbol.MethodSymbol&nbsp;sym,
@@ -1577,11 +1577,13 @@ compilation boundaries, like canonical constructors.</div>
 <section class="detail" id="hasAnnotation(com.sun.tools.javac.code.Symbol,java.lang.String,com.google.errorprone.VisitorState)">
 <h3>hasAnnotation</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">hasAnnotation</span><wbr><span class="parameters">(com.sun.tools.javac.code.Symbol&nbsp;sym,
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">hasAnnotation</span><wbr><span class="parameters">(@Nullable com.sun.tools.javac.code.Symbol&nbsp;sym,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;annotationClass,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
 <div class="block">Determines whether a symbol has an annotation of the given type. This includes annotations
-inherited from superclasses due to <code>@Inherited</code>.</div>
+inherited from superclasses due to <code>@Inherited</code>.
+
+<p>Prefer <a href="#hasAnnotation(com.sun.tools.javac.code.Symbol,com.google.errorprone.ClassName,com.google.errorprone.VisitorState)"><code>hasAnnotation(Symbol, ClassName, VisitorState)</code></a>.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>annotationClass</code> - the binary class name of the annotation (e.g.
@@ -1638,7 +1640,9 @@ inherited from superclasses due to <code>@Inherited</code>.</div>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">hasAnnotation</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;tree,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;annotationClass,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
-<div class="block">Check for the presence of an annotation, considering annotation inheritance.</div>
+<div class="block">Check for the presence of an annotation, considering annotation inheritance.
+
+<p>Prefer <a href="#hasAnnotation(com.sun.source.tree.Tree,com.google.errorprone.ClassName,com.google.errorprone.VisitorState)"><code>hasAnnotation(Tree, ClassName, VisitorState)</code></a>.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>annotationClass</code> - the binary class name of the annotation (e.g.
@@ -1675,7 +1679,7 @@ inherited from superclasses due to <code>@Inherited</code>.</div>
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;? extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/annotation/Annotation.html" title="class or interface in java.lang.annotation" class="external-link">Annotation</a>&gt;&nbsp;annotationClass,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
 <div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
-<div class="deprecation-comment">prefer <a href="#hasAnnotation(com.sun.tools.javac.code.Symbol,com.google.errorprone.ClassName,com.google.errorprone.VisitorState)"><code>hasAnnotation(Symbol, ClassName, VisitorState)</code></a> to avoid needing a
+<div class="deprecation-comment">prefer <a href="#hasAnnotation(com.sun.source.tree.Tree,com.google.errorprone.ClassName,com.google.errorprone.VisitorState)"><code>hasAnnotation(Tree, ClassName, VisitorState)</code></a> to avoid needing a
     runtime dependency on the annotation class, and to prevent issues if there is skew between
     the definition of the annotation on the runtime and compile-time classpaths</div>
 </div>

@@ -162,8 +162,10 @@ returns <code>null</code> if the symbol is not available.</div>
 "java.util.List"</code>, <code>"java.util.Map.Entry"</code>, or <code>"java.util.Map$Entry"</code>).</div>
 <dl class="notes">
 <dt>Throws:</dt>
-<dd><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/IllegalArgumentException.html" title="class or interface in java.lang" class="external-link">IllegalArgumentException</a></code> - if <code>name</code> is empty, ends with <code>'.'</code>, is
-    primitive/void, is an array type (<code>"[...]"</code>), or is parameterized (<code>"&lt;...&gt;"</code>)</dd>
+<dd><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/IllegalArgumentException.html" title="class or interface in java.lang" class="external-link">IllegalArgumentException</a></code> - if <code>name</code> is empty, has a leading/trailing/consecutive
+    <code>'.'</code>, contains invalid characters (<code>'*'</code>, <code>'/'</code>, <code>';'</code>, or
+    whitespace), is primitive/void, is an array type (<code>"[...]"</code>), or is parameterized
+    (<code>"&lt;...&gt;"</code>)</dd>
 </dl>
 </div>
 </section>

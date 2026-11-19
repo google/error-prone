@@ -532,7 +532,9 @@ matching descendant node is found.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#hasAnyAnnotation(java.lang.Class...)" class="member-name-link">hasAnyAnnotation</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;? extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/annotation/Annotation.html" title="class or interface in java.lang.annotation" class="external-link">Annotation</a>&gt;...&nbsp;annotations)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Determines whether a tree has any of the given annotations.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#hasAnyAnnotation(java.util.List)" class="member-name-link">hasAnyAnnotation</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;? extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.compiler/javax/lang/model/type/TypeMirror.html" title="class or interface in javax.lang.model.type" class="external-link">TypeMirror</a>&gt;&nbsp;mirrors)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
@@ -1562,7 +1564,10 @@ this;</code></div>
 <h3>isSubtypeOf</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="type-parameters">&lt;T extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;</span>&nbsp;<span class="return-type"><a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;T&gt;</span>&nbsp;<span class="element-name">isSubtypeOf</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;clazz)</span></div>
-<div class="block">Matches an AST node if its type is a subtype of the given type.</div>
+<div class="block">Matches an AST node if its type is a subtype of the given type.
+
+<p>Prefer <a href="#isSubtypeOf(java.lang.String)"><code>isSubtypeOf(String)</code></a> or <a href="#isSubtypeOf(com.google.errorprone.ClassName)"><code>isSubtypeOf(ClassName)</code></a> to avoid a runtime
+dependency on the class.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>clazz</code> - a class representation of the type, e.g., Action.class.</dd>
@@ -1602,7 +1607,10 @@ this;</code></div>
 <h3>isSameType</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="type-parameters">&lt;T extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;</span>&nbsp;<span class="return-type"><a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;T&gt;</span>&nbsp;<span class="element-name">isSameType</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;clazz)</span></div>
-<div class="block">Matches an AST node if it has the same erased type as the given class.</div>
+<div class="block">Matches an AST node if it has the same erased type as the given class.
+
+<p>Prefer <a href="#isSameType(java.lang.String)"><code>isSameType(String)</code></a> or <a href="#isSameType(com.google.errorprone.ClassName)"><code>isSameType(ClassName)</code></a> to avoid a runtime
+dependency on the class.</div>
 </div>
 </section>
 </li>
@@ -1994,7 +2002,10 @@ binary names and annotations inherited due to @Inherited.</div>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="type-parameters">&lt;T extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;</span>&nbsp;<span class="return-type"><a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;T&gt;</span>&nbsp;<span class="element-name">hasAnnotation</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;? extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/annotation/Annotation.html" title="class or interface in java.lang.annotation" class="external-link">Annotation</a>&gt;&nbsp;inputClass)</span></div>
 <div class="block">Determines whether an expression has an annotation of the given class. This includes
-annotations inherited from superclasses due to @Inherited.</div>
+annotations inherited from superclasses due to @Inherited.
+
+<p>Prefer <a href="#hasAnnotation(java.lang.String)"><code>hasAnnotation(String)</code></a> or <a href="#hasAnnotation(com.google.errorprone.ClassName)"><code>hasAnnotation(ClassName)</code></a> to avoid a
+runtime dependency on the annotation class.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>inputClass</code> - the class of the annotation to look for (e.g, <code>Produces.class</code>)</dd>
@@ -2033,7 +2044,10 @@ This includes annotations inherited from superclasses due to @Inherited.</div>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="type-parameters">&lt;T extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;</span>&nbsp;<span class="return-type"><a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;T&gt;</span>&nbsp;<span class="element-name">symbolHasAnnotation</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;? extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/annotation/Annotation.html" title="class or interface in java.lang.annotation" class="external-link">Annotation</a>&gt;&nbsp;inputClass)</span></div>
 <div class="block">Determines whether an expression refers to a symbol that has an annotation of the given type.
-This includes annotations inherited from superclasses due to @Inherited.</div>
+This includes annotations inherited from superclasses due to @Inherited.
+
+<p>Prefer <a href="#symbolHasAnnotation(java.lang.String)"><code>symbolHasAnnotation(String)</code></a> or <a href="#symbolHasAnnotation(com.google.errorprone.ClassName)"><code>symbolHasAnnotation(ClassName)</code></a> to
+avoid a runtime dependency on the annotation class.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>inputClass</code> - The class of the annotation to look for (e.g, Produces.class).</dd>
@@ -2702,6 +2716,10 @@ isDirectImplementationOf(I1).match(\/*class tree for C*\/); // will not match </
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="annotations"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/SafeVarargs.html" title="class or interface in java.lang" class="external-link">@SafeVarargs</a>
 </span><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;</span>&nbsp;<span class="element-name">hasAnyAnnotation</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;? extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/annotation/Annotation.html" title="class or interface in java.lang.annotation" class="external-link">Annotation</a>&gt;...&nbsp;annotations)</span></div>
+<div class="block">Determines whether a tree has any of the given annotations. This includes annotations inherited
+from superclasses due to <code>@Inherited</code>.
+
+<p>Prefer <a href="#hasAnyAnnotation(com.google.errorprone.ClassName...)"><code>hasAnyAnnotation(ClassName...)</code></a>.</div>
 </div>
 </section>
 </li>
