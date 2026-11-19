@@ -1623,6 +1623,9 @@ This catch block catches &#96;Exception&#96;, but can only catch unchecked excep
 __[CheckedExceptionNotThrown](bugpattern/CheckedExceptionNotThrown)__<br>
 This method cannot throw a checked exception that it claims to. This may cause consumers of the API to incorrectly attempt to handle, or propagate, this exception.
 
+__[ClasspathShadowing](bugpattern/ClasspathShadowing)__<br>
+Top-level class shadows a class on the compilation classpath
+
 __[ConstantPatternCompile](bugpattern/ConstantPatternCompile)__<br>
 Variables initialized with Pattern#compile calls on constants can be constants
 
