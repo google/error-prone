@@ -426,6 +426,9 @@ public final class Matchers {
   /**
    * Matches an AST node if its type is a subtype of the given type.
    *
+   * <p>Prefer {@link #isSubtypeOf(String)} or {@link #isSubtypeOf(ClassName)} to avoid a runtime
+   * dependency on the class.
+   *
    * @param clazz a class representation of the type, e.g., Action.class.
    */
   public static <T extends Tree> Matcher<T> isSubtypeOf(Class<?> clazz) {
@@ -447,7 +450,12 @@ public final class Matchers {
     return typePredicateMatcher(isExactType(className));
   }
 
-  /** Matches an AST node if it has the same erased type as the given class. */
+  /**
+   * Matches an AST node if it has the same erased type as the given class.
+   *
+   * <p>Prefer {@link #isSameType(String)} or {@link #isSameType(ClassName)} to avoid a runtime
+   * dependency on the class.
+   */
   public static <T extends Tree> Matcher<T> isSameType(Class<?> clazz) {
     return typePredicateMatcher(isExactType(typeFromClass(clazz)));
   }
@@ -717,7 +725,7 @@ public final class Matchers {
 
   /** Matches an {@link AnnotationTree} with the given qualified annotation class name. */
   public static Matcher<AnnotationTree> isType(String annotationClassName) {
-    return new AnnotationType(annotationClassName);
+    return isType(ClassName.of(annotationClassName));
   }
 
   /** Matches an {@link AnnotationTree} with the given annotation {@link ClassName}. */
@@ -730,7 +738,7 @@ public final class Matchers {
    * meta-annotation.
    */
   public static Matcher<AnnotationTree> hasMetaAnnotation(String annotationClassName) {
-    return typePredicateMatcher(TypePredicates.hasAnnotation(annotationClassName));
+    return hasMetaAnnotation(ClassName.of(annotationClassName));
   }
 
   /**
@@ -814,6 +822,9 @@ public final class Matchers {
    * Determines whether an expression has an annotation of the given class. This includes
    * annotations inherited from superclasses due to @Inherited.
    *
+   * <p>Prefer {@link #hasAnnotation(String)} or {@link #hasAnnotation(ClassName)} to avoid a
+   * runtime dependency on the annotation class.
+   *
    * @param inputClass the class of the annotation to look for (e.g, {@code Produces.class})
    */
   public static <T extends Tree> Matcher<T> hasAnnotation(Class<? extends Annotation> inputClass) {
@@ -828,8 +839,7 @@ public final class Matchers {
    *     "javax.annotation.Nullable", or "some.package.OuterClassName$InnerClassName")
    */
   public static <T extends Tree> Matcher<T> symbolHasAnnotation(String annotationClass) {
-    return symbolMatcher(
-        (symbol, state) -> ASTHelpers.hasAnnotation(symbol, annotationClass, state));
+    return symbolHasAnnotation(ClassName.of(annotationClass));
   }
 
   /**
@@ -845,11 +855,14 @@ public final class Matchers {
    * Determines whether an expression refers to a symbol that has an annotation of the given type.
    * This includes annotations inherited from superclasses due to @Inherited.
    *
+   * <p>Prefer {@link #symbolHasAnnotation(String)} or {@link #symbolHasAnnotation(ClassName)} to
+   * avoid a runtime dependency on the annotation class.
+   *
    * @param inputClass The class of the annotation to look for (e.g, Produces.class).
    */
   public static <T extends Tree> Matcher<T> symbolHasAnnotation(
       Class<? extends Annotation> inputClass) {
-    return (tree, state) -> ASTHelpers.hasAnnotation(getSymbol(tree), inputClass, state);
+    return symbolHasAnnotation(ClassName.of(inputClass.getName()));
   }
 
   /**
@@ -860,18 +873,7 @@ public final class Matchers {
    *     "javax.annotation.Nullable", or "some.package.OuterClassName$InnerClassName")
    */
   public static Matcher<MethodTree> hasAnnotationOnAnyOverriddenMethod(String annotationClass) {
-    return (tree, state) -> {
-      MethodSymbol methodSym = getSymbol(tree);
-      if (ASTHelpers.hasAnnotation(methodSym, annotationClass, state)) {
-        return true;
-      }
-      for (MethodSymbol method : ASTHelpers.findSuperMethods(methodSym, state.getTypes())) {
-        if (ASTHelpers.hasAnnotation(method, annotationClass, state)) {
-          return true;
-        }
-      }
-      return false;
-    };
+    return hasAnnotationOnAnyOverriddenMethod(ClassName.of(annotationClass));
   }
 
   /**
@@ -951,9 +953,7 @@ public final class Matchers {
    * @param methodName The name of the method to match, e.g., "checkNotNull"
    */
   public static Matcher<MethodTree> methodWithClassAndName(String className, String methodName) {
-    return (methodTree, state) ->
-        getSymbol(methodTree).getEnclosingElement().getQualifiedName().contentEquals(className)
-            && methodTree.getName().contentEquals(methodName);
+    return methodWithClassAndName(ClassName.of(className), methodName);
   }
 
   /**
@@ -1036,11 +1036,7 @@ public final class Matchers {
    *     "com.google.common.base.Preconditions"
    */
   public static Matcher<MethodTree> constructorOfClass(String className) {
-    return (methodTree, state) -> {
-      Symbol symbol = getSymbol(methodTree);
-      return symbol.getEnclosingElement().getQualifiedName().contentEquals(className)
-          && symbol.isConstructor();
-    };
+    return constructorOfClass(ClassName.of(className));
   }
 
   /**
@@ -1403,8 +1399,7 @@ public final class Matchers {
    * isDirectImplementationOf(I1).match(\/*class tree for C*\/); // will not match }
    */
   public static Matcher<ClassTree> isDirectImplementationOf(String clazz) {
-    Matcher<Tree> isProvidedType = isSameType(clazz);
-    return new IsDirectImplementationOf(isProvidedType);
+    return isDirectImplementationOf(ClassName.of(clazz));
   }
 
   /** Matches any node that is directly an implementation, but not extension, of the given Class. */
@@ -1415,8 +1410,7 @@ public final class Matchers {
 
   /** Matches any node that is a direct extension of the given class. */
   public static Matcher<ClassTree> isExtensionOf(String clazz) {
-    Matcher<Tree> isProvidedType = isSameType(clazz);
-    return new IsExtensionOf(isProvidedType);
+    return isExtensionOf(ClassName.of(clazz));
   }
 
   /** Matches any node that is a direct extension of the given class. */
@@ -1425,13 +1419,18 @@ public final class Matchers {
     return new IsExtensionOf(isProvidedType);
   }
 
+  /**
+   * Determines whether a tree has any of the given annotations. This includes annotations inherited
+   * from superclasses due to {@code @Inherited}.
+   *
+   * <p>Prefer {@link #hasAnyAnnotation(ClassName...)}.
+   */
   @SafeVarargs
   public static Matcher<Tree> hasAnyAnnotation(Class<? extends Annotation>... annotations) {
-    ArrayList<Matcher<Tree>> matchers = new ArrayList<>(annotations.length);
-    for (Class<? extends Annotation> annotation : annotations) {
-      matchers.add(hasAnnotation(annotation));
-    }
-    return anyOf(matchers);
+    return hasAnyAnnotation(
+        Arrays.stream(annotations)
+            .map(annotation -> ClassName.of(annotation.getName()))
+            .toArray(ClassName[]::new));
   }
 
   /**

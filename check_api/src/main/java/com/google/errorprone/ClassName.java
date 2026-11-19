@@ -40,8 +40,10 @@ public final class ClassName {
    * Constructs a {@link ClassName} from a qualified canonical or binary class name (e.g. {@code
    * "java.util.List"}, {@code "java.util.Map.Entry"}, or {@code "java.util.Map$Entry"}).
    *
-   * @throws IllegalArgumentException if {@code name} is empty, ends with {@code '.'}, is
-   *     primitive/void, is an array type ({@code "[...]"}), or is parameterized ({@code "<...>"})
+   * @throws IllegalArgumentException if {@code name} is empty, has a leading/trailing/consecutive
+   *     {@code '.'}, contains invalid characters ({@code '*'}, {@code '/'}, {@code ';'}, or
+   *     whitespace), is primitive/void, is an array type ({@code "[...]"}), or is parameterized
+   *     ({@code "<...>"})
    */
   public static ClassName of(String name) {
     requireNonNull(name);
@@ -174,7 +176,6 @@ public final class ClassName {
 
   private static void validateClassName(String name) {
     checkArgument(!name.isEmpty(), "class name must be non-empty");
-    checkArgument(name.charAt(name.length() - 1) != '.', "invalid class name: %s", name);
     checkArgument(
         !name.contains("[") && !name.contains("]"),
         "Cannot create ClassName for array types (%s), build them using Suppliers.arrayOf() or"
@@ -189,6 +190,17 @@ public final class ClassName {
           throw new IllegalArgumentException(
               String.format("Cannot create ClassName for primitive or void type (%s)", name));
       default -> {}
+    }
+    checkArgument(
+        name.charAt(0) != '.' && name.charAt(name.length() - 1) != '.' && !name.contains(".."),
+        "invalid class name: %s",
+        name);
+    for (int i = 0; i < name.length(); i++) {
+      char c = name.charAt(i);
+      checkArgument(
+          c != '*' && c != '/' && c != ';' && !Character.isWhitespace(c),
+          "invalid class name: %s",
+          name);
     }
   }
 }

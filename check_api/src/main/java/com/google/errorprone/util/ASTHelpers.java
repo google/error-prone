@@ -876,31 +876,15 @@ public final class ASTHelpers {
    * Determines whether a symbol has an annotation of the given type. This includes annotations
    * inherited from superclasses due to {@code @Inherited}.
    *
+   * <p>Prefer {@link #hasAnnotation(Symbol, ClassName, VisitorState)}.
+   *
    * @param annotationClass the binary class name of the annotation (e.g.
    *     "org.jspecify.annotations.Nullable", or "some.package.OuterClassName$InnerClassName")
    * @return true if the symbol is annotated with given type.
    */
-  public static boolean hasAnnotation(Symbol sym, String annotationClass, VisitorState state) {
-    if (sym == null) {
-      return false;
-    }
-    // TODO(amalloy): unify with hasAnnotation(Symbol, Name, VisitorState)
-    // normalize to non-binary names
-    annotationClass = annotationClass.replace('$', '.');
-    Name annotationName = state.getName(annotationClass);
-    if (hasAttribute(sym, annotationName)) {
-      return true;
-    }
-    if (sym instanceof ClassSymbol cs && isInherited(state, annotationClass)) {
-      for (sym = cs.getSuperclass().tsym;
-          sym instanceof ClassSymbol cs2;
-          sym = cs2.getSuperclass().tsym) {
-        if (hasAttribute(sym, annotationName)) {
-          return true;
-        }
-      }
-    }
-    return false;
+  public static boolean hasAnnotation(
+      @Nullable Symbol sym, String annotationClass, VisitorState state) {
+    return hasAnnotation(sym, state.binaryNameFromClassname(annotationClass), state);
   }
 
   /**
@@ -911,10 +895,13 @@ public final class ASTHelpers {
    */
   public static boolean hasAnnotation(
       @Nullable Symbol sym, ClassName annotationClass, VisitorState state) {
+    return hasAnnotation(sym, annotationClass.binaryName(state), state);
+  }
+
+  private static boolean hasAnnotation(@Nullable Symbol sym, Name binaryName, VisitorState state) {
     if (sym == null) {
       return false;
     }
-    Name binaryName = annotationClass.binaryName(state);
     if (hasFlatAttribute(sym, binaryName)) {
       return true;
     }
@@ -950,6 +937,8 @@ public final class ASTHelpers {
   /**
    * Check for the presence of an annotation, considering annotation inheritance.
    *
+   * <p>Prefer {@link #hasAnnotation(Tree, ClassName, VisitorState)}.
+   *
    * @param annotationClass the binary class name of the annotation (e.g.
    *     "org.jspecify.annotations.Nullable", or "some.package.OuterClassName$InnerClassName")
    * @return true if the tree is annotated with given type.
@@ -974,7 +963,7 @@ public final class ASTHelpers {
    * Check for the presence of an annotation, considering annotation inheritance.
    *
    * @return true if the tree is annotated with given type.
-   * @deprecated prefer {@link #hasAnnotation(Symbol, ClassName, VisitorState)} to avoid needing a
+   * @deprecated prefer {@link #hasAnnotation(Tree, ClassName, VisitorState)} to avoid needing a
    *     runtime dependency on the annotation class, and to prevent issues if there is skew between
    *     the definition of the annotation on the runtime and compile-time classpaths
    */
@@ -1013,19 +1002,6 @@ public final class ASTHelpers {
               Symbol inheritedSym = state.getSymtab().inheritedType.tsym;
               return annotationSym.attribute(inheritedSym) != null;
             });
-  }
-
-  private static boolean isInherited(VisitorState state, String annotationName) {
-    return isInherited(state, state.binaryNameFromClassname(annotationName));
-  }
-
-  private static boolean hasAttribute(Symbol sym, Name annotationName) {
-    for (Compound a : sym.getRawAttributes()) {
-      if (a.type.tsym.getQualifiedName().equals(annotationName)) {
-        return true;
-      }
-    }
-    return false;
   }
 
   private static boolean hasFlatAttribute(Symbol sym, Name binaryAnnotationName) {

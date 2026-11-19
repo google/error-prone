@@ -353,7 +353,7 @@ public final class VisitorState {
   private SharedState.ParsedName parseClassName(String className) {
     SharedState.ParsedName parsed = sharedState.parsedNameCache.get(className);
     if (parsed == null) {
-      Name binaryName = binaryNameFromClassname(className);
+      Name binaryName = getName(inferBinaryName(className));
       parsed =
           new SharedState.ParsedName(
               binaryName, ImmutableList.copyOf(Convert.enclosingCandidates(binaryName)));
@@ -370,7 +370,7 @@ public final class VisitorState {
    * <p>Prefer {@link ClassName#of} and {@link ClassName#binaryName} for constant class names.
    */
   public Name binaryNameFromClassname(String className) {
-    return getName(inferBinaryName(className));
+    return parseClassName(className).binaryName();
   }
 
   /**

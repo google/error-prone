@@ -98,33 +98,50 @@ public final class Suppliers {
   /**
    * Given the string representation of a type, supplies the corresponding type.
    *
-   * <p>Prefer {@link ClassName#of(String)} for class and interface types.
+   * <p>Prefer {@link ClassName#of(String)} for class and interface types, or the primitive and
+   * {@code void} constants on this class (e.g. {@link #INT_TYPE}, {@link #VOID_TYPE}).
    *
    * @param typeString a string representation of a type, e.g., "java.util.List"
    */
   public static Supplier<Type> typeFromString(String typeString) {
     requireNonNull(typeString);
-    return VisitorState.memoize(state -> state.getTypeFromString(typeString));
+    return switch (typeString) {
+      case "byte" -> BYTE_TYPE;
+      case "short" -> SHORT_TYPE;
+      case "int" -> INT_TYPE;
+      case "long" -> LONG_TYPE;
+      case "float" -> FLOAT_TYPE;
+      case "double" -> DOUBLE_TYPE;
+      case "boolean" -> BOOLEAN_TYPE;
+      case "char" -> CHAR_TYPE;
+      case "void" -> VOID_TYPE;
+      default -> ClassName.of(typeString).asTypeSupplier();
+    };
   }
 
   /**
    * Given the class representation of a type, supplies the corresponding type.
    *
-   * <p>Prefer {@link ClassName#of(String)} for class and interface types.
+   * <p>Prefer {@link ClassName#of(String)} for class and interface types, or the primitive and
+   * {@code void} constants on this class (e.g. {@link #INT_TYPE}, {@link #VOID_TYPE}).
    */
   public static Supplier<Type> typeFromClass(Class<?> inputClass) {
     return typeFromString(inputClass.getName());
   }
 
-  public static final Supplier<Type> JAVA_LANG_VOID_TYPE = typeFromClass(Void.class);
+  public static final Supplier<Type> JAVA_LANG_VOID_TYPE =
+      ClassName.of("java.lang.Void").asTypeSupplier();
 
   public static final Supplier<Type> VOID_TYPE = state -> state.getSymtab().voidType;
 
-  public static final Supplier<Type> JAVA_LANG_BOOLEAN_TYPE = typeFromString("java.lang.Boolean");
+  public static final Supplier<Type> JAVA_LANG_BOOLEAN_TYPE =
+      ClassName.of("java.lang.Boolean").asTypeSupplier();
 
-  public static final Supplier<Type> JAVA_LANG_INTEGER_TYPE = typeFromString("java.lang.Integer");
+  public static final Supplier<Type> JAVA_LANG_INTEGER_TYPE =
+      ClassName.of("java.lang.Integer").asTypeSupplier();
 
-  public static final Supplier<Type> JAVA_LANG_LONG_TYPE = typeFromString("java.lang.Long");
+  public static final Supplier<Type> JAVA_LANG_LONG_TYPE =
+      ClassName.of("java.lang.Long").asTypeSupplier();
 
   public static final Supplier<Type> STRING_TYPE = state -> state.getSymtab().stringType;
 

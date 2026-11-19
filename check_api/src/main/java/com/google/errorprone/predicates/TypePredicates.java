@@ -60,7 +60,7 @@ public final class TypePredicates {
 
   /** Match types that are annotated with the given annotation. */
   public static TypePredicate hasAnnotation(String annotationType) {
-    return (type, state) -> ASTHelpers.hasAnnotation(type.tsym, annotationType, state);
+    return hasAnnotation(ClassName.of(annotationType));
   }
 
   /** Match types that are annotated with the given annotation. */

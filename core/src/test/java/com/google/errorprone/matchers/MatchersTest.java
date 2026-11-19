@@ -1107,6 +1107,137 @@ public class MatchersTest {
   }
 
   @Test
+  public void isType_nestedBinaryName() {
+    assertMatcher(AnnotationTree.class, Matchers.isType("pkg.Outer$NestedAnno"))
+        .addSourceLines(
+            "pkg/Outer.java",
+            """
+            package pkg;
+
+            public class Outer {
+              public @interface NestedAnno {}
+
+              // BUG: Diagnostic contains:
+              @NestedAnno
+              void annotated() {}
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void constructorForClass_nestedBinaryName() {
+    assertMatcher(NewClassTree.class, MethodMatchers.constructor().forClass("pkg.Outer$Sub"))
+        .addSourceLines(
+            "pkg/Outer.java",
+            """
+            package pkg;
+
+            public class Outer {
+              public static class Sub {}
+
+              void test() {
+                // BUG: Diagnostic contains:
+                Sub sub = new Sub();
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void methodAndConstructorOfClass_nestedBinaryName() {
+    assertMatcher(
+            MethodTree.class,
+            Matchers.anyOf(
+                Matchers.methodWithClassAndName("pkg.Outer$Sub", "target"),
+                Matchers.constructorOfClass("pkg.Outer$Sub")))
+        .addSourceLines(
+            "pkg/Outer.java",
+            """
+            package pkg;
+
+            public class Outer {
+              public static class Sub {
+                // BUG: Diagnostic contains:
+                public Sub() {}
+
+                // BUG: Diagnostic contains:
+                public void target() {}
+
+                public void other() {}
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void hasAnyAnnotation_classOverload() {
+    assertMatcher(
+            MethodTree.class, Matchers.hasAnyAnnotation(Deprecated.class, SuppressWarnings.class))
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              @Deprecated
+              // BUG: Diagnostic contains:
+              void deprecatedMethod() {}
+
+              void plainMethod() {}
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void symbolHasAnnotation_classOverloadAndPrimitiveParameters() {
+    assertMatcher(
+            MethodInvocationTree.class,
+            Matchers.allOf(
+                Matchers.symbolHasAnnotation(Deprecated.class),
+                MethodMatchers.instanceMethod()
+                    .anyClass()
+                    .named("primitiveMethod")
+                    .withParameters("int", "long")))
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              @Deprecated
+              void primitiveMethod(int a, long b) {}
+
+              void call() {
+                // BUG: Diagnostic contains:
+                primitiveMethod(1, 2L);
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void primitiveTypeMatchers_stringAndClass() {
+    assertMatcher(
+            VariableTree.class,
+            Matchers.allOf(
+                Matchers.isSameType("int"),
+                Matchers.isSameType(int.class),
+                Matchers.typePredicateMatcher(TypePredicates.isExactType("int")),
+                Matchers.typePredicateMatcher(TypePredicates.isDescendantOf("int"))))
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              // BUG: Diagnostic contains:
+              int i;
+              long l;
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
   public void suppliersArrayOfClassName() {
     CompilationTestHelper.newInstance(ArrayOfClassNameChecker.class, getClass())
         .addSourceLines(

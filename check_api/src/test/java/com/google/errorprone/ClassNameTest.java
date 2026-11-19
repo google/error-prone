@@ -39,7 +39,15 @@ public final class ClassNameTest {
   public void validation() {
     assertThrows(NullPointerException.class, () -> ClassName.of(null));
     assertThrows(IllegalArgumentException.class, () -> ClassName.of(""));
+    assertThrows(IllegalArgumentException.class, () -> ClassName.of(".com.google.Foo"));
     assertThrows(IllegalArgumentException.class, () -> ClassName.of("com.google.Foo."));
+    assertThrows(IllegalArgumentException.class, () -> ClassName.of("com.google..Foo"));
+    assertThrows(IllegalArgumentException.class, () -> ClassName.of("java.util.*"));
+    assertThrows(IllegalArgumentException.class, () -> ClassName.of("java/lang/String"));
+    assertThrows(IllegalArgumentException.class, () -> ClassName.of("Ljava/lang/String;"));
+    assertThrows(IllegalArgumentException.class, () -> ClassName.of(" java.lang.String"));
+    assertThrows(IllegalArgumentException.class, () -> ClassName.of("java.lang.String "));
+    assertThrows(IllegalArgumentException.class, () -> ClassName.of("java.lang. String"));
     assertThrows(IllegalArgumentException.class, () -> ClassName.of("java.lang.String[]"));
     assertThrows(IllegalArgumentException.class, () -> ClassName.of("java.util.List<String>"));
     for (String primitive :

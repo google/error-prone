@@ -24,7 +24,6 @@ import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.tree.JCTree;
-import org.jspecify.annotations.Nullable;
 
 /**
  * @author eaftan@google.com (Eddie Aftandilian)
@@ -32,16 +31,15 @@ import org.jspecify.annotations.Nullable;
  */
 public class AnnotationType implements Matcher<AnnotationTree> {
 
-  private final @Nullable String annotationClassName;
-  private final @Nullable ClassName annotationClass;
+  private final ClassName annotationClass;
 
+  /** Matches an {@link AnnotationTree} with the given annotation class name. */
   public AnnotationType(String annotationClassName) {
-    this.annotationClassName = requireNonNull(annotationClassName);
-    this.annotationClass = null;
+    this(ClassName.of(annotationClassName));
   }
 
+  /** Matches an {@link AnnotationTree} with the given annotation {@link ClassName}. */
   public AnnotationType(ClassName annotationClass) {
-    this.annotationClassName = null;
     this.annotationClass = requireNonNull(annotationClass);
   }
 
@@ -57,9 +55,6 @@ public class AnnotationType implements Matcher<AnnotationTree> {
     if (sym == null) {
       return false;
     }
-    if (annotationClass != null) {
-      return sym.flatName().equals(annotationClass.binaryName(state));
-    }
-    return sym.getQualifiedName().contentEquals(annotationClassName);
+    return sym.flatName().equals(annotationClass.binaryName(state));
   }
 }

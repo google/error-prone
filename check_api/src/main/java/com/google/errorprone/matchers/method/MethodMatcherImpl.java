@@ -395,9 +395,7 @@ final class MethodMatcherImpl
 
   @Override
   public ConstructorClassMatcher forClass(String className) {
-    Supplier<Name> expectedName = VisitorState.memoize(state -> state.getName(className));
-    return forClass(
-        (type, state) -> type.asElement().getQualifiedName().equals(expectedName.get(state)));
+    return forClass(ClassName.of(className));
   }
 
   @Override

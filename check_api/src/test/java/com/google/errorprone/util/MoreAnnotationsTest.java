@@ -165,6 +165,46 @@ public class MoreAnnotationsTest extends CompilerBasedAbstractTest {
   }
 
   @Test
+  public void getAnnotation_nestedBinaryAndCanonicalNames() {
+    writeFile(
+        "Outer.java",
+        """
+        package pkg;
+
+        public class Outer {
+          public @interface NestedAnno {
+            String value();
+          }
+
+          @NestedAnno("hi")
+          public void testMethod() {}
+        }
+        """);
+
+    AtomicBoolean verified = new AtomicBoolean(false);
+    assertCompiles(
+        new Scanner() {
+          @Override
+          public Void visitMethod(MethodTree tree, VisitorState state) {
+            MethodSymbol sym = ASTHelpers.getSymbol(tree);
+            if (sym.getSimpleName().contentEquals("testMethod")) {
+              assertThat(MoreAnnotations.getAnnotation(sym, "pkg.Outer$NestedAnno")).isPresent();
+              assertThat(MoreAnnotations.getAnnotation(sym, "pkg.Outer.NestedAnno")).isPresent();
+              assertThat(MoreAnnotations.getAnnotation(sym, ClassName.of("pkg.Outer$NestedAnno")))
+                  .isPresent();
+              assertThat(MoreAnnotations.getStringValue(sym, "pkg.Outer$NestedAnno"))
+                  .hasValue("hi");
+              assertThat(MoreAnnotations.getStringValue(sym, "pkg.Outer.NestedAnno"))
+                  .hasValue("hi");
+              verified.set(true);
+            }
+            return super.visitMethod(tree, state);
+          }
+        });
+    assertThat(verified.get()).isTrue();
+  }
+
+  @Test
   public void targetAndRetentionHelpers() {
     writeFile(
         "MetaTest.java",
