@@ -372,9 +372,13 @@ public class UTemplater extends SimpleTreeVisitor<Tree, Void> {
   private static final UStaticIdent NEW_ARRAY;
   private static final UStaticIdent ENUM_VALUE_OF;
   private static final UStaticIdent AS_VARARGS;
+  private static final UStaticIdent CONCAT_LITERALS_STRING_FIRST_OPERAND;
+  private static final UStaticIdent CONCAT_LITERALS_STRING_SECOND_OPERAND;
 
   static {
     UTypeVar tVar = UTypeVar.create("T");
+    UClassType string = UClassType.create(String.class.getCanonicalName());
+    UClassType object = UClassType.create(Object.class.getCanonicalName());
     ANY_OF =
         UStaticIdent.create(
             Refaster.class.getCanonicalName(),
@@ -386,9 +390,7 @@ public class UTemplater extends SimpleTreeVisitor<Tree, Void> {
             Refaster.class.getCanonicalName(),
             "isInstance",
             UForAll.create(
-                ImmutableList.of(tVar),
-                UMethodType.create(
-                    UPrimitiveType.BOOLEAN, UClassType.create(Object.class.getCanonicalName()))));
+                ImmutableList.of(tVar), UMethodType.create(UPrimitiveType.BOOLEAN, object)));
     CLAZZ =
         UStaticIdent.create(
             Refaster.class.getCanonicalName(),
@@ -410,15 +412,23 @@ public class UTemplater extends SimpleTreeVisitor<Tree, Void> {
         UStaticIdent.create(
             Refaster.class.getCanonicalName(),
             "enumValueOf",
-            UForAll.create(
-                ImmutableList.of(eVar),
-                UMethodType.create(eVar, UClassType.create(String.class.getCanonicalName()))));
+            UForAll.create(ImmutableList.of(eVar), UMethodType.create(eVar, string)));
     AS_VARARGS =
         UStaticIdent.create(
             Refaster.class.getCanonicalName(),
             "asVarargs",
             UForAll.create(
                 ImmutableList.of(tVar), UMethodType.create(UArrayType.create(tVar), tVar)));
+    CONCAT_LITERALS_STRING_FIRST_OPERAND =
+        UStaticIdent.create(
+            Refaster.class.getCanonicalName(),
+            "concatLiterals",
+            UMethodType.create(string, string, UArrayType.create(object)));
+    CONCAT_LITERALS_STRING_SECOND_OPERAND =
+        UStaticIdent.create(
+            Refaster.class.getCanonicalName(),
+            "concatLiterals",
+            UMethodType.create(string, object, string));
   }
 
   private static Tree getSingleExplicitTypeArgument(MethodInvocationTree tree) {
@@ -471,6 +481,11 @@ public class UTemplater extends SimpleTreeVisitor<Tree, Void> {
               REPEATED_ANNOTATION,
               VisitorState.createForUtilityPurposes(context)));
       return template(arg);
+    } else if (anyMatch(
+            CONCAT_LITERALS_STRING_FIRST_OPERAND, tree.getMethodSelect(), new Unifier(context))
+        || anyMatch(
+            CONCAT_LITERALS_STRING_SECOND_OPERAND, tree.getMethodSelect(), new Unifier(context))) {
+      return UConcatLiterals.create(templateExpressions(tree.getArguments()));
     }
     if (placeholderMethods.containsKey(ASTHelpers.getSymbol(tree))) {
       return UPlaceholderExpression.create(
