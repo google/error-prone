@@ -437,4 +437,135 @@ public final class NonApiTypeTest {
             """)
         .doTest();
   }
+
+  @Test
+  public void overrides_notFlagged() {
+    helper
+        .addSourceLines(
+            "Parent.java",
+            """
+            import java.util.ArrayList;
+            import java.util.HashMap;
+            import java.util.LinkedHashSet;
+
+            public interface Parent {
+              // BUG: Diagnostic contains: java.util.List
+              void addAll(ArrayList<String> values);
+
+              // BUG: Diagnostic contains: java.util.Map
+              HashMap<String, String> asMap();
+
+              // BUG: Diagnostic contains: java.util.Set
+              void setValues(LinkedHashSet<String> values);
+            }
+            """)
+        .addSourceLines(
+            "Child.java",
+            """
+            import java.util.ArrayList;
+            import java.util.HashMap;
+            import java.util.LinkedHashSet;
+
+            public class Child implements Parent {
+              @Override
+              public void addAll(ArrayList<String> values) {}
+
+              @Override
+              public HashMap<String, String> asMap() {
+                return new HashMap<>();
+              }
+
+              @Override
+              public void setValues(LinkedHashSet<String> values) {}
+
+              // BUG: Diagnostic contains: java.util.List
+              public void notAnOverride(ArrayList<String> values) {}
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void overridesOfNonPublicMethods_notFlagged() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            import java.util.HashMap;
+
+            class Test {
+              abstract static class Parent {
+                // BUG: Diagnostic contains: java.util.Map
+                abstract void process(HashMap<String, String> map);
+              }
+
+              static class Child extends Parent {
+                @Override
+                void process(HashMap<String, String> map) {}
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void covariantReturnTypeOverrides_flagged() {
+    helper
+        .addSourceLines(
+            "Parent.java",
+            """
+            import java.util.Map;
+
+            public interface Parent {
+              Map<String, String> asMap();
+            }
+            """)
+        .addSourceLines(
+            "Child.java",
+            """
+            import java.util.HashMap;
+
+            public class Child implements Parent {
+              @Override
+              // BUG: Diagnostic contains: java.util.Map
+              public HashMap<String, String> asMap() {
+                return new HashMap<>();
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void returnTypeOverrides_dictatedBySupertype_notFlagged() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            import java.util.Collection;
+            import java.util.HashMap;
+            import java.util.List;
+            import java.util.function.Supplier;
+
+            class Test {
+              interface Parent {
+                // BUG: Diagnostic contains: java.util.Map
+                Collection<HashMap<String, String>> maps();
+              }
+
+              abstract static class Child implements Parent {
+                @Override
+                public abstract List<HashMap<String, String>> maps();
+              }
+
+              static class MapSupplier implements Supplier<HashMap<String, String>> {
+                @Override
+                public HashMap<String, String> get() {
+                  return new HashMap<>();
+                }
+              }
+            }
+            """)
+        .doTest();
+  }
 }

@@ -16,6 +16,7 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.common.base.Suppliers.memoize;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.ProtobufMatchers.PROTOCOL_STRING_LIST;
@@ -31,7 +32,7 @@ import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import static com.google.errorprone.util.ASTHelpers.isRecord;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
-import static com.google.errorprone.util.ASTHelpers.methodIsPublicAndNotAnOverride;
+import static com.google.errorprone.util.ASTHelpers.streamSuperMethods;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
@@ -42,10 +43,17 @@ import com.google.errorprone.predicates.TypePredicate;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
+import com.sun.tools.javac.code.Symbol;
+import com.sun.tools.javac.code.Symbol.MethodSymbol;
+import com.sun.tools.javac.code.Symbol.PackageSymbol;
 import com.sun.tools.javac.code.Type;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.List;
+import java.util.function.Predicate;
+import java.util.function.Supplier;
+import java.util.stream.Stream;
+import javax.lang.model.element.Modifier;
 
 /** Flags instances of non-API types from being accepted or returned in APIs. */
 @BugPattern(
@@ -241,19 +249,65 @@ public final class NonApiType extends BugChecker implements MethodTreeMatcher {
     Type enclosingType = symbol.owner.type;
 
     boolean isPublicApi =
-        methodIsPublicAndNotAnOverride(symbol, state)
-            && state.errorProneOptions().isPubliclyVisibleTarget();
+        state.errorProneOptions().isPubliclyVisibleTarget() && isPubliclyVisible(symbol);
+
+    // Overriding methods can't change their parameter types, since those are dictated by the
+    // supertype (which is flagged instead). Computed lazily, since walking the supertypes is only
+    // necessary if a parameter actually matches one of the NON_API_TYPES.
+    Supplier<Boolean> isOverride = memoize(() -> superMethods(symbol, state).findAny().isPresent());
 
     List<? extends VariableTree> parameters = tree.getParameters();
     // Avoid flagging primitive var-args parameters (e.g., int... rest) as array types.
     int paramsToCheck = symbol.isVarArgs() ? parameters.size() - 1 : parameters.size();
     for (int i = 0; i < paramsToCheck; i++) {
-      checkType(parameters.get(i), ApiElementType.PARAMETER, isPublicApi, enclosingType, state);
+      checkType(
+          parameters.get(i),
+          ApiElementType.PARAMETER,
+          isPublicApi,
+          enclosingType,
+          typeToCheck -> isOverride.get(),
+          state);
     }
-    checkType(tree.getReturnType(), ApiElementType.RETURN_TYPE, isPublicApi, enclosingType, state);
+    // Overriding methods may narrow their return type (e.g., a supertype method returning Map can
+    // be overridden to return HashMap), so only skip the return type if a supermethod's return
+    // type (as a member of the enclosing type) also matches.
+    checkType(
+        tree.getReturnType(),
+        ApiElementType.RETURN_TYPE,
+        isPublicApi,
+        enclosingType,
+        typeToCheck ->
+            superMethods(symbol, state)
+                .anyMatch(superMethod ->
+                    typeToCheck.matches(
+                        state.getTypes().memberType(enclosingType, superMethod).getReturnType(),
+                        enclosingType,
+                        state)),
+        state);
 
     // the accumulated matches (if any) are reported via state.reportMatch(...)
     return NO_MATCH;
+  }
+
+  /** Returns true if the method and all of its enclosing classes are {@code public}. */
+  private static boolean isPubliclyVisible(MethodSymbol method) {
+    for (Symbol symbol = method;
+        symbol != null && !(symbol instanceof PackageSymbol);
+        symbol = symbol.owner) {
+      if (!symbol.getModifiers().contains(Modifier.PUBLIC)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  /** Returns the methods (if any) that the given method overrides (even "effective overrides"). */
+  private static Stream<MethodSymbol> superMethods(MethodSymbol method, VisitorState state) {
+    // constructors, private methods, and static methods can never override another method
+    if (method.isConstructor() || method.isPrivate() || method.isStatic()) {
+      return Stream.empty();
+    }
+    return streamSuperMethods(method, state.getTypes());
   }
 
   private void checkType(
@@ -261,6 +315,7 @@ public final class NonApiType extends BugChecker implements MethodTreeMatcher {
       ApiElementType elementType,
       boolean isPublicApi,
       Type enclosingType,
+      Predicate<TypeToCheck> isDictatedBySupertype,
       VisitorState state) {
     if (isSuppressed(tree, state)) {
       return;
@@ -274,8 +329,10 @@ public final class NonApiType extends BugChecker implements MethodTreeMatcher {
         if (typeToCheck.elementType() == ApiElementType.ANY
             || typeToCheck.elementType() == elementType) {
           if (isPublicApi || typeToCheck.visibility() == ApiVisibility.ANY) {
-            state.reportMatch(
-                buildDescription(tree).setMessage(typeToCheck.failureMessage()).build());
+            if (!isDictatedBySupertype.test(typeToCheck)) {
+              state.reportMatch(
+                  buildDescription(tree).setMessage(typeToCheck.failureMessage()).build());
+            }
           }
         }
       }
