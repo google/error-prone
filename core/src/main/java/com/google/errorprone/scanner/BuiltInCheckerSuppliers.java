@@ -87,6 +87,7 @@ import com.google.errorprone.bugpatterns.ClassInitializationDeadlock;
 import com.google.errorprone.bugpatterns.ClassName;
 import com.google.errorprone.bugpatterns.ClassNamedLikeTypeParameter;
 import com.google.errorprone.bugpatterns.ClassNewInstance;
+import com.google.errorprone.bugpatterns.ClasspathShadowing;
 import com.google.errorprone.bugpatterns.ClosingStandardOutputStreams;
 import com.google.errorprone.bugpatterns.CollectionToArraySafeParameter;
 import com.google.errorprone.bugpatterns.CollectorShouldNotUseState;
@@ -1263,6 +1264,7 @@ public final class BuiltInCheckerSuppliers {
           CheckedExceptionNotThrown.class,
           ClassName.class,
           ClassNamedLikeTypeParameter.class,
+          ClasspathShadowing.class,
           ComparisonContractViolated.class,
           ConstantField.class,
           ConstantPatternCompile.class,
