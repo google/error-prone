@@ -2327,4 +2327,156 @@ public final class TraditionalJavadocToMarkdownTest {
             """)
         .doTest();
   }
+
+  @Test
+  public void codeTagWithBackticksAndEmpty() {
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            /**
+             * Empty {@code} and backticks {@code `ClassName.methodName()`} and {@code foo`bar}.
+             */
+            public class Test {}
+            """)
+        // TODO(b/532216390): skip empty {@code} and escape backticks inside {@code}
+        .addOutputLines(
+            "Test.java",
+            """
+            /// Empty `` and backticks ``ClassName.methodName()`` and `foo`bar`.
+            public class Test {}
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void bannerCommentIgnored() {
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            /************************************************************************
+             * Section banner
+             ************************************************************************/
+            public class Test {}
+            """)
+        // TODO(b/532216390): ignore /*** banner comments
+        .addOutputLines(
+            "Test.java",
+            """
+            /// Section banner
+            public class Test {}
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void linkWithTrailingSpaceInLabel() {
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            /**
+             * See {@link #foo foo = "bar" }.
+             */
+            public class Test {
+              public void foo() {}
+            }
+            """)
+        // TODO(b/532216390): trim link label
+        .addOutputLines(
+            "Test.java",
+            """
+            /// See [`foo = "bar" `][#foo].
+            public class Test {
+              public void foo() {}
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void lineBreakInCodeTagWithSpaceAndInList() {
+    assume().that(EXTRA_MARKDOWN_SPACE_GONE).isTrue();
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            /**
+             * Foo {@code\s
+             * bar}.
+             *
+             * <ul>
+             *   <li>{@code
+             *     baz}
+             * </ul>
+             */
+            public class Test {}
+            """)
+        // TODO(b/532216390): handle space before newline and list-item prefix in {@code}
+        .addOutputLines(
+            "Test.java",
+            """
+            /// Foo `
+            /// bar`.
+            ///
+            /// - `
+            ///     baz`
+            public class Test {}
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void linkWithBackticksInLabel() {
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            /**
+             * See {@link #foo `bar`}.
+             */
+            public class Test {
+              public void foo() {}
+            }
+            """)
+        // TODO(b/532216390): escape backticks in {@link} label
+        .addOutputLines(
+            "Test.java",
+            """
+            /// See [``bar``][#foo].
+            public class Test {
+              public void foo() {}
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void preWithTrailingBlankLine() {
+    assume().that(EXTRA_MARKDOWN_SPACE_GONE).isTrue();
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            /**
+             * <pre>{@code
+             * int x = 1;
+             *
+             * }</pre>
+             */
+            public class Test {}
+            """)
+        // TODO(b/532216390): strip trailing blank line before closing fence
+        .addOutputLines(
+            "Test.java",
+            """
+            /// ```
+            /// int x = 1;
+            ///
+            /// ```
+            public class Test {}
+            """)
+        .doTest();
+  }
 }
