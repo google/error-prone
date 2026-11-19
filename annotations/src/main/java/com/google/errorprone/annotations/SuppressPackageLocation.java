@@ -21,12 +21,10 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-/**
- * Indicates that the PackageLocation warning should be suppressed for this package.
- *
- * <p>The standard {@link SuppressWarnings} annotation cannot be applied to packages, so we must use
- * a custom suppression annotation for this check.
- */
+/// Indicates that the PackageLocation warning should be suppressed for this package.
+///
+/// The standard [SuppressWarnings] annotation cannot be applied to packages, so we must use a
+/// custom suppression annotation for this check.
 @Target(ElementType.PACKAGE)
 @Retention(RetentionPolicy.CLASS)
 public @interface SuppressPackageLocation {}

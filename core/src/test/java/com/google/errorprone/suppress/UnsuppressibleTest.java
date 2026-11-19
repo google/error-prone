@@ -39,11 +39,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * Test for unsuppressible checks.
- *
- * @author eaftan@google.com (Eddie Aftandilan)
- */
+/// Test for unsuppressible checks.
+///
+/// @author eaftan@google.com (Eddie Aftandilan)
 @RunWith(JUnit4.class)
 public class UnsuppressibleTest {
 

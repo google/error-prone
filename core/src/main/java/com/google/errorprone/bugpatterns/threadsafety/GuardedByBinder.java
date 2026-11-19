@@ -40,16 +40,12 @@ import java.util.Optional;
 import javax.lang.model.element.Name;
 import org.jspecify.annotations.Nullable;
 
-/**
- * A binder from {@code @GuardedBy} annotations to {@link GuardedByExpression}s.
- *
- * @author cushon@google.com (Liam Miller-Cushon)
- */
+/// A binder from `@GuardedBy` annotations to [GuardedByExpression]s.
+///
+/// @author cushon@google.com (Liam Miller-Cushon)
 public final class GuardedByBinder {
-  /**
-   * Creates a {@link GuardedByExpression} from a bound AST node, or returns {@code
-   * Optional.empty()} if the AST node doesn't correspond to a 'simple' lock expression.
-   */
+  /// Creates a [GuardedByExpression] from a bound AST node, or returns `Optional.empty()` if the
+  /// AST node doesn't correspond to a 'simple' lock expression.
   public static Optional<GuardedByExpression> bindExpression(
       JCTree.JCExpression exp, VisitorState visitorState) {
     try {
@@ -66,7 +62,7 @@ public final class GuardedByBinder {
     }
   }
 
-  /** Creates a {@link GuardedByExpression} from a string, given the resolution context. */
+  /// Creates a [GuardedByExpression] from a string, given the resolution context.
   public static Optional<GuardedByExpression> bindString(
       String string, GuardedBySymbolResolver resolver) {
     try {
@@ -93,14 +89,12 @@ public final class GuardedByBinder {
     return expr;
   }
 
-  /**
-   * A context containing the information necessary to resolve a {@link
-   * com.sun.tools.javac.code.Symbol} from an AST node.
-   *
-   * <p>Guard expressions can be bound from the string value of an {@code @GuardedBy} annotation, or
-   * from an actual java expression. In the first case, the string is parsed into an AST which will
-   * not have any semantic information attached.
-   */
+  /// A context containing the information necessary to resolve a [com.sun.tools.javac.code.Symbol]
+  /// from an AST node.
+  ///
+  /// Guard expressions can be bound from the string value of an `@GuardedBy` annotation, or from an
+  /// actual java expression. In the first case, the string is parsed into an AST which will not
+  /// have any semantic information attached.
   public interface Resolver {
     Symbol resolveIdentifier(IdentifierTree node);
 
@@ -118,7 +112,7 @@ public final class GuardedByBinder {
     Symbol resolveEnclosingClass(ExpressionTree expression);
   }
 
-  /** A resolver for AST nodes that have already been bound by javac. */
+  /// A resolver for AST nodes that have already been bound by javac.
   static final Resolver ALREADY_BOUND_RESOLVER =
       new Resolver() {
         @Override
@@ -265,19 +259,15 @@ public final class GuardedByBinder {
           return node.getExpression().accept(this, context);
         }
 
-        /**
-         * Determines the implicit receiver of a select expression that accesses the given symbol by
-         * simple name in the given resolution context.
-         */
+        /// Determines the implicit receiver of a select expression that accesses the given symbol
+        /// by simple name in the given resolution context.
         private GuardedByExpression computeBase(BinderContext context, Symbol symbol) {
           return normalizeBase(context, symbol, null);
         }
 
-        /**
-         * Normalizes the receiver of a select expression so that accesses on 'this' are divided
-         * into type names (for static accesses), qualified this accesses (for members of a
-         * lexically enclosing scope), or simple this accesses for members of the current class.
-         */
+        /// Normalizes the receiver of a select expression so that accesses on 'this' are divided
+        /// into type names (for static accesses), qualified this accesses (for members of a
+        /// lexically enclosing scope), or simple this accesses for members of the current class.
         private GuardedByExpression normalizeBase(
             BinderContext context, Symbol symbol, GuardedByExpression base) {
           if (isStatic(symbol)) {
@@ -300,10 +290,8 @@ public final class GuardedByBinder {
           throw new IllegalGuardedBy("Could not find the implicit receiver.");
         }
 
-        /**
-         * Returns the owner if the given member is declared in a lexically enclosing scope, and
-         * {@code null} otherwise.
-         */
+        /// Returns the owner if the given member is declared in a lexically enclosing scope, and
+        /// `null` otherwise.
         private @Nullable ClassSymbol isEnclosedIn(
             ClassSymbol startingClass, Symbol member, Types types) {
           for (ClassSymbol scope = enclosingClass(startingClass);

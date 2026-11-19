@@ -21,10 +21,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * @author chy@google.com (Christine Yang)
- * @author kmuhlrad@google.com (Katy Muhlrad)
- */
+/// @author chy@google.com (Christine Yang)
+/// @author kmuhlrad@google.com (Katy Muhlrad)
 @RunWith(JUnit4.class)
 public class GetClassOnClassTest {
   private final CompilationTestHelper compilationHelper =

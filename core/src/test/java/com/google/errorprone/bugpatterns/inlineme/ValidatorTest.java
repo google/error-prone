@@ -23,7 +23,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.safere.Pattern;
 
-/** Tests for the {@code @InlineMe} {@link Validator}. */
+/// Tests for the `@InlineMe` [Validator].
 @RunWith(JUnit4.class)
 public class ValidatorTest {
   private final CompilationTestHelper helper =

@@ -20,7 +20,7 @@ import com.google.errorprone.VisitorState;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
 
-/** A predicate on a method or constructor parameter. */
+/// A predicate on a method or constructor parameter.
 public interface ParameterPredicate {
 
   boolean matches(VarSymbol parameter, Type type, VisitorState state);

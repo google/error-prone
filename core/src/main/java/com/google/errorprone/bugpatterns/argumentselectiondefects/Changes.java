@@ -23,11 +23,9 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.sun.source.tree.Tree;
 import java.util.stream.Collectors;
 
-/**
- * Value class for holding suggested changes to method call arguments.
- *
- * @author andrewrice@google.com (Andrew Rice)
- */
+/// Value class for holding suggested changes to method call arguments.
+///
+/// @author andrewrice@google.com (Andrew Rice)
 record Changes(
     ImmutableList<Double> originalCost,
     ImmutableList<Double> assignmentCost,

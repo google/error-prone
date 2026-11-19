@@ -36,10 +36,8 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.tools.javac.util.Position;
 
-/**
- * A {@link BugChecker} that flags calls to {@link String#toLowerCase()} and {@link
- * String#toUpperCase()}, as these methods implicitly rely on the environment's default locale.
- */
+/// A [BugChecker] that flags calls to [String#toLowerCase()] and [String#toUpperCase()], as these
+/// methods implicitly rely on the environment's default locale.
 @BugPattern(
     summary =
         "Specify a `Locale` when calling `String#to{Lower,Upper}Case`. (Note: there are multiple"

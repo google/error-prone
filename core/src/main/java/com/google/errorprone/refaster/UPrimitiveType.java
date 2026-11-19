@@ -24,12 +24,10 @@ import com.sun.tools.javac.code.Symtab;
 import com.sun.tools.javac.code.Type;
 import javax.lang.model.type.TypeKind;
 
-/**
- * {@code UType} representation of primitive {@code Type} instances, specifically including the void
- * type and the null type.
- *
- * @author Louis Wasserman
- */
+/// `UType` representation of primitive `Type` instances, specifically including the void type and
+/// the null type.
+///
+/// @author Louis Wasserman
 @AutoValue
 abstract class UPrimitiveType extends UType {
 

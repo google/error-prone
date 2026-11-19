@@ -55,9 +55,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
-/**
- * @author gak@google.com (Gregory Kick)
- */
+/// @author gak@google.com (Gregory Kick)
 @BugPattern(
     summary =
         "@Multibinds is a more efficient and declarative mechanism for ensuring that a set"
@@ -74,7 +72,7 @@ public final class EmptySetMultibindingContributions extends BugChecker
           hasArgumentWithValue("complete", Matchers.<ExpressionTree>anything()),
           hasArgumentWithValue("library", Matchers.<ExpressionTree>anything()));
 
-  /** We're just not going to worry about Collections.EMPTY_SET. */
+  /// We're just not going to worry about Collections.EMPTY_SET.
   private static final Matcher<ExpressionTree> COLLECTIONS_EMPTY_SET =
       MethodMatchers.staticMethod().onClass(Collections.class.getCanonicalName()).named("emptySet");
 

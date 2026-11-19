@@ -32,11 +32,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * Test {@link UTree#unify} against real compiled ASTs.
- *
- * @author lowasser@google.com (Louis Wasserman)
- */
+/// Test [UTree#unify] against real compiled ASTs.
+///
+/// @author lowasser@google.com (Louis Wasserman)
 @RunWith(JUnit4.class)
 public class UnificationTest extends CompilerBasedTest {
 

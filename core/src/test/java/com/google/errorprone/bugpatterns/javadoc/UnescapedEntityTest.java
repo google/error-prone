@@ -24,7 +24,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** Unit tests for {@link UnescapedEntity} bug pattern. */
+/// Unit tests for [UnescapedEntity] bug pattern.
 @RunWith(JUnit4.class)
 public final class UnescapedEntityTest {
   private final CompilationTestHelper helper =

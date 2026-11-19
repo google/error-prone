@@ -35,12 +35,10 @@ import com.sun.source.tree.MethodTree;
 import java.util.Arrays;
 import java.util.List;
 
-/**
- * Checks for the existence of a JUnit3 style setUp() method in a JUnit4 test class or methods
- * annotated with a non-JUnit4 @Before annotation.
- *
- * @author glorioso@google.com (Nick Glorioso)
- */
+/// Checks for the existence of a JUnit3 style setUp() method in a JUnit4 test class or methods
+/// annotated with a non-JUnit4 @Before annotation.
+///
+/// @author glorioso@google.com (Nick Glorioso)
 @BugPattern(
     summary = "setUp() method will not be run; please add JUnit's @Before annotation",
     severity = ERROR)

@@ -61,7 +61,7 @@ import java.util.Set;
 import javax.inject.Inject;
 import javax.lang.model.element.Modifier;
 
-/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
+/// A [BugChecker]; see the associated [BugPattern] annotation for details.
 @BugPattern(
     altNames = "static-method",
     summary = "This method does not reference the enclosing instance and can be static",
@@ -220,10 +220,8 @@ public class MethodCanBeStatic extends BugChecker implements CompilationUnitTree
     return !Sets.difference(methodDetails.methodsReferenced, localMethods).isEmpty();
   }
 
-  /**
-   * Replace instance references to the method with static access (e.g. `this.foo(...)` ->
-   * `EnclosingClass.foo(...)` and `this::foo` to `EnclosingClass::foo`).
-   */
+  /// Replace instance references to the method with static access (e.g. `this.foo(...)` ->
+  /// `EnclosingClass.foo(...)` and `this::foo` to `EnclosingClass::foo`).
   private SuggestedFix fixQualifiers(VisitorState state, MethodSymbol sym, SuggestedFix f) {
     SuggestedFix.Builder builder = f.toBuilder();
     new TreeScanner<Void, Void>() {
@@ -287,7 +285,7 @@ public class MethodCanBeStatic extends BugChecker implements CompilationUnitTree
   private static final ImmutableSet<Modifier> EXCLUDED_MODIFIERS =
       immutableEnumSet(NATIVE, SYNCHRONIZED, ABSTRACT, DEFAULT);
 
-  /** Information about a {@link MethodSymbol} and whether it can be made static. */
+  /// Information about a [MethodSymbol] and whether it can be made static.
   private static final class MethodDetails {
     private final MethodTree tree;
     private boolean couldPossiblyBeStatic;
@@ -302,10 +300,8 @@ public class MethodCanBeStatic extends BugChecker implements CompilationUnitTree
     }
   }
 
-  /**
-   * Encapsulates how we should report findings. We support reporting a finding on either every
-   * affected (can be static) method, or just the first one in the file.
-   */
+  /// Encapsulates how we should report findings. We support reporting a finding on either every
+  /// affected (can be static) method, or just the first one in the file.
   private enum FindingOutputStyle {
     ONE_FINDING {
       @Override

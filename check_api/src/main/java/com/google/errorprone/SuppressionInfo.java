@@ -38,15 +38,13 @@ import java.util.Collections;
 import java.util.Set;
 import javax.lang.model.element.AnnotationMirror;
 
-/**
- * Immutable container of "suppression signals" - annotations or other information gathered from
- * source - that can be used to determine if a specific {@link Suppressible} object should be
- * considered suppressed.
- *
- * <p>SuppressionInfo instances are obtained by starting with the {@link #EMPTY} instance, then
- * getting new instances by calling {@link #withExtendedSuppressions} with symbols discovered as you
- * descend a program tree.
- */
+/// Immutable container of "suppression signals" - annotations or other information gathered from
+/// source - that can be used to determine if a specific [Suppressible] object should be considered
+/// suppressed.
+///
+/// SuppressionInfo instances are obtained by starting with the [#EMPTY] instance, then getting new
+/// instances by calling [#withExtendedSuppressions] with symbols discovered as you descend a
+/// program tree.
 @Immutable
 @CheckReturnValue
 public final class SuppressionInfo {
@@ -61,10 +59,8 @@ public final class SuppressionInfo {
       ClassName.of("android.annotation.SuppressLint");
   private static final Supplier<Name> GENERATED = memoize(state -> state.getName("Generated"));
 
-  /**
-   * Strings present in {@code @SuppressWarnings} or {@code @SuppressLint}, except {@code "all"}
-   * (which sets {@link #hasSuppressWarningsAll} instead).
-   */
+  /// Strings present in `@SuppressWarnings` or `@SuppressLint`, except `"all"` (which sets
+  /// [#hasSuppressWarningsAll] instead).
   private final ImmutableSet<String> suppressWarningsStrings;
 
   private final boolean hasSuppressWarningsAll;
@@ -99,13 +95,11 @@ public final class SuppressionInfo {
     return false;
   }
 
-  /**
-   * Returns true if this checker should be considered suppressed given the signals present in this
-   * object.
-   *
-   * @param suppressible Holds information about the suppressibilty of a checker
-   * @param suppressedInGeneratedCode true if this checker instance should be considered suppressed
-   */
+  /// Returns true if this checker should be considered suppressed given the signals present in this
+  /// object.
+  ///
+  /// @param suppressible Holds information about the suppressibilty of a checker
+  /// @param suppressedInGeneratedCode true if this checker instance should be considered suppressed
   public SuppressedState suppressedState(
       Suppressible suppressible, boolean suppressedInGeneratedCode, VisitorState state) {
     if (inGeneratedCode && suppressedInGeneratedCode) {
@@ -124,11 +118,9 @@ public final class SuppressionInfo {
     return SuppressedState.UNSUPPRESSED;
   }
 
-  /**
-   * Generates the {@link SuppressionInfo} for a {@link CompilationUnitTree}. This differs in that
-   * {@code isGenerated} is determined by inspecting the annotations of the outermost class so that
-   * matchers on {@link CompilationUnitTree} will also be suppressed.
-   */
+  /// Generates the [SuppressionInfo] for a [CompilationUnitTree]. This differs in that
+  /// `isGenerated` is determined by inspecting the annotations of the outermost class so that
+  /// matchers on [CompilationUnitTree] will also be suppressed.
   public SuppressionInfo forCompilationUnit(CompilationUnitTree tree, VisitorState state) {
     var visitor =
         new SimpleTreeVisitor<Void, Void>() {
@@ -145,21 +137,19 @@ public final class SuppressionInfo {
         suppressWarningsStrings, hasSuppressWarningsAll, customSuppressions, visitor.generated);
   }
 
-  /**
-   * Returns an instance of {@code SuppressionInfo} that takes into account any suppression signals
-   * present on {@code sym} as well as those already stored in {@code this}.
-   *
-   * <p>Checks suppressions for any {@code @SuppressWarnings}, Android's {@code SuppressLint}, and
-   * custom suppression annotations described by {@code customSuppressionAnnosToLookFor}.
-   *
-   * <p>We do not modify the existing suppression sets, so they can be restored when moving up the
-   * tree. We also avoid copying the suppression sets if the next node to explore does not have any
-   * suppressed warnings or custom suppression annotations. This is the common case.
-   *
-   * @param sym The {@code Symbol} for the AST node currently being scanned
-   * @param state VisitorState for checking the current tree, as well as for getting the {@code
-   *     SuppressWarnings symbol type}.
-   */
+  /// Returns an instance of `SuppressionInfo` that takes into account any suppression signals
+  /// present on `sym` as well as those already stored in `this`.
+  ///
+  /// Checks suppressions for any `@SuppressWarnings`, Android's `SuppressLint`, and custom
+  /// suppression annotations described by `customSuppressionAnnosToLookFor`.
+  ///
+  /// We do not modify the existing suppression sets, so they can be restored when moving up the
+  /// tree. We also avoid copying the suppression sets if the next node to explore does not have any
+  /// suppressed warnings or custom suppression annotations. This is the common case.
+  ///
+  /// @param sym The `Symbol` for the AST node currently being scanned
+  /// @param state VisitorState for checking the current tree, as well as for getting the
+  ///   `SuppressWarnings symbol type`.
   public SuppressionInfo withExtendedSuppressions(
       Symbol sym, VisitorState state, Set<? extends Name> customSuppressionAnnosToLookFor) {
     boolean newInGeneratedCode = inGeneratedCode || isGenerated(sym, state);

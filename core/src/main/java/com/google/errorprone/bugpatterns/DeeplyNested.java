@@ -54,7 +54,7 @@ import java.util.Collections;
 import java.util.List;
 import javax.inject.Inject;
 
-/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
+/// A [BugChecker]; see the associated [BugPattern] annotation for details.
 @BugPattern(
     summary = "Very deeply nested code may lead to StackOverflowErrors during compilation",
     severity = WARNING)

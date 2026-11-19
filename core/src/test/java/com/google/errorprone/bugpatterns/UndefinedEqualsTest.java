@@ -24,11 +24,9 @@ import junitparams.Parameters;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-/**
- * Unit tests for {@link UndefinedEquals}
- *
- * @author eleanorh@google.com (Eleanor Harris)
- */
+/// Unit tests for [UndefinedEquals]
+///
+/// @author eleanorh@google.com (Eleanor Harris)
 @RunWith(JUnitParamsRunner.class)
 public final class UndefinedEqualsTest {
   private final CompilationTestHelper compilationHelper =

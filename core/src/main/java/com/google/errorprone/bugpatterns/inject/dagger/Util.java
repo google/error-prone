@@ -56,7 +56,7 @@ import java.util.EnumSet;
 import java.util.Set;
 import javax.lang.model.element.Modifier;
 
-/** Matchers and utilities useful to Dagger bug checkers. */
+/// Matchers and utilities useful to Dagger bug checkers.
 final class Util {
 
   private Util() {}
@@ -70,10 +70,8 @@ final class Util {
           hasAnnotation("dagger.multibindings.ElementsIntoSet"),
           hasAnnotation("dagger.multibindings.IntoMap"));
 
-  /**
-   * Matches Dagger 2 {@linkplain dagger.Module modules} and {@linkplain
-   * dagger.producers.ProducersModule producer modules}.
-   */
+  /// Matches Dagger 2 [modules][dagger.Module] and [producer
+  /// modules][dagger.producers.ProducersModule].
   static final Matcher<Tree> IS_DAGGER_2_MODULE =
       annotations(
           AT_LEAST_ONE,
@@ -90,7 +88,7 @@ final class Util {
                           "library"))),
               isType("dagger.producers.ProducerModule")));
 
-  /** Matches an annotation that has an argument for at least one of the given parameters. */
+  /// Matches an annotation that has an argument for at least one of the given parameters.
   private static Matcher<AnnotationTree> hasAnyParameter(String... parameters) {
     return anyOf(
         transform(
@@ -105,15 +103,11 @@ final class Util {
         return t.getExtendsClause() == null;
       };
 
-  /**
-   * Matches Dagger 2 {@linkplain dagger.Module modules} and {@linkplain
-   * dagger.producers.ProducersModule producer modules} that could contain abstract binding methods.
-   *
-   * <ul>
-   *   <li>an interface or a class with no superclass
-   *   <li>no instance {@link dagger.Provides} or {@link dagger.producers.Produces} methods
-   * </ul>
-   */
+  /// Matches Dagger 2 [modules][dagger.Module] and [producer
+  /// modules][dagger.producers.ProducersModule] that could contain abstract binding methods.
+  ///
+  /// - an interface or a class with no superclass
+  /// - no instance [dagger.Provides] or [dagger.producers.Produces] methods
   static final Matcher<ClassTree> CAN_HAVE_ABSTRACT_BINDING_METHODS =
       allOf(
           IS_DAGGER_2_MODULE,
@@ -123,7 +117,7 @@ final class Util {
                   Matchers.<MethodTree>allOf(
                       ANNOTATED_WITH_PRODUCES_OR_PROVIDES, not(hasModifier(STATIC))))));
 
-  /** Returns the annotation on {@code classTree} whose type's FQCN is {@code annotationName}. */
+  /// Returns the annotation on `classTree` whose type's FQCN is `annotationName`.
   static Optional<AnnotationTree> findAnnotation(String annotationName, ClassTree classTree) {
     for (AnnotationTree annotationTree : classTree.getModifiers().getAnnotations()) {
       ClassSymbol annotationClass = (ClassSymbol) getSymbol(annotationTree.getAnnotationType());
@@ -141,16 +135,12 @@ final class Util {
             return isGeneratedConstructor(t);
           });
 
-  /**
-   * Returns a fix that changes a concrete class to an abstract class.
-   *
-   * <ul>
-   *   <li>Removes {@code final} if it was there.
-   *   <li>Adds {@code abstract} if it wasn't there.
-   *   <li>Adds a private empty constructor if the class was {@code final} and had only a default
-   *       constructor.
-   * </ul>
-   */
+  /// Returns a fix that changes a concrete class to an abstract class.
+  ///
+  /// - Removes `final` if it was there.
+  /// - Adds `abstract` if it wasn't there.
+  /// - Adds a private empty constructor if the class was `final` and had only a default
+  ///   constructor.
   static SuggestedFix.Builder makeConcreteClassAbstract(ClassTree classTree, VisitorState state) {
     Set<Modifier> flags = EnumSet.noneOf(Modifier.class);
     flags.addAll(classTree.getModifiers().getFlags());

@@ -37,22 +37,16 @@ import org.checkerframework.errorprone.dataflow.cfg.ControlFlowGraph;
 import org.checkerframework.errorprone.dataflow.cfg.UnderlyingAST;
 import org.checkerframework.errorprone.dataflow.cfg.builder.CFGBuilder;
 
-/**
- * An interface to the "trusting" nullness analysis. This variant "trusts" {@code Nullable}
- * annotations, similar to how a modular nullness checker like the checkerframework's would, meaning
- * method parameters, fields, and method returns are assumed {@link Nullness#NULLABLE} only if
- * annotated so.
- */
+/// An interface to the "trusting" nullness analysis. This variant "trusts" `Nullable` annotations,
+/// similar to how a modular nullness checker like the checkerframework's would, meaning method
+/// parameters, fields, and method returns are assumed [Nullness#NULLABLE] only if annotated so.
 public final class TrustingNullnessAnalysis implements Serializable {
 
   private static final Context.Key<TrustingNullnessAnalysis> TRUSTING_NULLNESS_KEY =
       new Context.Key<>();
 
-  /**
-   * Retrieve an instance of {@link TrustingNullnessAnalysis} from the {@code context}. If there is
-   * no {@link TrustingNullnessAnalysis} currently in the {@code context}, create one, insert it,
-   * and return it.
-   */
+  /// Retrieve an instance of [TrustingNullnessAnalysis] from the `context`. If there is no
+  /// [TrustingNullnessAnalysis] currently in the `context`, create one, insert it, and return it.
   public static TrustingNullnessAnalysis instance(Context context) {
     TrustingNullnessAnalysis instance = context.get(TRUSTING_NULLNESS_KEY);
     if (instance == null) {
@@ -67,13 +61,11 @@ public final class TrustingNullnessAnalysis implements Serializable {
   // Use #instance to instantiate
   private TrustingNullnessAnalysis() {}
 
-  /**
-   * Returns the {@link Nullness} of the leaf of {@code exprPath}.
-   *
-   * <p>If the leaf required the compiler to generate autoboxing or autounboxing calls, {@code
-   * getNullness} returns the {@code Nullness} <i>after</i> the boxing/unboxing. This implies that,
-   * in those cases, it will always return {@code NONNULL}.
-   */
+  /// Returns the [Nullness] of the leaf of `exprPath`.
+  ///
+  /// If the leaf required the compiler to generate autoboxing or autounboxing calls, `getNullness`
+  /// returns the `Nullness` *after* the boxing/unboxing. This implies that, in those cases, it will
+  /// always return `NONNULL`.
   public Nullness getNullness(TreePath exprPath, Context context) {
     try {
       nullnessPropagation.setContext(context).setCompilationUnit(exprPath.getCompilationUnit());
@@ -83,10 +75,8 @@ public final class TrustingNullnessAnalysis implements Serializable {
     }
   }
 
-  /**
-   * Returns {@link Nullness} of the initializer of the {@link VariableTree} at the leaf of the
-   * given {@code fieldDeclPath}. Returns {@link Nullness#NULL} should there be no initializer.
-   */
+  /// Returns [Nullness] of the initializer of the [VariableTree] at the leaf of the given
+  /// `fieldDeclPath`. Returns [Nullness#NULL] should there be no initializer.
   // TODO(kmb): Fold this functionality into Dataflow.expressionDataflow
   public Nullness getFieldInitializerNullness(TreePath fieldDeclPath, Context context) {
     Tree decl = fieldDeclPath.getLeaf();

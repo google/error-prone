@@ -35,7 +35,7 @@ import com.sun.source.tree.MethodInvocationTree;
 import java.util.List;
 import org.safere.Pattern;
 
-/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
+/// A [BugChecker]; see the associated [BugPattern] annotation for details.
 @BugPattern(
     summary = "There is no need to use String.format() when all the arguments are literals.",
     severity = WARNING)
@@ -67,13 +67,11 @@ public final class StringFormatWithLiteral extends BugChecker
     return Description.NO_MATCH;
   }
 
-  /**
-   * Should only format String.format() invocations where all the arguments are literals (format
-   * string included). Format strings (first argument) as variables or constants are excluded from
-   * refactoring. The refactoring also has an allowlist of "non trivial" formatting specifiers. This
-   * is done since there are some instances where the String.format() invocation is justified even
-   * with a CONSTANT but non-literal format string.
-   */
+  /// Should only format String.format() invocations where all the arguments are literals (format
+  /// string included). Format strings (first argument) as variables or constants are excluded from
+  /// refactoring. The refactoring also has an allowlist of "non trivial" formatting specifiers.
+  /// This is done since there are some instances where the String.format() invocation is justified
+  /// even with a CONSTANT but non-literal format string.
   private static boolean shouldRefactorStringFormat(
       ExpressionTree formatString, List<? extends ExpressionTree> arguments) {
     if (!(formatString instanceof LiteralTree literalTree)
@@ -89,10 +87,8 @@ public final class StringFormatWithLiteral extends BugChecker
     return !noSpecifierFormatBase.contains("%");
   }
 
-  /**
-   * Formats the string originally on the String.format to be a unified string with all the literal
-   * parameters, when available.
-   */
+  /// Formats the string originally on the String.format to be a unified string with all the literal
+  /// parameters, when available.
   private static String getFormattedUnifiedString(
       ExpressionTree formatString, List<? extends ExpressionTree> arguments) {
     String unescapedFormatString =

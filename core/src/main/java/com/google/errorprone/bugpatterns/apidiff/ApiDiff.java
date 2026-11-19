@@ -22,22 +22,18 @@ import com.google.common.collect.Multimap;
 import com.google.errorprone.bugpatterns.apidiff.ApiDiffProto.Diff;
 import java.util.Set;
 
-/**
- * The difference between two APIs.
- *
- * @param unsupportedClasses Binary names of classes only present in the new API.
- * @param unsupportedMembersByClass Members only present in the new API, grouped by binary name of
- *     their declaring class.
- */
+/// The difference between two APIs.
+///
+/// @param unsupportedClasses Binary names of classes only present in the new API.
+/// @param unsupportedMembersByClass Members only present in the new API, grouped by binary name of
+///   their declaring class.
 public record ApiDiff(
     ImmutableSet<String> unsupportedClasses,
     ImmutableSetMultimap<String, ClassMemberKey> unsupportedMembersByClass) {
-  /**
-   * A per class unique identifier for a field or method.
-   *
-   * @param identifier The simple name of the member.
-   * @param descriptor The JVMS 4.3 member descriptor.
-   */
+  /// A per class unique identifier for a field or method.
+  ///
+  /// @param identifier The simple name of the member.
+  /// @param descriptor The JVMS 4.3 member descriptor.
   public record ClassMemberKey(String identifier, String descriptor) {
     public static ClassMemberKey create(String identifier, String descriptor) {
       return new ClassMemberKey(identifier, descriptor);
@@ -49,12 +45,12 @@ public record ApiDiff(
     }
   }
 
-  /** Returns true if the class with the given binary name is unsupported. */
+  /// Returns true if the class with the given binary name is unsupported.
   boolean isClassUnsupported(String className) {
     return unsupportedClasses().contains(className);
   }
 
-  /** Returns true if the member with the given declaring class is unsupported. */
+  /// Returns true if the member with the given declaring class is unsupported.
   boolean isMemberUnsupported(String className, ClassMemberKey memberKey) {
     return unsupportedMembersByClass().containsEntry(className, memberKey)
         || unsupportedMembersByClass()
@@ -68,7 +64,7 @@ public record ApiDiff(
         ImmutableSetMultimap.copyOf(unsupportedMembersByClass));
   }
 
-  /** Converts a {@link Diff} to a {@link ApiDiff}. */
+  /// Converts a [Diff] to a [ApiDiff].
   public static ApiDiff fromProto(Diff diff) {
     ImmutableSet.Builder<String> unsupportedClasses = ImmutableSet.builder();
     ImmutableSetMultimap.Builder<String, ClassMemberKey> unsupportedMembersByClass =
@@ -90,7 +86,7 @@ public record ApiDiff(
     return new ApiDiff(unsupportedClasses.build(), unsupportedMembersByClass.build());
   }
 
-  /** Converts a {@link ApiDiff} to a {@link ApiDiffProto.Diff}. */
+  /// Converts a [ApiDiff] to a [ApiDiffProto.Diff].
   public Diff toProto() {
     ApiDiffProto.Diff.Builder builder = ApiDiffProto.Diff.newBuilder();
     for (String className : unsupportedClasses()) {

@@ -42,7 +42,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import javax.lang.model.element.ElementKind;
 
-/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
+/// A [BugChecker]; see the associated [BugPattern] annotation for details.
 @BugPattern(
     summary = "Switches on enum types should either handle all values, or have a default case.",
     severity = WARNING)
@@ -127,16 +127,12 @@ public class MissingCasesInEnumSwitch extends BugChecker
         ASTHelpers.enumValues(switchType.asElement()), getHandledEnumValues(cases));
   }
 
-  /**
-   * Build the diagnostic message.
-   *
-   * <p>Examples:
-   *
-   * <ul>
-   *   <li>Non-exhaustive switch, expected cases for: FOO
-   *   <li>Non-exhaustive switch, expected cases for: FOO, BAR, BAZ, and 42 others.
-   * </ul>
-   */
+  /// Build the diagnostic message.
+  ///
+  /// Examples:
+  ///
+  /// - Non-exhaustive switch, expected cases for: FOO
+  /// - Non-exhaustive switch, expected cases for: FOO, BAR, BAZ, and 42 others.
   private static String buildMessage(String errorMessage, Set<String> unhandled) {
     StringBuilder message = new StringBuilder(errorMessage);
     message.append(": ");
@@ -151,11 +147,9 @@ public class MissingCasesInEnumSwitch extends BugChecker
     return message.toString();
   }
 
-  /**
-   * Determines whether the given case tree has a "guarded" pattern. As defined in the JLS,
-   * "unguarded" means that either there is no guard or the guard is the boolean literal `true`, and
-   * "guarded" is the logical negation of "unguarded".
-   */
+  /// Determines whether the given case tree has a "guarded" pattern. As defined in the JLS,
+  /// "unguarded" means that either there is no guard or the guard is the boolean literal `true`,
+  /// and "guarded" is the logical negation of "unguarded".
   private static boolean isGuarded(CaseTree caseTree) {
     // Not a pattern
     if (!SwitchUtils.hasCasePattern(caseTree)) {

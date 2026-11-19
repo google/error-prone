@@ -21,7 +21,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** {@link Java8ApiChecker}Test */
+/// [Java8ApiChecker]Test
 @RunWith(JUnit4.class)
 public class Java8ApiCheckerTest {
 

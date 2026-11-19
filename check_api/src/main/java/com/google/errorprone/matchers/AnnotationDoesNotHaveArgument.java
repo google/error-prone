@@ -19,21 +19,17 @@ package com.google.errorprone.matchers;
 import com.google.errorprone.VisitorState;
 import com.sun.source.tree.AnnotationTree;
 
-/**
- * Matches an annotation that does not have a particular argument, possibly because the default
- * value is being used.
- *
- * @author mwacker@google.com (Mike Wacker)
- */
+/// Matches an annotation that does not have a particular argument, possibly because the default
+/// value is being used.
+///
+/// @author mwacker@google.com (Mike Wacker)
 public class AnnotationDoesNotHaveArgument implements Matcher<AnnotationTree> {
 
   private final String name;
 
-  /**
-   * Creates a new matcher.
-   *
-   * @param name the name of the argument to search for
-   */
+  /// Creates a new matcher.
+  ///
+  /// @param name the name of the argument to search for
   public AnnotationDoesNotHaveArgument(String name) {
     this.name = name;
   }

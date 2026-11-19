@@ -35,11 +35,9 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Optional;
 
-/**
- * Matches usages of {@code new BigDecimal(double)} which lose precision.
- *
- * @author endobson@google.com (Eric Dobson)
- */
+/// Matches usages of `new BigDecimal(double)` which lose precision.
+///
+/// @author endobson@google.com (Eric Dobson)
 @BugPattern(summary = "new BigDecimal(double) loses precision in this case.", severity = WARNING)
 public class BigDecimalLiteralDouble extends BugChecker implements NewClassTreeMatcher {
 

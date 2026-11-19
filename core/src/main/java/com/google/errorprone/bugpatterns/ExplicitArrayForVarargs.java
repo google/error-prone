@@ -43,7 +43,7 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type.ArrayType;
 import java.util.List;
 
-/** A {@link BugChecker}; see the summary. */
+/// A [BugChecker]; see the summary.
 @BugPattern(summary = "Avoid explicit array creation for varargs", severity = WARNING)
 public final class ExplicitArrayForVarargs extends BugChecker
     implements MethodInvocationTreeMatcher, NewClassTreeMatcher {

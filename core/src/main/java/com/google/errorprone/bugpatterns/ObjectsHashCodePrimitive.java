@@ -32,11 +32,9 @@ import com.google.errorprone.matchers.Matcher;
 import com.sun.source.tree.MethodInvocationTree;
 import java.util.Objects;
 
-/**
- * Check for calls to Objects' {@link Objects#hashCode} with a primitive parameter.
- *
- * @author seibelsabrina@google.com (Sabrina Seibel)
- */
+/// Check for calls to Objects' [Objects#hashCode] with a primitive parameter.
+///
+/// @author seibelsabrina@google.com (Sabrina Seibel)
 @BugPattern(
     summary = "Objects.hashCode(Object o) should not be passed a primitive value",
     severity = WARNING)

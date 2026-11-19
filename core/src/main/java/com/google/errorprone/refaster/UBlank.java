@@ -32,7 +32,7 @@ import com.sun.tools.javac.util.ListBuffer;
 import java.util.List;
 import java.util.UUID;
 
-/** Equivalent to a no-arg block placeholder invocation. */
+/// Equivalent to a no-arg block placeholder invocation.
 record UBlank(UUID unique) implements UStatement {
   static UBlank create() {
     return new UBlank(UUID.randomUUID());

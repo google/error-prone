@@ -116,15 +116,13 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.function.BiPredicate;
 
-/**
- * A base class for implementing bug checkers. The {@code BugChecker} supplies a Scanner
- * implementation for this checker, making it easy to use a single checker. Subclasses should also
- * implement one or more of the {@code *Matcher} interfaces in this class to declare which tree node
- * types to match against.
- *
- * @author Colin Decker
- * @author Eddie Aftandilian (eaftan@google.com)
- */
+/// A base class for implementing bug checkers. The `BugChecker` supplies a Scanner implementation
+/// for this checker, making it easy to use a single checker. Subclasses should also implement one
+/// or more of the `*Matcher` interfaces in this class to declare which tree node types to match
+/// against.
+///
+/// @author Colin Decker
+/// @author Eddie Aftandilian (eaftan@google.com)
 public abstract class BugChecker implements Suppressible, Serializable {
   private final BugCheckerInfo info;
   private final BiPredicate<Set<? extends Name>, VisitorState> checkSuppression;
@@ -156,85 +154,77 @@ public abstract class BugChecker implements Suppressible, Serializable {
     };
   }
 
-  /** Helper to create a Description for the common case where there is a fix. */
+  /// Helper to create a Description for the common case where there is a fix.
   @CheckReturnValue
   public Description describeMatch(ErrorPronePosition position, Fix fix) {
     return buildDescription(position).addFix(fix).build();
   }
 
-  /** Helper to create a Description for the common case where there is a fix. */
+  /// Helper to create a Description for the common case where there is a fix.
   @CheckReturnValue
   public Description describeMatch(Tree node, Fix fix) {
     return describeMatch(ErrorPronePosition.from(node), fix);
   }
 
-  /** Helper to create a Description for the common case where there is a fix. */
+  /// Helper to create a Description for the common case where there is a fix.
   @CheckReturnValue
   public Description describeMatch(JCTree node, Fix fix) {
     return describeMatch(ErrorPronePosition.from(node), fix);
   }
 
-  /** Helper to create a Description for the common case where there is a fix. */
+  /// Helper to create a Description for the common case where there is a fix.
   @CheckReturnValue
   public Description describeMatch(DiagnosticPosition position, Fix fix) {
     return describeMatch(ErrorPronePosition.from(position), fix);
   }
 
-  /** Helper to create a Description for the common case where there is no fix. */
+  /// Helper to create a Description for the common case where there is no fix.
   @CheckReturnValue
   public Description describeMatch(ErrorPronePosition position) {
     return buildDescription(position).build();
   }
 
-  /** Helper to create a Description for the common case where there is no fix. */
+  /// Helper to create a Description for the common case where there is no fix.
   @CheckReturnValue
   public Description describeMatch(Tree node) {
     return describeMatch(ErrorPronePosition.from(node));
   }
 
-  /** Helper to create a Description for the common case where there is no fix. */
+  /// Helper to create a Description for the common case where there is no fix.
   @CheckReturnValue
   public Description describeMatch(JCTree node) {
     return describeMatch(ErrorPronePosition.from(node));
   }
 
-  /** Helper to create a Description for the common case where there is no fix. */
+  /// Helper to create a Description for the common case where there is no fix.
   @CheckReturnValue
   public Description describeMatch(DiagnosticPosition position) {
     return describeMatch(ErrorPronePosition.from(position));
   }
 
-  /**
-   * Returns a Description builder, which allows you to customize the diagnostic with a custom
-   * message or multiple fixes.
-   */
+  /// Returns a Description builder, which allows you to customize the diagnostic with a custom
+  /// message or multiple fixes.
   @CheckReturnValue
   public Description.Builder buildDescription(ErrorPronePosition position) {
     return Description.builder(position, canonicalName(), linkUrl(), message());
   }
 
-  /**
-   * Returns a Description builder, which allows you to customize the diagnostic with a custom
-   * message or multiple fixes.
-   */
+  /// Returns a Description builder, which allows you to customize the diagnostic with a custom
+  /// message or multiple fixes.
   @CheckReturnValue
   public Description.Builder buildDescription(Tree node) {
     return buildDescription(ErrorPronePosition.from(node));
   }
 
-  /**
-   * Returns a Description builder, which allows you to customize the diagnostic with a custom
-   * message or multiple fixes.
-   */
+  /// Returns a Description builder, which allows you to customize the diagnostic with a custom
+  /// message or multiple fixes.
   @CheckReturnValue
   public Description.Builder buildDescription(DiagnosticPosition position) {
     return buildDescription(ErrorPronePosition.from(position));
   }
 
-  /**
-   * Returns a Description builder, which allows you to customize the diagnostic with a custom
-   * message or multiple fixes.
-   */
+  /// Returns a Description builder, which allows you to customize the diagnostic with a custom
+  /// message or multiple fixes.
   // This overload exists purely to disambiguate for JCTree.
   @CheckReturnValue
   public Description.Builder buildDescription(JCTree tree) {
@@ -282,10 +272,8 @@ public abstract class BugChecker implements Suppressible, Serializable {
     return checkSuppression.test(annotations, s);
   }
 
-  /**
-   * Returns true if the given tree is annotated with a {@code @SuppressWarnings} that disables this
-   * bug checker.
-   */
+  /// Returns true if the given tree is annotated with a `@SuppressWarnings` that disables this bug
+  /// checker.
   public boolean isSuppressed(Tree tree, VisitorState state) {
     Symbol sym = getDeclaredSymbol(tree);
     /*
@@ -297,10 +285,8 @@ public abstract class BugChecker implements Suppressible, Serializable {
     return sym != null && isSuppressed(sym, state);
   }
 
-  /**
-   * Returns true if the given symbol is annotated with a {@code @SuppressWarnings} or other
-   * annotation that disables this bug checker.
-   */
+  /// Returns true if the given symbol is annotated with a `@SuppressWarnings` or other annotation
+  /// that disables this bug checker.
   /*
    * TODO(cpovirk): Would we consider deleting this overload (or at least making it `private`)? Its
    * callers appear to all have access to a Tree, and callers might accidentally pass
@@ -328,7 +314,7 @@ public abstract class BugChecker implements Suppressible, Serializable {
               .map(a -> state.getName(a.getName()))
               .collect(toImmutableSet()));
 
-  /** Computes a RangeSet of code regions which are suppressed by this bug checker. */
+  /// Computes a RangeSet of code regions which are suppressed by this bug checker.
   public ImmutableRangeSet<Integer> suppressedRegions(VisitorState state) {
     TreeRangeSet<Integer> suppressedRegions = TreeRangeSet.create();
     new TreeScanner<Void, Void>() {
@@ -628,12 +614,10 @@ public abstract class BugChecker implements Suppressible, Serializable {
         customSuppressionAnnotations());
   }
 
-  /**
-   * A {@link TreePathScanner} which skips trees which are suppressed for this check.
-   *
-   * @param <R> the type returned by each scanner method
-   * @param <P> the type of the parameter passed to each scanner method
-   */
+  /// A [TreePathScanner] which skips trees which are suppressed for this check.
+  ///
+  /// @param <R> the type returned by each scanner method
+  /// @param <P> the type of the parameter passed to each scanner method
   protected class SuppressibleTreePathScanner<R, P> extends TreePathScanner<R, P> {
 
     protected final VisitorState state;

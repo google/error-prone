@@ -31,12 +31,10 @@ import com.sun.source.tree.ReturnTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.util.TreeScanner;
 
-/**
- * ToString should not return null.
- *
- * @author eleanorh@google.com (Eleanor Harris)
- * @author siyuanl@google.com (Siyuan Liu)
- */
+/// ToString should not return null.
+///
+/// @author eleanorh@google.com (Eleanor Harris)
+/// @author siyuanl@google.com (Siyuan Liu)
 @BugPattern(
     summary = "An implementation of Object.toString() should never return null.",
     severity = WARNING)

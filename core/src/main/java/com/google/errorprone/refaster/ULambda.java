@@ -35,11 +35,9 @@ import com.sun.tools.javac.util.List;
 import com.sun.tools.javac.util.ListBuffer;
 import java.util.Optional;
 
-/**
- * {@code UTree} representation of a {@code LambdaExpressionTree}.
- *
- * @author lowasser@google.com (Louis Wasserman)
- */
+/// `UTree` representation of a `LambdaExpressionTree`.
+///
+/// @author lowasser@google.com (Louis Wasserman)
 @AutoValue
 abstract class ULambda extends UExpression implements LambdaExpressionTree {
   public static ULambda create(

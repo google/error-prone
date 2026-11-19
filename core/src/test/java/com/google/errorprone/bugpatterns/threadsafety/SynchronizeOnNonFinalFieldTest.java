@@ -21,7 +21,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** {@link SynchronizeOnNonFinalFieldTest}Test */
+/// [SynchronizeOnNonFinalFieldTest]Test
 @RunWith(JUnit4.class)
 public class SynchronizeOnNonFinalFieldTest {
   private final CompilationTestHelper compilationHelper =

@@ -25,11 +25,9 @@ import com.sun.source.tree.TreeVisitor;
 import com.sun.tools.javac.tree.JCTree.JCMemberReference;
 import org.jspecify.annotations.Nullable;
 
-/**
- * {@code UTree} representation of a {@code MemberReferenceTree}
- *
- * @author lowasser@google.com (Louis Wasserman)
- */
+/// `UTree` representation of a `MemberReferenceTree`
+///
+/// @author lowasser@google.com (Louis Wasserman)
 @AutoValue
 abstract class UMemberReference extends UExpression implements MemberReferenceTree {
   public static UMemberReference create(

@@ -60,11 +60,9 @@ import java.util.Optional;
 import javax.inject.Inject;
 import org.jspecify.annotations.Nullable;
 
-/**
- * A {@link BugChecker}; see the associated {@link BugPattern} annotation for details.
- *
- * @author mboyington@google.com (Marcos Boyington)
- */
+/// A [BugChecker]; see the associated [BugPattern] annotation for details.
+///
+/// @author mboyington@google.com (Marcos Boyington)
 @BugPattern(
     name = "ThreadSafe",
     summary = "Type declaration annotated with @ThreadSafe is not thread safe",
@@ -229,7 +227,7 @@ public class ThreadSafeChecker extends BugChecker
 
   // Anonymous classes
 
-  /** Check anonymous implementations of {@code @ThreadSafe} types. */
+  /// Check anonymous implementations of `@ThreadSafe` types.
   private Description handleAnonymousClass(
       ClassTree tree, VisitorState state, ThreadSafeAnalysis analysis) {
     ClassSymbol sym = getSymbol(tree);
@@ -255,7 +253,7 @@ public class ThreadSafeChecker extends BugChecker
 
   // Strong behavioural subtyping
 
-  /** Check for classes without {@code @ThreadSafe} that have threadsafe supertypes. */
+  /// Check for classes without `@ThreadSafe` that have threadsafe supertypes.
   private Description checkSubtype(ClassTree tree, VisitorState state) {
     ClassSymbol sym = getSymbol(tree);
     Type superType = threadSafeSupertype(sym, state);
@@ -276,10 +274,8 @@ public class ThreadSafeChecker extends BugChecker
     return buildDescription(tree).setMessage(message).addFix(fix.build()).build();
   }
 
-  /**
-   * Returns the type of the first superclass or superinterface in the hierarchy annotated with
-   * {@code @ThreadSafe}, or {@code null} if no such super type exists.
-   */
+  /// Returns the type of the first superclass or superinterface in the hierarchy annotated with
+  /// `@ThreadSafe`, or `null` if no such super type exists.
   private static @Nullable Type threadSafeSupertype(Symbol sym, VisitorState state) {
     for (Type superType : state.getTypes().closure(sym.type)) {
       if (superType.asElement().equals(sym)) {

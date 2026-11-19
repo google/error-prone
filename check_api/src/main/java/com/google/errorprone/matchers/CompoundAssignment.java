@@ -23,7 +23,7 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.Tree.Kind;
 import java.util.Set;
 
-/** Matcher for a compound-assignment operator expression. */
+/// Matcher for a compound-assignment operator expression.
 public class CompoundAssignment implements Matcher<CompoundAssignmentTree> {
 
   private static final ImmutableSet<Kind> COMPOUND_ASSIGNMENT_OPERATORS =
@@ -44,17 +44,15 @@ public class CompoundAssignment implements Matcher<CompoundAssignmentTree> {
   private final Matcher<ExpressionTree> receiverMatcher;
   private final Matcher<ExpressionTree> expressionMatcher;
 
-  /**
-   * Creates a new compound-assignment operator matcher, which matches a compound assignment
-   * expression with one of a set of operators and whose receiver and expression match the given
-   * matchers.
-   *
-   * @param operators The set of matching compound-assignment operators. These are drawn from the
-   *     {@link Kind} enum values which link to {@link CompoundAssignmentTree} in their javadoc.
-   * @param receiverMatcher The matcher which must match the receiver which will be assigned to.
-   * @param expressionMatcher The matcher which must match the right-hand expression to the compound
-   *     assignment.
-   */
+  /// Creates a new compound-assignment operator matcher, which matches a compound assignment
+  /// expression with one of a set of operators and whose receiver and expression match the given
+  /// matchers.
+  ///
+  /// @param operators The set of matching compound-assignment operators. These are drawn from the
+  ///   [Kind] enum values which link to [CompoundAssignmentTree] in their javadoc.
+  /// @param receiverMatcher The matcher which must match the receiver which will be assigned to.
+  /// @param expressionMatcher The matcher which must match the right-hand expression to the
+  ///   compound assignment.
   public CompoundAssignment(
       Set<Kind> operators,
       Matcher<ExpressionTree> receiverMatcher,
@@ -79,10 +77,8 @@ public class CompoundAssignment implements Matcher<CompoundAssignmentTree> {
         && expressionMatcher.matches(compoundAssignmentTree.getExpression(), state);
   }
 
-  /**
-   * Returns the provided set of operators if they are all compound-assignment operators. Otherwise,
-   * throws an IllegalArgumentException.
-   */
+  /// Returns the provided set of operators if they are all compound-assignment operators.
+  /// Otherwise, throws an IllegalArgumentException.
   private static Set<Kind> validateOperators(Set<Kind> kinds) {
     for (Kind kind : kinds) {
       if (!COMPOUND_ASSIGNMENT_OPERATORS.contains(kind)) {

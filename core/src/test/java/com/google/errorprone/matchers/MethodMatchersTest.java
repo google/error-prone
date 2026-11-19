@@ -41,11 +41,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** {@link MethodMatchers}Test */
+/// [MethodMatchers]Test
 @RunWith(JUnit4.class)
 public class MethodMatchersTest {
 
-  /** A bugchecker to test constructor matching. */
+  /// A bugchecker to test constructor matching.
   @BugPattern(summary = "Deletes constructors", severity = ERROR)
   public static class ConstructorDeleter extends BugChecker
       implements BugChecker.MethodInvocationTreeMatcher,
@@ -172,7 +172,7 @@ public class MethodMatchersTest {
         .doTest();
   }
 
-  /** This is javadoc. */
+  /// This is javadoc.
   @BugPattern(name = "CrashyParameterMatcherTestChecker", summary = "", severity = ERROR)
   public static class CrashyerMatcherTestChecker extends BugChecker
       implements MethodInvocationTreeMatcher {
@@ -208,7 +208,7 @@ public class MethodMatchersTest {
         .doTest();
   }
 
-  /** Test BugChecker for namedAnyOf(...) */
+  /// Test BugChecker for namedAnyOf(...)
   @BugPattern(name = "FlagMethodNames", summary = "", severity = ERROR)
   public static class FlagMethodNamesChecker extends BugChecker
       implements MethodInvocationTreeMatcher, MemberReferenceTreeMatcher {
@@ -277,10 +277,8 @@ public class MethodMatchersTest {
         .doTest();
   }
 
-  /**
-   * BugChecker verifying that cheap constraints (staticness, exact name, arity) are checked before
-   * evaluating the class predicate.
-   */
+  /// BugChecker verifying that cheap constraints (staticness, exact name, arity) are checked before
+  /// evaluating the class predicate.
   @BugPattern(summary = "", severity = ERROR)
   public static class ConstraintOrderChecker extends BugChecker
       implements MethodInvocationTreeMatcher {
@@ -333,7 +331,7 @@ public class MethodMatchersTest {
         .doTest();
   }
 
-  /** BugChecker verifying that method matchers return false for a null tree. */
+  /// BugChecker verifying that method matchers return false for a null tree.
   @BugPattern(summary = "", severity = ERROR)
   public static class NullReceiverChecker extends BugChecker
       implements MethodInvocationTreeMatcher {

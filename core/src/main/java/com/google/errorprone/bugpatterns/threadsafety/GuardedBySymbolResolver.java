@@ -46,11 +46,9 @@ import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Name;
 import org.jspecify.annotations.Nullable;
 
-/**
- * A symbol resolver used while binding guardedby expressions from string literals.
- *
- * @author cushon@google.com (Liam Miller-Cushon)
- */
+/// A symbol resolver used while binding guardedby expressions from string literals.
+///
+/// @author cushon@google.com (Liam Miller-Cushon)
 public final class GuardedBySymbolResolver implements GuardedByBinder.Resolver {
 
   private final ClassSymbol enclosingClass;
@@ -248,10 +246,8 @@ public final class GuardedBySymbolResolver implements GuardedByBinder.Resolver {
     NO
   }
 
-  /**
-   * Resolves a simple name as a type. Considers super classes, lexically enclosing classes, and
-   * then arbitrary types available in the current environment.
-   */
+  /// Resolves a simple name as a type. Considers super classes, lexically enclosing classes, and
+  /// then arbitrary types available in the current environment.
   private Symbol resolveType(String name, SearchSuperTypes searchSuperTypes) {
     Symbol type = null;
     if (searchSuperTypes == SearchSuperTypes.YES) {
@@ -314,13 +310,11 @@ public final class GuardedBySymbolResolver implements GuardedByBinder.Resolver {
     return null;
   }
 
-  /**
-   * Information about a method that is associated with a {@link GuardedBy} annotation.
-   *
-   * @param sym The method symbol.
-   * @param arguments The method arguments, if the site is a method invocation expression for a
-   *     method annotated with {@code @GuardedBy}.
-   */
+  /// Information about a method that is associated with a [GuardedBy] annotation.
+  ///
+  /// @param sym The method symbol.
+  /// @param arguments The method arguments, if the site is a method invocation expression for a
+  ///   method annotated with `@GuardedBy`.
   private record MethodInfo(MethodSymbol sym, @Nullable ImmutableList<ExpressionTree> arguments) {
     MethodInfo {
       checkArgument(

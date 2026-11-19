@@ -22,7 +22,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** Unit tests for {@link IdentityHashMapUsage} bug pattern. */
+/// Unit tests for [IdentityHashMapUsage] bug pattern.
 @RunWith(JUnit4.class)
 public class IdentityHashMapUsageTest {
   private final CompilationTestHelper compilationHelper =

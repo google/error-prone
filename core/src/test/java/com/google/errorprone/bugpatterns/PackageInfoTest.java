@@ -21,7 +21,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** {@link PackageInfo}Test */
+/// [PackageInfo]Test
 @RunWith(JUnit4.class)
 public class PackageInfoTest {
   private final CompilationTestHelper testHelper =

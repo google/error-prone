@@ -63,10 +63,8 @@ import java.util.stream.Stream;
 import javax.inject.Inject;
 import javax.lang.model.element.Modifier;
 
-/**
- * Refactoring to suggest using {@code private static final} {@link ImmutableSet} over {@link
- * ImmutableList} when using only contains, containsAll and isEmpty.
- */
+/// Refactoring to suggest using `private static final` [ImmutableSet] over [ImmutableList] when
+/// using only contains, containsAll and isEmpty.
 @BugPattern(
     summary =
         "This private static ImmutableList is only used for contains, containsAll or isEmpty"
@@ -251,13 +249,13 @@ public final class ImmutableSetForContains extends BugChecker implements ClassTr
   }
 
   enum UsageState {
-    /** No usage detected. */
+    /// No usage detected.
     NEVER_USED,
 
-    /** At least one allowed usage detected. No disallowed usage detected. */
+    /// At least one allowed usage detected. No disallowed usage detected.
     ONLY_ALLOWED_USAGE,
 
-    /** Disallowed usage detected. Allowed usage is ignored. */
+    /// Disallowed usage detected. Allowed usage is ignored.
     DISALLOWED_USAGE;
 
     UsageState markAllowedUsageDetected() {

@@ -26,13 +26,10 @@ import com.google.errorprone.matchers.Matcher;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 
-/** Utilities relating to lenient format strings. */
+/// Utilities relating to lenient format strings.
 public final class LenientFormatStringUtils {
 
-  /**
-   * Returns the index of the lenient format string parameter in {@code tree}, or {@code -1} if
-   * there is none.
-   */
+  /// Returns the index of the lenient format string parameter in `tree`, or `-1` if there is none.
   public static int getLenientFormatStringPosition(ExpressionTree tree, VisitorState state) {
     for (LenientFormatMethod method : LENIENT_FORMATTING_METHODS) {
       if (method.matcher().matches(tree, state)) {
@@ -71,10 +68,8 @@ public final class LenientFormatStringUtils {
                   .named("withMessage"),
               0));
 
-  /**
-   * @param formatStringPosition position of the format string; we assume every argument afterwards
-   *     is a format argument.
-   */
+  /// @param formatStringPosition position of the format string; we assume every argument afterwards
+  ///   is a format argument.
   private record LenientFormatMethod(Matcher<ExpressionTree> matcher, int formatStringPosition) {}
 
   private LenientFormatStringUtils() {}

@@ -36,11 +36,9 @@ import com.sun.source.tree.MethodInvocationTree;
 import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 
-/**
- * Bans calls to {@code Duration} APIs where the {@link java.time.temporal.TemporalUnit} is not
- * {@link ChronoUnit#DAYS} or it has an estimated duration (which is guaranteed to throw an {@code
- * DateTimeException}).
- */
+/// Bans calls to `Duration` APIs where the [java.time.temporal.TemporalUnit] is not
+/// [ChronoUnit#DAYS] or it has an estimated duration (which is guaranteed to throw an
+/// `DateTimeException`).
 @BugPattern(
     summary = "Duration APIs only work for DAYS or exact durations.",
     explanation =

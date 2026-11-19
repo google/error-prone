@@ -36,11 +36,9 @@ import javax.tools.JavaCompiler;
 import javax.tools.JavaFileObject;
 import javax.tools.StandardJavaFileManager;
 
-/**
- * Abstract skeleton for tests that run the compiler on the fly.
- *
- * @author lowasser@google.com (Louis Wasserman)
- */
+/// Abstract skeleton for tests that run the compiler on the fly.
+///
+/// @author lowasser@google.com (Louis Wasserman)
 public class CompilerBasedTest {
   protected Context context;
   protected SourceFile sourceFile;

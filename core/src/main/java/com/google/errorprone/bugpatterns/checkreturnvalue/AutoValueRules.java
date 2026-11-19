@@ -34,21 +34,21 @@ import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Types;
 import java.util.Optional;
 
-/** Rules for {@code @AutoValue}, {@code @AutoValue.Builder}, and {@code @AutoBuilder} types. */
+/// Rules for `@AutoValue`, `@AutoValue.Builder`, and `@AutoBuilder` types.
 public final class AutoValueRules {
   private AutoValueRules() {}
 
-  /** Returns a rule for {@code abstract} methods on {@code @AutoValue} types. */
+  /// Returns a rule for `abstract` methods on `@AutoValue` types.
   public static ResultUseRule<VisitorState, Symbol> autoValues() {
     return new ValueRule();
   }
 
-  /** Returns a rule for {@code abstract} methods on {@code @AutoValue.Builder} types. */
+  /// Returns a rule for `abstract` methods on `@AutoValue.Builder` types.
   public static ResultUseRule<VisitorState, Symbol> autoValueBuilders() {
     return new BuilderRule("AutoValue.Builder");
   }
 
-  /** Returns a rule for {@code abstract} methods on {@code @AutoBuilder} types. */
+  /// Returns a rule for `abstract` methods on `@AutoBuilder` types.
   public static ResultUseRule<VisitorState, Symbol> autoBuilders() {
     return new BuilderRule("AutoBuilder");
   }

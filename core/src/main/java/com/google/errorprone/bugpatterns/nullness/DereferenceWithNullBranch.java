@@ -35,7 +35,7 @@ import com.sun.source.tree.MemberSelectTree;
 import com.sun.tools.javac.code.Symbol;
 import javax.lang.model.element.Name;
 
-/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
+/// A [BugChecker]; see the associated [BugPattern] annotation for details.
 @BugPattern(summary = "Dereference of an expression with a null branch", severity = ERROR)
 public final class DereferenceWithNullBranch extends BugChecker implements MemberSelectTreeMatcher {
   private static final Supplier<Name> CLASS_KEYWORD = memoize(state -> state.getName("class"));

@@ -59,7 +59,7 @@ import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** Tests for {@link VisitorState}. */
+/// Tests for [VisitorState].
 @RunWith(JUnit4.class)
 public class VisitorStateTest {
 
@@ -111,7 +111,7 @@ public class VisitorStateTest {
   // The following is taken from ErrorProneJavacPluginTest. There may be an easier way.
   // It's possible that it's overkill for what we need here.
 
-  /** A bugpattern for testing. */
+  /// A bugpattern for testing.
   @BugPattern(summary = "", severity = ERROR)
   public static class CheckThatTriesToMemoizeBasedOnTreePath extends BugChecker
       implements ClassTreeMatcher {

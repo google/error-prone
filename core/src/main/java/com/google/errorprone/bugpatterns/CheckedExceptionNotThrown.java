@@ -61,7 +61,7 @@ import java.util.Objects;
 import java.util.stream.Stream;
 import javax.lang.model.element.Element;
 
-/** Flags checked exceptions which are claimed to be thrown, but are not. */
+/// Flags checked exceptions which are claimed to be thrown, but are not.
 @BugPattern(
     summary =
         "This method cannot throw a checked exception that it claims to. This may cause consumers"

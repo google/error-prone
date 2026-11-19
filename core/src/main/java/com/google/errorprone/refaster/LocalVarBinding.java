@@ -20,11 +20,9 @@ import com.sun.source.tree.ModifiersTree;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.util.Name;
 
-/**
- * Binding for a local variable in a template.
- *
- * @author lowasser@google.com (Louis Wasserman)
- */
+/// Binding for a local variable in a template.
+///
+/// @author lowasser@google.com (Louis Wasserman)
 public record LocalVarBinding(VarSymbol symbol, ModifiersTree modifiers) {
   public static LocalVarBinding create(VarSymbol symbol, ModifiersTree modifiers) {
     return new LocalVarBinding(symbol, modifiers);

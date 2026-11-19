@@ -21,11 +21,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * Tests for {@code CannotMockFinalClass}.
- *
- * @author Louis Wasserman
- */
+/// Tests for `CannotMockFinalClass`.
+///
+/// @author Louis Wasserman
 @RunWith(JUnit4.class)
 public class CannotMockFinalClassTest {
   private final CompilationTestHelper compilationHelper =

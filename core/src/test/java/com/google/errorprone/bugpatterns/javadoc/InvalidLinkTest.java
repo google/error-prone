@@ -24,7 +24,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** Unit tests for {@link InvalidLink} bug pattern. */
+/// Unit tests for [InvalidLink] bug pattern.
 @RunWith(JUnit4.class)
 public final class InvalidLinkTest {
   private final CompilationTestHelper helper =

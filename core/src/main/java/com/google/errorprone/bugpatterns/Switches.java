@@ -31,12 +31,9 @@ final class Switches {
   private static final Pattern SKEW_PATTERN =
       Pattern.compile("\\bskew\\b", Pattern.CASE_INSENSITIVE);
 
-  /**
-   * Whether the default case for the given switch is a fallback for potential version skew.
-   *
-   * <p>This is purely a heuristic that looks for the word "skew" in the comment of the default
-   * case.
-   */
+  /// Whether the default case for the given switch is a fallback for potential version skew.
+  ///
+  /// This is purely a heuristic that looks for the word "skew" in the comment of the default case.
   static boolean isDefaultCaseForSkew(
       SwitchTree switchTree, CaseTree defaultCase, VisitorState state) {
     checkArgument(isSwitchDefault(defaultCase));
@@ -72,12 +69,9 @@ final class Switches {
         .anyMatch(comment -> SKEW_PATTERN.matcher(comment.getText()).find());
   }
 
-  /**
-   * Whether the default case for the given switch is a fallback for potential version skew.
-   *
-   * <p>This is purely a heuristic that looks for the word "skew" in the comment of the default
-   * case.
-   */
+  /// Whether the default case for the given switch is a fallback for potential version skew.
+  ///
+  /// This is purely a heuristic that looks for the word "skew" in the comment of the default case.
   static boolean isDefaultCaseForSkew(
       SwitchExpressionTree switchTree, CaseTree defaultCase, VisitorState state) {
     checkArgument(isSwitchDefault(defaultCase));

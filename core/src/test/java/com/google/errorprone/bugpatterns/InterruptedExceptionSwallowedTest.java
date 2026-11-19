@@ -22,7 +22,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** Unit tests for {@link InterruptedExceptionSwallowed}. */
+/// Unit tests for [InterruptedExceptionSwallowed].
 @RunWith(JUnit4.class)
 public final class InterruptedExceptionSwallowedTest {
   private final CompilationTestHelper compilationHelper =

@@ -30,12 +30,10 @@ import com.google.errorprone.matchers.Matchers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 
-/**
- * This checker warns about calls to {@code instant.getNano()} without a corresponding "nearby" call
- * to {@code instant.getEpochSecond()}.
- *
- * @author kak@google.com (Kurt Alfred Kluever)
- */
+/// This checker warns about calls to `instant.getNano()` without a corresponding "nearby" call to
+/// `instant.getEpochSecond()`.
+///
+/// @author kak@google.com (Kurt Alfred Kluever)
 @BugPattern(
     summary =
         "instant.getNano() only accesses the underlying nanosecond adjustment from the whole "

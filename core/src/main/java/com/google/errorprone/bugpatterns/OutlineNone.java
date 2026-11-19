@@ -36,7 +36,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
-/** Check for the a11y antipattern of setting CSS outline attributes to none or 0. */
+/// Check for the a11y antipattern of setting CSS outline attributes to none or 0.
 @BugPattern(
     summary =
         "Setting CSS outline style to none or 0 (while not otherwise providing visual focus "
@@ -56,10 +56,8 @@ public class OutlineNone extends BugChecker
       Pattern.compile("outline\\s*:\\s*(none|0px)\\s*;?");
   private static final ImmutableSet<String> NONE_STRINGS = ImmutableSet.of("none", "0px");
 
-  /**
-   * Matches on {@code @Template} annotations whose value contains "outline:none" or equivalent
-   * outline style.
-   */
+  /// Matches on `@Template` annotations whose value contains "outline:none" or equivalent outline
+  /// style.
   @Override
   public Description matchAnnotation(AnnotationTree tree, VisitorState state) {
     if (!TEMPLATE_ANNOTATION.matches(tree, state)) {
@@ -77,7 +75,7 @@ public class OutlineNone extends BugChecker
     return describeMatch(tree);
   }
 
-  /** Matches on {@code setProperty("outline", "none")} and equivalent method calls. */
+  /// Matches on `setProperty("outline", "none")` and equivalent method calls.
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
     List<? extends ExpressionTree> args = tree.getArguments();
@@ -100,10 +98,8 @@ public class OutlineNone extends BugChecker
     return NO_MATCH;
   }
 
-  /**
-   * Matches if the expression is a numeric 0, or either of the strings "none" or "0px". These are
-   * the values which will cause the outline to be invisible and therefore impede accessibility.
-   */
+  /// Matches if the expression is a numeric 0, or either of the strings "none" or "0px". These are
+  /// the values which will cause the outline to be invisible and therefore impede accessibility.
   private static boolean constantNoneOrZero(ExpressionTree arg) {
     Object value = constValue(arg);
     if (value instanceof String && NONE_STRINGS.contains(value)) {

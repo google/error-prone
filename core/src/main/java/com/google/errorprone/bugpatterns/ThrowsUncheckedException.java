@@ -32,11 +32,9 @@ import com.sun.tools.javac.code.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Suggests to remove the unchecked throws clause.
- *
- * @author yulissa@google.com (Yulissa Arroyo-Paredes)
- */
+/// Suggests to remove the unchecked throws clause.
+///
+/// @author yulissa@google.com (Yulissa Arroyo-Paredes)
 @BugPattern(
     summary = "Unchecked exceptions do not need to be declared in the method signature.",
     severity = SUGGESTION)

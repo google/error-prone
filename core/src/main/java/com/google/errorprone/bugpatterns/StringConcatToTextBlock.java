@@ -61,7 +61,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
+/// A [BugChecker]; see the associated [BugPattern] annotation for details.
 @BugPattern(
     summary = "This string literal can be written more clearly as a text block",
     severity = WARNING)

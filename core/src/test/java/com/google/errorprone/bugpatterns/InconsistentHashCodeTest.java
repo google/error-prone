@@ -21,11 +21,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * Tests for {@link InconsistentHashCode} bugpattern.
- *
- * @author ghm@google.com (Graeme Morgan)
- */
+/// Tests for [InconsistentHashCode] bugpattern.
+///
+/// @author ghm@google.com (Graeme Morgan)
 @RunWith(JUnit4.class)
 public final class InconsistentHashCodeTest {
   private final CompilationTestHelper helper =

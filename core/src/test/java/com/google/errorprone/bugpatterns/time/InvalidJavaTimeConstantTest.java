@@ -20,11 +20,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * Tests for {@link InvalidJavaTimeConstant}.
- *
- * @author kak@google.com (Kurt Alfred Kluever)
- */
+/// Tests for [InvalidJavaTimeConstant].
+///
+/// @author kak@google.com (Kurt Alfred Kluever)
 @RunWith(JUnit4.class)
 public class InvalidJavaTimeConstantTest {
 

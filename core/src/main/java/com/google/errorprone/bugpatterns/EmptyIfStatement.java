@@ -30,15 +30,13 @@ import com.sun.source.tree.IfTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.util.TreePath;
 
-/**
- * This checker finds and fixes empty statements after an if, with no else part. For example: if
- * (foo == 10);
- *
- * <p>It attempts to match javac's -Xlint:empty warning behavior, which can be found in
- * com/sun/tools/javac/comp/Check.java.
- *
- * @author eaftan@google.com (Eddie Aftandilian)
- */
+/// This checker finds and fixes empty statements after an if, with no else part. For example: if
+/// (foo == 10);
+///
+/// It attempts to match javac's -Xlint:empty warning behavior, which can be found in
+/// com/sun/tools/javac/comp/Check.java.
+///
+/// @author eaftan@google.com (Eddie Aftandilian)
 @BugPattern(
     name = "EmptyIf",
     altNames = {"empty"},
@@ -46,10 +44,8 @@ import com.sun.source.util.TreePath;
     severity = ERROR)
 public class EmptyIfStatement extends BugChecker implements EmptyStatementTreeMatcher {
 
-  /**
-   * Match empty statement if: - Parent statement is an if - The then part of the parent if is an
-   * empty statement, and - The else part of the parent if does not exist
-   */
+  /// Match empty statement if: - Parent statement is an if - The then part of the parent if is an
+  /// empty statement, and - The else part of the parent if does not exist
   @Override
   public Description matchEmptyStatement(EmptyStatementTree tree, VisitorState state) {
     TreePath parentPath = state.getPath().getParentPath();

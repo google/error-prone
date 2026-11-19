@@ -32,7 +32,7 @@ import com.sun.tools.javac.code.Symbol;
 import java.util.ArrayList;
 import java.util.List;
 
-/** Migrate users who use JSR 330 scopes on Dagger modules. */
+/// Migrate users who use JSR 330 scopes on Dagger modules.
 @BugPattern(
     summary = "Scopes on modules have no function and will soon be an error.",
     severity = SUGGESTION)

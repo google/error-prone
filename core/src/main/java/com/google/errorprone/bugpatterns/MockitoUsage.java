@@ -32,7 +32,7 @@ import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.Tree;
 import java.util.List;
 
-/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
+/// A [BugChecker]; see the associated [BugPattern] annotation for details.
 @BugPattern(summary = "Missing method call for verify(mock) here", severity = ERROR)
 public class MockitoUsage extends BugChecker implements MethodInvocationTreeMatcher {
 
@@ -56,16 +56,12 @@ public class MockitoUsage extends BugChecker implements MethodInvocationTreeMatc
     return builder.build();
   }
 
-  /**
-   * Create fixes for invalid assertions.
-   *
-   * <ul>
-   *   <li>Rewrite `verify(mock.bar())` to `verify(mock).bar()`
-   *   <li>Rewrite `verify(mock.bar(), times(N))` to `verify(mock, times(N)).bar()`
-   *   <li>Rewrite `verify(mock, never())` to `verifyZeroInteractions(mock)`
-   *   <li>Finally, offer to delete the mock statement.
-   * </ul>
-   */
+  /// Create fixes for invalid assertions.
+  ///
+  /// - Rewrite `verify(mock.bar())` to `verify(mock).bar()`
+  /// - Rewrite `verify(mock.bar(), times(N))` to `verify(mock, times(N)).bar()`
+  /// - Rewrite `verify(mock, never())` to `verifyZeroInteractions(mock)`
+  /// - Finally, offer to delete the mock statement.
   private static void buildFix(
       Description.Builder builder, MethodInvocationTree tree, VisitorState state) {
     MethodInvocationTree mockitoCall = tree;

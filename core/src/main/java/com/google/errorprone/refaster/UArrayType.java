@@ -20,12 +20,9 @@ import com.google.auto.value.AutoValue;
 import com.sun.tools.javac.code.Type.ArrayType;
 import org.jspecify.annotations.Nullable;
 
-/**
- * {@link UType} version of {@link ArrayType}, which represents a type {@code T[]} based on the type
- * {@code T}.
- *
- * @author lowasser@google.com (Louis Wasserman)
- */
+/// [UType] version of [ArrayType], which represents a type `T[]` based on the type `T`.
+///
+/// @author lowasser@google.com (Louis Wasserman)
 @AutoValue
 abstract class UArrayType extends UType {
   public static UArrayType create(UType componentType) {

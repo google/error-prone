@@ -40,20 +40,16 @@ import java.time.Month;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Warns against suspect looking calls to {@link java.util.Date} APIs. Notably, {@code Date} uses:
- *
- * <ul>
- *   <li>1900-based years (negative values permitted)
- *   <li>0-based months (with rollover and negative values permitted)
- *   <li>1-based days (with rollover and negative values permitted)
- *   <li>0-based hours (with rollover and negative values permitted)
- *   <li>0-based minutes (with rollover and negative values permitted)
- *   <li>0-based seconds (with rollover and negative values permitted)
- * </ul>
- *
- * @author kak@google.com (Kurt Alfred Kluever)
- */
+/// Warns against suspect looking calls to [java.util.Date] APIs. Notably, `Date` uses:
+///
+/// - 1900-based years (negative values permitted)
+/// - 0-based months (with rollover and negative values permitted)
+/// - 1-based days (with rollover and negative values permitted)
+/// - 0-based hours (with rollover and negative values permitted)
+/// - 0-based minutes (with rollover and negative values permitted)
+/// - 0-based seconds (with rollover and negative values permitted)
+///
+/// @author kak@google.com (Kurt Alfred Kluever)
 @BugPattern(
     summary = "Warns against suspect looking calls to java.util.Date APIs",
     explanation =

@@ -23,7 +23,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** {@link JdkObsolete}Test */
+/// [JdkObsolete]Test
 @RunWith(JUnit4.class)
 public class JdkObsoleteTest {
   private final CompilationTestHelper testHelper =
@@ -378,7 +378,7 @@ public class JdkObsoleteTest {
         .doTest();
   }
 
-  /** A test input. */
+  /// A test input.
   public interface Lib {
     Enumeration<Integer> foos();
   }

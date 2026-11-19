@@ -37,10 +37,8 @@ import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import java.util.Set;
 import javax.lang.model.element.Modifier;
 
-/**
- * Describes visibilities available via VisibleForTesting annotations, and provides methods to
- * establish whether a given {@link Tree} should be visible.
- */
+/// Describes visibilities available via VisibleForTesting annotations, and provides methods to
+/// establish whether a given [Tree] should be visible.
 public enum Visibility implements Comparable<Visibility> {
   // In order of ascending visibility.
   NONE {
@@ -193,16 +191,10 @@ public enum Visibility implements Comparable<Visibility> {
     }
   };
 
-  /**
-   * Whether {@code tree} should be visible from the path in {@code state} assuming we're in prod
-   * code.
-   */
+  /// Whether `tree` should be visible from the path in `state` assuming we're in prod code.
   public abstract boolean shouldBeVisible(Tree tree, VisitorState state);
 
-  /**
-   * Whether {@code symbol} should be visible from the path in {@code state} assuming we're in prod
-   * code.
-   */
+  /// Whether `symbol` should be visible from the path in `state` assuming we're in prod code.
   public abstract boolean shouldBeVisible(Symbol symbol, VisitorState state);
 
   public static Visibility fromModifiers(Set<Modifier> modifiers) {
@@ -226,10 +218,8 @@ public enum Visibility implements Comparable<Visibility> {
     return compareTo(visibility) > 0;
   }
 
-  /**
-   * A fragment describing this visibility, to fit in a phrase like "restricted to [...]".
-   *
-   * <p>This is complicated by {@code NONE}, which doesn't describe a Java visibility.
-   */
+  /// A fragment describing this visibility, to fit in a phrase like "restricted to [...]".
+  ///
+  /// This is complicated by `NONE`, which doesn't describe a Java visibility.
   public abstract String description();
 }

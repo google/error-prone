@@ -50,12 +50,10 @@ import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.SafeConstructor;
 import org.yaml.snakeyaml.representer.Representer;
 
-/**
- * Reads each line of the bugpatterns.txt tab-delimited data file, and generates a GitHub Jekyll
- * page for each one.
- *
- * @author alexeagle@google.com (Alex Eagle)
- */
+/// Reads each line of the bugpatterns.txt tab-delimited data file, and generates a GitHub Jekyll
+/// page for each one.
+///
+/// @author alexeagle@google.com (Alex Eagle)
 class BugPatternFileGenerator implements LineProcessor<List<BugPatternInstance>> {
 
   private final Path outputDir;
@@ -64,10 +62,10 @@ class BugPatternFileGenerator implements LineProcessor<List<BugPatternInstance>>
 
   private final Function<BugPatternInstance, SeverityLevel> severityRemapper;
 
-  /** Controls whether yaml front-matter is generated. */
+  /// Controls whether yaml front-matter is generated.
   private final boolean generateFrontMatter;
 
-  /** The base url for links to bugpatterns. */
+  /// The base url for links to bugpatterns.
   private final @Nullable String baseUrl;
 
   private final Set<String> ignore;

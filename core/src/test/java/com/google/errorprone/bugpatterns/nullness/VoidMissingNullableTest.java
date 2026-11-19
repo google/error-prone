@@ -22,7 +22,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** {@link VoidMissingNullable}Test */
+/// [VoidMissingNullable]Test
 @RunWith(JUnit4.class)
 public class VoidMissingNullableTest {
   private final CompilationTestHelper conservativeCompilationHelper =

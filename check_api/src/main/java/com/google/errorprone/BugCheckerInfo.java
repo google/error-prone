@@ -31,57 +31,44 @@ import java.util.Set;
 import java.util.stream.Stream;
 import org.jspecify.annotations.Nullable;
 
-/**
- * An accessor for information about a single bug checker, including the metadata in the check's
- * {@code @BugPattern} annotation and the class that implements the check.
- */
+/// An accessor for information about a single bug checker, including the metadata in the check's
+/// `@BugPattern` annotation and the class that implements the check.
 public final class BugCheckerInfo implements Serializable {
 
-  /** The BugChecker class. */
+  /// The BugChecker class.
   private final Class<? extends BugChecker> checker;
 
-  /**
-   * The canonical name of this check. Corresponds to the {@code name} attribute from its {@code
-   * BugPattern} annotation.
-   */
+  /// The canonical name of this check. Corresponds to the `name` attribute from its `BugPattern`
+  /// annotation.
   private final String canonicalName;
 
-  /**
-   * Additional identifiers for this check, to be checked for in @SuppressWarnings annotations.
-   * Corresponds to the canonical name plus all {@code altName}s from its {@code BugPattern}
-   * annotation.
-   */
+  /// Additional identifiers for this check, to be checked for in @SuppressWarnings annotations.
+  /// Corresponds to the canonical name plus all `altName`s from its `BugPattern` annotation.
   private final ImmutableSet<String> allNames;
 
-  /** Set of String tags associated with the checker. */
+  /// Set of String tags associated with the checker.
   private final ImmutableSet<String> tags;
 
-  /**
-   * The error message to print in compiler diagnostics when this check triggers. Corresponds to the
-   * {@code summary} attribute from its {@code BugPattern}.
-   */
+  /// The error message to print in compiler diagnostics when this check triggers. Corresponds to
+  /// the `summary` attribute from its `BugPattern`.
   private final String message;
 
-  /** The default type of diagnostic (error or warning) to emit when this check triggers. */
+  /// The default type of diagnostic (error or warning) to emit when this check triggers.
   private final SeverityLevel defaultSeverity;
 
-  /**
-   * The link URL to display in the diagnostic message when this check triggers. Computed from the
-   * {@code link} and {@code linkType} attributes from its {@code BugPattern}. May be null if no
-   * link should be displayed.
-   */
+  /// The link URL to display in the diagnostic message when this check triggers. Computed from the
+  /// `link` and `linkType` attributes from its `BugPattern`. May be null if no link should be
+  /// displayed.
   private final String linkUrl;
 
   private final boolean supportsSuppressWarnings;
 
-  /**
-   * A set of suppression annotations for this check. Computed from the {@code
-   * suppressionAnnotations} attributes from its {@code BugPattern}. May be empty if there are no
-   * suppression annotations for this check.
-   */
+  /// A set of suppression annotations for this check. Computed from the `suppressionAnnotations`
+  /// attributes from its `BugPattern`. May be empty if there are no suppression annotations for
+  /// this check.
   private final Set<Class<? extends Annotation>> customSuppressionAnnotations;
 
-  /** True if the check can be disabled using command-line flags. */
+  /// True if the check can be disabled using command-line flags.
   private final boolean disableable;
 
   public static BugCheckerInfo create(Class<? extends BugChecker> checker) {
@@ -150,11 +137,9 @@ public final class BugCheckerInfo implements Serializable {
     return annotation.getSimpleName().equals("SuppressWarnings");
   }
 
-  /**
-   * @return a BugCheckerInfo with the same information as this class, except that its default
-   *     severity is the passed in parameter. If this checker's current defaultSeverity is the same
-   *     as the argument, return this.
-   */
+  /// @return a BugCheckerInfo with the same information as this class, except that its default
+  ///   severity is the passed in parameter. If this checker's current defaultSeverity is the same
+  ///   as the argument, return this.
   public BugCheckerInfo withCustomDefaultSeverity(SeverityLevel defaultSeverity) {
     if (defaultSeverity == this.defaultSeverity) {
       return this;

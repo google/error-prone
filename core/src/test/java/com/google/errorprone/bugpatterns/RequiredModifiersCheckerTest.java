@@ -23,11 +23,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * Unit tests for {@link RequiredModifiersChecker}.
- *
- * @author sgoldfeder@google.com (Steven Goldfeder)
- */
+/// Unit tests for [RequiredModifiersChecker].
+///
+/// @author sgoldfeder@google.com (Steven Goldfeder)
 @RunWith(JUnit4.class)
 public class RequiredModifiersCheckerTest {
 

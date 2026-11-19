@@ -42,9 +42,7 @@ import com.sun.tools.javac.tree.JCTree.JCMethodInvocation;
 import com.sun.tools.javac.tree.JCTree.JCUnary;
 import com.sun.tools.javac.tree.TreeInfo;
 
-/**
- * @author galitch@google.com (Anton Galitch)
- */
+/// @author galitch@google.com (Anton Galitch)
 @BugPattern(
     summary =
         "Java assert is used in testing code. For testing purposes, prefer using Truth-based"
@@ -156,7 +154,7 @@ public class UseCorrectAssertInTests extends BugChecker implements MethodTreeMat
     fix.replace(foundAssert, assertToUse + isMethod);
   }
 
-  /** Handles the case "expr1 == expr2" */
+  /// Handles the case "expr1 == expr2"
   private static void suggestFixForEquality(
       SuggestedFix.Builder fix, AssertTree foundAssert, VisitorState state, boolean isEqual) {
 
@@ -201,7 +199,7 @@ public class UseCorrectAssertInTests extends BugChecker implements MethodTreeMat
             : ".toString()");
   }
 
-  /** Returns all the "assert" expressions in the tree. */
+  /// Returns all the "assert" expressions in the tree.
   private static ImmutableList<AssertTree> scanAsserts(Tree tree) {
     ImmutableList.Builder<AssertTree> assertTrees = ImmutableList.builder();
 

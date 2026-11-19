@@ -54,7 +54,7 @@ import com.sun.tools.javac.tree.JCTree.JCClassDecl;
 import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
 import com.sun.tools.javac.util.Name;
 
-/** Bug checker for equals methods that don't actually override equals. */
+/// Bug checker for equals methods that don't actually override equals.
 @BugPattern(
     summary = "equals method doesn't override Object.equals",
     severity = WARNING,
@@ -63,22 +63,18 @@ public class NonOverridingEquals extends BugChecker implements MethodTreeMatcher
 
   private static final String MESSAGE_BASE = "equals method doesn't override Object.equals";
 
-  /**
-   * Matches any method definition that:
-   *
-   * <ol>
-   *   <li>is named {@code equals};
-   *   <li>takes a single argument of a type other than {@code Object};
-   *   <li>returns a {@code boolean} or {@code Boolean}.
-   * </ol>
-   */
+  /// Matches any method definition that:
+  ///
+  /// 1. is named `equals`;
+  /// 1. takes a single argument of a type other than `Object`;
+  /// 1. returns a `boolean` or `Boolean`.
   private static final Matcher<MethodTree> MATCHER =
       allOf(
           methodIsNamed("equals"),
           methodHasParameters(variableType(TypePredicates.not(isExactType(OBJECT_TYPE)))),
           anyOf(methodReturns(BOOLEAN_TYPE), methodReturns(JAVA_LANG_BOOLEAN_TYPE)));
 
-  /** Matches if the enclosing class overrides Object#equals. */
+  /// Matches if the enclosing class overrides Object#equals.
   private static final Matcher<MethodTree> enclosingClassOverridesEquals =
       enclosingClass(
           hasMethod(
@@ -88,17 +84,13 @@ public class NonOverridingEquals extends BugChecker implements MethodTreeMatcher
                   methodHasParameters(variableType(isExactType(OBJECT_TYPE))),
                   not(isStatic()))));
 
-  /**
-   * Matches method declarations for which we cannot provide a fix. Our default fix rewrites the
-   * equals method to override Object.equals. In these (uncommon) cases, our rewrite algorithm
-   * doesn't work:
-   *
-   * <ul>
-   *   <li>the method is static;
-   *   <li>the method is not public;
-   *   <li>the method returns a boxed Boolean.
-   * </ul>
-   */
+  /// Matches method declarations for which we cannot provide a fix. Our default fix rewrites the
+  /// equals method to override Object.equals. In these (uncommon) cases, our rewrite algorithm
+  /// doesn't work:
+  ///
+  /// - the method is static;
+  /// - the method is not public;
+  /// - the method returns a boxed Boolean.
   private static final Matcher<MethodTree> noFixMatcher =
       anyOf(
           isStatic(),
@@ -183,7 +175,7 @@ public class NonOverridingEquals extends BugChecker implements MethodTreeMatcher
 
   private record CastState(Name name, String castToType, SuggestedFix.Builder fix) {}
 
-  /** A Scanner used to replace all references to a variable with a casted version. */
+  /// A Scanner used to replace all references to a variable with a casted version.
   private static class CastScanner extends TreeScanner<Void, CastState> {
     @Override
     public Void visitIdentifier(IdentifierTree node, CastState state) {

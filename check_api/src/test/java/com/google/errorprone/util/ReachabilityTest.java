@@ -43,11 +43,11 @@ import com.sun.source.util.TreeScanner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-/** {@link Reachability}Test. */
+/// [Reachability]Test.
 @RunWith(TestParameterInjector.class)
 public class ReachabilityTest {
 
-  /** Reports an error if the first case in a switch falls through to the second. */
+  /// Reports an error if the first case in a switch falls through to the second.
   @BugPattern(summary = "", severity = ERROR)
   public static class FirstCaseFallsThrough extends BugChecker implements SwitchTreeMatcher {
 
@@ -63,10 +63,8 @@ public class ReachabilityTest {
     }
   }
 
-  /**
-   * Reports whether {@link Reachability} thinks that the statement contained in each labeled
-   * statement in a method named {@code f} can complete normally.
-   */
+  /// Reports whether [Reachability] thinks that the statement contained in each labeled statement
+  /// in a method named `f` can complete normally.
   @BugPattern(summary = "", severity = ERROR)
   public static class ContainedStatementCanCompleteNormally extends BugChecker
       implements LabeledStatementTreeMatcher {
@@ -83,14 +81,11 @@ public class ReachabilityTest {
     }
   }
 
-  /**
-   * Returns a test that {@link Reachability} and javac agree on whether {@code statement} can
-   * complete normally. {@code expected} is the ground truth of whether the {@code statement} can
-   * complete normally.
-   *
-   * <p>The {@code statement} may use (but doesn't need to use) the parameters {@code x}, {@code o},
-   * {@code shape}, {@code paint} and {@code color}, of the types declared in the generated source.
-   */
+  /// Returns a test that [Reachability] and javac agree on whether `statement` can complete
+  /// normally. `expected` is the ground truth of whether the `statement` can complete normally.
+  ///
+  /// The `statement` may use (but doesn't need to use) the parameters `x`, `o`, `shape`, `paint`
+  /// and `color`, of the types declared in the generated source.
   private CompilationTestHelper canCompleteNormallyTest(boolean expected, String statement) {
     return CompilationTestHelper.newInstance(FirstCaseFallsThrough.class, getClass())
         .addSourceLines(
@@ -137,25 +132,21 @@ public class ReachabilityTest {
                     expected ? "System.out.println(\"reached\");" : ""));
   }
 
-  /**
-   * Returns a test that {@link Reachability} and javac agree on whether the statement contained in
-   * {@code labeledStatement} (call it {@code S}) can complete normally. {@code expected} is the
-   * ground truth of whether {@code S} can complete normally per the JLS.
-   *
-   * <p>A unit test can't easily access the answer for {@code S}, because any code after {@code S}
-   * is also after {@code labeledStatement}. However, this can be addressed with a couple tricks,
-   * depending on the ground truth value:
-   *
-   * <p>Ground truth: the statement {@code S} can complete normally 1. We put {@code S} in {@code if
-   * (!(o instanceof String s)) S}, inside a block labeled {@code l}. 2. The pattern variable {@code
-   * s} is in scope after the {@code if} statement iff {@code S} cannot complete normally. 3.
-   * declare a new local variable {@code s}, which would clash with the pattern variable if it were
-   * in scope.
-   *
-   * <p>Ground truth: the statement {@code S} cannot complete normally 1.-2. as above, 3. code after
-   * the {@code if} references the pattern variable {@code s}, which would otherwise not be in
-   * scope.
-   */
+  /// Returns a test that [Reachability] and javac agree on whether the statement contained in
+  /// `labeledStatement` (call it `S`) can complete normally. `expected` is the ground truth of
+  /// whether `S` can complete normally per the JLS.
+  ///
+  /// A unit test can't easily access the answer for `S`, because any code after `S` is also after
+  /// `labeledStatement`. However, this can be addressed with a couple tricks, depending on the
+  /// ground truth value:
+  ///
+  /// Ground truth: the statement `S` can complete normally 1. We put `S` in `if (!(o instanceof
+  /// String s)) S`, inside a block labeled `l`. 2. The pattern variable `s` is in scope after the
+  /// `if` statement iff `S` cannot complete normally. 3. declare a new local variable `s`, which
+  /// would clash with the pattern variable if it were in scope.
+  ///
+  /// Ground truth: the statement `S` cannot complete normally 1.-2. as above, 3. code after the
+  /// `if` references the pattern variable `s`, which would otherwise not be in scope.
   private CompilationTestHelper containedStatementCanCompleteNormallyTest(
       boolean expected, String labeledStatement) {
     String label = "l:\n";
@@ -482,7 +473,7 @@ public class ReachabilityTest {
         .doTest();
   }
 
-  /** A labeled block exited by a {@code break} can complete normally (JLS 21 §14.22). */
+  /// A labeled block exited by a `break` can complete normally (JLS 21 §14.22).
   @Test
   public void breakExitsLabeledStatement_block() {
     canCompleteNormallyTest(
@@ -499,9 +490,7 @@ public class ReachabilityTest {
         .doTest();
   }
 
-  /**
-   * A labeled {@code if} statement exited by a {@code break} can complete normally (JLS 21 §14.22).
-   */
+  /// A labeled `if` statement exited by a `break` can complete normally (JLS 21 §14.22).
   @Test
   public void breakExitsLabeledStatement_if() {
     canCompleteNormallyTest(
@@ -517,10 +506,7 @@ public class ReachabilityTest {
         .doTest();
   }
 
-  /**
-   * A labeled {@code try} statement exited by a {@code break} can complete normally (JLS 21
-   * §14.22).
-   */
+  /// A labeled `try` statement exited by a `break` can complete normally (JLS 21 §14.22).
   @Test
   public void breakExitsLabeledStatement_try() {
     canCompleteNormallyTest(
@@ -536,10 +522,7 @@ public class ReachabilityTest {
         .doTest();
   }
 
-  /**
-   * A labeled {@code synchronized} statement exited by a {@code break} can complete normally (JLS
-   * 21 §14.22).
-   */
+  /// A labeled `synchronized` statement exited by a `break` can complete normally (JLS 21 §14.22).
   @Test
   public void breakExitsLabeledStatement_synchronized() {
     canCompleteNormallyTest(
@@ -553,10 +536,8 @@ public class ReachabilityTest {
         .doTest();
   }
 
-  /**
-   * With two labels on a loop, a {@code break} of the outer label exits the outer labeled
-   * statement, so that statement can complete normally (JLS 21 §14.22) even though the loop cannot.
-   */
+  /// With two labels on a loop, a `break` of the outer label exits the outer labeled statement, so
+  /// that statement can complete normally (JLS 21 §14.22) even though the loop cannot.
   @Test
   public void breakExitsLabeledStatement_nestedLabelsOnLoop() {
     canCompleteNormallyTest(
@@ -571,11 +552,8 @@ public class ReachabilityTest {
         .doTest();
   }
 
-  /**
-   * With two labels on a {@code switch}, a {@code break} of the outer label exits the outer labeled
-   * statement, so that statement can complete normally (JLS 21 §14.22) even though the {@code
-   * switch} cannot.
-   */
+  /// With two labels on a `switch`, a `break` of the outer label exits the outer labeled statement,
+  /// so that statement can complete normally (JLS 21 §14.22) even though the `switch` cannot.
   @Test
   public void breakExitsLabeledStatement_nestedLabelsOnSwitch() {
     canCompleteNormallyTest(
@@ -591,10 +569,8 @@ public class ReachabilityTest {
         .doTest();
   }
 
-  /**
-   * A {@code break l} exits the labeled statement, not the {@code while} statement it contains (JLS
-   * 21 §14.15), so only the labeled statement can complete normally (JLS 21 §14.22).
-   */
+  /// A `break l` exits the labeled statement, not the `while` statement it contains (JLS 21
+  /// §14.15), so only the labeled statement can complete normally (JLS 21 §14.22).
   @Test
   public void breakExitsLabeledStatement_while() {
     String statement =
@@ -608,10 +584,8 @@ public class ReachabilityTest {
     containedStatementCanCompleteNormallyTest(/* expected= */ false, statement).doTest();
   }
 
-  /**
-   * A {@code break l} exits the labeled statement, not the {@code do} statement it contains (JLS 21
-   * §14.15), so only the labeled statement can complete normally (JLS 21 §14.22).
-   */
+  /// A `break l` exits the labeled statement, not the `do` statement it contains (JLS 21 §14.15),
+  /// so only the labeled statement can complete normally (JLS 21 §14.22).
   @Test
   public void breakExitsLabeledStatement_do() {
     String statement =
@@ -625,10 +599,8 @@ public class ReachabilityTest {
     containedStatementCanCompleteNormallyTest(/* expected= */ false, statement).doTest();
   }
 
-  /**
-   * A {@code break l} exits the labeled statement, not the {@code for} statement it contains (JLS
-   * 21 §14.15), so only the labeled statement can complete normally (JLS 21 §14.22).
-   */
+  /// A `break l` exits the labeled statement, not the `for` statement it contains (JLS 21 §14.15),
+  /// so only the labeled statement can complete normally (JLS 21 §14.22).
   @Test
   public void breakExitsLabeledStatement_for() {
     String statement =
@@ -642,10 +614,8 @@ public class ReachabilityTest {
     containedStatementCanCompleteNormallyTest(/* expected= */ false, statement).doTest();
   }
 
-  /**
-   * A {@code break l} exits the labeled statement, not the {@code switch} statement it contains
-   * (JLS 21 §14.15), so only the labeled statement can complete normally (JLS 21 §14.22).
-   */
+  /// A `break l` exits the labeled statement, not the `switch` statement it contains (JLS 21
+  /// §14.15), so only the labeled statement can complete normally (JLS 21 §14.22).
   @Test
   public void breakExitsLabeledStatement_switch() {
     String statement =
@@ -662,7 +632,7 @@ public class ReachabilityTest {
     containedStatementCanCompleteNormallyTest(/* expected= */ false, statement).doTest();
   }
 
-  /** Like {@link #breakExitsLabeledStatement_switch}, but with switch rules. */
+  /// Like [#breakExitsLabeledStatement_switch], but with switch rules.
   @Test
   public void breakExitsLabeledStatement_arrowSwitch() {
     String statement =
@@ -680,11 +650,9 @@ public class ReachabilityTest {
     containedStatementCanCompleteNormallyTest(/* expected= */ false, statement).doTest();
   }
 
-  /**
-   * A {@code break} with no label exits the innermost {@code switch}, {@code while}, {@code do} or
-   * {@code for} statement around it (JLS 21 §14.15). So here the {@code while} statement can
-   * complete normally (JLS 21 §14.22), even though it has a label.
-   */
+  /// A `break` with no label exits the innermost `switch`, `while`, `do` or `for` statement around
+  /// it (JLS 21 §14.15). So here the `while` statement can complete normally (JLS 21 §14.22), even
+  /// though it has a label.
   @Test
   public void breakExitsContainedStatement_withoutLabel() {
     String statement =
@@ -698,10 +666,8 @@ public class ReachabilityTest {
     containedStatementCanCompleteNormallyTest(/* expected= */ true, statement).doTest();
   }
 
-  /**
-   * An unlabeled {@code break} exits only the loop it is in, not the labeled block around it, which
-   * here cannot complete normally.
-   */
+  /// An unlabeled `break` exits only the loop it is in, not the labeled block around it, which here
+  /// cannot complete normally.
   @Test
   public void jumpDoesNotExitLabeledStatement_breakOutOfNestedLoop() {
     canCompleteNormallyTest(
@@ -720,10 +686,8 @@ public class ReachabilityTest {
         .doTest();
   }
 
-  /**
-   * {@code break inner} exits only the inner labeled block, not the outer one, which here cannot
-   * complete normally.
-   */
+  /// `break inner` exits only the inner labeled block, not the outer one, which here cannot
+  /// complete normally.
   @Test
   public void jumpDoesNotExitLabeledStatement_breakOutOfInnerLabel() {
     canCompleteNormallyTest(
@@ -743,7 +707,7 @@ public class ReachabilityTest {
         .doTest();
   }
 
-  /** {@code continue l} does not exit the labeled loop, which here cannot complete normally. */
+  /// `continue l` does not exit the labeled loop, which here cannot complete normally.
   @Test
   public void jumpDoesNotExitLabeledStatement_continueOfLabeledLoop() {
     canCompleteNormallyTest(
@@ -759,12 +723,10 @@ public class ReachabilityTest {
         .doTest();
   }
 
-  /**
-   * With two labels on a {@code do} statement, {@code continue inner} continues the {@code do}
-   * statement (JLS 21 §14.16), so the {@code do} statement can complete normally (JLS 21 §14.22).
-   * ({@code continue outer} is a compile-time error, because the statement that {@code outer}
-   * labels is a labeled statement, not a loop.)
-   */
+  /// With two labels on a `do` statement, `continue inner` continues the `do` statement (JLS 21
+  /// §14.16), so the `do` statement can complete normally (JLS 21 §14.22). (`continue outer` is a
+  /// compile-time error, because the statement that `outer` labels is a labeled statement, not a
+  /// loop.)
   @Test
   public void continueContinuesLabeledLoop_nestedLabelsOnDo() {
     canCompleteNormallyTest(
@@ -779,10 +741,8 @@ public class ReachabilityTest {
         .doTest();
   }
 
-  /**
-   * Like {@link #continueContinuesLabeledLoop_nestedLabelsOnDo}, but the condition is the constant
-   * {@code true}, so the {@code do} statement can't complete normally (JLS 21 §14.22).
-   */
+  /// Like [#continueContinuesLabeledLoop_nestedLabelsOnDo], but the condition is the constant
+  /// `true`, so the `do` statement can't complete normally (JLS 21 §14.22).
   @Test
   public void continueContinuesLabeledLoop_nestedLabelsOnDo_constantTrue() {
     canCompleteNormallyTest(
@@ -797,11 +757,8 @@ public class ReachabilityTest {
         .doTest();
   }
 
-  /**
-   * A {@code break} in a {@code try} block does not exit the loop if the {@code finally} block
-   * cannot complete normally, because the {@code finally} block discards it (JLS 21 §14.20.2,
-   * §14.22).
-   */
+  /// A `break` in a `try` block does not exit the loop if the `finally` block cannot complete
+  /// normally, because the `finally` block discards it (JLS 21 §14.20.2, §14.22).
   @Test
   public void jumpDiscardedByFinally_breakInTryBlock() {
     canCompleteNormallyTest(
@@ -818,10 +775,8 @@ public class ReachabilityTest {
         .doTest();
   }
 
-  /**
-   * A {@code break} in a {@code catch} block does not exit the loop if the {@code finally} block
-   * cannot complete normally, because the {@code finally} block discards it (JLS 21 §14.20.2).
-   */
+  /// A `break` in a `catch` block does not exit the loop if the `finally` block cannot complete
+  /// normally, because the `finally` block discards it (JLS 21 §14.20.2).
   @Test
   public void jumpDiscardedByFinally_breakInCatchBlock() {
     canCompleteNormallyTest(
@@ -840,11 +795,8 @@ public class ReachabilityTest {
         .doTest();
   }
 
-  /**
-   * A {@code continue} in a {@code try} block does not continue the {@code do} statement if the
-   * {@code finally} block cannot complete normally, because the {@code finally} block discards it
-   * (JLS 21 §14.20.2, §14.22).
-   */
+  /// A `continue` in a `try` block does not continue the `do` statement if the `finally` block
+  /// cannot complete normally, because the `finally` block discards it (JLS 21 §14.20.2, §14.22).
   @Test
   public void jumpDiscardedByFinally_continueInTryBlock() {
     canCompleteNormallyTest(
@@ -861,10 +813,8 @@ public class ReachabilityTest {
         .doTest();
   }
 
-  /**
-   * Similar to {@link #continueInTryBlock}, but the {@code continue} is camouflaged as a larger try
-   * statement.
-   */
+  /// Similar to [#jumpDiscardedByFinally_continueInTryBlock], but the `continue` is camouflaged as
+  /// a larger try statement.
   @Test
   public void jumpDiscardedByFinally_camouflagedContinueInTryBlock() {
     canCompleteNormallyTest(
@@ -885,11 +835,8 @@ public class ReachabilityTest {
         .doTest();
   }
 
-  /**
-   * A {@code break} in a {@code try} block does not exit the {@code switch} if the {@code finally}
-   * block cannot complete normally, because the {@code finally} block discards it (JLS 21 §14.20.2,
-   * §14.22).
-   */
+  /// A `break` in a `try` block does not exit the `switch` if the `finally` block cannot complete
+  /// normally, because the `finally` block discards it (JLS 21 §14.20.2, §14.22).
   @Test
   public void jumpDiscardedByFinally_breakOutOfSwitch() {
     canCompleteNormallyTest(
@@ -907,11 +854,8 @@ public class ReachabilityTest {
         .doTest();
   }
 
-  /**
-   * A {@code break l} in a {@code try} block does not exit the labeled statement if the {@code
-   * finally} block cannot complete normally, because the {@code finally} block discards it (JLS 21
-   * §14.20.2, §14.22).
-   */
+  /// A `break l` in a `try` block does not exit the labeled statement if the `finally` block cannot
+  /// complete normally, because the `finally` block discards it (JLS 21 §14.20.2, §14.22).
   @Test
   public void jumpDiscardedByFinally_breakOutOfLabeledStatement() {
     canCompleteNormallyTest(
@@ -927,11 +871,8 @@ public class ReachabilityTest {
         .doTest();
   }
 
-  /**
-   * A {@code break} does not exit the loop if the {@code finally} block of any enclosing {@code
-   * try} statement within the loop cannot complete normally, even if an inner one can (JLS 21
-   * §14.22).
-   */
+  /// A `break` does not exit the loop if the `finally` block of any enclosing `try` statement
+  /// within the loop cannot complete normally, even if an inner one can (JLS 21 §14.22).
   @Test
   public void jumpDiscardedByFinally_outerFinally() {
     canCompleteNormallyTest(
@@ -952,10 +893,7 @@ public class ReachabilityTest {
         .doTest();
   }
 
-  /**
-   * A {@code break} in a {@code try} block exits the loop if the {@code finally} block can complete
-   * normally.
-   */
+  /// A `break` in a `try` block exits the loop if the `finally` block can complete normally.
   @Test
   public void jumpNotDiscardedByFinally_finallyCompletesNormally() {
     canCompleteNormallyTest(
@@ -972,10 +910,8 @@ public class ReachabilityTest {
         .doTest();
   }
 
-  /**
-   * A {@code break} in the {@code finally} block itself exits the loop, even though it means that
-   * the {@code finally} block cannot complete normally.
-   */
+  /// A `break` in the `finally` block itself exits the loop, even though it means that the
+  /// `finally` block cannot complete normally.
   @Test
   public void jumpNotDiscardedByFinally_breakInFinallyBlock() {
     canCompleteNormallyTest(
@@ -992,10 +928,8 @@ public class ReachabilityTest {
         .doTest();
   }
 
-  /**
-   * A {@code break} before the {@code try} statement still exits the loop, even though a {@code
-   * break} to the same loop inside the {@code try} block is discarded.
-   */
+  /// A `break` before the `try` statement still exits the loop, even though a `break` to the same
+  /// loop inside the `try` block is discarded.
   @Test
   public void jumpNotDiscardedByFinally_breakBeforeTry() {
     canCompleteNormallyTest(
@@ -1015,10 +949,8 @@ public class ReachabilityTest {
         .doTest();
   }
 
-  /**
-   * A {@code switch} over a sealed interface, with a pattern for each permitted subclass and no
-   * {@code default}, is enhanced, so it cannot complete normally when every case throws.
-   */
+  /// A `switch` over a sealed interface, with a pattern for each permitted subclass and no
+  /// `default`, is enhanced, so it cannot complete normally when every case throws.
   @Test
   public void enhancedSwitchWithoutDefault_sealedPatterns() {
     canCompleteNormallyTest(
@@ -1033,7 +965,7 @@ public class ReachabilityTest {
         .doTest();
   }
 
-  /** Like {@link #enhancedSwitchWithoutDefault_sealedPatterns}, but with old-style colon switch. */
+  /// Like [#enhancedSwitchWithoutDefault_sealedPatterns], but with old-style colon switch.
   @Test
   public void enhancedSwitchWithoutDefault_sealedPatternsInStatementGroups() {
     canCompleteNormallyTest(
@@ -1051,10 +983,8 @@ public class ReachabilityTest {
         .doTest();
   }
 
-  /**
-   * A {@code switch} over an enum with a {@code case null} is enhanced, so without a {@code
-   * default} it cannot complete normally when every case throws (§14.22).
-   */
+  /// A `switch` over an enum with a `case null` is enhanced, so without a `default` it cannot
+  /// complete normally when every case throws (§14.22).
   @Test
   public void enhancedSwitchWithoutDefault_nullLabel() {
     canCompleteNormallyTest(
@@ -1069,10 +999,8 @@ public class ReachabilityTest {
         .doTest();
   }
 
-  /**
-   * An unconditional pattern is similar to but not the same as a {@code default}: a {@code switch}
-   * with patterns is enhanced, so it cannot complete normally when every case throws.
-   */
+  /// An unconditional pattern is similar to but not the same as a `default`: a `switch` with
+  /// patterns is enhanced, so it cannot complete normally when every case throws.
   @Test
   public void enhancedSwitchWithoutDefault_unconditionalPattern() {
     canCompleteNormallyTest(
@@ -1087,11 +1015,9 @@ public class ReachabilityTest {
         .doTest();
   }
 
-  /**
-   * A {@code switch} over a sealed interface is enhanced (JLS 21 §14.11.2) even if its only labels
-   * are constants of an enum that implements the interface, so it cannot complete normally when
-   * every case throws (§14.22).
-   */
+  /// A `switch` over a sealed interface is enhanced (JLS 21 §14.11.2) even if its only labels are
+  /// constants of an enum that implements the interface, so it cannot complete normally when every
+  /// case throws (§14.22).
   @Test
   public void enhancedSwitchWithoutDefault_enumConstantsOfSealedInterface() {
     canCompleteNormallyTest(
@@ -1106,11 +1032,9 @@ public class ReachabilityTest {
         .doTest();
   }
 
-  /**
-   * A {@code switch} over an enum with only constant labels is not enhanced (JLS 21 §14.11.2), so
-   * without a {@code default} it can complete normally, even though it names every constant and
-   * every case throws (§14.22).
-   */
+  /// A `switch` over an enum with only constant labels is not enhanced (JLS 21 §14.11.2), so
+  /// without a `default` it can complete normally, even though it names every constant and every
+  /// case throws (§14.22).
   @Test
   public void notEnhancedSwitchWithoutDefault_enum() {
     canCompleteNormallyTest(
@@ -1125,11 +1049,9 @@ public class ReachabilityTest {
         .doTest();
   }
 
-  /**
-   * A {@code switch} with only constant labels is not enhanced if the type of the selector
-   * expression is in a designated set of types. So without a {@code default} it can complete
-   * normally even though every case throws.
-   */
+  /// A `switch` with only constant labels is not enhanced if the type of the selector expression is
+  /// in a designated set of types. So without a `default` it can complete normally even though
+  /// every case throws.
   @Test
   public void notEnhancedSwitchWithoutDefault_selectorType(
       @TestParameter({
@@ -1156,7 +1078,7 @@ public class ReachabilityTest {
         .doTest();
   }
 
-  /** Similar to {@link #notEnhancedSwitchWithoutDefault_selectorType}, but with {@code String}. */
+  /// Similar to [#notEnhancedSwitchWithoutDefault_selectorType], but with `String`.
   @Test
   public void notEnhancedSwitchWithoutDefault_string() {
     canCompleteNormallyTest(
@@ -1171,10 +1093,7 @@ public class ReachabilityTest {
         .doTest();
   }
 
-  /**
-   * An enhanced {@code switch} without a {@code default} can still complete normally if a {@code
-   * break} exits it.
-   */
+  /// An enhanced `switch` without a `default` can still complete normally if a `break` exits it.
   @Test
   public void enhancedSwitchWithoutDefault_breakExitsSwitch() {
     canCompleteNormallyTest(
@@ -1192,10 +1111,8 @@ public class ReachabilityTest {
         .doTest();
   }
 
-  /**
-   * Reports a {@code do} loop that can complete normally, where each statement in its body labeled
-   * {@code doesNotComplete} is patched with {@code CANNOT_COMPLETE_NORMALLY_ANALYZE_INSIDE}.
-   */
+  /// Reports a `do` loop that can complete normally, where each statement in its body labeled
+  /// `doesNotComplete` is patched with `CANNOT_COMPLETE_NORMALLY_ANALYZE_INSIDE`.
   @BugPattern(summary = "", severity = ERROR)
   public static class DoWhileCompletesWithAnalyzedPatches extends BugChecker
       implements DoWhileLoopTreeMatcher {
@@ -1218,12 +1135,10 @@ public class ReachabilityTest {
     }
   }
 
-  /**
-   * A tree patched to be unable to complete normally is still analyzed, so a {@code continue}
-   * inside it is recorded and makes the enclosing {@code do} able to complete normally. (Patching
-   * the same tree with {@code CANNOT_COMPLETE_NORMALLY_SKIP_INSIDE} would not descend into it, so
-   * the {@code continue} would be missed.)
-   */
+  /// A tree patched to be unable to complete normally is still analyzed, so a `continue` inside it
+  /// is recorded and makes the enclosing `do` able to complete normally. (Patching the same tree
+  /// with `CANNOT_COMPLETE_NORMALLY_SKIP_INSIDE` would not descend into it, so the `continue` would
+  /// be missed.)
   @Test
   public void analyzedPatches_doesNotComplete_recordsJumpsInside() {
     CompilationTestHelper.newInstance(DoWhileCompletesWithAnalyzedPatches.class, getClass())

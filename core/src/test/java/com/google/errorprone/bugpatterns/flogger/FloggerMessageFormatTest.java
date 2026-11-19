@@ -22,7 +22,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** Tests for {@link FloggerMessageFormat}. */
+/// Tests for [FloggerMessageFormat].
 @RunWith(JUnit4.class)
 public class FloggerMessageFormatTest {
   private final CompilationTestHelper compilationHelper =

@@ -39,7 +39,7 @@ import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Type;
 
-/** A BugPattern; see the summary. */
+/// A BugPattern; see the summary.
 @BugPattern(summary = "The types passed to this assertion are incompatible.", severity = WARNING)
 public final class AssertSameIncompatible extends BugChecker
     implements MethodInvocationTreeMatcher {

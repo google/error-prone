@@ -44,11 +44,9 @@ import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeDiagnosingMatcher;
 
-/**
- * Utility class for tests which need to assert on the diagnostics produced during compilation.
- *
- * @author alexeagle@google.com (Alex Eagle)
- */
+/// Utility class for tests which need to assert on the diagnostics produced during compilation.
+///
+/// @author alexeagle@google.com (Alex Eagle)
 public class DiagnosticTestHelper {
   // When testing a single error-prone check, the name of the check. Used to validate diagnostics.
   // Null if not testing a single error-prone check.
@@ -56,12 +54,12 @@ public class DiagnosticTestHelper {
 
   private final Map<String, Predicate<? super String>> expectedErrorMsgs = new HashMap<>();
 
-  /** Construct a {@link DiagnosticTestHelper} not associated with a specific check. */
+  /// Construct a [DiagnosticTestHelper] not associated with a specific check.
   public DiagnosticTestHelper() {
     this(null);
   }
 
-  /** Construct a {@link DiagnosticTestHelper} for a check with the given name. */
+  /// Construct a [DiagnosticTestHelper] for a check with the given name.
   public DiagnosticTestHelper(String checkName) {
     this.checkName = checkName;
   }
@@ -178,12 +176,10 @@ public class DiagnosticTestHelper {
               (diagnostic, message) -> diagnostic.getMessage(Locale.getDefault()).contains(message),
               "diagnostic containing");
 
-  /**
-   * Comment that marks a bug on the next line in a test file. For example, "// BUG: Diagnostic
-   * contains: foo.bar()", where "foo.bar()" is a string that should be in the diagnostic for the
-   * line. Multiple expected strings may be separated by newlines, e.g. // BUG: Diagnostic contains:
-   * foo.bar() // bar.baz() // baz.foo()
-   */
+  /// Comment that marks a bug on the next line in a test file. For example, "// BUG: Diagnostic
+  /// contains: foo.bar()", where "foo.bar()" is a string that should be in the diagnostic for the
+  /// line. Multiple expected strings may be separated by newlines, e.g. // BUG: Diagnostic
+  /// contains: foo.bar() // bar.baz() // baz.foo()
   private static final String BUG_MARKER_COMMENT_INLINE = "// BUG: Diagnostic contains:";
 
   private static final String BUG_MARKER_COMMENT_LOOKUP = "// BUG: Diagnostic matches:";
@@ -194,32 +190,27 @@ public class DiagnosticTestHelper {
     NO;
   }
 
-  /**
-   * Expects an error message matching {@code matcher} at the line below a comment matching the key.
-   * For example, given the source
-   *
-   * <pre>
-   *   // BUG: Diagnostic matches: X
-   *   a = b + c;
-   * </pre>
-   *
-   * ... you can use {@code expectErrorMessage("X", Predicates.containsPattern("Can't add b to
-   * c"));}
-   *
-   * <p>Error message keys that don't match any diagnostics will cause test to fail.
-   */
+  /// Expects an error message matching `matcher` at the line below a comment matching the key. For
+  /// example, given the source
+  ///
+  /// ```
+  ///   // BUG: Diagnostic matches: X
+  ///   a = b + c;
+  /// ```
+  ///
+  /// ... you can use `expectErrorMessage("X", Predicates.containsPattern("Can't add b to c"));`
+  ///
+  /// Error message keys that don't match any diagnostics will cause test to fail.
   public void expectErrorMessage(String key, Predicate<? super String> matcher) {
     expectedErrorMsgs.put(key, matcher);
   }
 
-  /**
-   * Asserts that the diagnostics contain a diagnostic on each line of the source file that matches
-   * our bug marker pattern. Parses the bug marker pattern for the specific string to look for in
-   * the diagnostic. The failure message names every line that fails, each with the first
-   * expectation it fails.
-   *
-   * @param source File in which to find matching lines
-   */
+  /// Asserts that the diagnostics contain a diagnostic on each line of the source file that matches
+  /// our bug marker pattern. Parses the bug marker pattern for the specific string to look for in
+  /// the diagnostic. The failure message names every line that fails, each with the first
+  /// expectation it fails.
+  ///
+  /// @param source File in which to find matching lines
   public void assertHasDiagnosticOnAllMatchingLines(
       JavaFileObject source, LookForCheckNameInDiagnostic lookForCheckNameInDiagnostic)
       throws IOException {
@@ -229,11 +220,9 @@ public class DiagnosticTestHelper {
     }
   }
 
-  /**
-   * Returns one message for each line of {@code source} that fails, in source order, naming the
-   * first expectation the line fails: a marker whose key has no expected message, a marked line
-   * without a matching diagnostic, or an unmarked line with a diagnostic.
-   */
+  /// Returns one message for each line of `source` that fails, in source order, naming the first
+  /// expectation the line fails: a marker whose key has no expected message, a marked line without
+  /// a matching diagnostic, or an unmarked line with a diagnostic.
   ImmutableList<String> findMismatchedLines(
       JavaFileObject source, LookForCheckNameInDiagnostic lookForCheckNameInDiagnostic)
       throws IOException {
@@ -318,10 +307,8 @@ public class DiagnosticTestHelper {
     return mismatches.build();
   }
 
-  /**
-   * Returns a failure message with each of {@code mismatches} on its own line, followed by every
-   * diagnostic the compilation reported.
-   */
+  /// Returns a failure message with each of `mismatches` on its own line, followed by every
+  /// diagnostic the compilation reported.
   String describeMismatches(List<String> mismatches) {
     return String.join("\n", mismatches) + "\n" + allErrors(getDiagnostics());
   }
@@ -334,19 +321,17 @@ public class DiagnosticTestHelper {
         + diagnostics.stream().map(Object::toString).collect(Collectors.joining("\n\n"));
   }
 
-  /** Returns the lookup keys that weren't used. */
+  /// Returns the lookup keys that weren't used.
   public Set<String> getUnusedLookupKeys() {
     return Sets.difference(expectedErrorMsgs.keySet(), usedLookupKeys);
   }
 
-  /**
-   * Extracts the patterns from a bug marker comment.
-   *
-   * @param line The first line of the bug marker comment
-   * @param reader A reader for the test file
-   * @param matchString The bug marker comment match string.
-   * @return A list of patterns that the diagnostic is expected to contain
-   */
+  /// Extracts the patterns from a bug marker comment.
+  ///
+  /// @param line The first line of the bug marker comment
+  /// @param reader A reader for the test file
+  /// @param matchString The bug marker comment match string.
+  /// @return A list of patterns that the diagnostic is expected to contain
   private static List<String> extractPatterns(
       String line, BufferedReader reader, String matchString) throws IOException {
     int bugMarkerIndex = line.indexOf(matchString);

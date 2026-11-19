@@ -30,7 +30,7 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MemberSelectTree;
 
-/** Checks for usages of dangerous {@code DateTimeConstants} constants. */
+/// Checks for usages of dangerous `DateTimeConstants` constants.
 @BugPattern(
     summary =
         "Using the `_PER_` constants in `DateTimeConstants` is problematic because they encourage"

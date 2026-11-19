@@ -107,7 +107,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** Tests for {@link ASTHelpers}. */
+/// Tests for [ASTHelpers].
 @RunWith(JUnit4.class)
 public class ASTHelpersTest extends CompilerBasedAbstractTest {
 
@@ -920,10 +920,8 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
     assertCompiles(scanner);
   }
 
-  /**
-   * Test checker to ensure that ASTHelpers.hasDirectAnnotationWithSimpleName() does require the
-   * annotation symbol to be on the classpath.
-   */
+  /// Test checker to ensure that ASTHelpers.hasDirectAnnotationWithSimpleName() does require the
+  /// annotation symbol to be on the classpath.
   @BugPattern(
       severity = SeverityLevel.ERROR,
       summary =
@@ -941,9 +939,9 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
     }
   }
 
-  /** Test class containing a method annotated with a custom @CheckReturnValue. */
+  /// Test class containing a method annotated with a custom @CheckReturnValue.
   public static final class CustomCRVTest {
-    /** A custom @CRV annotation. */
+    /// A custom @CRV annotation.
     @Retention(RetentionPolicy.RUNTIME)
     public @interface CheckReturnValue {}
 
@@ -1090,10 +1088,8 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
   private abstract static class TestScanner extends Scanner {
     private boolean assertionsComplete = false;
 
-    /**
-     * Subclasses of {@link TestScanner} are expected to call this method within their overridden
-     * visitXYZ() method in order to verify that the method has run at least once.
-     */
+    /// Subclasses of [TestScanner] are expected to call this method within their overridden
+    /// visitXYZ() method in order to verify that the method has run at least once.
     void setAssertionsComplete() {
       this.assertionsComplete = true;
     }
@@ -1110,7 +1106,7 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
     }
   }
 
-  /** A checker that reports the constant value of fields. */
+  /// A checker that reports the constant value of fields.
   @BugPattern(summary = "", severity = ERROR)
   public static class ConstChecker extends BugChecker implements VariableTreeMatcher {
     @Override
@@ -1138,7 +1134,7 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
         .doTest();
   }
 
-  /** A {@link BugChecker} that prints the result type of the first argument in method calls. */
+  /// A [BugChecker] that prints the result type of the first argument in method calls.
   @BugPattern(
       severity = SeverityLevel.ERROR,
       summary = "Prints the type of the first argument in method calls")
@@ -1250,7 +1246,7 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
         .doTest();
   }
 
-  /** A {@link BugChecker} that prints the target type of a parameterized type. */
+  /// A [BugChecker] that prints the target type of a parameterized type.
   @BugPattern(
       severity = SeverityLevel.ERROR,
       summary =
@@ -1317,7 +1313,7 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
     Target target();
   }
 
-  /** A {@link Lib}rary for testing. */
+  /// A [Lib]rary for testing.
   public static class Lib {
     @B("one")
     volatile Map.@A(1) Entry<@A(2) ?, ? extends @A(3) Object> field;
@@ -1330,7 +1326,7 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
     }
   }
 
-  /** A {@link BugChecker} that prints if the method can be overridden. */
+  /// A [BugChecker] that prints if the method can be overridden.
   @BugPattern(
       severity = SeverityLevel.ERROR,
       summary = "Prints whether the method can be overridden.")
@@ -1516,7 +1512,7 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
     assertCompiles(scanner);
   }
 
-  /** Replaces all throws clauses with more specific exceptions. */
+  /// Replaces all throws clauses with more specific exceptions.
   @BugPattern(
       summary = "Replaces all throws clauses with more specific exceptions.",
       severity = WARNING)
@@ -1760,7 +1756,7 @@ class Test {
     assertCompiles(scanner);
   }
 
-  /** Comments on method invocations with their receiver chain. */
+  /// Comments on method invocations with their receiver chain.
   @BugPattern(
       summary = "Comments on method invocations with their receiver chain.",
       severity = WARNING)
@@ -1797,7 +1793,7 @@ class Test {
         .doTest();
   }
 
-  /** Helper for testing {@link ASTHelpers#canBeRemoved}. */
+  /// Helper for testing [ASTHelpers#canBeRemoved].
   @BugPattern(summary = "", severity = WARNING)
   public static final class VisibleMembers extends BugChecker
       implements ClassTreeMatcher, MethodTreeMatcher, VariableTreeMatcher {
@@ -1947,7 +1943,7 @@ class Test {
     assertThrows(NoSuchMethodException.class, () -> clazz.getMethod(method, params));
   }
 
-  /** Helper for testing {@link ASTHelpers#enclosingPackage}. */
+  /// Helper for testing [ASTHelpers#enclosingPackage].
   @BugPattern(summary = "", severity = WARNING)
   public static final class EnclosingPackage extends BugChecker
       implements VariableTreeMatcher, MemberReferenceTreeMatcher {
@@ -1998,10 +1994,8 @@ class Test {
         .doTest();
   }
 
-  /**
-   * Test checker to ensure that ASTHelpers.hasDirectAnnotationWithSimpleName handles type
-   * annotations.
-   */
+  /// Test checker to ensure that ASTHelpers.hasDirectAnnotationWithSimpleName handles type
+  /// annotations.
   @BugPattern(
       severity = SeverityLevel.ERROR,
       summary =
@@ -2078,7 +2072,7 @@ class Test {
         .doTest();
   }
 
-  /** Helper for testing {@link ASTHelpers#getTypeSubstitution}. */
+  /// Helper for testing [ASTHelpers#getTypeSubstitution].
   @BugPattern(summary = "", severity = WARNING)
   public static final class GetTypeSubstitution extends BugChecker
       implements MethodInvocationTreeMatcher {

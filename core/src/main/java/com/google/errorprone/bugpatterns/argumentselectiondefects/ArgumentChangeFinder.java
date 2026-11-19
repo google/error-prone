@@ -21,19 +21,17 @@ import com.google.common.collect.ImmutableList;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import java.util.function.Function;
 
-/**
- * Instances of this class are used to find whether there should be argument swaps on a method
- * invocation. It's general operation is through using the provided distance function to compute the
- * similarity of a parameter name and an argument name. A change is a permutation of the original
- * arguments which has the lowest total distance. This is computed as the minimum cost distance
- * match on the bi-partite graph mapping parameters to assignable arguments.
- *
- * @author andrewrice@google.com (Andrew Rice)
- * @param distanceFunction The distance function to use when comparing formal and actual parameters.
- *     The function should return 0 for highly similar names and larger positive values as names are
- *     more different.
- * @param heuristics List of heuristics to apply to eliminate spurious suggestions.
- */
+/// Instances of this class are used to find whether there should be argument swaps on a method
+/// invocation. It's general operation is through using the provided distance function to compute
+/// the similarity of a parameter name and an argument name. A change is a permutation of the
+/// original arguments which has the lowest total distance. This is computed as the minimum cost
+/// distance match on the bi-partite graph mapping parameters to assignable arguments.
+///
+/// @author andrewrice@google.com (Andrew Rice)
+/// @param distanceFunction The distance function to use when comparing formal and actual
+///   parameters. The function should return 0 for highly similar names and larger positive values
+///   as names are more different.
+/// @param heuristics List of heuristics to apply to eliminate spurious suggestions.
 record ArgumentChangeFinder(
     Function<ParameterPair, Double> distanceFunction, ImmutableList<Heuristic> heuristics) {
   static Builder builder() {
@@ -43,16 +41,14 @@ record ArgumentChangeFinder(
   @AutoBuilder
   abstract static class Builder {
 
-    /** Set the distance function that {@link ArgumentChangeFinder} should use. */
+    /// Set the distance function that [ArgumentChangeFinder] should use.
     abstract Builder setDistanceFunction(Function<ParameterPair, Double> distanceFunction);
 
     abstract ImmutableList.Builder<Heuristic> heuristicsBuilder();
 
-    /**
-     * Add the given heuristic to the list to be considered by {@link ArgumentChangeFinder} for
-     * eliminating spurious findings. Heuristics are applied in order so add more expensive checks
-     * last.
-     */
+    /// Add the given heuristic to the list to be considered by [ArgumentChangeFinder] for
+    /// eliminating spurious findings. Heuristics are applied in order so add more expensive checks
+    /// last.
     @CanIgnoreReturnValue
     Builder addHeuristic(Heuristic heuristic) {
       heuristicsBuilder().add(heuristic);
@@ -62,10 +58,8 @@ record ArgumentChangeFinder(
     abstract ArgumentChangeFinder build();
   }
 
-  /**
-   * Find the optimal permutation of arguments for this method invocation or return {@code
-   * Changes.empty()} if no good permutations were found.
-   */
+  /// Find the optimal permutation of arguments for this method invocation or return
+  /// `Changes.empty()` if no good permutations were found.
   Changes findChanges(InvocationInfo invocationInfo) {
     /* Methods with one or fewer parameters cannot possibly have a swap */
     if (invocationInfo.formalParameters().size() <= 1) {

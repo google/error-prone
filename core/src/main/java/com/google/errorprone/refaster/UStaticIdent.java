@@ -25,11 +25,9 @@ import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
 
-/**
- * Identifier representing a static member (field, method, etc.) on a class.
- *
- * @author lowasser@google.com (Louis Wasserman)
- */
+/// Identifier representing a static member (field, method, etc.) on a class.
+///
+/// @author lowasser@google.com (Louis Wasserman)
 @AutoValue
 public abstract class UStaticIdent extends UIdent {
   public static UStaticIdent create(UClassIdent classIdent, CharSequence member, UType memberType) {

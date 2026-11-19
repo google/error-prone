@@ -31,10 +31,10 @@ import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.util.Name;
 import java.util.function.BiPredicate;
 
-/** Matchers for fields. */
+/// Matchers for fields.
 public final class FieldMatchers {
 
-  /** Matches instance fields. */
+  /// Matches instance fields.
   public interface InstanceFieldMatcher {
     default FieldClassMatcher onClass(String className) {
       return onClass(ClassName.of(className));
@@ -43,7 +43,7 @@ public final class FieldMatchers {
     FieldClassMatcher onClass(ClassName className);
   }
 
-  /** Matches static fields. */
+  /// Matches static fields.
   public interface StaticFieldMatcher {
     default FieldClassMatcher onClass(String className) {
       return onClass(ClassName.of(className));
@@ -52,7 +52,7 @@ public final class FieldMatchers {
     FieldClassMatcher onClass(ClassName className);
   }
 
-  /** Matches fields by declaring class. */
+  /// Matches fields by declaring class.
   public interface FieldClassMatcher {
     FieldNameMatcher named(String name);
 
@@ -61,7 +61,7 @@ public final class FieldMatchers {
     FieldNameMatcher namedAnyOf(ImmutableSet<String> names);
   }
 
-  /** Matches fields by name. */
+  /// Matches fields by name.
   public interface FieldNameMatcher extends Matcher<ExpressionTree> {}
 
   private static FieldClassMatcher fieldClassMatcher(

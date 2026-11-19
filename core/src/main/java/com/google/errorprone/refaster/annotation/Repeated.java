@@ -21,12 +21,10 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-/**
- * An annotation for repeated Refaster template variables.
- *
- * <p>A template variable with annotation @Repeated matches zero or more occurrences of expression.
- * This is often used for varargs.
- */
+/// An annotation for repeated Refaster template variables.
+///
+/// A template variable with annotation @Repeated matches zero or more occurrences of expression.
+/// This is often used for varargs.
 @Target(ElementType.PARAMETER)
 @Retention(RetentionPolicy.SOURCE)
 public @interface Repeated {}

@@ -27,11 +27,9 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.sun.source.tree.MethodInvocationTree;
 
-/**
- * Checks for use of Character.getNumericValue and UCharacter.getNumericValue
- *
- * @author conklinh@google.com
- */
+/// Checks for use of Character.getNumericValue and UCharacter.getNumericValue
+///
+/// @author conklinh@google.com
 @BugPattern(
     summary =
         "getNumericValue has unexpected behaviour: it interprets A-Z as base-36 digits with values"

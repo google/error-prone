@@ -23,9 +23,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * @author epmjohnston@google.com
- */
+/// @author epmjohnston@google.com
 @RunWith(JUnit4.class)
 public class WakelockReleasedDangerouslyTest {
 

@@ -44,11 +44,9 @@ import java.util.Optional;
 import javax.inject.Inject;
 import javax.lang.model.type.TypeKind;
 
-/**
- * Flags {@code javax.lang.model.type.TypeMirror#toString} usage in {@link BugChecker}s.
- *
- * @author bhagwani@google.com (Sumit Bhagwani)
- */
+/// Flags `javax.lang.model.type.TypeMirror#toString` usage in [BugChecker]s.
+///
+/// @author bhagwani@google.com (Sumit Bhagwani)
 @BugPattern(
     summary =
         "TypeMirror#toString shouldn't be used for comparison as it is expensive and fragile.",

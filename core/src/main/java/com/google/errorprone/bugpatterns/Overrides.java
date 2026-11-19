@@ -32,11 +32,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-/**
- * Matches the behaviour of javac's overrides Xlint warning.
- *
- * @author cushon@google.com (Liam Miller-Cushon)
- */
+/// Matches the behaviour of javac's overrides Xlint warning.
+///
+/// @author cushon@google.com (Liam Miller-Cushon)
 @BugPattern(
     altNames = "overrides",
     summary = "Varargs doesn't agree for overridden method",

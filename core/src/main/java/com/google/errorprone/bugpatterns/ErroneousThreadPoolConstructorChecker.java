@@ -32,11 +32,8 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.NewClassTree;
 import java.util.List;
 
-/**
- * ErrorProne checker to generate warning whenever {@link java.util.concurrent.ThreadPoolExecutor}
- * is constructed with different {@code corePoolSize} and {@code maximumPoolSize} using an unbounded
- * {@code workQueue}
- */
+/// ErrorProne checker to generate warning whenever [java.util.concurrent.ThreadPoolExecutor] is
+/// constructed with different `corePoolSize` and `maximumPoolSize` using an unbounded `workQueue`
 @BugPattern(
     summary = "Thread pool size will never go beyond corePoolSize if an unbounded queue is used",
     severity = WARNING)

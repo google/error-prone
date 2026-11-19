@@ -29,9 +29,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * @author bhagwani@google.com (Sumit Bhagwani)
- */
+/// @author bhagwani@google.com (Sumit Bhagwani)
 @RunWith(JUnit4.class)
 public class ObjectToStringTest {
 
@@ -154,13 +152,13 @@ public class ObjectToStringNegativeCases {
         .doTest();
   }
 
-  /** A class that will be missing at compile-time for {@link #testIncompleteClasspath}. */
+  /// A class that will be missing at compile-time for [#testIncompleteClasspath].
   public static class One {}
 
-  /** A test class for {@link #testIncompleteClasspath}. */
+  /// A test class for [#testIncompleteClasspath].
   public abstract static class TestLib {
 
-    /** Another test class for {@link #testIncompleteClasspath}. */
+    /// Another test class for [#testIncompleteClasspath].
     public static final class Two extends One {
       @Override
       public String toString() {
@@ -173,7 +171,7 @@ public class ObjectToStringNegativeCases {
 
   // A bugchecker that eagerly completes the missing symbol for testIncompleteClasspath below,
   // to avoid the CompletionFailure being reported later.
-  /** A checker for {@link #testIncompleteClasspath}. */
+  /// A checker for [#testIncompleteClasspath].
   @BugPattern(summary = "", severity = ERROR)
   public static class CompletionChecker extends BugChecker implements ClassTreeMatcher {
     @Override

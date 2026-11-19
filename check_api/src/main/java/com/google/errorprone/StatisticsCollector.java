@@ -20,21 +20,21 @@ import com.google.common.collect.HashMultiset;
 import com.google.common.collect.ImmutableMultiset;
 import com.google.common.collect.Multiset;
 
-/** A collector of counters keyed by strings. */
+/// A collector of counters keyed by strings.
 public interface StatisticsCollector {
 
-  /** Adds 1 to the counter for {@code key}. */
+  /// Adds 1 to the counter for `key`.
   default void incrementCounter(String key) {
     incrementCounter(key, 1);
   }
 
-  /** Adds {@code count} to the counter for {@code key}. */
+  /// Adds `count` to the counter for `key`.
   void incrementCounter(String key, int count);
 
-  /** Returns a copy of the counters in this statistics collector. */
+  /// Returns a copy of the counters in this statistics collector.
   ImmutableMultiset<String> counters();
 
-  /** Returns a new statistics collector that will successfully count keys added to it. */
+  /// Returns a new statistics collector that will successfully count keys added to it.
   static StatisticsCollector createCollector() {
     return new StatisticsCollector() {
       private final Multiset<String> strings = HashMultiset.create();
@@ -51,10 +51,8 @@ public interface StatisticsCollector {
     };
   }
 
-  /**
-   * Returns a statistics collector that will ignore any statistics added to it, always returning an
-   * empty result for {@link #counters}.
-   */
+  /// Returns a statistics collector that will ignore any statistics added to it, always returning
+  /// an empty result for [#counters].
   static StatisticsCollector createNoOpCollector() {
     return new StatisticsCollector() {
       @Override

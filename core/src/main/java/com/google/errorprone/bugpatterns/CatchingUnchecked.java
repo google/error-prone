@@ -38,9 +38,7 @@ import java.util.HashSet;
 import java.util.Set;
 import org.jspecify.annotations.Nullable;
 
-/**
- * Flags code which catches {@link RuntimeException}s under the guise of catching {@link Exception}.
- */
+/// Flags code which catches [RuntimeException]s under the guise of catching [Exception].
 @BugPattern(
     summary =
         "This catch block catches `Exception`, but can only catch unchecked exceptions. Consider"

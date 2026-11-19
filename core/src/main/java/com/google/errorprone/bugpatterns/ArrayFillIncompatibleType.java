@@ -37,10 +37,8 @@ import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Type;
 
-/**
- * Checks when Arrays.fill(Object[], Object) is called with object types that are guaranteed to
- * result in an ArrayStoreException.
- */
+/// Checks when Arrays.fill(Object[], Object) is called with object types that are guaranteed to
+/// result in an ArrayStoreException.
 @BugPattern(
     summary = "Arrays.fill(Object[], Object) called with incompatible types.",
     severity = ERROR)

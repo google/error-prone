@@ -32,11 +32,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * Tests for {@code DescriptionBasedDiff}.
- *
- * @author lowasser@google.com (Louis Wasserman)
- */
+/// Tests for `DescriptionBasedDiff`.
+///
+/// @author lowasser@google.com (Louis Wasserman)
 @RunWith(JUnit4.class)
 public class DescriptionBasedDiffTest extends CompilerBasedTest {
   private JCCompilationUnit compilationUnit;

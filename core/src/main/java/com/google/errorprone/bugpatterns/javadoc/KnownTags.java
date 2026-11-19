@@ -26,11 +26,11 @@ import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.annotations.Immutable;
 import javax.inject.Inject;
 
-/** Other commonly-used javadoc tags which we allow. */
+/// Other commonly-used javadoc tags which we allow.
 @Immutable
 public final class KnownTags {
 
-  /** Non-standard commonly-used tags which we should allow. */
+  /// Non-standard commonly-used tags which we should allow.
   private static final ImmutableSet<JavadocTag> KNOWN_OTHER_TAGS =
       ImmutableSet.of(
           blockTag("apiNote"),

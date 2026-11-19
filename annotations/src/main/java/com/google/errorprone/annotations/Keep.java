@@ -26,16 +26,14 @@ import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
-/**
- * Indicates that the annotated element should not be removed, and that its visibility, modifiers,
- * type, and name should not be modified.
- *
- * <p>For example, program elements that are referenced via reflection may be annotated to prevent
- * them from being removed by static analysis that detects dead code.
- *
- * <p>If this annotates another annotation type, any member annotated with that annotation type
- * should also be kept.
- */
+/// Indicates that the annotated element should not be removed, and that its visibility, modifiers,
+/// type, and name should not be modified.
+///
+/// For example, program elements that are referenced via reflection may be annotated to prevent
+/// them from being removed by static analysis that detects dead code.
+///
+/// If this annotates another annotation type, any member annotated with that annotation type should
+/// also be kept.
 @Documented
 @Target({ANNOTATION_TYPE, CONSTRUCTOR, FIELD, METHOD, TYPE})
 @Retention(RUNTIME)

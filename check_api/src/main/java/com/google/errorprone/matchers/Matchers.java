@@ -113,36 +113,33 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeMirror;
 import org.safere.Pattern;
 
-/**
- * Static factory methods which make the DSL read more fluently. Since matchers are run in a tight
- * loop during compilation, performance is important. When assembling a matcher from the DSL, it's
- * best to construct it only once, by saving the resulting matcher as a static variable for example.
- *
- * @author alexeagle@google.com (Alex Eagle)
- */
+/// Static factory methods which make the DSL read more fluently. Since matchers are run in a tight
+/// loop during compilation, performance is important. When assembling a matcher from the DSL, it's
+/// best to construct it only once, by saving the resulting matcher as a static variable for
+/// example.
+///
+/// @author alexeagle@google.com (Alex Eagle)
 public final class Matchers {
 
   private Matchers() {}
 
-  /** A matcher that matches any AST node. */
+  /// A matcher that matches any AST node.
   public static <T extends Tree> Matcher<T> anything() {
     return (t, state) -> true;
   }
 
-  /** A matcher that matches no AST node. */
+  /// A matcher that matches no AST node.
   public static <T extends Tree> Matcher<T> nothing() {
     return (t, state) -> false;
   }
 
-  /** Matches an AST node iff it does not match the given matcher. */
+  /// Matches an AST node iff it does not match the given matcher.
   public static <T extends Tree> Matcher<T> not(Matcher<T> matcher) {
     return (t, state) -> !matcher.matches(t, state);
   }
 
-  /**
-   * Compose several matchers together, such that the composite matches an AST node iff all the
-   * given matchers do.
-   */
+  /// Compose several matchers together, such that the composite matches an AST node iff all the
+  /// given matchers do.
   @SafeVarargs
   public static <T extends Tree> Matcher<T> allOf(Matcher<? super T>... matchers) {
     return (t, state) -> {
@@ -155,10 +152,8 @@ public final class Matchers {
     };
   }
 
-  /**
-   * Compose several matchers together, such that the composite matches an AST node iff all the
-   * given matchers do.
-   */
+  /// Compose several matchers together, such that the composite matches an AST node iff all the
+  /// given matchers do.
   public static <T extends Tree> Matcher<T> allOf(Iterable<? extends Matcher<? super T>> matchers) {
     return (t, state) -> {
       for (Matcher<? super T> matcher : matchers) {
@@ -170,10 +165,8 @@ public final class Matchers {
     };
   }
 
-  /**
-   * Compose several matchers together, such that the composite matches an AST node if any of the
-   * given matchers do.
-   */
+  /// Compose several matchers together, such that the composite matches an AST node if any of the
+  /// given matchers do.
   public static <T extends Tree> Matcher<T> anyOf(Iterable<? extends Matcher<? super T>> matchers) {
     return (t, state) -> {
       for (Matcher<? super T> matcher : matchers) {
@@ -191,52 +184,49 @@ public final class Matchers {
     return anyOf(Arrays.<Matcher<? super T>>asList(matchers));
   }
 
-  /** Matches if an AST node is an instance of the given class. */
+  /// Matches if an AST node is an instance of the given class.
   public static <T extends Tree> Matcher<T> isInstance(java.lang.Class<?> klass) {
     return (t, state) -> klass.isInstance(t);
   }
 
-  /** Matches an AST node of a given kind, for example, an Annotation or a switch block. */
+  /// Matches an AST node of a given kind, for example, an Annotation or a switch block.
   public static <T extends Tree> Matcher<T> kindIs(Kind kind) {
     return (tree, state) -> tree.getKind() == kind;
   }
 
-  /** Matches an AST node of a given kind, for example, an Annotation or a switch block. */
+  /// Matches an AST node of a given kind, for example, an Annotation or a switch block.
   public static <T extends Tree> Matcher<T> kindAnyOf(Set<Kind> kinds) {
     return (tree, state) -> kinds.contains(tree.getKind());
   }
 
-  /** Matches an AST node which is the same object reference as the given node. */
+  /// Matches an AST node which is the same object reference as the given node.
   public static <T extends Tree> Matcher<T> isSame(Tree t) {
     return (tree, state) -> tree == t;
   }
 
-  /** Matches a static method. */
+  /// Matches a static method.
   public static StaticMethodMatcher staticMethod() {
     return MethodMatchers.staticMethod();
   }
 
-  /** Matches an instance method. */
+  /// Matches an instance method.
   public static InstanceMethodMatcher instanceMethod() {
     return MethodMatchers.instanceMethod();
   }
 
-  /** Matches a static or instance method. */
+  /// Matches a static or instance method.
   public static AnyMethodMatcher anyMethod() {
     return MethodMatchers.anyMethod();
   }
 
-  /** Matches a constructor. */
+  /// Matches a constructor.
   public static ConstructorMatcher constructor() {
     return MethodMatchers.constructor();
   }
 
-  /**
-   * Match a Tree based solely on the Symbol produced by {@link ASTHelpers#getSymbol(Tree)}.
-   *
-   * <p>If {@code getSymbol} returns {@code null}, the matcher returns false instead of calling
-   * {@code pred}.
-   */
+  /// Match a Tree based solely on the Symbol produced by [ASTHelpers#getSymbol(Tree)].
+  ///
+  /// If `getSymbol` returns `null`, the matcher returns false instead of calling `pred`.
   public static <T extends Tree> Matcher<T> symbolMatcher(BiPredicate<Symbol, VisitorState> pred) {
     return (tree, state) -> {
       Symbol sym = getSymbol(tree);
@@ -244,27 +234,25 @@ public final class Matchers {
     };
   }
 
-  /** Matches an AST node that represents a non-static field. */
+  /// Matches an AST node that represents a non-static field.
   public static Matcher<ExpressionTree> isInstanceField() {
     return symbolMatcher(
         (symbol, state) -> symbol.getKind() == ElementKind.FIELD && !ASTHelpers.isStatic(symbol));
   }
 
-  /** Matches an AST node that represents a local variable or parameter. */
+  /// Matches an AST node that represents a local variable or parameter.
   public static Matcher<ExpressionTree> isVariable() {
     return symbolMatcher((symbol, state) ->
         symbol.getKind() == ElementKind.LOCAL_VARIABLE
             || symbol.getKind() == ElementKind.PARAMETER);
   }
 
-  /**
-   * Matches a compound assignment operator AST node which matches a given left-operand matcher, a
-   * given right-operand matcher, and a specific compound assignment operator.
-   *
-   * @param operator Which compound assignment operator to match against.
-   * @param leftOperandMatcher The matcher to apply to the left operand.
-   * @param rightOperandMatcher The matcher to apply to the right operand.
-   */
+  /// Matches a compound assignment operator AST node which matches a given left-operand matcher, a
+  /// given right-operand matcher, and a specific compound assignment operator.
+  ///
+  /// @param operator Which compound assignment operator to match against.
+  /// @param leftOperandMatcher The matcher to apply to the left operand.
+  /// @param rightOperandMatcher The matcher to apply to the right operand.
   public static CompoundAssignment compoundAssignment(
       Kind operator,
       Matcher<ExpressionTree> leftOperandMatcher,
@@ -274,15 +262,13 @@ public final class Matchers {
     return new CompoundAssignment(operators, leftOperandMatcher, rightOperandMatcher);
   }
 
-  /**
-   * Matches a compound assignment operator AST node which matches a given left-operand matcher, a
-   * given right-operand matcher, and is one of a set of compound assignment operators. Does not
-   * match compound assignment operators.
-   *
-   * @param operators Which compound assignment operators to match against.
-   * @param receiverMatcher The matcher to apply to the receiver.
-   * @param expressionMatcher The matcher to apply to the expression.
-   */
+  /// Matches a compound assignment operator AST node which matches a given left-operand matcher, a
+  /// given right-operand matcher, and is one of a set of compound assignment operators. Does not
+  /// match compound assignment operators.
+  ///
+  /// @param operators Which compound assignment operators to match against.
+  /// @param receiverMatcher The matcher to apply to the receiver.
+  /// @param expressionMatcher The matcher to apply to the expression.
   public static CompoundAssignment compoundAssignment(
       Set<Kind> operators,
       Matcher<ExpressionTree> receiverMatcher,
@@ -290,12 +276,10 @@ public final class Matchers {
     return new CompoundAssignment(operators, receiverMatcher, expressionMatcher);
   }
 
-  /**
-   * Matches when the receiver of an instance method is the same reference as a particular argument
-   * to the method. For example, receiverSameAsArgument(1) would match {@code obj.method("", obj)}
-   *
-   * @param argNum The number of the argument to compare against (zero-based.
-   */
+  /// Matches when the receiver of an instance method is the same reference as a particular argument
+  /// to the method. For example, receiverSameAsArgument(1) would match `obj.method("", obj)`
+  ///
+  /// @param argNum The number of the argument to compare against (zero-based.
   public static Matcher<? super MethodInvocationTree> receiverSameAsArgument(int argNum) {
     return (t, state) -> {
       List<? extends ExpressionTree> args = t.getArguments();
@@ -324,20 +308,18 @@ public final class Matchers {
     };
   }
 
-  /**
-   * Matches if the given annotation matcher matches all of or any of the annotations on this tree
-   * node.
-   *
-   * @param matchType Whether to match if the matchers match any of or all of the annotations on
-   *     this tree.
-   * @param annotationMatcher The annotation matcher to use.
-   */
+  /// Matches if the given annotation matcher matches all of or any of the annotations on this tree
+  /// node.
+  ///
+  /// @param matchType Whether to match if the matchers match any of or all of the annotations on
+  ///   this tree.
+  /// @param annotationMatcher The annotation matcher to use.
   public static <T extends Tree> MultiMatcher<T, AnnotationTree> annotations(
       MatchType matchType, Matcher<AnnotationTree> annotationMatcher) {
     return new AnnotationMatcher<>(matchType, annotationMatcher);
   }
 
-  /** Matches a class in which any of/all of its constructors match the given constructorMatcher. */
+  /// Matches a class in which any of/all of its constructors match the given constructorMatcher.
   public static MultiMatcher<ClassTree, MethodTree> constructor(
       MatchType matchType, Matcher<MethodTree> constructorMatcher) {
     return new ConstructorOfClass(matchType, constructorMatcher);
@@ -348,19 +330,17 @@ public final class Matchers {
     return new MethodInvocationArgument(position, argumentMatcher);
   }
 
-  /** Matches if the given matcher matches all of/any of the arguments to this method invocation. */
+  /// Matches if the given matcher matches all of/any of the arguments to this method invocation.
   public static MultiMatcher<MethodInvocationTree, ExpressionTree> hasArguments(
       MatchType matchType, Matcher<ExpressionTree> argumentMatcher) {
     return new HasArguments(matchType, argumentMatcher);
   }
 
-  /**
-   * Matches an AST node if it is a method invocation and the given matchers match.
-   *
-   * @param methodSelectMatcher matcher identifying the method being called
-   * @param matchType how to match method arguments with {@code methodArgumentMatcher}
-   * @param methodArgumentMatcher matcher applied to each method argument
-   */
+  /// Matches an AST node if it is a method invocation and the given matchers match.
+  ///
+  /// @param methodSelectMatcher matcher identifying the method being called
+  /// @param matchType how to match method arguments with `methodArgumentMatcher`
+  /// @param methodArgumentMatcher matcher applied to each method argument
   public static Matcher<ExpressionTree> methodInvocation(
       Matcher<ExpressionTree> methodSelectMatcher,
       MatchType matchType,
@@ -368,10 +348,8 @@ public final class Matchers {
     return new MethodInvocation(methodSelectMatcher, matchType, methodArgumentMatcher);
   }
 
-  /**
-   * Matches an AST node if it is a method invocation and the method select matches {@code
-   * methodSelectMatcher}. Ignores any arguments.
-   */
+  /// Matches an AST node if it is a method invocation and the method select matches
+  /// `methodSelectMatcher`. Ignores any arguments.
   public static Matcher<ExpressionTree> methodInvocation(
       Matcher<ExpressionTree> methodSelectMatcher) {
     return (expressionTree, state) -> {
@@ -384,11 +362,8 @@ public final class Matchers {
     return (t, state) -> t.getArguments().size() == argumentCount;
   }
 
-  /**
-   * Matches an AST node if its parent node is matched by the given matcher. For example, {@code
-   * parentNode(kindIs(Kind.RETURN))} would match the {@code this} expression in {@code return
-   * this;}
-   */
+  /// Matches an AST node if its parent node is matched by the given matcher. For example,
+  /// `parentNode(kindIs(Kind.RETURN))` would match the `this` expression in `return this;`
   public static <T extends Tree> Matcher<T> parentNode(Matcher<Tree> treeMatcher) {
     return (tree, state) -> {
       TreePath parent = requireNonNull(state.getPath().getParentPath());
@@ -396,76 +371,63 @@ public final class Matchers {
     };
   }
 
-  /**
-   * Matches an AST node if its type is a subtype of the given type.
-   *
-   * @param typeStr a string representation of the type, e.g., "java.util.AbstractList"
-   */
+  /// Matches an AST node if its type is a subtype of the given type.
+  ///
+  /// @param typeStr a string representation of the type, e.g., "java.util.AbstractList"
   public static <T extends Tree> Matcher<T> isSubtypeOf(String typeStr) {
     return typePredicateMatcher(isDescendantOf(typeStr));
   }
 
-  /**
-   * Matches an AST node if its type is a subtype of the given class.
-   *
-   * @param className the class to check against
-   */
+  /// Matches an AST node if its type is a subtype of the given class.
+  ///
+  /// @param className the class to check against
   public static <T extends Tree> Matcher<T> isSubtypeOf(ClassName className) {
     return typePredicateMatcher(isDescendantOf(className));
   }
 
-  /**
-   * Matches an AST node if its type is a subtype of the given type.
-   *
-   * @param type the type to check against
-   */
+  /// Matches an AST node if its type is a subtype of the given type.
+  ///
+  /// @param type the type to check against
   public static <T extends Tree> Matcher<T> isSubtypeOf(Supplier<Type> type) {
     return typePredicateMatcher(isDescendantOf(type));
   }
 
-  /**
-   * Matches an AST node if its type is a subtype of the given type.
-   *
-   * <p>Prefer {@link #isSubtypeOf(String)} or {@link #isSubtypeOf(ClassName)} to avoid a runtime
-   * dependency on the class.
-   *
-   * @param clazz a class representation of the type, e.g., Action.class.
-   */
+  /// Matches an AST node if its type is a subtype of the given type.
+  ///
+  /// Prefer [#isSubtypeOf(String)] or [#isSubtypeOf(ClassName)] to avoid a runtime dependency on
+  /// the class.
+  ///
+  /// @param clazz a class representation of the type, e.g., Action.class.
   public static <T extends Tree> Matcher<T> isSubtypeOf(Class<?> clazz) {
     return typePredicateMatcher(isDescendantOf(typeFromClass(clazz)));
   }
 
-  /** Matches an AST node if it has the same erased type as the given type. */
+  /// Matches an AST node if it has the same erased type as the given type.
   public static <T extends Tree> Matcher<T> isSameType(Supplier<Type> type) {
     return typePredicateMatcher(isExactType(type));
   }
 
-  /** Matches an AST node if it has the same erased type as the given type. */
+  /// Matches an AST node if it has the same erased type as the given type.
   public static <T extends Tree> Matcher<T> isSameType(String typeString) {
     return typePredicateMatcher(isExactType(typeString));
   }
 
-  /** Matches an AST node if it has the same erased type as the given class. */
+  /// Matches an AST node if it has the same erased type as the given class.
   public static <T extends Tree> Matcher<T> isSameType(ClassName className) {
     return typePredicateMatcher(isExactType(className));
   }
 
-  /**
-   * Matches an AST node if it has the same erased type as the given class.
-   *
-   * <p>Prefer {@link #isSameType(String)} or {@link #isSameType(ClassName)} to avoid a runtime
-   * dependency on the class.
-   */
+  /// Matches an AST node if it has the same erased type as the given class.
+  ///
+  /// Prefer [#isSameType(String)] or [#isSameType(ClassName)] to avoid a runtime dependency on the
+  /// class.
   public static <T extends Tree> Matcher<T> isSameType(Class<?> clazz) {
     return typePredicateMatcher(isExactType(typeFromClass(clazz)));
   }
 
-  /**
-   * Match a Tree based solely on the type produced by {@link ASTHelpers#getType(Tree)}.
-   *
-   * <p>If {@code getType} returns {@code null}, the matcher returns false instead of calling {@code
-   * pred}.
-   */
+  /// Match a Tree based solely on the type produced by [ASTHelpers#getType(Tree)].
+  ///
+  /// If `getType` returns `null`, the matcher returns false instead of calling `pred`.
   public static <T extends Tree> Matcher<T> typePredicateMatcher(TypePredicate pred) {
     return (tree, state) -> {
       Type type = getType(tree);
@@ -473,65 +435,61 @@ public final class Matchers {
     };
   }
 
-  /** Matches an AST node if its type is an array type. */
+  /// Matches an AST node if its type is an array type.
   public static <T extends Tree> Matcher<T> isArrayType() {
     return typePredicateMatcher((type, state) -> state.getTypes().isArray(type));
   }
 
-  /** Matches an AST node if its type is a primitive array type. */
+  /// Matches an AST node if its type is a primitive array type.
   public static <T extends Tree> Matcher<T> isPrimitiveArrayType() {
     return typePredicateMatcher((type, state) ->
         state.getTypes().isArray(type) && state.getTypes().elemtype(type).isPrimitive());
   }
 
-  /** Matches an AST node if its type is a primitive type. */
+  /// Matches an AST node if its type is a primitive type.
   public static <T extends Tree> Matcher<T> isPrimitiveType() {
     return typePredicateMatcher((type, state) -> type.isPrimitive());
   }
 
-  /** Matches an AST node if its type is either a primitive type or a {@code void} type. */
+  /// Matches an AST node if its type is either a primitive type or a `void` type.
   public static <T extends Tree> Matcher<T> isPrimitiveOrVoidType() {
     return typePredicateMatcher((type, state) -> type.isPrimitiveOrVoid());
   }
 
-  /** Matches an AST node if its type is a {@code void} type. */
+  /// Matches an AST node if its type is a `void` type.
   public static <T extends Tree> Matcher<T> isVoidType() {
     return typePredicateMatcher(
         (type, state) -> state.getTypes().isSameType(type, state.getSymtab().voidType));
   }
 
-  /**
-   * Matches an AST node if its type is a primitive type, or a boxed version of a primitive type.
-   */
+  /// Matches an AST node if its type is a primitive type, or a boxed version of a primitive type.
   public static <T extends Tree> Matcher<T> isPrimitiveOrBoxedPrimitiveType() {
     return typePredicateMatcher((type, state) -> unboxedTypeOrType(type, state).isPrimitive());
   }
 
-  /** Matches an AST node if its type is a boxed primitive type. */
+  /// Matches an AST node if its type is a boxed primitive type.
   public static Matcher<ExpressionTree> isBoxedPrimitiveType() {
     return typePredicateMatcher(ASTHelpers::isBoxedPrimitiveType);
   }
 
-  /** Matches an AST node which is enclosed by a block node that matches the given matcher. */
+  /// Matches an AST node which is enclosed by a block node that matches the given matcher.
   public static <T extends Tree> Enclosing.Block<T> enclosingBlock(Matcher<BlockTree> matcher) {
     return new Enclosing.Block<>(matcher);
   }
 
-  /** Matches an AST node which is enclosed by a class node that matches the given matcher. */
+  /// Matches an AST node which is enclosed by a class node that matches the given matcher.
   public static <T extends Tree> Enclosing.Class<T> enclosingClass(Matcher<ClassTree> matcher) {
     return new Enclosing.Class<>(matcher);
   }
 
-  /** Matches an AST node which is enclosed by a method node that matches the given matcher. */
+  /// Matches an AST node which is enclosed by a method node that matches the given matcher.
   public static <T extends Tree> Enclosing.Method<T> enclosingMethod(Matcher<MethodTree> matcher) {
     return new Enclosing.Method<>(matcher);
   }
 
-  /**
-   * Matches an AST node that is enclosed by some node that matches the given matcher.
-   *
-   * <p>TODO(eaftan): This could be used instead of enclosingBlock and enclosingClass.
-   */
+  /// Matches an AST node that is enclosed by some node that matches the given matcher.
+  ///
+  /// TODO(eaftan): This could be used instead of enclosingBlock and enclosingClass.
   public static Matcher<Tree> enclosingNode(Matcher<Tree> matcher) {
     return (t, state) -> {
       TreePath path = state.getPath().getParentPath();
@@ -568,24 +526,20 @@ public final class Matchers {
     return matcher.matches(sibling, state.withPath(new TreePath(blockPath, sibling)));
   }
 
-  /**
-   * Matches a statement AST node if the following statement in the enclosing block matches the
-   * given matcher.
-   */
+  /// Matches a statement AST node if the following statement in the enclosing block matches the
+  /// given matcher.
   public static <T extends StatementTree> Matcher<T> nextStatement(Matcher<StatementTree> matcher) {
     return (statement, state) -> siblingStatement(/* offset= */ 1, matcher, statement, state);
   }
 
-  /**
-   * Matches a statement AST node if the previous statement in the enclosing block matches the given
-   * matcher.
-   */
+  /// Matches a statement AST node if the previous statement in the enclosing block matches the
+  /// given matcher.
   public static <T extends StatementTree> Matcher<T> previousStatement(
       Matcher<StatementTree> matcher) {
     return (statement, state) -> siblingStatement(/* offset= */ -1, matcher, statement, state);
   }
 
-  /** Matches a statement AST node if the statement is the last statement in the block. */
+  /// Matches a statement AST node if the statement is the last statement in the block.
   public static Matcher<StatementTree> isLastStatementInBlock() {
     return (statement, state) -> {
       // TODO(cushon): walking arbitrarily far up to find a block tree often isn't what we want
@@ -598,12 +552,12 @@ public final class Matchers {
     };
   }
 
-  /** Matches an AST node if it is a null literal. */
+  /// Matches an AST node if it is a null literal.
   public static Matcher<ExpressionTree> nullLiteral() {
     return (tree, state) -> tree.getKind() == Kind.NULL_LITERAL;
   }
 
-  /** Matches an AST node if it is a literal other than null. */
+  /// Matches an AST node if it is a literal other than null.
   public static Matcher<ExpressionTree> nonNullLiteral() {
     return (tree, state) -> {
       return switch (tree.getKind()) {
@@ -628,28 +582,22 @@ public final class Matchers {
             && matcher.test(string);
   }
 
-  /**
-   * Matches a Literal AST node if it is a string literal with the given value. For example, {@code
-   * stringLiteral("thing")} matches the literal {@code "thing"}
-   */
+  /// Matches a Literal AST node if it is a string literal with the given value. For example,
+  /// `stringLiteral("thing")` matches the literal `"thing"`
   public static Matcher<ExpressionTree> stringLiteral(String value) {
     return stringLiteral(value::equals);
   }
 
-  /**
-   * Matches a Literal AST node if it is a string literal which matches the given {@code Pattern}.
-   *
-   * @see #stringLiteral(String)
-   */
+  /// Matches a Literal AST node if it is a string literal which matches the given `Pattern`.
+  ///
+  /// @see #stringLiteral(String)
   public static Matcher<ExpressionTree> stringLiteral(Pattern pattern) {
     return stringLiteral(pattern.asPredicate());
   }
 
-  /**
-   * Matches a Literal AST node if it is a string literal which matches the given {@code Pattern}.
-   *
-   * @see #stringLiteral(String)
-   */
+  /// Matches a Literal AST node if it is a string literal which matches the given `Pattern`.
+  ///
+  /// @see #stringLiteral(String)
   public static Matcher<ExpressionTree> stringLiteral(java.util.regex.Pattern pattern) {
     return stringLiteral(pattern.asPredicate());
   }
@@ -661,10 +609,8 @@ public final class Matchers {
             && bool == value;
   }
 
-  /**
-   * Matches the boolean constant ({@link Boolean#TRUE} or {@link Boolean#FALSE}) corresponding to
-   * the given value.
-   */
+  /// Matches the boolean constant ([Boolean#TRUE] or [Boolean#FALSE]) corresponding to the given
+  /// value.
   public static Matcher<ExpressionTree> booleanConstant(boolean value) {
     return (expressionTree, state) -> {
       if (expressionTree instanceof JCFieldAccess) {
@@ -682,16 +628,14 @@ public final class Matchers {
     };
   }
 
-  /**
-   * Ignores any number of parenthesis wrapping an expression and then applies the passed matcher to
-   * that expression. For example, the passed matcher would be applied to {@code value} in {@code
-   * (((value)))}.
-   */
+  /// Ignores any number of parenthesis wrapping an expression and then applies the passed matcher
+  /// to that expression. For example, the passed matcher would be applied to `value` in
+  /// `(((value)))`.
   public static Matcher<ExpressionTree> ignoreParens(Matcher<ExpressionTree> innerMatcher) {
     return (tree, state) -> innerMatcher.matches(stripParentheses(tree), state);
   }
 
-  /** Matches an {@code int} literal with the given value. */
+  /// Matches an `int` literal with the given value.
   public static Matcher<ExpressionTree> intLiteral(int value) {
     return (tree, state) ->
         tree instanceof LiteralTree literalTree
@@ -699,7 +643,7 @@ public final class Matchers {
             && integer == value;
   }
 
-  /** Matches a class literal with the given class matcher. */
+  /// Matches a class literal with the given class matcher.
   public static Matcher<ExpressionTree> classLiteral(Matcher<? super ExpressionTree> classMatcher) {
     return (tree, state) ->
         tree instanceof MemberSelectTree select
@@ -707,56 +651,48 @@ public final class Matchers {
             && classMatcher.matches(select.getExpression(), state);
   }
 
-  /**
-   * Matches an Annotation AST node if the argument to the annotation with the given name has a
-   * value which matches the given matcher. For example, {@code hasArgumentWithValue("value",
-   * stringLiteral("one"))} matches {@code @Thing("one")} or {@code @Thing({"one", "two"})} or
-   * {@code @Thing(value = "one")}
-   */
+  /// Matches an Annotation AST node if the argument to the annotation with the given name has a
+  /// value which matches the given matcher. For example, `hasArgumentWithValue("value",
+  /// stringLiteral("one"))` matches `@Thing("one")` or `@Thing({"one", "two"})` or `@Thing(value =
+  /// "one")`
   public static Matcher<AnnotationTree> hasArgumentWithValue(
       String argumentName, Matcher<ExpressionTree> valueMatcher) {
     return new AnnotationHasArgumentWithValue(argumentName, valueMatcher);
   }
 
-  /** Matches an Annotation AST node if an argument to the annotation does not exist. */
+  /// Matches an Annotation AST node if an argument to the annotation does not exist.
   public static Matcher<AnnotationTree> doesNotHaveArgument(String argumentName) {
     return new AnnotationDoesNotHaveArgument(argumentName);
   }
 
-  /** Matches an {@link AnnotationTree} with the given qualified annotation class name. */
+  /// Matches an [AnnotationTree] with the given qualified annotation class name.
   public static Matcher<AnnotationTree> isType(String annotationClassName) {
     return isType(ClassName.of(annotationClassName));
   }
 
-  /** Matches an {@link AnnotationTree} with the given annotation {@link ClassName}. */
+  /// Matches an [AnnotationTree] with the given annotation [ClassName].
   public static Matcher<AnnotationTree> isType(ClassName annotationClassName) {
     return new AnnotationType(annotationClassName);
   }
 
-  /**
-   * Matches an annotation that is itself annotated with the given annotation, i.e. a
-   * meta-annotation.
-   */
+  /// Matches an annotation that is itself annotated with the given annotation, i.e. a
+  /// meta-annotation.
   public static Matcher<AnnotationTree> hasMetaAnnotation(String annotationClassName) {
     return hasMetaAnnotation(ClassName.of(annotationClassName));
   }
 
-  /**
-   * Matches an annotation that is itself annotated with the given annotation, i.e. a
-   * meta-annotation.
-   */
+  /// Matches an annotation that is itself annotated with the given annotation, i.e. a
+  /// meta-annotation.
   public static Matcher<AnnotationTree> hasMetaAnnotation(ClassName annotationClassName) {
     return typePredicateMatcher(TypePredicates.hasAnnotation(annotationClassName));
   }
 
-  /**
-   * Matches a {@link MethodInvocation} when the arguments at the two given indices are both the
-   * same variable, as determined by {@link ASTHelpers#sameVariable}.
-   *
-   * @param index1 the index of the first actual parameter to test
-   * @param index2 the index of the second actual parameter to test
-   * @throws IndexOutOfBoundsException if the given indices are invalid
-   */
+  /// Matches a [MethodInvocation] when the arguments at the two given indices are both the same
+  /// variable, as determined by [ASTHelpers#sameVariable].
+  ///
+  /// @param index1 the index of the first actual parameter to test
+  /// @param index2 the index of the second actual parameter to test
+  /// @throws IndexOutOfBoundsException if the given indices are invalid
   public static Matcher<? super MethodInvocationTree> sameArgument(int index1, int index2) {
     return (tree, state) -> {
       List<? extends ExpressionTree> args = tree.getArguments();
@@ -764,44 +700,36 @@ public final class Matchers {
     };
   }
 
-  /**
-   * Determines whether an expression has an annotation with the given simple name. This does not
-   * include annotations inherited from superclasses due to @Inherited.
-   *
-   * @param simpleName the simple name of the annotation (e.g. "Nullable")
-   */
+  /// Determines whether an expression has an annotation with the given simple name. This does not
+  /// include annotations inherited from superclasses due to @Inherited.
+  ///
+  /// @param simpleName the simple name of the annotation (e.g. "Nullable")
   public static <T extends Tree> Matcher<T> hasAnnotationWithSimpleName(String simpleName) {
     return (tree, state) ->
         ASTHelpers.hasDirectAnnotationWithSimpleName(
             ASTHelpers.getDeclaredSymbol(tree), simpleName);
   }
 
-  /**
-   * Determines whether an expression has an annotation of the given type. This includes annotations
-   * inherited from superclasses due to @Inherited.
-   *
-   * @param annotationClass the binary class name of the annotation (e.g.
-   *     "javax.annotation.Nullable", or "some.package.OuterClassName$InnerClassName")
-   */
+  /// Determines whether an expression has an annotation of the given type. This includes
+  /// annotations inherited from superclasses due to @Inherited.
+  ///
+  /// @param annotationClass the binary class name of the annotation (e.g.
+  ///   "javax.annotation.Nullable", or "some.package.OuterClassName$InnerClassName")
   public static <T extends Tree> Matcher<T> hasAnnotation(String annotationClass) {
     return hasAnnotation(ClassName.of(annotationClass));
   }
 
-  /**
-   * Determines whether an expression has an annotation of the given type. This includes annotations
-   * inherited from superclasses due to @Inherited.
-   */
+  /// Determines whether an expression has an annotation of the given type. This includes
+  /// annotations inherited from superclasses due to @Inherited.
   public static <T extends Tree> Matcher<T> hasAnnotation(ClassName annotationClass) {
     return (T tree, VisitorState state) ->
         ASTHelpers.hasAnnotation(ASTHelpers.getDeclaredSymbol(tree), annotationClass, state);
   }
 
-  /**
-   * Determines if an expression has an annotation referred to by the given mirror. Accounts for
-   * binary names and annotations inherited due to @Inherited.
-   *
-   * @param annotationMirror mirror referring to the annotation type
-   */
+  /// Determines if an expression has an annotation referred to by the given mirror. Accounts for
+  /// binary names and annotations inherited due to @Inherited.
+  ///
+  /// @param annotationMirror mirror referring to the annotation type
   public static Matcher<Tree> hasAnnotation(TypeMirror annotationMirror) {
     String annotationName = annotationMirror.toString();
     return (Tree tree, VisitorState state) -> {
@@ -818,68 +746,56 @@ public final class Matchers {
     };
   }
 
-  /**
-   * Determines whether an expression has an annotation of the given class. This includes
-   * annotations inherited from superclasses due to @Inherited.
-   *
-   * <p>Prefer {@link #hasAnnotation(String)} or {@link #hasAnnotation(ClassName)} to avoid a
-   * runtime dependency on the annotation class.
-   *
-   * @param inputClass the class of the annotation to look for (e.g, {@code Produces.class})
-   */
+  /// Determines whether an expression has an annotation of the given class. This includes
+  /// annotations inherited from superclasses due to @Inherited.
+  ///
+  /// Prefer [#hasAnnotation(String)] or [#hasAnnotation(ClassName)] to avoid a runtime dependency
+  /// on the annotation class.
+  ///
+  /// @param inputClass the class of the annotation to look for (e.g, `Produces.class`)
   public static <T extends Tree> Matcher<T> hasAnnotation(Class<? extends Annotation> inputClass) {
     return hasAnnotation(ClassName.of(inputClass.getName()));
   }
 
-  /**
-   * Determines whether an expression refers to a symbol that has an annotation of the given type.
-   * This includes annotations inherited from superclasses due to @Inherited.
-   *
-   * @param annotationClass the binary class name of the annotation (e.g.
-   *     "javax.annotation.Nullable", or "some.package.OuterClassName$InnerClassName")
-   */
+  /// Determines whether an expression refers to a symbol that has an annotation of the given type.
+  /// This includes annotations inherited from superclasses due to @Inherited.
+  ///
+  /// @param annotationClass the binary class name of the annotation (e.g.
+  ///   "javax.annotation.Nullable", or "some.package.OuterClassName$InnerClassName")
   public static <T extends Tree> Matcher<T> symbolHasAnnotation(String annotationClass) {
     return symbolHasAnnotation(ClassName.of(annotationClass));
   }
 
-  /**
-   * Determines whether an expression refers to a symbol that has an annotation of the given type.
-   * This includes annotations inherited from superclasses due to @Inherited.
-   */
+  /// Determines whether an expression refers to a symbol that has an annotation of the given type.
+  /// This includes annotations inherited from superclasses due to @Inherited.
   public static <T extends Tree> Matcher<T> symbolHasAnnotation(ClassName annotationClass) {
     return symbolMatcher(
         (symbol, state) -> ASTHelpers.hasAnnotation(symbol, annotationClass, state));
   }
 
-  /**
-   * Determines whether an expression refers to a symbol that has an annotation of the given type.
-   * This includes annotations inherited from superclasses due to @Inherited.
-   *
-   * <p>Prefer {@link #symbolHasAnnotation(String)} or {@link #symbolHasAnnotation(ClassName)} to
-   * avoid a runtime dependency on the annotation class.
-   *
-   * @param inputClass The class of the annotation to look for (e.g, Produces.class).
-   */
+  /// Determines whether an expression refers to a symbol that has an annotation of the given type.
+  /// This includes annotations inherited from superclasses due to @Inherited.
+  ///
+  /// Prefer [#symbolHasAnnotation(String)] or [#symbolHasAnnotation(ClassName)] to avoid a runtime
+  /// dependency on the annotation class.
+  ///
+  /// @param inputClass The class of the annotation to look for (e.g, Produces.class).
   public static <T extends Tree> Matcher<T> symbolHasAnnotation(
       Class<? extends Annotation> inputClass) {
     return symbolHasAnnotation(ClassName.of(inputClass.getName()));
   }
 
-  /**
-   * Matches if a method or any method it overrides has an annotation of the given type. JUnit 4's
-   * {@code @Test}, {@code @Before}, and {@code @After} annotations behave this way.
-   *
-   * @param annotationClass the binary class name of the annotation (e.g.
-   *     "javax.annotation.Nullable", or "some.package.OuterClassName$InnerClassName")
-   */
+  /// Matches if a method or any method it overrides has an annotation of the given type. JUnit 4's
+  /// `@Test`, `@Before`, and `@After` annotations behave this way.
+  ///
+  /// @param annotationClass the binary class name of the annotation (e.g.
+  ///   "javax.annotation.Nullable", or "some.package.OuterClassName$InnerClassName")
   public static Matcher<MethodTree> hasAnnotationOnAnyOverriddenMethod(String annotationClass) {
     return hasAnnotationOnAnyOverriddenMethod(ClassName.of(annotationClass));
   }
 
-  /**
-   * Matches if a method or any method it overrides has an annotation of the given type. JUnit 4's
-   * {@code @Test}, {@code @Before}, and {@code @After} annotations behave this way.
-   */
+  /// Matches if a method or any method it overrides has an annotation of the given type. JUnit 4's
+  /// `@Test`, `@Before`, and `@After` annotations behave this way.
   public static Matcher<MethodTree> hasAnnotationOnAnyOverriddenMethod(ClassName annotationClass) {
     return (tree, state) -> {
       MethodSymbol methodSym = getSymbol(tree);
@@ -895,7 +811,7 @@ public final class Matchers {
     };
   }
 
-  /** Matches a method invocation that is known to never return null. */
+  /// Matches a method invocation that is known to never return null.
   public static Matcher<ExpressionTree> methodReturnsNonNull() {
     return anyOf(
         instanceMethod().onDescendantOf("java.lang.Object").named("toString"),
@@ -912,56 +828,48 @@ public final class Matchers {
     };
   }
 
-  /** Match a method whose return type equals the given {@code returnType}. */
+  /// Match a method whose return type equals the given `returnType`.
   public static Matcher<MethodTree> methodReturns(Supplier<Type> returnType) {
     return methodReturns(isSameType(returnType));
   }
 
-  /** Match a method whose return type equals the given {@code returnType}. */
+  /// Match a method whose return type equals the given `returnType`.
   public static Matcher<MethodTree> methodReturns(ClassName returnType) {
     return methodReturns(isSameType(returnType));
   }
 
-  /** Match a method that returns a non-primitive type. */
+  /// Match a method that returns a non-primitive type.
   public static Matcher<MethodTree> methodReturnsNonPrimitiveType() {
     return methodReturns(not(isPrimitiveOrVoidType()));
   }
 
-  /**
-   * Match a method declaration with a specific name.
-   *
-   * @param methodName The name of the method to match, e.g., "equals"
-   */
+  /// Match a method declaration with a specific name.
+  ///
+  /// @param methodName The name of the method to match, e.g., "equals"
   public static Matcher<MethodTree> methodIsNamed(String methodName) {
     return (methodTree, state) -> methodTree.getName().contentEquals(methodName);
   }
 
-  /**
-   * Match a method declaration that starts with a given string.
-   *
-   * @param prefix The prefix.
-   */
+  /// Match a method declaration that starts with a given string.
+  ///
+  /// @param prefix The prefix.
   public static Matcher<MethodTree> methodNameStartsWith(String prefix) {
     return (methodTree, state) -> methodTree.getName().toString().startsWith(prefix);
   }
 
-  /**
-   * Match a method declaration with a specific enclosing class and method name.
-   *
-   * @param className The fully-qualified name of the enclosing class, e.g.
-   *     "com.google.common.base.Preconditions"
-   * @param methodName The name of the method to match, e.g., "checkNotNull"
-   */
+  /// Match a method declaration with a specific enclosing class and method name.
+  ///
+  /// @param className The fully-qualified name of the enclosing class, e.g.
+  ///   "com.google.common.base.Preconditions"
+  /// @param methodName The name of the method to match, e.g., "checkNotNull"
   public static Matcher<MethodTree> methodWithClassAndName(String className, String methodName) {
     return methodWithClassAndName(ClassName.of(className), methodName);
   }
 
-  /**
-   * Match a method declaration with a specific enclosing class and method name.
-   *
-   * @param className The enclosing class
-   * @param methodName The name of the method to match, e.g., "checkNotNull"
-   */
+  /// Match a method declaration with a specific enclosing class and method name.
+  ///
+  /// @param className The enclosing class
+  /// @param methodName The name of the method to match, e.g., "checkNotNull"
   public static Matcher<MethodTree> methodWithClassAndName(ClassName className, String methodName) {
     return (methodTree, state) ->
         methodTree.getName().contentEquals(methodName)
@@ -969,36 +877,32 @@ public final class Matchers {
             && owner.flatName().equals(className.binaryName(state));
   }
 
-  /**
-   * Matches an AST node that represents a method declaration, based on the list of
-   * variableMatchers. Applies the variableMatcher at index n to the parameter at index n and
-   * returns true iff they all match. Returns false if the number of variableMatchers provided does
-   * not match the number of parameters.
-   *
-   * <p>If you pass no variableMatchers, this will match methods with no parameters.
-   *
-   * @param variableMatcher an array of matchers to apply to the parameters of the method
-   */
+  /// Matches an AST node that represents a method declaration, based on the list of
+  /// variableMatchers. Applies the variableMatcher at index n to the parameter at index n and
+  /// returns true iff they all match. Returns false if the number of variableMatchers provided does
+  /// not match the number of parameters.
+  ///
+  /// If you pass no variableMatchers, this will match methods with no parameters.
+  ///
+  /// @param variableMatcher an array of matchers to apply to the parameters of the method
   @SafeVarargs
   public static Matcher<MethodTree> methodHasParameters(Matcher<VariableTree>... variableMatcher) {
     return methodHasParameters(ImmutableList.copyOf(variableMatcher));
   }
 
-  /** Matches an AST node that represents a method declaration with no parameters. */
+  /// Matches an AST node that represents a method declaration with no parameters.
   public static Matcher<MethodTree> methodHasNoParameters() {
     return methodHasParameters(ImmutableList.of());
   }
 
-  /**
-   * Matches an AST node that represents a method declaration, based on the list of
-   * variableMatchers. Applies the variableMatcher at index n to the parameter at index n and
-   * returns true iff they all match. Returns false if the number of variableMatchers provided does
-   * not match the number of parameters.
-   *
-   * <p>If you pass no variableMatchers, this will match methods with no parameters.
-   *
-   * @param variableMatcher a list of matchers to apply to the parameters of the method
-   */
+  /// Matches an AST node that represents a method declaration, based on the list of
+  /// variableMatchers. Applies the variableMatcher at index n to the parameter at index n and
+  /// returns true iff they all match. Returns false if the number of variableMatchers provided does
+  /// not match the number of parameters.
+  ///
+  /// If you pass no variableMatchers, this will match methods with no parameters.
+  ///
+  /// @param variableMatcher a list of matchers to apply to the parameters of the method
   public static Matcher<MethodTree> methodHasParameters(
       List<Matcher<VariableTree>> variableMatcher) {
     return (methodTree, state) -> {
@@ -1015,7 +919,7 @@ public final class Matchers {
     };
   }
 
-  /** Matches if the given matcher matches all of/any of the parameters to this method. */
+  /// Matches if the given matcher matches all of/any of the parameters to this method.
   public static MultiMatcher<MethodTree, VariableTree> methodHasParameters(
       MatchType matchType, Matcher<VariableTree> parameterMatcher) {
     return new MethodHasParameters(matchType, parameterMatcher);
@@ -1029,21 +933,17 @@ public final class Matchers {
     return (methodTree, state) -> getSymbol(methodTree).isConstructor();
   }
 
-  /**
-   * Matches a constructor declaration in a specific enclosing class.
-   *
-   * @param className The fully-qualified name of the enclosing class, e.g.
-   *     "com.google.common.base.Preconditions"
-   */
+  /// Matches a constructor declaration in a specific enclosing class.
+  ///
+  /// @param className The fully-qualified name of the enclosing class, e.g.
+  ///   "com.google.common.base.Preconditions"
   public static Matcher<MethodTree> constructorOfClass(String className) {
     return constructorOfClass(ClassName.of(className));
   }
 
-  /**
-   * Matches a constructor declaration in a specific enclosing class.
-   *
-   * @param className The enclosing class
-   */
+  /// Matches a constructor declaration in a specific enclosing class.
+  ///
+  /// @param className The enclosing class
   public static Matcher<MethodTree> constructorOfClass(ClassName className) {
     return (methodTree, state) -> {
       Symbol symbol = getSymbol(methodTree);
@@ -1053,12 +953,10 @@ public final class Matchers {
     };
   }
 
-  /**
-   * Matches a class in which at least one method matches the given methodMatcher.
-   *
-   * @param methodMatcher A matcher on MethodTrees to run against all methods in this class.
-   * @return True if some method in the class matches the given methodMatcher.
-   */
+  /// Matches a class in which at least one method matches the given methodMatcher.
+  ///
+  /// @param methodMatcher A matcher on MethodTrees to run against all methods in this class.
+  /// @return True if some method in the class matches the given methodMatcher.
   public static Matcher<ClassTree> hasMethod(Matcher<MethodTree> methodMatcher) {
     return (t, state) -> {
       for (Tree member : t.getMembers()) {
@@ -1070,20 +968,16 @@ public final class Matchers {
     };
   }
 
-  /**
-   * Matches on the type of a VariableTree AST node.
-   *
-   * @param typePredicate the type predicate to apply to the variable type
-   */
+  /// Matches on the type of a VariableTree AST node.
+  ///
+  /// @param typePredicate the type predicate to apply to the variable type
   public static Matcher<VariableTree> variableType(TypePredicate typePredicate) {
     return (variableTree, state) -> typePredicate.apply(getType(variableTree), state);
   }
 
-  /**
-   * Matches on the initializer of a VariableTree AST node.
-   *
-   * @param expressionTreeMatcher A matcher on the initializer of the variable.
-   */
+  /// Matches on the initializer of a VariableTree AST node.
+  ///
+  /// @param expressionTreeMatcher A matcher on the initializer of the variable.
   public static Matcher<VariableTree> variableInitializer(
       Matcher<ExpressionTree> expressionTreeMatcher) {
     return (variableTree, state) -> {
@@ -1092,55 +986,48 @@ public final class Matchers {
     };
   }
 
-  /**
-   * Matches if a {@link VariableTree} is a field declaration, as opposed to a local variable, enum
-   * constant, parameter to a method, etc.
-   */
+  /// Matches if a [VariableTree] is a field declaration, as opposed to a local variable, enum
+  /// constant, parameter to a method, etc.
   public static Matcher<VariableTree> isField() {
     return (variableTree, state) -> getSymbol(variableTree).getKind() == ElementKind.FIELD;
   }
 
-  /** Matches if a {@link ClassTree} is an enum declaration. */
+  /// Matches if a [ClassTree] is an enum declaration.
   public static Matcher<ClassTree> isEnum() {
     return (classTree, state) -> getSymbol(classTree).getKind() == ElementKind.ENUM;
   }
 
-  /** Matches if a {@link ClassTree} is a {@code record} declaration. */
+  /// Matches if a [ClassTree] is a `record` declaration.
   public static Matcher<ClassTree> isRecord() {
     return (classTree, state) -> getSymbol(classTree).getKind() == ElementKind.RECORD;
   }
 
-  /**
-   * Matches an class based on whether it is nested in another class or method.
-   *
-   * @param kind The kind of nesting to match, eg ANONYMOUS, LOCAL, MEMBER, TOP_LEVEL
-   */
+  /// Matches an class based on whether it is nested in another class or method.
+  ///
+  /// @param kind The kind of nesting to match, eg ANONYMOUS, LOCAL, MEMBER, TOP_LEVEL
   public static Matcher<ClassTree> nestingKind(NestingKind kind) {
     return (classTree, state) -> kind == getSymbol(classTree).getNestingKind();
   }
 
-  /**
-   * Matches a binary tree if the given matchers match the operands in either order. That is,
-   * returns true if either: matcher1 matches the left operand and matcher2 matches the right
-   * operand or matcher2 matches the left operand and matcher1 matches the right operand
-   */
+  /// Matches a binary tree if the given matchers match the operands in either order. That is,
+  /// returns true if either: matcher1 matches the left operand and matcher2 matches the right
+  /// operand or matcher2 matches the left operand and matcher1 matches the right operand
   public static Matcher<BinaryTree> binaryTree(
       Matcher<ExpressionTree> matcher1, Matcher<ExpressionTree> matcher2) {
     return (t, state) ->
         null != ASTHelpers.matchBinaryTree(t, Arrays.asList(matcher1, matcher2), state);
   }
 
-  /**
-   * Matches any AST that contains an identifier with a certain property. This matcher can be used,
-   * for instance, to locate identifiers with a certain name or which is defined in a certain class.
-   *
-   * @param nodeMatcher Which identifiers to look for
-   */
+  /// Matches any AST that contains an identifier with a certain property. This matcher can be used,
+  /// for instance, to locate identifiers with a certain name or which is defined in a certain
+  /// class.
+  ///
+  /// @param nodeMatcher Which identifiers to look for
   public static Matcher<Tree> hasIdentifier(Matcher<IdentifierTree> nodeMatcher) {
     return new HasIdentifier(nodeMatcher);
   }
 
-  /** Returns true if the Tree node has the expected {@code Modifier}. */
+  /// Returns true if the Tree node has the expected `Modifier`.
   public static <T extends Tree> Matcher<T> hasModifier(Modifier modifier) {
     return (tree, state) -> {
       Symbol sym = getSymbol(tree);
@@ -1148,12 +1035,12 @@ public final class Matchers {
     };
   }
 
-  /** Matches an AST node which is an expression yielding the indicated static field access. */
+  /// Matches an AST node which is an expression yielding the indicated static field access.
   public static Matcher<ExpressionTree> staticFieldAccess() {
     return allOf(isStatic(), isSymbol(VarSymbol.class));
   }
 
-  /** Matches an AST node that is static. */
+  /// Matches an AST node that is static.
   public static <T extends Tree> Matcher<T> isStatic() {
     return (tree, state) -> {
       Symbol sym = getSymbol(tree);
@@ -1161,43 +1048,35 @@ public final class Matchers {
     };
   }
 
-  /** Matches an AST node that is transient. */
+  /// Matches an AST node that is transient.
   public static <T extends Tree> Matcher<T> isTransient() {
     return (tree, state) -> getSymbol(tree).getModifiers().contains(Modifier.TRANSIENT);
   }
 
-  /**
-   * Matches a {@code throw} statement where the thrown item is matched by the passed {@code
-   * thrownMatcher}.
-   */
+  /// Matches a `throw` statement where the thrown item is matched by the passed `thrownMatcher`.
   public static Matcher<StatementTree> throwStatement(
       Matcher<? super ExpressionTree> thrownMatcher) {
     return new Throws(thrownMatcher);
   }
 
-  /**
-   * Matches a {@code return} statement where the returned expression is matched by the passed
-   * {@code returnedMatcher}.
-   */
+  /// Matches a `return` statement where the returned expression is matched by the passed
+  /// `returnedMatcher`.
   public static Matcher<StatementTree> returnStatement(
       Matcher<? super ExpressionTree> returnedMatcher) {
     return new Returns(returnedMatcher);
   }
 
-  /**
-   * Matches an {@code assert} statement where the condition is matched by the passed {@code
-   * conditionMatcher}.
-   */
+  /// Matches an `assert` statement where the condition is matched by the passed `conditionMatcher`.
   public static Matcher<StatementTree> assertStatement(Matcher<ExpressionTree> conditionMatcher) {
     return new Asserts(conditionMatcher);
   }
 
-  /** Matches a {@code continue} statement. */
+  /// Matches a `continue` statement.
   public static Matcher<StatementTree> continueStatement() {
     return (statementTree, state) -> statementTree instanceof ContinueTree;
   }
 
-  /** Matches an {@link ExpressionStatementTree} based on its {@link ExpressionTree}. */
+  /// Matches an [ExpressionStatementTree] based on its [ExpressionTree].
   public static Matcher<StatementTree> expressionStatement(Matcher<ExpressionTree> matcher) {
     return (statementTree, state) ->
         statementTree instanceof ExpressionStatementTree expressionStatementTree
@@ -1208,16 +1087,14 @@ public final class Matchers {
     return new IsSymbol(symbolClass);
   }
 
-  /**
-   * Converts the given matcher to one that can be applied to any tree but is only executed when run
-   * on a tree of {@code type} and returns {@code false} for all other tree types.
-   */
+  /// Converts the given matcher to one that can be applied to any tree but is only executed when
+  /// run on a tree of `type` and returns `false` for all other tree types.
   public static <S extends T, T extends Tree> Matcher<T> toType(
       Class<S> type, Matcher<? super S> matcher) {
     return (tree, state) -> type.isInstance(tree) && matcher.matches(type.cast(tree), state);
   }
 
-  /** Matches if this Tree is enclosed by either a synchronized block or a synchronized method. */
+  /// Matches if this Tree is enclosed by either a synchronized block or a synchronized method.
   public static <T extends Tree> Matcher<T> inSynchronized() {
     return (tree, state) -> {
       // TODO(cpovirk): Look for `synchronized` only within the current method?
@@ -1233,58 +1110,46 @@ public final class Matchers {
     };
   }
 
-  /**
-   * Matches if this ExpressionTree refers to the same variable as the one passed into the matcher.
-   */
+  /// Matches if this ExpressionTree refers to the same variable as the one passed into the matcher.
   public static Matcher<ExpressionTree> sameVariable(ExpressionTree expr) {
     return (tree, state) -> ASTHelpers.sameVariable(tree, expr);
   }
 
-  /**
-   * Matches if the expression is provably non-null.
-   *
-   * <p>Uses the Checker Framework dataflow implementation to determine nullness. Be careful about
-   * using this in performance-critical code.
-   */
+  /// Matches if the expression is provably non-null.
+  ///
+  /// Uses the Checker Framework dataflow implementation to determine nullness. Be careful about
+  /// using this in performance-critical code.
   public static Matcher<ExpressionTree> isNonNullUsingDataflow() {
     return new NullnessMatcher(Nullness.NONNULL);
   }
 
-  /**
-   * @deprecated use {@link #isNonNullUsingDataflow} instead.
-   */
+  /// @deprecated use [#isNonNullUsingDataflow] instead.
   @Deprecated
   public static Matcher<ExpressionTree> isNonNull() {
     return isNonNullUsingDataflow();
   }
 
-  /**
-   * Matches if the expression is provably null.
-   *
-   * <p>Uses the Checker Framework dataflow implementation to determine nullness. Be careful about
-   * using this in performance-critical code.
-   *
-   * <p>Prefer {@code kindIs(NULL_LITERAL)} unless you really need dataflow.
-   */
+  /// Matches if the expression is provably null.
+  ///
+  /// Uses the Checker Framework dataflow implementation to determine nullness. Be careful about
+  /// using this in performance-critical code.
+  ///
+  /// Prefer `kindIs(NULL_LITERAL)` unless you really need dataflow.
   public static Matcher<ExpressionTree> isNullUsingDataflow() {
     return new NullnessMatcher(Nullness.NULL);
   }
 
-  /**
-   * @deprecated use {@link #isNullUsingDataflow} instead.
-   */
+  /// @deprecated use [#isNullUsingDataflow] instead.
   @Deprecated
   public static Matcher<ExpressionTree> isNull() {
     return isNullUsingDataflow();
   }
 
-  /**
-   * Matches an enhanced for loop if all the given matchers match.
-   *
-   * @param variableMatcher The matcher to apply to the variable.
-   * @param expressionMatcher The matcher to apply to the expression.
-   * @param statementMatcher The matcher to apply to the statement.
-   */
+  /// Matches an enhanced for loop if all the given matchers match.
+  ///
+  /// @param variableMatcher The matcher to apply to the variable.
+  /// @param expressionMatcher The matcher to apply to the expression.
+  /// @param statementMatcher The matcher to apply to the statement.
   public static Matcher<EnhancedForLoopTree> enhancedForLoop(
       Matcher<VariableTree> variableMatcher,
       Matcher<ExpressionTree> expressionMatcher,
@@ -1295,7 +1160,7 @@ public final class Matchers {
             && statementMatcher.matches(t.getStatement(), state);
   }
 
-  /** Matches if the given tree is inside a loop. */
+  /// Matches if the given tree is inside a loop.
   public static <T extends Tree> Matcher<T> inLoop() {
     return (tree, state) -> {
       TreePath path = state.getPath().getParentPath();
@@ -1318,12 +1183,10 @@ public final class Matchers {
     };
   }
 
-  /**
-   * Matches an assignment operator AST node if both of the given matchers match.
-   *
-   * @param variableMatcher The matcher to apply to the variable.
-   * @param expressionMatcher The matcher to apply to the expression.
-   */
+  /// Matches an assignment operator AST node if both of the given matchers match.
+  ///
+  /// @param variableMatcher The matcher to apply to the variable.
+  /// @param expressionMatcher The matcher to apply to the expression.
   public static Matcher<AssignmentTree> assignment(
       Matcher<ExpressionTree> variableMatcher, Matcher<? super ExpressionTree> expressionMatcher) {
     return (t, state) ->
@@ -1331,12 +1194,10 @@ public final class Matchers {
             && expressionMatcher.matches(t.getExpression(), state);
   }
 
-  /**
-   * Matches a type cast AST node if both of the given matchers match.
-   *
-   * @param typeMatcher The matcher to apply to the type.
-   * @param expressionMatcher The matcher to apply to the expression.
-   */
+  /// Matches a type cast AST node if both of the given matchers match.
+  ///
+  /// @param typeMatcher The matcher to apply to the type.
+  /// @param expressionMatcher The matcher to apply to the expression.
   public static Matcher<TypeCastTree> typeCast(
       Matcher<Tree> typeMatcher, Matcher<ExpressionTree> expressionMatcher) {
     return (t, state) ->
@@ -1344,87 +1205,75 @@ public final class Matchers {
             && expressionMatcher.matches(t.getExpression(), state);
   }
 
-  /**
-   * Matches an assertion AST node if the given matcher matches its condition.
-   *
-   * @param conditionMatcher The matcher to apply to the condition in the assertion, e.g. in "assert
-   *     false", the "false" part of the statement
-   */
+  /// Matches an assertion AST node if the given matcher matches its condition.
+  ///
+  /// @param conditionMatcher The matcher to apply to the condition in the assertion, e.g. in
+  ///   "assert false", the "false" part of the statement
   public static Matcher<AssertTree> assertionWithCondition(
       Matcher<ExpressionTree> conditionMatcher) {
     return (tree, state) -> conditionMatcher.matches(tree.getCondition(), state);
   }
 
-  /**
-   * Applies the given matcher recursively to all descendants of an AST node, and matches if any
-   * matching descendant node is found.
-   *
-   * @param treeMatcher The matcher to apply recursively to the tree.
-   */
+  /// Applies the given matcher recursively to all descendants of an AST node, and matches if any
+  /// matching descendant node is found.
+  ///
+  /// @param treeMatcher The matcher to apply recursively to the tree.
   public static Matcher<Tree> contains(Matcher<Tree> treeMatcher) {
     return new Contains(treeMatcher);
   }
 
-  /**
-   * Applies the given matcher recursively to all descendants of an AST node, and matches if any
-   * matching descendant node is found.
-   *
-   * @param clazz The type of node to be matched.
-   * @param treeMatcher The matcher to apply recursively to the tree.
-   */
+  /// Applies the given matcher recursively to all descendants of an AST node, and matches if any
+  /// matching descendant node is found.
+  ///
+  /// @param clazz The type of node to be matched.
+  /// @param treeMatcher The matcher to apply recursively to the tree.
   public static <T extends Tree, V extends Tree> Matcher<T> contains(
       Class<? extends V> clazz, Matcher<? super V> treeMatcher) {
     Matcher<Tree> contains = new Contains(toType(clazz, treeMatcher));
     return contains::matches;
   }
 
-  /**
-   * Matches if the method accepts the given number of arguments.
-   *
-   * @param arity the number of arguments the method should accept
-   */
+  /// Matches if the method accepts the given number of arguments.
+  ///
+  /// @param arity the number of arguments the method should accept
   public static Matcher<MethodTree> methodHasArity(int arity) {
     return (methodTree, state) -> methodTree.getParameters().size() == arity;
   }
 
-  /**
-   * Matches any node that is directly an implementation, but not extension, of the given Class.
-   *
-   * <p>E.x. {@code class C implements I} will match, but {@code class C extends A} will not.
-   *
-   * <p>Additionally, this will only match <i>direct</i> implementations of interfaces. E.g. the
-   * following will not match:
-   *
-   * <p>{@code interface I1 {} interface I2 extends I1 {} class C implements I2 {} ...
-   * isDirectImplementationOf(I1).match(\/*class tree for C*\/); // will not match }
-   */
+  /// Matches any node that is directly an implementation, but not extension, of the given Class.
+  ///
+  /// E.x. `class C implements I` will match, but `class C extends A` will not.
+  ///
+  /// Additionally, this will only match *direct* implementations of interfaces. E.g. the following
+  /// will not match:
+  ///
+  /// `interface I1 {} interface I2 extends I1 {} class C implements I2 {} ...
+  /// isDirectImplementationOf(I1).match(/*class tree for C*/); // will not match`
   public static Matcher<ClassTree> isDirectImplementationOf(String clazz) {
     return isDirectImplementationOf(ClassName.of(clazz));
   }
 
-  /** Matches any node that is directly an implementation, but not extension, of the given Class. */
+  /// Matches any node that is directly an implementation, but not extension, of the given Class.
   public static Matcher<ClassTree> isDirectImplementationOf(ClassName clazz) {
     Matcher<Tree> isProvidedType = isSameType(clazz);
     return new IsDirectImplementationOf(isProvidedType);
   }
 
-  /** Matches any node that is a direct extension of the given class. */
+  /// Matches any node that is a direct extension of the given class.
   public static Matcher<ClassTree> isExtensionOf(String clazz) {
     return isExtensionOf(ClassName.of(clazz));
   }
 
-  /** Matches any node that is a direct extension of the given class. */
+  /// Matches any node that is a direct extension of the given class.
   public static Matcher<ClassTree> isExtensionOf(ClassName clazz) {
     Matcher<Tree> isProvidedType = isSameType(clazz);
     return new IsExtensionOf(isProvidedType);
   }
 
-  /**
-   * Determines whether a tree has any of the given annotations. This includes annotations inherited
-   * from superclasses due to {@code @Inherited}.
-   *
-   * <p>Prefer {@link #hasAnyAnnotation(ClassName...)}.
-   */
+  /// Determines whether a tree has any of the given annotations. This includes annotations
+  /// inherited from superclasses due to `@Inherited`.
+  ///
+  /// Prefer [#hasAnyAnnotation(ClassName...)].
   @SafeVarargs
   public static Matcher<Tree> hasAnyAnnotation(Class<? extends Annotation>... annotations) {
     return hasAnyAnnotation(
@@ -1433,10 +1282,8 @@ public final class Matchers {
             .toArray(ClassName[]::new));
   }
 
-  /**
-   * Determines whether a tree has any of the given annotations. This includes annotations inherited
-   * from superclasses due to {@code @Inherited}.
-   */
+  /// Determines whether a tree has any of the given annotations. This includes annotations
+  /// inherited from superclasses due to `@Inherited`.
   public static <T extends Tree> Matcher<T> hasAnyAnnotation(ClassName... annotations) {
     ImmutableList<ClassName> classNames = ImmutableList.copyOf(annotations);
     Supplier<ImmutableSet<Name>> names =
@@ -1474,13 +1321,11 @@ public final class Matchers {
     return false;
   }
 
-  /**
-   * {@link FunctionalInterface}s that are generally used as a lambda expression for 'a block of
-   * code that's going to fail', e.g.:
-   *
-   * <p>{@code assertThrows(FooException.class, () -> myCodeThatThrowsAnException());
-   * errorCollector.checkThrows(FooException.class, () -> myCodeThatThrowsAnException()); }
-   */
+  /// [FunctionalInterface]s that are generally used as a lambda expression for 'a block of code
+  /// that's going to fail', e.g.:
+  ///
+  /// `assertThrows(FooException.class, () -> myCodeThatThrowsAnException());
+  /// errorCollector.checkThrows(FooException.class, () -> myCodeThatThrowsAnException());`
   // TODO(glorioso): Consider a meta-annotation like @LikelyToThrow instead/in addition?
   private static final ImmutableList<ClassName> CLASSES_CONSIDERED_THROWING =
       ImmutableList.of(
@@ -1521,24 +1366,20 @@ public final class Matchers {
     }
   }
 
-  /**
-   * Matches if the compilation unit's canonical source path (as defined by {@link
-   * ASTHelpers#getSourcePath(VisitorState)}) starts with any of the given directory prefixes.
-   *
-   * @param prefix the directory prefix to match (e.g. "third_party/" or "javatests/"); must not
-   *     start with a leading {@code /}
-   * @see ASTHelpers#getSourcePath(VisitorState)
-   */
+  /// Matches if the compilation unit's canonical source path (as defined by
+  /// [ASTHelpers#getSourcePath(VisitorState)]) starts with any of the given directory prefixes.
+  ///
+  /// @param prefix the directory prefix to match (e.g. "third_party/" or "javatests/"); must not
+  ///   start with a leading `/`
+  /// @see ASTHelpers#getSourcePath(VisitorState)
   public static Matcher<Tree> sourcePathStartsWith(String prefix, String... morePrefixes) {
     return sourcePathStartsWith(Lists.asList(prefix, morePrefixes));
   }
 
-  /**
-   * Matches if the compilation unit's canonical source path (as defined by {@link
-   * ASTHelpers#getSourcePath(VisitorState)}) starts with any of the given directory prefixes.
-   *
-   * @see ASTHelpers#getSourcePath(VisitorState)
-   */
+  /// Matches if the compilation unit's canonical source path (as defined by
+  /// [ASTHelpers#getSourcePath(VisitorState)]) starts with any of the given directory prefixes.
+  ///
+  /// @see ASTHelpers#getSourcePath(VisitorState)
   public static Matcher<Tree> sourcePathStartsWith(Iterable<String> prefixes) {
     ImmutableList<String> prefixList =
         stream(prefixes).map(Matchers::normalizePrefix).collect(toImmutableList());
@@ -1555,19 +1396,15 @@ public final class Matchers {
 
   private static final Matcher<Tree> IN_THIRD_PARTY = sourcePathStartsWith("third_party/");
 
-  /**
-   * Matches if the compilation unit's canonical source path (as defined by {@link
-   * ASTHelpers#getSourcePath(VisitorState)}) is located within third_party.
-   *
-   * @see ASTHelpers#getSourcePath(VisitorState)
-   */
+  /// Matches if the compilation unit's canonical source path (as defined by
+  /// [ASTHelpers#getSourcePath(VisitorState)]) is located within third_party.
+  ///
+  /// @see ASTHelpers#getSourcePath(VisitorState)
   public static Matcher<Tree> inThirdParty() {
     return IN_THIRD_PARTY;
   }
 
-  /**
-   * Matches if the compilation is marked as test-only (e.g. via {@code -XepCompilingTestOnlyCode}).
-   */
+  /// Matches if the compilation is marked as test-only (e.g. via `-XepCompilingTestOnlyCode`).
   public static <T extends Tree> Matcher<T> isTestOnlyTarget() {
     return (tree, state) -> state.errorProneOptions().isTestOnlyTarget();
   }
@@ -1578,54 +1415,46 @@ public final class Matchers {
     return prefix.endsWith("/") ? prefix : prefix + "/";
   }
 
-  /**
-   * Matches if the compilation unit's canonical source path (as defined by {@link
-   * ASTHelpers#getSourcePath(VisitorState)}) matches the given path pattern (exact path ending with
-   * {@code .java}, or directory prefix ending with {@code /}).
-   *
-   * @see ASTHelpers#getSourcePath(VisitorState)
-   */
+  /// Matches if the compilation unit's canonical source path (as defined by
+  /// [ASTHelpers#getSourcePath(VisitorState)]) matches the given path pattern (exact path ending
+  /// with `.java`, or directory prefix ending with `/`).
+  ///
+  /// @see ASTHelpers#getSourcePath(VisitorState)
   public static Matcher<Tree> sourcePathMatches(String pattern) {
     SourcePathMatcher matcher = SourcePathMatcher.create(pattern);
     return (tree, state) -> matcher.matches(state);
   }
 
-  /**
-   * Matches if the compilation unit's canonical source path (as defined by {@link
-   * ASTHelpers#getSourcePath(VisitorState)}) matches the given {@link SourcePathMatcher}.
-   *
-   * @see ASTHelpers#getSourcePath(VisitorState)
-   */
+  /// Matches if the compilation unit's canonical source path (as defined by
+  /// [ASTHelpers#getSourcePath(VisitorState)]) matches the given [SourcePathMatcher].
+  ///
+  /// @see ASTHelpers#getSourcePath(VisitorState)
   public static Matcher<Tree> sourcePathMatches(SourcePathMatcher matcher) {
     return (tree, state) -> matcher.matches(state);
   }
 
-  /** Matches an AST node whose compilation unit's package name matches the given predicate. */
+  /// Matches an AST node whose compilation unit's package name matches the given predicate.
   public static <T extends Tree> Matcher<T> packageMatches(Predicate<String> predicate) {
     return (tree, state) -> predicate.test(getPackageFullName(state));
   }
 
-  /** Matches an AST node whose compilation unit's package name matches the given pattern. */
+  /// Matches an AST node whose compilation unit's package name matches the given pattern.
   public static <T extends Tree> Matcher<T> packageMatches(Pattern pattern) {
     return packageMatches(pattern.asPredicate());
   }
 
-  /**
-   * Matches an AST node whose compilation unit's package name equals the given package name or is a
-   * subpackage of the given package name.
-   *
-   * <p>For example, {@code packageStartsWith("com.google")} will match:
-   *
-   * <ul>
-   *   <li>{@code com.google}
-   *   <li>{@code com.google.common}
-   *   <li>{@code com.google.common.collect}
-   * </ul>
-   *
-   * but it will <b>not</b> match {@code com.googlebutnotreallygoogle}.
-   *
-   * @throws IllegalArgumentException if {@code packageName} is not a valid package name
-   */
+  /// Matches an AST node whose compilation unit's package name equals the given package name or is
+  /// a subpackage of the given package name.
+  ///
+  /// For example, `packageStartsWith("com.google")` will match:
+  ///
+  /// - `com.google`
+  /// - `com.google.common`
+  /// - `com.google.common.collect`
+  ///
+  /// but it will **not** match `com.googlebutnotreallygoogle`.
+  ///
+  /// @throws IllegalArgumentException if `packageName` is not a valid package name
   // TODO(kak): Consider renaming this to something like packageOrSubpackageOf()?
   public static <T extends Tree> Matcher<T> packageStartsWith(String packageName) {
     checkArgument(SourceVersion.isName(packageName), "Invalid package name: %s", packageName);
@@ -1669,11 +1498,9 @@ public final class Matchers {
                   .withParameters("java.lang.Object", "java.lang.Object"),
               Matchers::methodReturnsBoolean));
 
-  /**
-   * Matches an invocation of a recognized static object equality method such as {@link
-   * java.util.Objects#equals}. These are simple facades to {@link Object#equals} that accept null
-   * for either argument.
-   */
+  /// Matches an invocation of a recognized static object equality method such as
+  /// [java.util.Objects#equals]. These are simple facades to [Object#equals] that accept null for
+  /// either argument.
   @SuppressWarnings("unchecked") // safe covariant cast
   public static <T extends ExpressionTree> Matcher<T> staticEqualsInvocation() {
     return (Matcher<T>) STATIC_EQUALS;
@@ -1689,7 +1516,7 @@ public final class Matchers {
         getSymbol(tree).type.getReturnType(), state.getSymtab().booleanType, state);
   }
 
-  /** Matches calls to the method {@link Object#equals(Object)} or any override of that method. */
+  /// Matches calls to the method [Object#equals(Object)] or any override of that method.
   @SuppressWarnings("unchecked") // safe covariant cast
   public static <T extends ExpressionTree> Matcher<T> instanceEqualsInvocation() {
     return (Matcher<T>) INSTANCE_EQUALS;
@@ -1707,7 +1534,7 @@ public final class Matchers {
   private static final Matcher<ExpressionTree> INSTANCE_HASHCODE =
       allOf(instanceMethod().anyClass().named("hashCode").withNoParameters(), isSameType(INT_TYPE));
 
-  /** Matches calls to the method {@link Object#hashCode()} or any override of that method. */
+  /// Matches calls to the method [Object#hashCode()] or any override of that method.
   public static Matcher<ExpressionTree> instanceHashCodeInvocation() {
     return INSTANCE_HASHCODE;
   }
@@ -1715,7 +1542,7 @@ public final class Matchers {
   private static final Matcher<ExpressionTree> STRING_FORMAT =
       staticMethod().onClass("java.lang.String").named("format");
 
-  /** Matches calls to the static method {@link String#format} (with or without a locale). */
+  /// Matches calls to the static method [String#format] (with or without a locale).
   public static Matcher<ExpressionTree> stringFormatInvocation() {
     return STRING_FORMAT;
   }
@@ -1723,7 +1550,7 @@ public final class Matchers {
   private static final Matcher<ExpressionTree> STRING_FORMATTED =
       instanceMethod().onExactClass("java.lang.String").named("formatted");
 
-  /** Matches calls to the instance method {@link String#formatted}. */
+  /// Matches calls to the instance method [String#formatted].
   public static Matcher<ExpressionTree> stringFormattedInvocation() {
     return STRING_FORMATTED;
   }
@@ -1733,10 +1560,8 @@ public final class Matchers {
           .onClassAny("org.junit.Assert", "junit.framework.Assert", "junit.framework.TestCase")
           .named("assertEquals");
 
-  /**
-   * Matches calls to the method {@code org.junit.Assert#assertEquals} and corresponding methods in
-   * JUnit 3.x.
-   */
+  /// Matches calls to the method `org.junit.Assert#assertEquals` and corresponding methods in JUnit
+  /// 3.x.
   public static Matcher<ExpressionTree> assertEqualsInvocation() {
     return ASSERT_EQUALS;
   }
@@ -1746,10 +1571,8 @@ public final class Matchers {
           .onClassAny("org.junit.Assert", "junit.framework.Assert", "junit.framework.TestCase")
           .named("assertNotEquals");
 
-  /**
-   * Matches calls to the method {@code org.junit.Assert#assertNotEquals} and corresponding methods
-   * in JUnit 3.x.
-   */
+  /// Matches calls to the method `org.junit.Assert#assertNotEquals` and corresponding methods in
+  /// JUnit 3.x.
   public static Matcher<ExpressionTree> assertNotEqualsInvocation() {
     return ASSERT_NOT_EQUALS;
   }
@@ -1761,7 +1584,7 @@ public final class Matchers {
           methodHasParameters(variableType(isExactType("java.lang.Object"))),
           anyOf(methodReturns(BOOLEAN_TYPE), methodReturns(JAVA_LANG_BOOLEAN_TYPE)));
 
-  /** Matches {@link Object#equals} method declaration. */
+  /// Matches [Object#equals] method declaration.
   public static Matcher<MethodTree> equalsMethodDeclaration() {
     return EQUALS_DECLARATION;
   }
@@ -1773,7 +1596,7 @@ public final class Matchers {
           methodHasNoParameters(),
           methodReturns(STRING_TYPE));
 
-  /** Matches {@link Object#toString} method declaration. */
+  /// Matches [Object#toString] method declaration.
   public static Matcher<MethodTree> toStringMethodDeclaration() {
     return TO_STRING_DECLARATION;
   }
@@ -1785,12 +1608,12 @@ public final class Matchers {
           methodHasNoParameters(),
           methodReturns(INT_TYPE));
 
-  /** Matches {@code hashCode} method declaration. */
+  /// Matches `hashCode` method declaration.
   public static Matcher<MethodTree> hashCodeMethodDeclaration() {
     return HASH_CODE_DECLARATION;
   }
 
-  /** Matcher for the overriding method of 'int java.lang.Comparable.compareTo(T other)' */
+  /// Matcher for the overriding method of 'int java.lang.Comparable.compareTo(T other)'
   private static final Matcher<MethodTree> COMPARABLE_METHOD_MATCHER =
       allOf(
           methodIsNamed("compareTo"),
@@ -1798,12 +1621,12 @@ public final class Matchers {
           methodReturns(INT_TYPE),
           methodHasArity(1));
 
-  /** Matches {@code compareTo} method declaration. */
+  /// Matches `compareTo` method declaration.
   public static Matcher<MethodTree> compareToMethodDeclaration() {
     return COMPARABLE_METHOD_MATCHER;
   }
 
-  /** Method signature of serialization methods. */
+  /// Method signature of serialization methods.
   public static final Matcher<MethodTree> SERIALIZATION_METHODS =
       allOf(
           // Check the cheap conditions on the method itself before the subtype check.
@@ -1825,9 +1648,7 @@ public final class Matchers {
         return symbol instanceof ClassSymbol && symbol.isInterface();
       };
 
-  /**
-   * Matches the {@code Tree} if it returns an expression matching {@code expressionTreeMatcher}.
-   */
+  /// Matches the `Tree` if it returns an expression matching `expressionTreeMatcher`.
   public static Matcher<StatementTree> matchExpressionReturn(
       Matcher<ExpressionTree> expressionTreeMatcher) {
     return (statement, state) -> {
@@ -1842,10 +1663,7 @@ public final class Matchers {
     };
   }
 
-  /**
-   * Matches a {@link BlockTree} if it single statement block with statement matching {@code
-   * statementMatcher}.
-   */
+  /// Matches a [BlockTree] if it single statement block with statement matching `statementMatcher`.
   public static Matcher<BlockTree> matchSingleStatementBlock(
       Matcher<StatementTree> statementMatcher) {
     return (blockTree, state) -> {
@@ -1860,10 +1678,8 @@ public final class Matchers {
     };
   }
 
-  /**
-   * Returns a matcher for {@link MethodTree} whose implementation contains a single return
-   * statement with expression matching the passed {@code expressionTreeMatcher}.
-   */
+  /// Returns a matcher for [MethodTree] whose implementation contains a single return statement
+  /// with expression matching the passed `expressionTreeMatcher`.
   public static Matcher<MethodTree> singleStatementReturnMatcher(
       Matcher<ExpressionTree> expressionTreeMatcher) {
     Matcher<BlockTree> matcher =

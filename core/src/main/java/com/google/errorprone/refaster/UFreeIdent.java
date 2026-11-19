@@ -26,11 +26,9 @@ import com.sun.tools.javac.tree.JCTree.JCExpression;
 import com.sun.tools.javac.util.Names;
 import org.jspecify.annotations.Nullable;
 
-/**
- * Free identifier that can be bound to any expression of the appropriate type.
- *
- * @author lowasser@google.com (Louis Wasserman)
- */
+/// Free identifier that can be bound to any expression of the appropriate type.
+///
+/// @author lowasser@google.com (Louis Wasserman)
 @AutoValue
 public abstract class UFreeIdent extends UIdent {
   static class Key extends Bindings.Key<JCExpression> {

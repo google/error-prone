@@ -22,7 +22,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** Tests for {@link FloggerLogVarargs}. */
+/// Tests for [FloggerLogVarargs].
 @RunWith(JUnit4.class)
 public final class FloggerLogVarargsTest {
   @Test

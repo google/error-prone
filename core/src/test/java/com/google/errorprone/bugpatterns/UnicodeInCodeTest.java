@@ -35,7 +35,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** Tests for {@link UnicodeInCode}. */
+/// Tests for [UnicodeInCode].
 @RunWith(JUnit4.class)
 public final class UnicodeInCodeTest {
   private final CompilationTestHelper helper =

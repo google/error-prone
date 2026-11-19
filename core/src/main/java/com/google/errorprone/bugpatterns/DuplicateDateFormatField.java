@@ -32,7 +32,7 @@ import java.util.Optional;
 import java.util.Set;
 import org.jspecify.annotations.Nullable;
 
-/** Flag DateFormats which use the same field more than once. */
+/// Flag DateFormats which use the same field more than once.
 @BugPattern(summary = "Reuse of DateFormat fields is most likely unintentional", severity = WARNING)
 public final class DuplicateDateFormatField extends MisusedDateFormat {
   private static final ImmutableSet<Character> PATTERN_CHARACTERS =

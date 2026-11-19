@@ -49,9 +49,7 @@ import java.util.Collections;
 import java.util.Set;
 import java.util.stream.Stream;
 
-/**
- * @author sgoldfeder@google.com (Steven Goldfeder)
- */
+/// @author sgoldfeder@google.com (Steven Goldfeder)
 @BugPattern(
     name = "MissingRuntimeRetention",
     altNames = "InjectScopeOrQualifierAnnotationRetention",

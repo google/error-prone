@@ -30,12 +30,10 @@ import com.google.errorprone.matchers.Matchers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 
-/**
- * This checker warns about calls to {@code period.getDays()} without a corresponding "nearby" call
- * to {@code period.getYears(), period.getMonths(), or period.getTotalMonths()}.
- *
- * @author glorioso@google.com (Nick Glorioso)
- */
+/// This checker warns about calls to `period.getDays()` without a corresponding "nearby" call to
+/// `period.getYears(), period.getMonths(), or period.getTotalMonths()`.
+///
+/// @author glorioso@google.com (Nick Glorioso)
 @BugPattern(
     summary =
         "period.getDays() only accesses the \"days\" portion of the Period, and doesn't represent"

@@ -39,7 +39,7 @@ import java.util.List;
 import java.util.Optional;
 import javax.lang.model.element.ElementKind;
 
-/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
+/// A [BugChecker]; see the associated [BugPattern] annotation for details.
 @BugPattern(
     summary =
         "The Google Java Style Guide requires that each switch statement includes a default"

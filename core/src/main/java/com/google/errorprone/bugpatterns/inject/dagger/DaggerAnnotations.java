@@ -21,7 +21,7 @@ import static com.google.errorprone.matchers.Matchers.hasAnnotation;
 import com.google.errorprone.matchers.Matcher;
 import com.sun.source.tree.Tree;
 
-/** A utility class for static analysis having to do with Dagger annotations. */
+/// A utility class for static analysis having to do with Dagger annotations.
 public final class DaggerAnnotations {
 
   // Dagger types

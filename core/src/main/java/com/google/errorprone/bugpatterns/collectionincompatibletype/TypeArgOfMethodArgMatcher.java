@@ -36,10 +36,8 @@ import java.util.Collection;
 import java.util.Optional;
 import org.jspecify.annotations.Nullable;
 
-/**
- * Matches an instance method like {@link Collection#removeAll}, for which we need to extract the
- * type argument to the method argument.
- */
+/// Matches an instance method like [Collection#removeAll], for which we need to extract the type
+/// argument to the method argument.
 class TypeArgOfMethodArgMatcher extends AbstractCollectionIncompatibleTypeMatcher {
 
   private final Matcher<ExpressionTree> methodMatcher;
@@ -49,19 +47,18 @@ class TypeArgOfMethodArgMatcher extends AbstractCollectionIncompatibleTypeMatche
   private final String methodArgTypeName;
   private final int methodArgTypeArgIndex;
 
-  /**
-   * @param receiverTypeName The fully-qualified name of the type of the method receiver whose
-   *     descendants to match on
-   * @param receiverTypeArgIndex The index of the type argument that should match the method
-   *     argument
-   * @param methodArgIndex The index of the method argument whose type argument we should extract
-   * @param methodArgTypeName The fully-qualified name of the type of the method argument whose type
-   *     argument we should extract
-   * @param methodArgTypeArgIndex The index of the type argument to extract from the method argument
-   * @param name The name of the method to match on
-   * @param firstParam The type of the first parameter of the method
-   * @param otherParams The types of any additional parameters of the method
-   */
+  /// @param receiverTypeName The fully-qualified name of the type of the method receiver whose
+  ///   descendants to match on
+  /// @param receiverTypeArgIndex The index of the type argument that should match the method
+  ///   argument
+  /// @param methodArgIndex The index of the method argument whose type argument we should extract
+  /// @param methodArgTypeName The fully-qualified name of the type of the method argument whose
+  ///   type argument we should extract
+  /// @param methodArgTypeArgIndex The index of the type argument to extract from the method
+  ///   argument
+  /// @param name The name of the method to match on
+  /// @param firstParam The type of the first parameter of the method
+  /// @param otherParams The types of any additional parameters of the method
   public TypeArgOfMethodArgMatcher(
       String receiverTypeName,
       int receiverTypeArgIndex,

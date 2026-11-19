@@ -78,7 +78,7 @@ import java.util.function.Predicate;
 import javax.lang.model.element.ElementKind;
 import org.jspecify.annotations.Nullable;
 
-/** Utility methods for refactoring switches. */
+/// Utility methods for refactoring switches.
 public final class SwitchUtils {
   static final Matcher<ExpressionTree> COMPILE_TIME_CONSTANT_MATCHER =
       CompileTimeConstantExpressionMatcher.instance();
@@ -92,33 +92,27 @@ public final class SwitchUtils {
   static final String REMOVE_DEFAULT_CASE_SHORT_DESCRIPTION =
       "Remove default case because all enum values handled";
 
-  /**
-   * Tri-state of whether the if-chain is valid, invalid, or possibly valid for conversion to a
-   * switch.
-   */
+  /// Tri-state of whether the if-chain is valid, invalid, or possibly valid for conversion to a
+  /// switch.
   enum Validity {
     MAYBE_VALID,
     INVALID,
     VALID
   }
 
-  /**
-   * Tri-state to represent whether cases within a single switch statement meet an (unspecified)
-   * qualification predicate
-   */
+  /// Tri-state to represent whether cases within a single switch statement meet an (unspecified)
+  /// qualification predicate
   enum CaseQualifications {
     NO_CASES_ASSESSED,
     ALL_CASES_QUALIFY,
     SOME_OR_ALL_CASES_DONT_QUALIFY
   }
 
-  /**
-   * The kind of null/default cases included within a single CaseTree.
-   *
-   * <p>This enum is used to classify whether a CaseTree includes a null and/or default. Referencing
-   * JLS 21 §14.11.1, the `SwitchLabel:` production has specific rules applicable to null/default
-   * cases: `case null, [default]` and `default`. All other scenarios are lumped into KIND_NEITHER.
-   */
+  /// The kind of null/default cases included within a single CaseTree.
+  ///
+  /// This enum is used to classify whether a CaseTree includes a null and/or default. Referencing
+  /// JLS 21 §14.11.1, the `SwitchLabel:` production has specific rules applicable to null/default
+  /// cases: `case null, [default]` and `default`. All other scenarios are lumped into KIND_NEITHER.
   enum NullDefaultKind {
     KIND_NULL_AND_DEFAULT,
     KIND_DEFAULT,
@@ -126,10 +120,8 @@ public final class SwitchUtils {
     KIND_NEITHER
   }
 
-  /**
-   * Renders the Java source code for a [compound] assignment operator. The parameter must be either
-   * an {@code AssignmentTree} or a {@code CompoundAssignmentTree}.
-   */
+  /// Renders the Java source code for a \[compound\] assignment operator. The parameter must be
+  /// either an `AssignmentTree` or a `CompoundAssignmentTree`.
   static String renderJavaSourceOfAssignment(ExpressionTree tree) {
     // Simple assignment tree?
     if (tree instanceof JCAssign) {
@@ -142,7 +134,7 @@ public final class SwitchUtils {
     return pretty.operatorName(jcAssignOp.getTag().noAssignOp()) + EQUALS_STRING;
   }
 
-  /** Render the supplied comments, separated by newlines. */
+  /// Render the supplied comments, separated by newlines.
   static String renderComments(ImmutableList<ErrorProneComment> comments) {
     return comments.stream()
         .map(ErrorProneComment::getText)
@@ -150,7 +142,7 @@ public final class SwitchUtils {
         .collect(joining("\n"));
   }
 
-  /** Retrieves a list of all statements (if any) preceding the current path, if any. */
+  /// Retrieves a list of all statements (if any) preceding the current path, if any.
   static ImmutableList<StatementTree> getPrecedingStatementsInBlock(VisitorState state) {
     TreePath path = state.getPath();
     if (!(path.getParentPath().getLeaf() instanceof BlockTree blockTree)) {
@@ -197,10 +189,8 @@ public final class SwitchUtils {
     return type.asElement().getKind() == ElementKind.ENUM;
   }
 
-  /**
-   * Determines whether local variable {@code symbol} has no reads within the scope of the {@code
-   * VisitorState}. (Writes to the variable are ignored.)
-   */
+  /// Determines whether local variable `symbol` has no reads within the scope of the
+  /// `VisitorState`. (Writes to the variable are ignored.)
   private static boolean noReadsOfVariable(VarSymbol symbol, VisitorState state) {
     Set<VarSymbol> referencedLocalVariables = new HashSet<>();
     new TreePathScanner<Void, Void>() {
@@ -237,12 +227,10 @@ public final class SwitchUtils {
     return !referencedLocalVariables.contains(symbol);
   }
 
-  /**
-   * Determines whether the last two preceding statements are not variable declarations within the
-   * same VariableDeclaratorList, for example {@code int x, y;}. VariableDeclaratorLists are defined
-   * in e.g. JLS 21 § 14.4. Precondition: all preceding statements are taken from the same {@code
-   * BlockTree}.
-   */
+  /// Determines whether the last two preceding statements are not variable declarations within the
+  /// same VariableDeclaratorList, for example `int x, y;`. VariableDeclaratorLists are defined in
+  /// e.g. JLS 21 § 14.4. Precondition: all preceding statements are taken from the same
+  /// `BlockTree`.
   private static boolean precedingTwoStatementsNotInSameVariableDeclaratorList(
       List<StatementTree> precedingStatements) {
 
@@ -262,11 +250,9 @@ public final class SwitchUtils {
     return getStartPosition(variableTree1) != getStartPosition(variableTree2);
   }
 
-  /**
-   * Determines whether a variable definition is compatible with an assignment target (e.g. of a
-   * switch statement). Compatibility means that the assignment is being made to to the same
-   * variable that is being defined.
-   */
+  /// Determines whether a variable definition is compatible with an assignment target (e.g. of a
+  /// switch statement). Compatibility means that the assignment is being made to to the same
+  /// variable that is being defined.
   private static boolean isVariableCompatibleWithAssignment(
       ExpressionTree assignmentTarget, VariableTree variableDefinition) {
     Symbol assignmentTargetSymbol = getSymbol(assignmentTarget);
@@ -275,11 +261,9 @@ public final class SwitchUtils {
     return Objects.equals(assignmentTargetSymbol, definedSymbol);
   }
 
-  /**
-   * Returns the statements on the RHS of a {@link CaseTree}, if any exist, otherwise an empty list.
-   * If the only statement is a block statement, return the block's inner statements instead,
-   * unwrapping multiple blocks if needed.
-   */
+  /// Returns the statements on the RHS of a [CaseTree], if any exist, otherwise an empty list. If
+  /// the only statement is a block statement, return the block's inner statements instead,
+  /// unwrapping multiple blocks if needed.
   static ImmutableList<StatementTree> getStatements(CaseTree caseTree) {
     Tree at = caseTree.getBody();
 
@@ -298,7 +282,7 @@ public final class SwitchUtils {
     };
   }
 
-  /** Returns whether the switch statement covers all possible values of the enum. */
+  /// Returns whether the switch statement covers all possible values of the enum.
   static boolean isSwitchCoveringAllEnumValues(Set<String> handledEnumValues, Type switchType) {
     // Handles switching on enum only (map is bijective)
     if (switchType.asElement().getKind() != ElementKind.ENUM) {
@@ -312,10 +296,8 @@ public final class SwitchUtils {
     return tree.hasTag(JCTree.Tag.LABELLED) ? ((JCTree.JCLabeledStatement) tree).body : tree;
   }
 
-  /**
-   * Determines whether any `continue` statements that jump out of the {@code tree} are present
-   * within the {@code tree}.
-   */
+  /// Determines whether any `continue` statements that jump out of the `tree` are present within
+  /// the `tree`.
   static boolean hasContinueOutOfTree(Tree tree, VisitorState state) {
     Boolean result =
         new TreeScanner<Boolean, Void>() {
@@ -342,10 +324,8 @@ public final class SwitchUtils {
     return Objects.equals(result, true);
   }
 
-  /**
-   * Determines whether any `break` statements that jump out of the {@code tree} are present within
-   * the {@code tree}.
-   */
+  /// Determines whether any `break` statements that jump out of the `tree` are present within the
+  /// `tree`.
   static boolean hasBreakOutOfTree(Tree tree, VisitorState state) {
     Boolean result =
         new TreeScanner<Boolean, Void>() {
@@ -370,10 +350,8 @@ public final class SwitchUtils {
     return Objects.equals(result, true);
   }
 
-  /**
-   * In a switch with multiple assignments, determine whether a subsequent assignment target is
-   * compatible with the first assignment target.
-   */
+  /// In a switch with multiple assignments, determine whether a subsequent assignment target is
+  /// compatible with the first assignment target.
   static boolean isCompatibleWithFirstAssignment(
       Optional<ExpressionTree> assignmentTargetOptional,
       Optional<ExpressionTree> caseAssignmentTargetOptional) {
@@ -392,10 +370,7 @@ public final class SwitchUtils {
     return Objects.equals(assignmentTargetSymbol, caseAssignmentTargetSymbol);
   }
 
-  /**
-   * Renders all comments of the supplied {@code variableTree} into a list of Strings, in code
-   * order.
-   */
+  /// Renders all comments of the supplied `variableTree` into a list of Strings, in code order.
   static ImmutableList<String> renderVariableTreeComments(
       VariableTree variableTree, VisitorState state) {
     return state.getTokensForNode(variableTree).stream()
@@ -405,10 +380,7 @@ public final class SwitchUtils {
         .collect(toImmutableList());
   }
 
-  /**
-   * Renders all annotations of the supplied {@code variableTree} into a list of Strings, in code
-   * order.
-   */
+  /// Renders all annotations of the supplied `variableTree` into a list of Strings, in code order.
   static ImmutableList<String> renderVariableTreeAnnotations(
       VariableTree variableTree, VisitorState state) {
     return variableTree.getModifiers().getAnnotations().stream()
@@ -416,10 +388,8 @@ public final class SwitchUtils {
         .collect(toImmutableList());
   }
 
-  /**
-   * Renders the flags of the supplied variable declaration, such as "final", into a single
-   * space-separated String.
-   */
+  /// Renders the flags of the supplied variable declaration, such as "final", into a single
+  /// space-separated String.
   static String renderVariableTreeFlags(VariableTree variableTree) {
     StringBuilder flagsBuilder = new StringBuilder();
     if (!variableTree.getModifiers().getFlags().isEmpty()) {
@@ -431,10 +401,8 @@ public final class SwitchUtils {
     return flagsBuilder.toString();
   }
 
-  /**
-   * Prints source for all expressions in a given {@code case}, separated by commas, or the pattern
-   * and guard (if present).
-   */
+  /// Prints source for all expressions in a given `case`, separated by commas, or the pattern and
+  /// guard (if present).
   static String printCaseExpressionsOrPatternAndGuard(CaseTree caseTree, VisitorState state) {
     if (!hasCasePattern(caseTree)) {
       return caseTree.getExpressions().stream().map(state::getSourceForNode).collect(joining(", "));
@@ -455,9 +423,7 @@ public final class SwitchUtils {
         .anyMatch(caseLabelTree -> caseLabelTree instanceof PatternCaseLabelTree);
   }
 
-  /**
-   * Determines whether the supplied {@code caseTree} case contains `case null` and/or `default`.
-   */
+  /// Determines whether the supplied `caseTree` case contains `case null` and/or `default`.
   static NullDefaultKind analyzeCaseForNullAndDefault(CaseTree caseTree) {
     boolean hasDefault = isSwitchDefault(caseTree);
     boolean hasNull =
@@ -475,10 +441,8 @@ public final class SwitchUtils {
     return NullDefaultKind.KIND_NEITHER;
   }
 
-  /**
-   * Renders the Java source prefix needed for the supplied {@code nullDefaultKind}, incorporating
-   * whether the `default` case should be removed.
-   */
+  /// Renders the Java source prefix needed for the supplied `nullDefaultKind`, incorporating
+  /// whether the `default` case should be removed.
   static String renderNullDefaultKindPrefix(
       NullDefaultKind nullDefaultKind, boolean removeDefault) {
 
@@ -515,7 +479,7 @@ public final class SwitchUtils {
     return referencedLocalVariables;
   }
 
-  /** Returns the names of enum constants handled by {@code caseTree}. */
+  /// Returns the names of enum constants handled by `caseTree`.
   static ImmutableSet<String> getHandledEnumValues(CaseTree caseTree) {
     return caseTree.getExpressions().stream()
         .map(ASTHelpers::getSymbol)
@@ -524,25 +488,23 @@ public final class SwitchUtils {
         .collect(toImmutableSet());
   }
 
-  /** Returns the names of enum constants handled across all {@code cases}. */
+  /// Returns the names of enum constants handled across all `cases`.
   static ImmutableSet<String> getHandledEnumValues(List<? extends CaseTree> cases) {
     return cases.stream().flatMap(c -> getHandledEnumValues(c).stream()).collect(toImmutableSet());
   }
 
-  /**
-   * Deletes the code that becomes dead once {@code replacedTree}, the statement at {@code
-   * state.getPath()}, is replaced by a statement that cannot complete normally: the statements
-   * after it in its statement list, and in turn those after each enclosing statement that can then
-   * no longer complete normally either. Returns {@code true} if successful, or {@code false} if the
-   * refactoring should be abandoned (in which case {@code suggestedFixBuilder} may hold some of the
-   * deletions and should be discarded).
-   *
-   * @param numberPulledUp the number of statements right after {@code replacedTree}, in its own
-   *     statement list, that move into the replacement and so are not deleted
-   * @param declineIfDeleted returns {@code true} for a statement whose deletion should instead
-   *     abandon the refactoring, for example because a separate finding may rewrite it with a fix
-   *     that would overlap the deletion
-   */
+  /// Deletes the code that becomes dead once `replacedTree`, the statement at `state.getPath()`, is
+  /// replaced by a statement that cannot complete normally: the statements after it in its
+  /// statement list, and in turn those after each enclosing statement that can then no longer
+  /// complete normally either. Returns `true` if successful, or `false` if the refactoring should
+  /// be abandoned (in which case `suggestedFixBuilder` may hold some of the deletions and should be
+  /// discarded).
+  ///
+  /// @param numberPulledUp the number of statements right after `replacedTree`, in its own
+  ///   statement list, that move into the replacement and so are not deleted
+  /// @param declineIfDeleted returns `true` for a statement whose deletion should instead abandon
+  ///   the refactoring, for example because a separate finding may rewrite it with a fix that would
+  ///   overlap the deletion
   static boolean deleteDeadCodeInAncestors(
       Tree replacedTree,
       VisitorState state,
@@ -641,12 +603,10 @@ public final class SwitchUtils {
     return true;
   }
 
-  /**
-   * Returns whether {@code tree} contains a switch statement or switch expression. A check that
-   * rewrites switches can pass this as the {@code declineIfDeleted} argument of {@link
-   * #deleteDeadCodeInAncestors}: deleting such a switch would overlap the fix of any separate
-   * finding that the check reports on it.
-   */
+  /// Returns whether `tree` contains a switch statement or switch expression. A check that rewrites
+  /// switches can pass this as the `declineIfDeleted` argument of [#deleteDeadCodeInAncestors]:
+  /// deleting such a switch would overlap the fix of any separate finding that the check reports on
+  /// it.
   static boolean hasSwitchInTree(Tree tree) {
     return Objects.equals(
         new TreeScanner<Boolean, Void>() {
@@ -669,10 +629,8 @@ public final class SwitchUtils {
         true);
   }
 
-  /**
-   * Returns the statements that {@code tree} holds directly, or empty if it holds none. Statements
-   * can only be held by a block or a colon-style {@code case}.
-   */
+  /// Returns the statements that `tree` holds directly, or empty if it holds none. Statements can
+  /// only be held by a block or a colon-style `case`.
   private static Optional<List<? extends StatementTree>> getEnclosedStatements(Tree tree) {
     return switch (tree) {
       case BlockTree blockTree -> Optional.of(blockTree.getStatements());
@@ -682,7 +640,7 @@ public final class SwitchUtils {
     };
   }
 
-  /** Returns the cases that follow {@code caseTree} in {@code switchTree}, its enclosing switch. */
+  /// Returns the cases that follow `caseTree` in `switchTree`, its enclosing switch.
   private static List<? extends CaseTree> getSubsequentCases(Tree switchTree, CaseTree caseTree) {
     List<? extends CaseTree> cases =
         switch (switchTree) {
@@ -693,11 +651,8 @@ public final class SwitchUtils {
     return cases.subList(cases.indexOf(caseTree) + 1, cases.size());
   }
 
-  /**
-   * Returns whether a local variable declared by {@code deletedStatements}, which are deleted from
-   * {@code caseTree}, is referred to by a later case of {@code switchTree} (its enclosing
-   * `switch`).
-   */
+  /// Returns whether a local variable declared by `deletedStatements`, which are deleted from
+  /// `caseTree`, is referred to by a later case of `switchTree` (its enclosing `switch`).
   private static boolean isDeletedVariableReferencedLater(
       Tree switchTree, CaseTree caseTree, List<? extends StatementTree> deletedStatements) {
     ImmutableSet<Symbol> deletedVariableSymbols =

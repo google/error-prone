@@ -20,7 +20,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** Unit tests for {@link StreamToIterable}. */
+/// Unit tests for [StreamToIterable].
 @RunWith(JUnit4.class)
 public final class StreamToIterableTest {
   private final CompilationTestHelper helper =

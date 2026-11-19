@@ -21,15 +21,13 @@ import java.util.Collection;
 import org.pcollections.Empty;
 import org.pcollections.PSet;
 
-/**
- * A set of held locks.
- *
- * <p>Wrapper around a {@link PSet} of {@link GuardedByExpression}s. Using a persistent collection
- * makes it easy to handle adding locks to the set only while visiting the scope where those locks
- * are held, without mutating the underlying collection.
- *
- * @author cushon@google.com (Liam Miller-Cushon)
- */
+/// A set of held locks.
+///
+/// Wrapper around a [PSet] of [GuardedByExpression]s. Using a persistent collection makes it easy
+/// to handle adding locks to the set only while visiting the scope where those locks are held,
+/// without mutating the underlying collection.
+///
+/// @author cushon@google.com (Liam Miller-Cushon)
 final class HeldLockSet {
 
   final PSet<GuardedByExpression> locks;

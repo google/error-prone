@@ -40,23 +40,19 @@ import com.sun.tools.javac.tree.JCTree.JCBreak;
 import com.sun.tools.javac.tree.JCTree.JCContinue;
 import com.sun.tools.javac.util.Name;
 
-/**
- * Matches the behaviour of javac's {@code -Xlint:finally} flag.
- *
- * <ol>
- *   <li>Any return statement in a finally block is an error.
- *   <li>An uncaught throw statement in a finally block is an error. We can't always know whether a
- *       specific exception will be caught, so we report errors for throw statements that are not
- *       contained in a try with at least one catch block.
- *   <li>A continue statement in a finally block is an error if it breaks out of a (possibly
- *       labeled) loop that is outside the enclosing finally.
- *   <li>A break statement in a finally block is an error if it breaks out of a (possibly labeled)
- *       loop or a switch statement that is outside the enclosing finally.
- * </ol>
- *
- * @author eaftan@google.com (Eddie Aftandilian)
- * @author cushon@google.com (Liam Miller-Cushon)
- */
+/// Matches the behaviour of javac's `-Xlint:finally` flag.
+///
+/// 1. Any return statement in a finally block is an error.
+/// 1. An uncaught throw statement in a finally block is an error. We can't always know whether a
+///    specific exception will be caught, so we report errors for throw statements that are not
+///    contained in a try with at least one catch block.
+/// 1. A continue statement in a finally block is an error if it breaks out of a (possibly labeled)
+///    loop that is outside the enclosing finally.
+/// 1. A break statement in a finally block is an error if it breaks out of a (possibly labeled)
+///    loop or a switch statement that is outside the enclosing finally.
+///
+/// @author eaftan@google.com (Eddie Aftandilian)
+/// @author cushon@google.com (Liam Miller-Cushon)
 @BugPattern(
     altNames = {"finally", "ThrowFromFinallyBlock"},
     summary =
@@ -105,19 +101,15 @@ public class Finally extends BugChecker
     FOUND_ERROR;
   }
 
-  /**
-   * Base class for all finally matchers. Walks up the tree of enclosing statements and reports an
-   * error if it finds an enclosing finally block.
-   *
-   * @param <T> The type of the tree node to match against
-   */
+  /// Base class for all finally matchers. Walks up the tree of enclosing statements and reports an
+  /// error if it finds an enclosing finally block.
+  ///
+  /// @param <T> The type of the tree node to match against
   private static class FinallyCompletionMatcher<T extends StatementTree> implements Matcher<T> {
 
-    /**
-     * Matches a StatementTree type by walking that statement's ancestor chain.
-     *
-     * @return true if an error is found.
-     */
+    /// Matches a StatementTree type by walking that statement's ancestor chain.
+    ///
+    /// @return true if an error is found.
     @Override
     public boolean matches(T tree, VisitorState state) {
       Tree prevTree = null;
@@ -138,7 +130,7 @@ public class Finally extends BugChecker
       return false;
     }
 
-    /** Match a tree in the ancestor chain given the ancestor's immediate descendant. */
+    /// Match a tree in the ancestor chain given the ancestor's immediate descendant.
     MatchResult matchAncestor(Tree leaf, Tree prevTree) {
       if (leaf instanceof TryTree tryTree) {
         if (tryTree.getFinallyBlock() != null && tryTree.getFinallyBlock().equals(prevTree)) {
@@ -150,7 +142,7 @@ public class Finally extends BugChecker
     }
   }
 
-  /** Ancestor matcher for statements that break or continue out of a finally block. */
+  /// Ancestor matcher for statements that break or continue out of a finally block.
   private static class FinallyJumpMatcher extends FinallyCompletionMatcher<StatementTree> {
     private final Name label;
     private final JumpType jumpType;
@@ -170,18 +162,14 @@ public class Finally extends BugChecker
       this.jumpType = JumpType.BREAK;
     }
 
-    /**
-     * The target of a jump statement (break or continue) is:
-     *
-     * <ol>
-     *   <li>the enclosing loop if the jump is unlabeled;
-     *   <li>the enclosing LabeledStatementTree with matching label if the jump is labeled;
-     *   <li>the enclosing switch statement if the jump is a break.
-     * </ol>
-     *
-     * <p>If the target of a break or continue statement is encountered before reaching a finally
-     * block, return NO_MATCH.
-     */
+    /// The target of a jump statement (break or continue) is:
+    ///
+    /// 1. the enclosing loop if the jump is unlabeled;
+    /// 1. the enclosing LabeledStatementTree with matching label if the jump is labeled;
+    /// 1. the enclosing switch statement if the jump is a break.
+    ///
+    /// If the target of a break or continue statement is encountered before reaching a finally
+    /// block, return NO_MATCH.
     @Override
     protected MatchResult matchAncestor(Tree leaf, Tree prevTree) {
 
@@ -211,7 +199,7 @@ public class Finally extends BugChecker
     }
   }
 
-  /** Match throw statements that are not caught. */
+  /// Match throw statements that are not caught.
   private static class FinallyThrowMatcher extends FinallyCompletionMatcher<ThrowTree> {
     @Override
     protected MatchResult matchAncestor(Tree tree, Tree prevTree) {

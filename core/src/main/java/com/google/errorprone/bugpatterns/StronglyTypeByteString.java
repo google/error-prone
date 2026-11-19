@@ -32,9 +32,7 @@ import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.tools.javac.code.Type;
 
-/**
- * Flags fields which would be better expressed as ByteStrings rather than primitive byte arrays.
- */
+/// Flags fields which would be better expressed as ByteStrings rather than primitive byte arrays.
 @BugPattern(
     summary =
         "This primitive byte array is only used to construct ByteStrings. It would be"

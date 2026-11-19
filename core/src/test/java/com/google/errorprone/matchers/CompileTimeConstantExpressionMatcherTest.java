@@ -30,7 +30,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** {@link CompileTimeConstantExpressionMatcher}Test */
+/// [CompileTimeConstantExpressionMatcher]Test
 @RunWith(JUnit4.class)
 public class CompileTimeConstantExpressionMatcherTest {
   private final CompilationTestHelper testHelper =
@@ -443,7 +443,7 @@ public class CompileTimeConstantExpressionMatcherTest {
         .doTest();
   }
 
-  /** A test-only bugpattern for testing {@link CompileTimeConstantExpressionMatcher}. */
+  /// A test-only bugpattern for testing [CompileTimeConstantExpressionMatcher].
   @BugPattern(severity = WARNING, summary = "")
   public static final class CompileTimeConstantExpressionMatcherTester extends BugChecker
       implements VariableTreeMatcher {

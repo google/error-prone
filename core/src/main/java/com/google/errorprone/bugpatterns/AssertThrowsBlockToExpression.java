@@ -40,7 +40,7 @@ import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.VariableTree;
 import java.util.List;
 
-/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
+/// A [BugChecker]; see the associated [BugPattern] annotation for details.
 @BugPattern(
     summary =
         "assertThrows calls with lambdas containing a single statement can be expressed more"

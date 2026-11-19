@@ -25,11 +25,9 @@ import com.sun.source.tree.IntersectionTypeTree;
 import com.sun.source.tree.TreeVisitor;
 import com.sun.tools.javac.tree.JCTree.JCTypeIntersection;
 
-/**
- * {@code UTree} representation of an {@code IntersectionTypeTree}.
- *
- * @author lowasser@google.com (Louis Wasserman)
- */
+/// `UTree` representation of an `IntersectionTypeTree`.
+///
+/// @author lowasser@google.com (Louis Wasserman)
 @AutoValue
 abstract class UIntersectionType extends UExpression implements IntersectionTypeTree {
   @VisibleForTesting

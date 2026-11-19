@@ -40,7 +40,7 @@ import com.sun.tools.javac.code.Type;
 import java.util.Comparator;
 import org.jspecify.annotations.Nullable;
 
-/** Identifies Comparators that are unnecessarily boxing the comparison key. */
+/// Identifies Comparators that are unnecessarily boxing the comparison key.
 @BugPattern(
     summary =
         "Comparator.comparing() unnecessarily boxes numerical primitives; please use the"

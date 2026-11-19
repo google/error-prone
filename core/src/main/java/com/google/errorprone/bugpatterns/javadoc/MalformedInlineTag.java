@@ -37,11 +37,9 @@ import com.sun.tools.javac.tree.DCTree.DCDocComment;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/**
- * Finds malformed inline tags where {@literal @}{tag is used instead of {{@literal @}tag.
- *
- * @author aaronhurst@google.com (Aaron Hurst)
- */
+/// Finds malformed inline tags where `@{tag` is used instead of `{@tag`.
+///
+/// @author aaronhurst@google.com (Aaron Hurst)
 @BugPattern(
     summary = "This Javadoc tag is malformed. The correct syntax is {@tag and not @{tag.",
     severity = WARNING,
@@ -70,13 +68,11 @@ public final class MalformedInlineTag extends BugChecker
     return handle(state);
   }
 
-  /**
-   * Main action on each class/method/variable Javadoc comment.
-   *
-   * <p>Match all instances of the malformed regex pattern in the full comment text. There isn't any
-   * benefit to iterating over the parsed tree, as the syntax errors can appear anywhere and won't
-   * be parsed.
-   */
+  /// Main action on each class/method/variable Javadoc comment.
+  ///
+  /// Match all instances of the malformed regex pattern in the full comment text. There isn't any
+  /// benefit to iterating over the parsed tree, as the syntax errors can appear anywhere and won't
+  /// be parsed.
   private Description handle(VisitorState state) {
     DocTreePath path = Utils.getDocTreePath(state);
     if (path == null) {

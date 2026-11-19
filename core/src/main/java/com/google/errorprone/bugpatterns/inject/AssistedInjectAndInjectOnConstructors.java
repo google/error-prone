@@ -32,9 +32,7 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.sun.source.tree.ClassTree;
 
-/**
- * @author sgoldfeder@google.com (Steven Goldfeder)
- */
+/// @author sgoldfeder@google.com (Steven Goldfeder)
 @BugPattern(
     summary =
         "@AssistedInject and @Inject should not be used on different constructors in the same"
@@ -42,10 +40,8 @@ import com.sun.source.tree.ClassTree;
     severity = WARNING)
 public class AssistedInjectAndInjectOnConstructors extends BugChecker implements ClassTreeMatcher {
 
-  /**
-   * Matches if a class has a constructor that is annotated with @Inject and a constructor annotated
-   * with @AssistedInject.
-   */
+  /// Matches if a class has a constructor that is annotated with @Inject and a constructor
+  /// annotated with @AssistedInject.
   private static final Matcher<ClassTree> HAS_CONSTRUCTORS_WITH_INJECT_AND_ASSISTED_INJECT =
       allOf(
           constructor(AT_LEAST_ONE, hasInjectAnnotation()),

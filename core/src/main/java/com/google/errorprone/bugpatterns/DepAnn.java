@@ -33,11 +33,9 @@ import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 import com.sun.tools.javac.code.Symbol;
 
-/**
- * Matches the behaviour of the javac dep-ann Xlint warning.
- *
- * @author cushon@google.com (Liam Miller-Cushon)
- */
+/// Matches the behaviour of the javac dep-ann Xlint warning.
+///
+/// @author cushon@google.com (Liam Miller-Cushon)
 @BugPattern(
     altNames = "dep-ann",
     summary = "Item documented with a @deprecated javadoc note is not annotated with @Deprecated",
@@ -60,10 +58,8 @@ public class DepAnn extends BugChecker
     return checkDeprecatedAnnotation(variableTree, state);
   }
 
-  /**
-   * Reports a dep-ann error for a declaration if: (1) javadoc contains the deprecated javadoc tag
-   * (2) the declaration is not annotated with {@link java.lang.Deprecated}
-   */
+  /// Reports a dep-ann error for a declaration if: (1) javadoc contains the deprecated javadoc tag
+  /// (2) the declaration is not annotated with [java.lang.Deprecated]
   @SuppressWarnings("javadoc")
   private Description checkDeprecatedAnnotation(Tree tree, VisitorState state) {
     Symbol symbol = ASTHelpers.getSymbol(tree);

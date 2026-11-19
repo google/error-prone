@@ -67,7 +67,7 @@ import java.util.Objects;
 import javax.lang.model.element.ElementKind;
 import org.jspecify.annotations.Nullable;
 
-/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
+/// A [BugChecker]; see the associated [BugPattern] annotation for details.
 @BugPattern(
     summary = "Comparison using reference equality instead of value equality",
     severity = WARNING,
@@ -198,11 +198,9 @@ public class ReferenceEquality extends AbstractReferenceEquality
     return true;
   }
 
-  /**
-   * True if this operand is a sentinel value (a static final field declared in the same file
-   * initialized inline to a new class instance that doesn't override equals, or initialized to an
-   * enum constant).
-   */
+  /// True if this operand is a sentinel value (a static final field declared in the same file
+  /// initialized inline to a new class instance that doesn't override equals, or initialized to an
+  /// enum constant).
   private static boolean isSentinelComparison(
       ExpressionTree tree,
       VisitorState state,
@@ -279,23 +277,18 @@ public class ReferenceEquality extends AbstractReferenceEquality
         .collect(onlyElement());
   }
 
-  /**
-   * Returns {@code true} if an instance of {@code type} is guaranteed to have an {@code equals}
-   * implementation that is equivalent to {@code ==}.
-   *
-   * <p>We can guarantee this for:
-   *
-   * <ul>
-   *   <li>enum classes
-   *   <li>{@code final} identity classes that inherit {@link Object#equals} instead of having a
-   *       more specific implementation
-   *   <li>{@code sealed} classes whose permitted subclasses all definitely use reference equality
-   *       according to this method
-   *   <li>{@code private} classes (or classes whose constructors are all {@code private}) whose
-   *       subclasses within the compilation unit all definitely use reference equality according to
-   *       this method
-   * </ul>
-   */
+  /// Returns `true` if an instance of `type` is guaranteed to have an `equals` implementation that
+  /// is equivalent to `==`.
+  ///
+  /// We can guarantee this for:
+  ///
+  /// - enum classes
+  /// - `final` identity classes that inherit [Object#equals] instead of having a more specific
+  ///   implementation
+  /// - `sealed` classes whose permitted subclasses all definitely use reference equality according
+  ///   to this method
+  /// - `private` classes (or classes whose constructors are all `private`) whose subclasses within
+  ///   the compilation unit all definitely use reference equality according to this method
   private static boolean definitelyUsesReferenceEquality(
       Type type, ImmutableListMultimap<ClassSymbol, Type> subclassMap, VisitorState state) {
     return definitelyUsesReferenceEquality(type, subclassMap, state, 0);
@@ -350,11 +343,8 @@ public class ReferenceEquality extends AbstractReferenceEquality
     return true;
   }
 
-  /**
-   * If we are sure that we know the complete list of direct subclasses for the given class (such as
-   * because it's {@code sealed} or {@code final}), returns all those subclasses. Otherwise, returns
-   * {@code null}.
-   */
+  /// If we are sure that we know the complete list of direct subclasses for the given class (such
+  /// as because it's `sealed` or `final`), returns all those subclasses. Otherwise, returns `null`.
   private static @Nullable List<Type> directSubclassesIfAllKnown(
       ClassSymbol sym, VisitorState state, ImmutableListMultimap<ClassSymbol, Type> subclassMap) {
     if (sym.type.getKind() == INTERSECTION) {
@@ -400,9 +390,7 @@ public class ReferenceEquality extends AbstractReferenceEquality
     return true;
   }
 
-  /**
-   * Returns {@code true} if {@code type} declares or inherits an override of {@link Object#equals}.
-   */
+  /// Returns `true` if `type` declares or inherits an override of [Object#equals].
   private static boolean implementsEquals(Type type, VisitorState state) {
     Name equalsName = EQUALS.get(state);
     Symbol objectEquals = getOnlyMember(state.getSymtab().objectType, "equals");

@@ -31,7 +31,7 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import java.util.Objects;
 
-/** A BugPattern; see the summary. */
+/// A BugPattern; see the summary.
 @BugPattern(
     summary = "Scanner.useDelimiter is not an efficient way to read an entire InputStream",
     severity = WARNING)

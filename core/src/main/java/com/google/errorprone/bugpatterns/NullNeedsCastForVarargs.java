@@ -43,7 +43,7 @@ import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Type.ArrayType;
 import java.util.List;
 
-/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
+/// A [BugChecker]; see the associated [BugPattern] annotation for details.
 @BugPattern(
     summary =
         "This call passes a null *array*, so it always produces NullPointerException. To pass a"
@@ -111,10 +111,8 @@ public final class NullNeedsCastForVarargs extends BugChecker
     return castType.getKind() == ARRAY;
   }
 
-  /**
-   * Returns whether {@code arg} is being cast to {@code Foo[]} and the target type of the method
-   * call at the path of {@code state} is {@code SomeGenericType<Foo>}.
-   */
+  /// Returns whether `arg` is being cast to `Foo[]` and the target type of the method call at the
+  /// path of `state` is `SomeGenericType<Foo>`.
   private static boolean isCastOfNullToArrayOfTargetTypeElementType(
       MethodInvocationTree tree, ExpressionTree arg, VisitorState state) {
     if (!isCastOfNullToArray(arg)) {

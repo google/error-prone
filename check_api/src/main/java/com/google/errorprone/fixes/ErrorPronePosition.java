@@ -20,7 +20,7 @@ import com.sun.source.tree.Tree;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
 
-/** A compatibility wrapper around {@link DiagnosticPosition}. */
+/// A compatibility wrapper around [DiagnosticPosition].
 public interface ErrorPronePosition {
   static ErrorPronePosition from(Tree node) {
     return from((DiagnosticPosition) node);

@@ -33,11 +33,9 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
 import java.util.List;
 
-/**
- * Checks that variable argument methods have even number of arguments.
- *
- * @author bhagwani@google.com (Sumit Bhagwani)
- */
+/// Checks that variable argument methods have even number of arguments.
+///
+/// @author bhagwani@google.com (Sumit Bhagwani)
 @BugPattern(
     summary = "This method must be called with an even number of arguments.",
     severity = ERROR)

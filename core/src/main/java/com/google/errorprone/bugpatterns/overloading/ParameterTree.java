@@ -26,21 +26,18 @@ import java.util.Set;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.Name;
 
-/**
- * A simpler version of standard {@link VariableTree} used to distinguish between real variable
- * declarations and method parameters.
- *
- * <p>{@link VariableTree} is in a sense "too rich" to represent method parameters. For example, it
- * is allowed to have an initializer or arbitrary modifiers. This class is a much simpler version of
- * variable tree used to distinguish actual real {@link VariableTree} (variable declarations) from
- * simple method parameters. During construction it is validated that the underlying {@link
- * VariableTree} can really be used as method parameter.
- *
- * <p>It also provides slightly more sensible (for our purposes) {@link Object#toString()}
- * implementation.
- *
- * @author hanuszczak@google.com (Łukasz Hanuszczak)
- */
+/// A simpler version of standard [VariableTree] used to distinguish between real variable
+/// declarations and method parameters.
+///
+/// [VariableTree] is in a sense "too rich" to represent method parameters. For example, it is
+/// allowed to have an initializer or arbitrary modifiers. This class is a much simpler version of
+/// variable tree used to distinguish actual real [VariableTree] (variable declarations) from simple
+/// method parameters. During construction it is validated that the underlying [VariableTree] can
+/// really be used as method parameter.
+///
+/// It also provides slightly more sensible (for our purposes) [Object#toString()] implementation.
+///
+/// @author hanuszczak@google.com (Łukasz Hanuszczak)
 record ParameterTree(Name name, Tree type, boolean varArgs) {
 
   public static ParameterTree create(VariableTree variableTree) {

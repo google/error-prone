@@ -22,11 +22,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * Test cases for {@link LongLiteralLowerCaseSuffix}.
- *
- * @author Simon Nickerson (sjnickerson@google.com)
- */
+/// Test cases for [LongLiteralLowerCaseSuffix].
+///
+/// @author Simon Nickerson (sjnickerson@google.com)
 @RunWith(JUnit4.class)
 public class LongLiteralLowerCaseSuffixTest {
 
@@ -120,7 +118,7 @@ public class LongLiteralLowerCaseSuffixPositiveCase1 {
         .doTest();
   }
 
-  /** Test for Java 7 integer literals that include underscores. */
+  /// Test for Java 7 integer literals that include underscores.
   @Test
   public void java7PositiveCase() {
     compilationHelper

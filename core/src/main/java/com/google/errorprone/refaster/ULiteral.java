@@ -28,11 +28,9 @@ import com.sun.tools.javac.tree.JCTree.JCLiteral;
 import java.util.Objects;
 import org.jspecify.annotations.Nullable;
 
-/**
- * {@link UTree} version of {@link LiteralTree}.
- *
- * @author lowasser@google.com (Louis Wasserman)
- */
+/// [UTree] version of [LiteralTree].
+///
+/// @author lowasser@google.com (Louis Wasserman)
 @AutoValue
 public abstract class ULiteral extends UExpression implements LiteralTree {
 

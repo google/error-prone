@@ -39,7 +39,7 @@ import java.lang.reflect.Modifier;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-/** {@link TruthIncompatibleType}Test */
+/// [TruthIncompatibleType]Test
 @RunWith(TestParameterInjector.class)
 public class TruthIncompatibleTypeTest {
 

@@ -39,9 +39,7 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import java.util.List;
 import org.jspecify.annotations.Nullable;
 
-/**
- * @author cushon@google.com (Liam Miller-Cushon)
- */
+/// @author cushon@google.com (Liam Miller-Cushon)
 @BugPattern(
     altNames = "FormatString",
     summary = "Invalid printf-style format string",
@@ -79,10 +77,8 @@ public class FloggerFormatString extends BugChecker implements MethodInvocationT
     return description.build();
   }
 
-  /**
-   * If there were more arguments than format specifiers and the last argument is an exception,
-   * suggest using {@code withCause(e)} instead of adding a format specifier.
-   */
+  /// If there were more arguments than format specifiers and the last argument is an exception,
+  /// suggest using `withCause(e)` instead of adding a format specifier.
   private @Nullable Fix withCauseFix(
       ValidationResult result, MethodInvocationTree tree, VisitorState state) {
     if (!result.message().startsWith("extra format arguments")) {

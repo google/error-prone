@@ -44,7 +44,7 @@ import com.sun.tools.javac.code.Type;
 import java.util.List;
 import org.jspecify.annotations.Nullable;
 
-/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
+/// A [BugChecker]; see the associated [BugPattern] annotation for details.
 @BugPattern(
     summary = "Refactor explicit null checks to Objects.requireNonNull",
     severity = SUGGESTION)

@@ -22,11 +22,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * Tests for {@link UStaticIdent}.
- *
- * @author lowasser@google.com (Louis Wasserman)
- */
+/// Tests for [UStaticIdent].
+///
+/// @author lowasser@google.com (Louis Wasserman)
 @RunWith(JUnit4.class)
 public class UStaticIdentTest extends AbstractUTreeTest {
   @Test

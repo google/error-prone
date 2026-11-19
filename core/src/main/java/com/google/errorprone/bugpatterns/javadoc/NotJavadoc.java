@@ -47,7 +47,7 @@ import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
 import com.sun.source.util.TreeScanner;
 
-/** A BugPattern; see the summary. */
+/// A BugPattern; see the summary.
 @BugPattern(
     summary = "Avoid using `/**` for comments which aren't actually Javadoc.",
     severity = WARNING,

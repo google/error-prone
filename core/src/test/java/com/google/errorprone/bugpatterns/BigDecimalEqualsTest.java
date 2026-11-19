@@ -21,11 +21,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * Unit tests for {@link BigDecimalEquals}.
- *
- * @author ghm@google.com (Graeme Morgan)
- */
+/// Unit tests for [BigDecimalEquals].
+///
+/// @author ghm@google.com (Graeme Morgan)
 @RunWith(JUnit4.class)
 public final class BigDecimalEqualsTest {
   @Test

@@ -35,11 +35,8 @@ import com.sun.source.tree.MethodInvocationTree;
 import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 
-/**
- * Bans calls to {@code Instant} APIs where the {@link java.time.temporal.TemporalUnit} is not one
- * of: {@code NANOS}, {@code MICROS}, {@code MILLIS}, {@code SECONDS}, {@code MINUTES}, {@code
- * HOURS}, {@code HALF_DAYS}, or {@code DAYS}.
- */
+/// Bans calls to `Instant` APIs where the [java.time.temporal.TemporalUnit] is not one of: `NANOS`,
+/// `MICROS`, `MILLIS`, `SECONDS`, `MINUTES`, `HOURS`, `HALF_DAYS`, or `DAYS`.
 @BugPattern(
     summary =
         "Instant APIs only work for NANOS, MICROS, MILLIS, SECONDS, MINUTES, HOURS, HALF_DAYS and"

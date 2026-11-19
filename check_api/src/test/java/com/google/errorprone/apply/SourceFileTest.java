@@ -25,11 +25,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * Unit tests for {@link SourceFile}s.
- *
- * @author sjnickerson@google.com (Simon Nickerson)
- */
+/// Unit tests for [SourceFile]s.
+///
+/// @author sjnickerson@google.com (Simon Nickerson)
 @RunWith(JUnit4.class)
 public class SourceFileTest {
 

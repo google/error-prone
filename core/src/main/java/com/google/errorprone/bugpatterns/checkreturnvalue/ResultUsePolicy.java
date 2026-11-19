@@ -16,17 +16,15 @@
 
 package com.google.errorprone.bugpatterns.checkreturnvalue;
 
-/** Policy for use of a method or constructor's result. */
+/// Policy for use of a method or constructor's result.
 public enum ResultUsePolicy {
-  /**
-   * Use of the result is expected except in certain contexts where the method is being used in a
-   * way such that not using the result is likely correct. Examples include when the result type at
-   * the callsite is {@code java.lang.Void} and when the surrounding context seems to be testing
-   * that the method throws an exception.
-   */
+  /// Use of the result is expected except in certain contexts where the method is being used in a
+  /// way such that not using the result is likely correct. Examples include when the result type at
+  /// the callsite is `java.lang.Void` and when the surrounding context seems to be testing that the
+  /// method throws an exception.
   EXPECTED,
-  /** Use of the result is optional. */
+  /// Use of the result is optional.
   OPTIONAL,
-  /** It is unspecified whether the result should be used or not. */
+  /// It is unspecified whether the result should be used or not.
   UNSPECIFIED,
 }

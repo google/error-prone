@@ -32,10 +32,8 @@ import com.google.errorprone.suppliers.Supplier;
 import com.sun.source.tree.ImportTree;
 import com.sun.tools.javac.code.Type;
 
-/**
- * Checker that recommends using ErrorProne's version of {@code @CheckReturnValue} over the version
- * in JSR305 (which is defunct).
- */
+/// Checker that recommends using ErrorProne's version of `@CheckReturnValue` over the version in
+/// JSR305 (which is defunct).
 @BugPattern(
     summary = "Prefer ErrorProne's @CheckReturnValue over JSR305's version.",
     severity = WARNING)

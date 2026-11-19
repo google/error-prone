@@ -78,11 +78,9 @@ import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * Integration tests for the Error Prone compiler.
- *
- * @author alexeagle@google.com (Alex Eagle)
- */
+/// Integration tests for the Error Prone compiler.
+///
+/// @author alexeagle@google.com (Alex Eagle)
 @RunWith(JUnit4.class)
 public class ErrorProneCompilerIntegrationTest {
 
@@ -153,10 +151,8 @@ public class ErrorProneCompilerIntegrationTest {
     assertWithMessage(outputStream.toString()).that(exitCode).isEqualTo(Result.OK);
   }
 
-  /**
-   * Regression test for a bug in which multiple top-level classes may cause NullPointerExceptions
-   * in the matchers.
-   */
+  /// Regression test for a bug in which multiple top-level classes may cause NullPointerExceptions
+  /// in the matchers.
   @Test
   public void fileWithMultipleTopLevelClassesExtendsWithError() {
     Result exitCode =
@@ -207,7 +203,7 @@ public class ErrorProneCompilerIntegrationTest {
                 "unhandled exception was thrown by the Error Prone"));
   }
 
-  /** Regression test for Issue 188, error-prone doesn't work with annotation processors. */
+  /// Regression test for Issue 188, error-prone doesn't work with annotation processors.
   @Test
   public void annotationProcessingWorks() {
     Result exitCode =
@@ -217,7 +213,7 @@ public class ErrorProneCompilerIntegrationTest {
     assertWithMessage(outputStream.toString()).that(exitCode).isEqualTo(Result.OK);
   }
 
-  /** Test that if javac does dataflow on a class twice error-prone only analyses it once. */
+  /// Test that if javac does dataflow on a class twice error-prone only analyses it once.
   @Test
   public void reportReadyForAnalysisOnce() {
     Result exitCode =
@@ -630,10 +626,8 @@ public class ErrorProneCompilerIntegrationTest {
     assertThat(output).doesNotContain("Using 'return' is considered harmful");
   }
 
-  /**
-   * Trivial bug checker for testing command line flags. Forbids methods from returning the string
-   * provided by "-XepOpt:Forbidden=<VALUE>" flag.
-   */
+  /// Trivial bug checker for testing command line flags. Forbids methods from returning the string
+  /// provided by `-XepOpt:Forbidden=<VALUE>` flag.
   @BugPattern(summary = "Please don't return this const value", severity = ERROR)
   public static class ForbiddenString extends BugChecker implements ReturnTreeMatcher {
     private final String forbiddenString;
@@ -855,7 +849,7 @@ public class ErrorProneCompilerIntegrationTest {
     assertThat(diagnostics).hasSize(3);
   }
 
-  /** A bugpattern for testing. */
+  /// A bugpattern for testing.
   @BugPattern(summary = "", severity = ERROR)
   public static class InvalidSourceRange extends BugChecker implements ClassTreeMatcher {
 

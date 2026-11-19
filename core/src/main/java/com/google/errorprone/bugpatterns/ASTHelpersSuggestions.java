@@ -47,7 +47,7 @@ import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.model.JavacElements;
 
-/** A BugPattern; see the summary */
+/// A BugPattern; see the summary
 @BugPattern(summary = "Prefer ASTHelpers instead of calling this API directly", severity = WARNING)
 public class ASTHelpersSuggestions extends BugChecker implements MethodInvocationTreeMatcher {
 

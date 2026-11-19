@@ -53,11 +53,9 @@ import java.util.Optional;
 import java.util.Set;
 import org.safere.Pattern;
 
-/**
- * Matches incorrect Javadoc {@literal @}param tags.
- *
- * @author ghm@google.com (Graeme Morgan)
- */
+/// Matches incorrect Javadoc `@param` tags.
+///
+/// @author ghm@google.com (Graeme Morgan)
 // TODO(ghm): Split this into the @param part and the @code part; the former is always right that
 // there's a mistake, but the latter is based on a heuristic.
 @BugPattern(
@@ -68,12 +66,10 @@ public final class InvalidParam extends BugChecker implements ClassTreeMatcher, 
 
   private static final Pattern POSSIBLE_PARAMETER = Pattern.compile("[a-z][A-Za-z0-9]*");
 
-  /** Names which are often used in {@literal @}code blocks, and shouldn't be checked. */
+  /// Names which are often used in `@code` blocks, and shouldn't be checked.
   private static final ImmutableSet<String> EXCLUSIONS = ImmutableSet.of("true", "false");
 
-  /**
-   * Heuristic for the relative edit distance below which we report maybe-param {@literal @code}s.
-   */
+  /// Heuristic for the relative edit distance below which we report maybe-param `@code`s.
   private static final double LIKELY_PARAMETER_THRESHOLD = 0.25;
 
   @Override
@@ -122,7 +118,7 @@ public final class InvalidParam extends BugChecker implements ClassTreeMatcher, 
         .collect(onlyElement());
   }
 
-  /** Checks that documented parameters match the method's parameter list. */
+  /// Checks that documented parameters match the method's parameter list.
   private final class ParamsChecker extends DocTreePathScanner<Void, Void> {
     private final VisitorState state;
 

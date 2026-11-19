@@ -45,7 +45,7 @@ import java.util.List;
 import javax.lang.model.element.Modifier;
 import org.jspecify.annotations.Nullable;
 
-/** Checks for reliance on identity semantics of value-based classes. */
+/// Checks for reliance on identity semantics of value-based classes.
 @BugPattern(
     summary =
         "Value-based classes do not have identity; relying on identity semantics (such as"
@@ -62,12 +62,10 @@ public class ValueClassIdentity extends BugChecker
   private static final Supplier<Type> IDENTITY_HASH_MAP_TYPE =
       Suppliers.typeFromString("java.util.IdentityHashMap");
 
-  /**
-   * Value-based classes defined in standard libraries (e.g. {@code java.util}, {@code java.time},
-   * {@code java.lang}) that are migrating to value objects in Valhalla / JEP 401. This explicit set
-   * is checked in addition to the {@code @jdk.internal.ValueBased} annotation for environments or
-   * older JDK versions where the annotation is not present or visible on the classpath.
-   */
+  /// Value-based classes defined in standard libraries (e.g. `java.util`, `java.time`, `java.lang`)
+  /// that are migrating to value objects in Valhalla / JEP 401. This explicit set is checked in
+  /// addition to the `@jdk.internal.ValueBased` annotation for environments or older JDK versions
+  /// where the annotation is not present or visible on the classpath.
   private static final ImmutableSet<String> VALUE_CLASSES_BESIDES_PRIMITIVE_WRAPPERS =
       ImmutableSet.of(
           // keep-sorted start

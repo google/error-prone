@@ -66,7 +66,7 @@ import javax.inject.Inject;
 import javax.lang.model.element.NestingKind;
 import org.safere.Pattern;
 
-/** Finds fields which can be safely made static. */
+/// Finds fields which can be safely made static.
 @BugPattern(
     summary =
         "A final field initialized at compile-time with an instance of an immutable type can be"
@@ -130,10 +130,8 @@ public final class FieldCanBeStatic extends BugChecker implements VariableTreeMa
 
   private static final long RECORD_FLAG = 1L << 61;
 
-  /**
-   * Renames the variable, clobbering any qualifying (like {@code this.}). This is a tad unsafe, but
-   * we need to somehow remove any qualification with an instance.
-   */
+  /// Renames the variable, clobbering any qualifying (like `this.`). This is a tad unsafe, but we
+  /// need to somehow remove any qualification with an instance.
   private SuggestedFix renameVariable(VariableTree variableTree, VisitorState state) {
     String name = variableTree.getName().toString();
     if (!LOWER_CAMEL_PATTERN.matcher(name).matches()) {
@@ -172,10 +170,8 @@ public final class FieldCanBeStatic extends BugChecker implements VariableTreeMa
 
   private static final Pattern LOWER_CAMEL_PATTERN = Pattern.compile("[a-z][a-zA-Z0-9]+");
 
-  /**
-   * Tries to establish whether an expression is pure. For example, literals and invocations of
-   * known-pure functions are pure.
-   */
+  /// Tries to establish whether an expression is pure. For example, literals and invocations of
+  /// known-pure functions are pure.
   private boolean isPure(ExpressionTree initializer, VisitorState state) {
     return constantExpressions
         .constantExpression(initializer, state)

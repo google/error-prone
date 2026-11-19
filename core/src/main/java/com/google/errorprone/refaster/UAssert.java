@@ -24,11 +24,9 @@ import com.sun.source.tree.TreeVisitor;
 import com.sun.tools.javac.tree.JCTree.JCStatement;
 import org.jspecify.annotations.Nullable;
 
-/**
- * {@code UTree} representation of an assertion.
- *
- * @author lowasser@google.com (Louis Wasserman)
- */
+/// `UTree` representation of an assertion.
+///
+/// @author lowasser@google.com (Louis Wasserman)
 @AutoValue
 abstract class UAssert extends USimpleStatement implements AssertTree {
 

@@ -22,11 +22,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * Unit tests for {@link ConstantPatternCompile} bug pattern.
- *
- * @author bhagwani@google.com (Sumit Bhagwani)
- */
+/// Unit tests for [ConstantPatternCompile] bug pattern.
+///
+/// @author bhagwani@google.com (Sumit Bhagwani)
 @RunWith(JUnit4.class)
 public class ConstantPatternCompileTest {
   private final CompilationTestHelper compilationHelper =

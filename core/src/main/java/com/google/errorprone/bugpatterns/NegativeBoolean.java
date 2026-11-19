@@ -30,7 +30,7 @@ import javax.lang.model.type.TypeKind;
 import org.safere.Matcher;
 import org.safere.Pattern;
 
-/** Discourages the use of negative boolean names. */
+/// Discourages the use of negative boolean names.
 @BugPattern(summary = "Prefer positive boolean names", severity = WARNING)
 public final class NegativeBoolean extends BugChecker implements VariableTreeMatcher {
 

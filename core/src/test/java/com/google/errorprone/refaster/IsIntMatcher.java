@@ -23,7 +23,7 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.tools.javac.code.Type;
 import javax.lang.model.type.TypeKind;
 
-/** Test matcher that matches expressions whose static type is exactly primitive int. */
+/// Test matcher that matches expressions whose static type is exactly primitive int.
 public final class IsIntMatcher implements Matcher<ExpressionTree> {
   @Override
   public boolean matches(ExpressionTree tree, VisitorState state) {

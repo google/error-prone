@@ -36,7 +36,7 @@ import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** {@link ThreadSafeChecker}Test */
+/// [ThreadSafeChecker]Test
 @RunWith(JUnit4.class)
 public class ThreadSafeCheckerTest {
 
@@ -1152,7 +1152,7 @@ class Test {
         .doTest();
   }
 
-  /** A sample superclass with a mutable field. */
+  /// A sample superclass with a mutable field.
   public static class SuperFieldSuppressionTest {
     @LazyInit public int x = 0;
 

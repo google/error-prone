@@ -47,7 +47,7 @@ import com.sun.source.util.TreePathScanner;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Type.ClassType;
 
-/** Finds tests that won't run due to the enclosing runner. */
+/// Finds tests that won't run due to the enclosing runner.
 @BugPattern(
     summary =
         "This test is annotated @Test, but given it's within a class using the Enclosed runner,"

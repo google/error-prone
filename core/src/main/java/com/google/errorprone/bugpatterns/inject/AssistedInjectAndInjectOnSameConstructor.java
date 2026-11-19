@@ -36,20 +36,18 @@ import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
 
-/**
- * @author sgoldfeder@google.com (Steven Goldfeder)
- */
+/// @author sgoldfeder@google.com (Steven Goldfeder)
 @BugPattern(
     summary = "@AssistedInject and @Inject cannot be used on the same constructor.",
     severity = WARNING)
 public class AssistedInjectAndInjectOnSameConstructor extends BugChecker
     implements AnnotationTreeMatcher {
 
-  /** Matches a method/constructor that is annotated with an @AssistedInject annotation. */
+  /// Matches a method/constructor that is annotated with an @AssistedInject annotation.
   private static final Matcher<MethodTree> HAS_ASSISTED_INJECT_MATCHER =
       hasAnnotation(ASSISTED_INJECT_ANNOTATION);
 
-  /** Matches the @Inject and @Assisted inject annotations. */
+  /// Matches the @Inject and @Assisted inject annotations.
   private static final Matcher<AnnotationTree> injectOrAssistedInjectMatcher =
       anyOf(IS_APPLICATION_OF_AT_INJECT, isType(ASSISTED_INJECT_ANNOTATION));
 

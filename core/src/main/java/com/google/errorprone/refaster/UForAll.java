@@ -23,11 +23,9 @@ import com.sun.tools.javac.code.Type.ForAll;
 import com.sun.tools.javac.code.Types;
 import java.util.List;
 
-/**
- * {@link UType} version of {@link ForAll}.
- *
- * @author lowasser@google.com (Louis Wasserman)
- */
+/// [UType] version of [ForAll].
+///
+/// @author lowasser@google.com (Louis Wasserman)
 @AutoValue
 public abstract class UForAll extends UType {
   public static UForAll create(List<UTypeVar> typeVars, UType quantifiedType) {

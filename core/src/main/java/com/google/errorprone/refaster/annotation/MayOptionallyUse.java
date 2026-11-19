@@ -21,30 +21,28 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-/**
- * Indicates that a parameter to a placeholder method is not required to be used in the
- * placeholder's implementation. For example, the pattern
- *
- * <pre>{@code
- * abstract class Utf8Bytes {
- *  @Placeholder abstract void handleException(
- *      @MayOptionallyUse UnsupportedEncodingException e);
- *  @Placeholder abstract void useString(String str);
- *  @BeforeTemplate void before(byte[] array) {
- *     try {
- *       useString(new String(array, "UTF_8"));
- *     } catch (UnsupportedEncodingException e) {
- *       handleException(e);
- *     }
- *   }
- *  @AfterTemplate void after(byte[] array) {
- *     useString(new String(array, StandardCharsets.UTF_8));
- *   }
- * }
- * }</pre>
- *
- * would match even if the catch statement were empty, or didn't refer to e.
- */
+/// Indicates that a parameter to a placeholder method is not required to be used in the
+/// placeholder's implementation. For example, the pattern
+///
+/// ```
+/// abstract class Utf8Bytes {
+///  @Placeholder abstract void handleException(
+///      @MayOptionallyUse UnsupportedEncodingException e);
+///  @Placeholder abstract void useString(String str);
+///  @BeforeTemplate void before(byte[] array) {
+///     try {
+///       useString(new String(array, "UTF_8"));
+///     } catch (UnsupportedEncodingException e) {
+///       handleException(e);
+///     }
+///   }
+///  @AfterTemplate void after(byte[] array) {
+///     useString(new String(array, StandardCharsets.UTF_8));
+///   }
+/// }
+/// ```
+///
+/// would match even if the catch statement were empty, or didn't refer to e.
 @Target(ElementType.PARAMETER)
 @Retention(RetentionPolicy.SOURCE)
 public @interface MayOptionallyUse {}

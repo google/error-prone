@@ -27,11 +27,9 @@ import com.sun.tools.javac.tree.JCTree.JCMethodInvocation;
 import java.util.List;
 import org.jspecify.annotations.Nullable;
 
-/**
- * {@link UTree} version of {@link MethodInvocationTree}.
- *
- * @author lowasser@google.com (Louis Wasserman)
- */
+/// [UTree] version of [MethodInvocationTree].
+///
+/// @author lowasser@google.com (Louis Wasserman)
 @AutoValue
 public abstract class UMethodInvocation extends UExpression implements MethodInvocationTree {
   public static UMethodInvocation create(

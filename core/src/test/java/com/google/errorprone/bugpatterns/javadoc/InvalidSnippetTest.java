@@ -21,7 +21,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** Unit tests for {@link InvalidSnippet} bug pattern. */
+/// Unit tests for [InvalidSnippet] bug pattern.
 @RunWith(JUnit4.class)
 public final class InvalidSnippetTest {
   private final CompilationTestHelper helper =

@@ -22,7 +22,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** Unit tests for {@link ReturnFromVoid} bug pattern. */
+/// Unit tests for [ReturnFromVoid] bug pattern.
 @RunWith(JUnit4.class)
 public final class ReturnFromVoidTest {
   private final BugCheckerRefactoringTestHelper refactoring =

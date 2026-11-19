@@ -31,7 +31,7 @@ import com.sun.source.tree.MethodInvocationTree;
 import com.sun.tools.javac.code.Flags;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 
-/** A BugPattern; see the summary */
+/// A BugPattern; see the summary
 @BugPattern(
     summary = "Mockito cannot mock final or static methods, and can't detect this at runtime",
     altNames = {"MockitoBadFinalMethod", "CannotMockFinalMethod"},

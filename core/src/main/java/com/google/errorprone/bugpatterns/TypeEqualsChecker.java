@@ -39,7 +39,7 @@ import com.sun.source.tree.Tree.Kind;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.TypeTag;
 
-/** Flags TypeMirror equality usage. */
+/// Flags TypeMirror equality usage.
 @BugPattern(
     name = "TypeEquals",
     summary =

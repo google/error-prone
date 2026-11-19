@@ -66,7 +66,7 @@ import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
 import org.safere.Pattern;
 
-/** Flags a few ways in which member names may violate the style guide. */
+/// Flags a few ways in which member names may violate the style guide.
 @BugPattern(
     severity = WARNING,
     summary = "Methods and non-static variables should be named in lowerCamelCase",

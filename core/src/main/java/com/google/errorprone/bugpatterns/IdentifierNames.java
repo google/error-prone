@@ -26,7 +26,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.inject.Inject;
 
-/** Utilities for dealing with identifier names. */
+/// Utilities for dealing with identifier names.
 final class IdentifierNames {
 
   private final boolean allowInitialismsInTypeName;

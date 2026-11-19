@@ -55,7 +55,7 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Set;
 
-/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
+/// A [BugChecker]; see the associated [BugPattern] annotation for details.
 @BugPattern(
     summary =
         "Anytime you need to look up a constant value from VisitorState, improve performance by"
@@ -166,13 +166,11 @@ public class MemoizeConstantVisitorStateLookups extends BugChecker
     }
   }
 
-  /**
-   * @param method The method on VisitorState being called.
-   * @param lookupKey The normalized lookup key for grouping equivalent lookups.
-   * @param argumentExpression The actual expression with that value: a string literal, or a
-   *     constant with such a value.
-   * @param entireTree The entire invocation of the VisitorState method.
-   */
+  /// @param method The method on VisitorState being called.
+  /// @param lookupKey The normalized lookup key for grouping equivalent lookups.
+  /// @param argumentExpression The actual expression with that value: a string literal, or a
+  ///   constant with such a value.
+  /// @param entireTree The entire invocation of the VisitorState method.
   private record CallSite(
       Name method,
       LookupKey lookupKey,
@@ -193,7 +191,7 @@ public class MemoizeConstantVisitorStateLookups extends BugChecker
         return super.visitMethodInvocation(tree, null);
       }
 
-      /** Adds to result if the call uses a compile-time constant argument. */
+      /// Adds to result if the call uses a compile-time constant argument.
       private void handleConstantLookup(MethodInvocationTree tree) {
         ExpressionTree argumentExpr = tree.getArguments().getFirst();
         String argumentValue = ASTHelpers.constValue(argumentExpr, String.class);
@@ -218,10 +216,8 @@ public class MemoizeConstantVisitorStateLookups extends BugChecker
     return result.build();
   }
 
-  /**
-   * Adds to {@code fix} the changes necessary to memoize all the callsites in {@code instances},
-   * and returns the new constant declaration to which the fixed callsites will refer.
-   */
+  /// Adds to `fix` the changes necessary to memoize all the callsites in `instances`, and returns
+  /// the new constant declaration to which the fixed callsites will refer.
   private static String memoizeLookup(
       VisitorState state,
       SuggestedFix.Builder fix,
@@ -277,13 +273,12 @@ public class MemoizeConstantVisitorStateLookups extends BugChecker
     };
   }
 
-  /**
-   * Chooses one call site to use for understanding all related callsites. This is used to determine
-   * what type is being looked up and what source text to use as the argument to the VisitorState
-   * method. The idea is that if someone writes both getName("foo") and getName(FOO), we want to
-   * only define one constant for them. In case there are two callsites with different arguments, we
-   * prefer defined constants rather than x-raying through to a string literal, i.e., getName(FOO).
-   */
+  /// Chooses one call site to use for understanding all related callsites. This is used to
+  /// determine what type is being looked up and what source text to use as the argument to the
+  /// VisitorState method. The idea is that if someone writes both getName("foo") and getName(FOO),
+  /// we want to only define one constant for them. In case there are two callsites with different
+  /// arguments, we prefer defined constants rather than x-raying through to a string literal, i.e.,
+  /// getName(FOO).
   private static CallSite bestCallsite(ImmutableList<CallSite> instances) {
     return instances.stream()
         .max(

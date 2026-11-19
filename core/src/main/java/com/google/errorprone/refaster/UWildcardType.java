@@ -23,18 +23,16 @@ import com.sun.tools.javac.code.BoundKind;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Type.WildcardType;
 
-/**
- * {@link UType} version of {@link WildcardType}.
- *
- * @author lowasser@google.com (Louis Wasserman)
- */
+/// [UType] version of [WildcardType].
+///
+/// @author lowasser@google.com (Louis Wasserman)
 @AutoValue
 abstract class UWildcardType extends UType {
   public static UWildcardType create(BoundKind boundKind, UType bound) {
     return new AutoValue_UWildcardType(boundKind, bound);
   }
 
-  /** This corresponds to a plain ? wildcard. */
+  /// This corresponds to a plain ? wildcard.
   public static UWildcardType create() {
     return create(BoundKind.UNBOUND, UClassType.create("java.lang.Object"));
   }

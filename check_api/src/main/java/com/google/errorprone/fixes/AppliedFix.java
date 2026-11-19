@@ -26,17 +26,13 @@ import java.util.List;
 import java.util.Set;
 import org.jspecify.annotations.Nullable;
 
-/**
- * Represents the corrected source which we think was intended, by applying a Fix. This is used to
- * generate the "Did you mean?" snippet in the error message.
- *
- * @author alexeagle@google.com (Alex Eagle)
- */
+/// Represents the corrected source which we think was intended, by applying a Fix. This is used to
+/// generate the "Did you mean?" snippet in the error message.
+///
+/// @author alexeagle@google.com (Alex Eagle)
 public record AppliedFix(String snippet, boolean isRemoveLine) {
-  /**
-   * Applies the suggestedFix to the source. Returns null if applying the fix results in no change
-   * to the source, or a change only to imports.
-   */
+  /// Applies the suggestedFix to the source. Returns null if applying the fix results in no change
+  /// to the source, or a change only to imports.
   public static @Nullable AppliedFix apply(
       CharSequence source, ErrorProneEndPosTable endPositions, Fix suggestedFix) {
     // We apply the replacements in ascending order here. Descending is simpler, since applying a
@@ -54,10 +50,8 @@ public record AppliedFix(String snippet, boolean isRemoveLine) {
     return new AppliedFix(snippet, /* isRemoveLine= */ false);
   }
 
-  /**
-   * The maximum distance we'll look for a newline before or after the snippet. If we don't find one
-   * the snippet will just start or end in the middle of a line.
-   */
+  /// The maximum distance we'll look for a newline before or after the snippet. If we don't find
+  /// one the snippet will just start or end in the middle of a line.
   public static final int MAX_LINE_LENGTH = 100;
 
   private static String snippet(
@@ -118,19 +112,17 @@ public record AppliedFix(String snippet, boolean isRemoveLine) {
     return replaced.toString();
   }
 
-  /** Get the replacements in an appropriate order to apply correctly. */
+  /// Get the replacements in an appropriate order to apply correctly.
   private static ImmutableSet<Replacement> ascending(Set<Replacement> set) {
     Replacements replacements = new Replacements();
     set.forEach(replacements::add);
     return replacements.ascending();
   }
 
-  /**
-   * Finds the full text of the first line that's changed. In this case "line" means "bracketed by
-   * \n characters". We don't handle \r\n specially, because the strings that javac provides to
-   * Error Prone have already been transformed from platform line endings to newlines (and even if
-   * it didn't, the dangling \r characters would be handled by a trim() call).
-   */
+  /// Finds the full text of the first line that's changed. In this case "line" means "bracketed by
+  /// \n characters". We don't handle \r\n specially, because the strings that javac provides to
+  /// Error Prone have already been transformed from platform line endings to newlines (and even if
+  /// it didn't, the dangling \r characters would be handled by a trim() call).
   private static String firstEditedLine(String content, Replacement firstEdit) {
     // We subtract 1 here because we want to find the first newline *before* the edit, not one
     // at its beginning.

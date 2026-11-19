@@ -22,12 +22,10 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-/**
- * Indicates that an annotation requires the presence of another annotation. Only checked on
- * Refaster templates at runtime.
- *
- * @author lowasser@google.com (Louis Wasserman)
- */
+/// Indicates that an annotation requires the presence of another annotation. Only checked on
+/// Refaster templates at runtime.
+///
+/// @author lowasser@google.com (Louis Wasserman)
 @Target(ElementType.ANNOTATION_TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface RequiredAnnotation {

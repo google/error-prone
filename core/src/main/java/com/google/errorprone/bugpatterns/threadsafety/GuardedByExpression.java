@@ -30,11 +30,9 @@ import com.sun.tools.javac.util.Names;
 import java.util.Objects;
 import javax.lang.model.element.ElementKind;
 
-/**
- * The lock expression of an {@code @GuardedBy} annotation.
- *
- * @author cushon@google.com (Liam Miller-Cushon)
- */
+/// The lock expression of an `@GuardedBy` annotation.
+///
+/// @author cushon@google.com (Liam Miller-Cushon)
 public abstract class GuardedByExpression {
 
   public abstract Kind kind();
@@ -45,7 +43,7 @@ public abstract class GuardedByExpression {
 
   static final String ENCLOSING_INSTANCE_NAME = "outer$";
 
-  /** A 'class' literal: ClassName.class */
+  /// A 'class' literal: ClassName.class
   @AutoValue
   public abstract static class ClassLiteral extends GuardedByExpression {
     public static ClassLiteral create(Symbol owner) {
@@ -53,9 +51,7 @@ public abstract class GuardedByExpression {
     }
   }
 
-  /**
-   * The base expression for a static member select on a class literal (e.g. ClassName.fieldName).
-   */
+  /// The base expression for a static member select on a class literal (e.g. ClassName.fieldName).
   @AutoValue
   public abstract static class TypeLiteral extends GuardedByExpression {
     public static TypeLiteral create(Symbol owner) {
@@ -63,7 +59,7 @@ public abstract class GuardedByExpression {
     }
   }
 
-  /** A local variable (or parameter), resolved as part of a lock access expression. */
+  /// A local variable (or parameter), resolved as part of a lock access expression.
   @AutoValue
   public abstract static class LocalVariable extends GuardedByExpression {
     public static LocalVariable create(Symbol owner) {
@@ -72,7 +68,7 @@ public abstract class GuardedByExpression {
     }
   }
 
-  /** A guarded by expression that could not be resolved. */
+  /// A guarded by expression that could not be resolved.
   public static class Erroneous extends GuardedByExpression {
 
     private final String guardString;
@@ -101,7 +97,7 @@ public abstract class GuardedByExpression {
     }
   }
 
-  /** A simple 'this literal. */
+  /// A simple 'this literal.
   // Don't use AutoValue here, since sym and type need to be 'null'. (And since
   // it's a singleton we don't need to implement equals() or hashCode()).
   public static final class ThisLiteral extends GuardedByExpression {
@@ -126,7 +122,7 @@ public abstract class GuardedByExpression {
     private ThisLiteral() {}
   }
 
-  /** The member access expression for a field or method. */
+  /// The member access expression for a field or method.
   @AutoValue
   public abstract static class Select extends GuardedByExpression {
 
@@ -136,7 +132,7 @@ public abstract class GuardedByExpression {
       return new AutoValue_GuardedByExpression_Select(Kind.SELECT, sym, type, base);
     }
 
-    /** Finds this {@link Select}'s nearest non-Select ancestor. */
+    /// Finds this [Select]'s nearest non-Select ancestor.
     public GuardedByExpression root() {
       GuardedByExpression exp = this.base();
       while (exp.kind() == Kind.SELECT) {
@@ -146,37 +142,33 @@ public abstract class GuardedByExpression {
     }
   }
 
-  /** Makes {@link GuardedByExpression}s. */
+  /// Makes [GuardedByExpression]s.
   public static class Factory {
     ThisLiteral thisliteral() {
       return ThisLiteral.INSTANCE;
     }
 
-    /**
-     * Synthesizes the {@link GuardedByExpression} for an enclosing class access. The access is
-     * represented as a chain of field accesses from an instance of the current class to its
-     * enclosing ancestor. At each level, the enclosing class is accessed via a magic 'outer$'
-     * field.
-     *
-     * <p>Example:
-     *
-     * <pre>
-     * <code>
-     * class Outer {
-     *   final Object lock = new Object();
-     *   class Middle {
-     *     class Inner {
-     *       {@code @}GuardedBy("lock") // resolves to 'this.outer$.outer$.lock'
-     *       int x;
-     *     }
-     *   }
-     * }
-     * </code>
-     * </pre>
-     *
-     * @param access the inner class where the access occurs.
-     * @param enclosing the lexically enclosing class.
-     */
+    /// Synthesizes the [GuardedByExpression] for an enclosing class access. The access is
+    /// represented as a chain of field accesses from an instance of the current class to its
+    /// enclosing ancestor. At each level, the enclosing class is accessed via a magic 'outer$'
+    /// field.
+    ///
+    /// Example:
+    ///
+    /// ```
+    /// class Outer {
+    ///   final Object lock = new Object();
+    ///   class Middle {
+    ///     class Inner {
+    ///       @GuardedBy("lock") // resolves to 'this.outer$.outer$.lock'
+    ///       int x;
+    ///     }
+    ///   }
+    /// }
+    /// ```
+    ///
+    /// @param access the inner class where the access occurs.
+    /// @param enclosing the lexically enclosing class.
     GuardedByExpression qualifiedThis(Names names, ClassSymbol access, Symbol enclosing) {
       GuardedByExpression base = thisliteral();
       Symbol curr = access;
@@ -257,7 +249,7 @@ public abstract class GuardedByExpression {
     }
   }
 
-  /** {@link GuardedByExpression} kind. */
+  /// [GuardedByExpression] kind.
   public enum Kind {
     THIS,
     CLASS_LITERAL,
@@ -276,7 +268,7 @@ public abstract class GuardedByExpression {
     return DebugPrinter.print(this);
   }
 
-  /** Pretty printer for lock expressions. */
+  /// Pretty printer for lock expressions.
   private static class PrettyPrinter {
 
     static String print(GuardedByExpression exp) {
@@ -320,7 +312,7 @@ public abstract class GuardedByExpression {
     }
   }
 
-  /** s-exp pretty printer for lock expressions. */
+  /// s-exp pretty printer for lock expressions.
   private static class DebugPrinter {
     static String print(GuardedByExpression exp) {
       StringBuilder sb = new StringBuilder();

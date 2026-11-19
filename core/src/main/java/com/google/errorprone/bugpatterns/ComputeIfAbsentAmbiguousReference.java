@@ -39,11 +39,9 @@ import com.sun.tools.javac.util.Name;
 import java.util.List;
 import java.util.stream.Collectors;
 
-/**
- * Flags ambiguous creations of objects in {@link java.util.Map#computeIfAbsent}.
- *
- * @author bhagwani@google.com (Sumit Bhagwani)
- */
+/// Flags ambiguous creations of objects in [java.util.Map#computeIfAbsent].
+///
+/// @author bhagwani@google.com (Sumit Bhagwani)
 @BugPattern(
     summary = "computeIfAbsent passes the map key to the provided class's constructor",
     severity = ERROR)

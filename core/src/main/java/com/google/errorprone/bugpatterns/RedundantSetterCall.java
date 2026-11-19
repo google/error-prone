@@ -61,7 +61,7 @@ import java.util.Collection;
 import java.util.Map;
 import org.jspecify.annotations.Nullable;
 
-/** A BugPattern; see the summary. */
+/// A BugPattern; see the summary.
 @BugPattern(
     summary = "A field was set twice in the same chained expression.",
     severity = ERROR,
@@ -69,7 +69,7 @@ import org.jspecify.annotations.Nullable;
     tags = StandardTags.FRAGILE_CODE)
 public final class RedundantSetterCall extends BugChecker implements MethodInvocationTreeMatcher {
 
-  /** Matches a fluent setter method. */
+  /// Matches a fluent setter method.
   private static final Matcher<ExpressionTree> FLUENT_SETTER =
       anyOf(
           PROTO_BUILDER_MUTATOR,
@@ -83,10 +83,8 @@ public final class RedundantSetterCall extends BugChecker implements MethodInvoc
                 && isSameType(symbol.owner.type, symbol.getReturnType(), state);
           });
 
-  /**
-   * Matches a terminal setter. That is, a fluent builder method which is either not followed by
-   * another method invocation, or by a method invocation which is not a {@link #FLUENT_SETTER}.
-   */
+  /// Matches a terminal setter. That is, a fluent builder method which is either not followed by
+  /// another method invocation, or by a method invocation which is not a [#FLUENT_SETTER].
   private static final Matcher<ExpressionTree> TERMINAL_FLUENT_SETTER =
       allOf(
           FLUENT_SETTER,
@@ -181,13 +179,11 @@ public final class RedundantSetterCall extends BugChecker implements MethodInvoc
     return builder.buildOrThrow();
   }
 
-  /**
-   * Returns all the field names in the proto in uppercase with all components concatenated.
-   *
-   * <p>This is an odd format, but it works to compare the existence of a field based on a getter,
-   * given both {@code foo_bar} and {@code fooBar} as field names generate a getter named {@code
-   * getFooBar} (so we normalise to {@code FOOBAR}).
-   */
+  /// Returns all the field names in the proto in uppercase with all components concatenated.
+  ///
+  /// This is an odd format, but it works to compare the existence of a field based on a getter,
+  /// given both `foo_bar` and `fooBar` as field names generate a getter named `getFooBar` (so we
+  /// normalise to `FOOBAR`).
   private static ImmutableSet<String> getFields(Symbol proto) {
     return getEnclosedElements(proto).stream()
         .map(element -> element.getSimpleName().toString())

@@ -33,7 +33,7 @@ import com.sun.tools.javac.util.Position.LineMap;
 import java.util.HashMap;
 import java.util.Map;
 
-/** A utility for tokenizing and preserving comments. */
+/// A utility for tokenizing and preserving comments.
 public class ErrorProneTokens {
   private final int offset;
   private final CommentSavingTokenizer commentSavingTokenizer;
@@ -84,21 +84,19 @@ public class ErrorProneTokens {
     return token.comments.stream().map(comments::get).collect(toImmutableList()).reverse();
   }
 
-  /** Returns the tokens for the given source text, including comments. */
+  /// Returns the tokens for the given source text, including comments.
   public static ImmutableList<ErrorProneToken> getTokens(String source, Context context) {
     return getTokens(source, 0, context);
   }
 
-  /**
-   * Returns the tokens for the given source text, including comments, indicating the offset of the
-   * source within the overall file.
-   */
+  /// Returns the tokens for the given source text, including comments, indicating the offset of the
+  /// source within the overall file.
   public static ImmutableList<ErrorProneToken> getTokens(
       String source, int offset, Context context) {
     return new ErrorProneTokens(source, offset, context).getTokens();
   }
 
-  /** A {@link JavaTokenizer} that saves comments. */
+  /// A [JavaTokenizer] that saves comments.
   static class CommentSavingTokenizer extends JavaTokenizer {
 
     private final Map<Comment, ErrorProneComment> comments = new HashMap<>();

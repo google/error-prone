@@ -43,7 +43,7 @@ import javax.lang.model.type.TypeVariable;
 import org.jspecify.annotations.Nullable;
 import org.safere.Pattern;
 
-/** Utilities to extract {@link Nullness} from annotations. */
+/// Utilities to extract [Nullness] from annotations.
 public final class NullnessAnnotations {
   // TODO(kmb): Correctly handle JSR 305 @Nonnull(NEVER) etc.
   private static final Predicate<String> ANNOTATION_RELEVANT_TO_NULLNESS =
@@ -141,10 +141,8 @@ public final class NullnessAnnotations {
     return Optional.empty();
   }
 
-  /**
-   * Walks the syntactically enclosing elements of the given element until it finds a defaulting
-   * annotation.
-   */
+  /// Walks the syntactically enclosing elements of the given element until it finds a defaulting
+  /// annotation.
   // Note this may be a good candidate for caching
   public static Optional<Nullness> fromDefaultAnnotations(@Nullable Element sym) {
     while (sym != null) {
@@ -160,11 +158,9 @@ public final class NullnessAnnotations {
     return Optional.empty();
   }
 
-  /**
-   * Returns any declared or implied bound for the given type variable, meaning this returns any
-   * annotation on the given type variable and otherwise returns {@link #fromDefaultAnnotations} to
-   * find any default in scope of the given type variable.
-   */
+  /// Returns any declared or implied bound for the given type variable, meaning this returns any
+  /// annotation on the given type variable and otherwise returns [#fromDefaultAnnotations] to find
+  /// any default in scope of the given type variable.
   public static Optional<Nullness> getUpperBound(TypeVariable typeVar) {
     // Annotations on bounds at type variable declaration
     Optional<Nullness> result;

@@ -20,7 +20,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** Tests for {@link JavaLocalDateTimeGetNano}. */
+/// Tests for [JavaLocalDateTimeGetNano].
 @RunWith(JUnit4.class)
 public final class JavaLocalDateTimeGetNanoTest {
   private final CompilationTestHelper compilationHelper =

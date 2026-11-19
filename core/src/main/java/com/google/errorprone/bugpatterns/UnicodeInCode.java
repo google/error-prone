@@ -38,7 +38,7 @@ import com.google.errorprone.util.ErrorProneToken;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.tools.javac.parser.Tokens.TokenKind;
 
-/** Bans using non-ASCII Unicode characters outside string literals and comments. */
+/// Bans using non-ASCII Unicode characters outside string literals and comments.
 @BugPattern(
     severity = ERROR,
     summary =

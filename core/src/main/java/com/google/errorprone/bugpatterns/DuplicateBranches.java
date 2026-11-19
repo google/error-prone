@@ -34,7 +34,7 @@ import com.sun.source.tree.ConditionalExpressionTree;
 import com.sun.source.tree.IfTree;
 import com.sun.source.tree.Tree;
 
-/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
+/// A [BugChecker]; see the associated [BugPattern] annotation for details.
 @BugPattern(summary = "Both branches contain identical code", severity = WARNING)
 public class DuplicateBranches extends BugChecker
     implements IfTreeMatcher, ConditionalExpressionTreeMatcher {

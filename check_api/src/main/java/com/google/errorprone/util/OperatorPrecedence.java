@@ -19,11 +19,9 @@ package com.google.errorprone.util;
 import com.sun.source.tree.Tree;
 import java.util.Optional;
 
-/**
- * The precedence for an operator kind in the {@link com.sun.source.tree} API.
- *
- * <p>As documented at: https://docs.oracle.com/javase/tutorial/java/nutsandbolts/operators.html
- */
+/// The precedence for an operator kind in the [com.sun.source.tree] API.
+///
+/// As documented at: https://docs.oracle.com/javase/tutorial/java/nutsandbolts/operators.html
 public enum OperatorPrecedence {
   POSTFIX(14),
   UNARY(13),

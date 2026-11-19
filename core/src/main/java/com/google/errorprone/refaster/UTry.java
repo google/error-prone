@@ -26,11 +26,9 @@ import com.sun.tools.javac.tree.JCTree.JCBlock;
 import com.sun.tools.javac.tree.JCTree.JCTry;
 import org.jspecify.annotations.Nullable;
 
-/**
- * {@code UTree} representation of a {@code TryTree}.
- *
- * @author lowasser@google.com (Louis Wasserman)
- */
+/// `UTree` representation of a `TryTree`.
+///
+/// @author lowasser@google.com (Louis Wasserman)
 @AutoValue
 abstract class UTry extends USimpleStatement implements TryTree {
   static UTry create(
@@ -75,7 +73,7 @@ abstract class UTry extends USimpleStatement implements TryTree {
             inlineFinallyBlock(inliner));
   }
 
-  /** Skips the finally block if the result would be empty. */
+  /// Skips the finally block if the result would be empty.
   private @Nullable JCBlock inlineFinallyBlock(Inliner inliner)
       throws CouldNotResolveImportException {
     if (getFinallyBlock() != null) {

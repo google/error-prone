@@ -48,7 +48,7 @@ import com.sun.tools.javac.util.Name;
 import java.io.InputStream;
 import javax.lang.model.element.ElementKind;
 
-/** Checks that InputStreams should override int read(byte[], int, int); */
+/// Checks that InputStreams should override int read(byte[], int, int);
 @BugPattern(
     summary =
         "Please also override int read(byte[], int, int), otherwise multi-byte reads from this "

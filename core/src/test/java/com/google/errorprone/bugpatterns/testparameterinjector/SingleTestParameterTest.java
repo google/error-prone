@@ -24,7 +24,7 @@ import com.google.testing.junit.testparameterinjector.TestParameterInjector;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-/** Tests for {@link SingleTestParameter}. */
+/// Tests for [SingleTestParameter].
 @RunWith(TestParameterInjector.class)
 public final class SingleTestParameterTest {
   private final BugCheckerRefactoringTestHelper refactoringHelper =

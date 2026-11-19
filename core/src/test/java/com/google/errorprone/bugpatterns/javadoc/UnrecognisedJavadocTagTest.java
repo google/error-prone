@@ -23,7 +23,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** Tests for {@link UnrecognisedJavadocTag}. */
+/// Tests for [UnrecognisedJavadocTag].
 @RunWith(JUnit4.class)
 public final class UnrecognisedJavadocTagTest {
   private final CompilationTestHelper helper =

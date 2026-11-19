@@ -28,7 +28,7 @@ import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.DeclaredType;
 
-/** A serialization-friendly POJO of the information in a {@link BugPattern}. */
+/// A serialization-friendly POJO of the information in a [BugPattern].
 public final class BugPatternInstance {
 
   public String className;

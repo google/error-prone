@@ -21,7 +21,7 @@ import com.google.common.base.CharMatcher;
 import com.google.common.collect.ImmutableList;
 import java.util.Locale;
 
-/** Utility functions for dealing with Java naming conventions */
+/// Utility functions for dealing with Java naming conventions
 public final class NamingConventions {
 
   private static final CharMatcher UNDERSCORE = CharMatcher.is('_');
@@ -29,13 +29,12 @@ public final class NamingConventions {
   private static final CharMatcher NON_ASCII_DIGIT = ASCII_DIGIT.negate();
   private static final CharMatcher LOWER_OR_DIGIT = CharMatcher.inRange('a', 'z').or(ASCII_DIGIT);
 
-  /**
-   * Split a Java name into terms based on either Camel Case or Underscores. We also split digits at
-   * the end of the name into a separate term so as to treat PERSON1 and PERSON_1 as the same thing.
-   *
-   * @param identifierName to split
-   * @return a list of the terms in the name, in order and converted to lowercase
-   */
+  /// Split a Java name into terms based on either Camel Case or Underscores. We also split digits
+  /// at the end of the name into a separate term so as to treat PERSON1 and PERSON_1 as the same
+  /// thing.
+  ///
+  /// @param identifierName to split
+  /// @return a list of the terms in the name, in order and converted to lowercase
   public static ImmutableList<String> splitToLowercaseTerms(String identifierName) {
     if (!identifierName.isEmpty() && UNDERSCORE.matchesAllOf(identifierName)) {
       // Degenerate case of names which contain only underscore

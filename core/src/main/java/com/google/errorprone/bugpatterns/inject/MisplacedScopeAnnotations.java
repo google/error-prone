@@ -40,10 +40,8 @@ import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.VariableTree;
 import java.util.List;
 
-/**
- * Bug checker for when a scope annotation is used at injection site, which does not have any effect
- * on the injected values.
- */
+/// Bug checker for when a scope annotation is used at injection site, which does not have any
+/// effect on the injected values.
 @BugPattern(
     summary =
         "Scope annotations used as qualifier annotations don't have any effect."

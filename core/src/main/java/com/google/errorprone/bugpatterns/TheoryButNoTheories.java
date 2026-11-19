@@ -43,7 +43,7 @@ import com.sun.source.tree.Tree;
 import com.sun.tools.javac.util.Name;
 import java.util.stream.Stream;
 
-/** Flags uses of {@code @Theory} (and others) in non-{@code Theories}-run tests. */
+/// Flags uses of `@Theory` (and others) in non-`Theories`-run tests.
 @BugPattern(
     summary =
         "This test has members annotated with @Theory, @DataPoint, or @DataPoints but is using the"

@@ -42,7 +42,7 @@ import java.util.Collections;
 import java.util.Optional;
 import javax.inject.Inject;
 
-/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
+/// A [BugChecker]; see the associated [BugPattern] annotation for details.
 @BugPattern(
     name = "ImmutableAnnotationChecker",
     altNames = "Immutable",

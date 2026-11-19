@@ -61,7 +61,7 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import java.util.List;
 import javax.inject.Inject;
 
-/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
+/// A [BugChecker]; see the associated [BugPattern] annotation for details.
 @BugPattern(
     summary = "Parameter has handling for null but is not annotated @Nullable",
     severity = SUGGESTION)

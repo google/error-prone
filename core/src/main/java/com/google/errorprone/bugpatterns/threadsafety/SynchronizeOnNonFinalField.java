@@ -35,7 +35,7 @@ import com.sun.tools.javac.code.Symbol.VarSymbol;
 import java.util.stream.Stream;
 import javax.lang.model.element.Name;
 
-/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
+/// A [BugChecker]; see the associated [BugPattern] annotation for details.
 @BugPattern(
     name = "SynchronizeOnNonFinalField",
     summary =

@@ -29,14 +29,12 @@ import org.checkerframework.errorprone.dataflow.cfg.visualize.CFGVisualizer;
 import org.checkerframework.errorprone.dataflow.expression.JavaExpression;
 import org.jspecify.annotations.Nullable;
 
-/**
- * Immutable map from local variables or heap access paths to their {@link AbstractValue}
- *
- * <p>To derive a new instance, {@linkplain #toBuilder() create a builder} from an old instance. To
- * start from scratch, call {@link #empty()}.
- *
- * @author bennostein@google.com (Benno Stein)
- */
+/// Immutable map from local variables or heap access paths to their [AbstractValue]
+///
+/// To derive a new instance, [create a builder][#toBuilder()] from an old instance. To start from
+/// scratch, call [#empty()].
+///
+/// @author bennostein@google.com (Benno Stein)
 public record AccessPathStore<V extends AbstractValue<V>>(ImmutableMap<AccessPath, V> heap)
     implements Store<AccessPathStore<V>>, AccessPathValues<V> {
   @SuppressWarnings({"unchecked", "rawtypes"}) // fully variant
@@ -92,11 +90,9 @@ public record AccessPathStore<V extends AbstractValue<V>>(ImmutableMap<AccessPat
     throw new UnsupportedOperationException("DOT output not supported");
   }
 
-  /**
-   * Builder for {@link AccessPathStore} instances. To obtain an instance, obtain a {@link
-   * AccessPathStore} (such as {@link AccessPathStore#empty()}), and call {@link
-   * AccessPathStore#toBuilder() toBuilder()} on it.
-   */
+  /// Builder for [AccessPathStore] instances. To obtain an instance, obtain a [AccessPathStore]
+  /// (such as [AccessPathStore#empty()]), and call [`toBuilder()`][AccessPathStore#toBuilder()] on
+  /// it.
   public static final class Builder<V extends AbstractValue<V>> {
     private final Map<AccessPath, V> heap;
 

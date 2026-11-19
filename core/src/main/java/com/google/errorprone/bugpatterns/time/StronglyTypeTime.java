@@ -33,7 +33,7 @@ import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.ExpressionTree;
 import org.safere.Pattern;
 
-/** Flags fields which would be better expressed as time types rather than primitive integers. */
+/// Flags fields which would be better expressed as time types rather than primitive integers.
 @BugPattern(
     summary =
         "This primitive integral type is only used to construct time types. It would be clearer to"
@@ -84,7 +84,7 @@ public final class StronglyTypeTime extends BugChecker implements CompilationUni
         .match(tree, state);
   }
 
-  /** Tries to strip any time-related suffix off the field name. */
+  /// Tries to strip any time-related suffix off the field name.
   private static final String createNewName(String fieldName) {
     String newName = TIME_UNIT_REMOVER.matcher(fieldName).replaceAll("");
     // Guard against field names that *just* contain the unit. Not much we can do here.

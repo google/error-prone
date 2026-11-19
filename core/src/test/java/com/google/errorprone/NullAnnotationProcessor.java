@@ -23,11 +23,9 @@ import javax.annotation.processing.SupportedAnnotationTypes;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.TypeElement;
 
-/**
- * A minimal annotation processor that claims all annotations and does nothing else.
- *
- * @author Eddie Aftandilian (eaftan@google.com)
- */
+/// A minimal annotation processor that claims all annotations and does nothing else.
+///
+/// @author Eddie Aftandilian (eaftan@google.com)
 @SupportedAnnotationTypes("*")
 public class NullAnnotationProcessor extends AbstractProcessor {
   @Override

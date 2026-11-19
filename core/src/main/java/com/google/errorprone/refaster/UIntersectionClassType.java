@@ -25,11 +25,9 @@ import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Type.ClassType;
 import com.sun.tools.javac.code.Type.IntersectionClassType;
 
-/**
- * {@code UType} representation of an {@code IntersectionClassType}.
- *
- * @author lowasser@google.com (Louis Wasserman)
- */
+/// `UType` representation of an `IntersectionClassType`.
+///
+/// @author lowasser@google.com (Louis Wasserman)
 @AutoValue
 public abstract class UIntersectionClassType extends UType {
   static UIntersectionClassType create(Iterable<? extends UType> bounds) {

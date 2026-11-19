@@ -26,7 +26,7 @@ import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.ClassName;
 import com.sun.source.tree.ExpressionTree;
 
-/** Matchers and class name constants for regular expression APIs. */
+/// Matchers and class name constants for regular expression APIs.
 public final class RegexMatchers {
 
   public static final ClassName JDK_PATTERN_CLASS = ClassName.of("java.util.regex.Pattern");
@@ -43,7 +43,7 @@ public final class RegexMatchers {
   private static final ClassName PREDICATES_CLASS =
       ClassName.of("com.google.common.base.Predicates");
 
-  /** Immutable {@code Pattern} classes that do not hold closeable native resources. */
+  /// Immutable `Pattern` classes that do not hold closeable native resources.
   public static final ImmutableSet<ClassName> NON_CLOSEABLE_PATTERN_CLASSES =
       ImmutableSet.<ClassName>builder()
           .add(JDK_PATTERN_CLASS)
@@ -51,11 +51,11 @@ public final class RegexMatchers {
           .add(SAFERE_PATTERN_CLASS)
           .build();
 
-  /** All supported regular expression {@code Pattern} classes. */
+  /// All supported regular expression `Pattern` classes.
   public static final ImmutableSet<ClassName> ALL_PATTERN_CLASSES =
       ImmutableSet.<ClassName>builder().addAll(NON_CLOSEABLE_PATTERN_CLASSES).build();
 
-  /** All supported regular expression {@code Matcher} classes. */
+  /// All supported regular expression `Matcher` classes.
   public static final ImmutableSet<ClassName> ALL_MATCHER_CLASSES =
       ImmutableSet.<ClassName>builder()
           .add(JDK_MATCHER_CLASS)
@@ -64,53 +64,53 @@ public final class RegexMatchers {
           .add(SAFERE_CROSSCHECK_MATCHER_CLASS)
           .build();
 
-  /** Matches static {@code compile} (and {@code compileUnsafe}) calls on {@code Pattern} types. */
+  /// Matches static `compile` (and `compileUnsafe`) calls on `Pattern` types.
   public static final Matcher<ExpressionTree> PATTERN_COMPILE_METHODS =
       anyOf(staticMethod().onClass(isExactTypeAnyOf(ALL_PATTERN_CLASSES)).named("compile"));
 
-  /** Matches static {@code matches} (and {@code matchesUnsafe}) calls on {@code Pattern} types. */
+  /// Matches static `matches` (and `matchesUnsafe`) calls on `Pattern` types.
   public static final Matcher<ExpressionTree> PATTERN_MATCHES_METHODS =
       anyOf(staticMethod().onClass(isExactTypeAnyOf(ALL_PATTERN_CLASSES)).named("matches"));
 
-  /** Matches static {@code quote} calls on {@code Pattern} types. */
+  /// Matches static `quote` calls on `Pattern` types.
   public static final Matcher<ExpressionTree> PATTERN_QUOTE_METHODS =
       staticMethod().onClass(isExactTypeAnyOf(ALL_PATTERN_CLASSES)).named("quote");
 
-  /** Matches instance {@code matcher} calls on {@code Pattern} types. */
+  /// Matches instance `matcher` calls on `Pattern` types.
   public static final Matcher<ExpressionTree> PATTERN_MATCHER_METHODS =
       instanceMethod().onClass(isExactTypeAnyOf(ALL_PATTERN_CLASSES)).named("matcher");
 
-  /** Matches {@link String#matches(String)}. */
+  /// Matches [String#matches(String)].
   public static final Matcher<ExpressionTree> STRING_MATCHES_METHOD =
       instanceMethod()
           .onExactClass(STRING_CLASS)
           .named("matches")
           .withParametersOfType(STRING_CLASS);
 
-  /** Matches {@link String#replaceFirst(String, String)} and {@link String#replaceAll}. */
+  /// Matches [String#replaceFirst(String, String)] and [String#replaceAll].
   public static final Matcher<ExpressionTree> STRING_REPLACE_METHODS =
       instanceMethod()
           .onExactClass(STRING_CLASS)
           .namedAnyOf("replaceFirst", "replaceAll")
           .withParametersOfType(STRING_CLASS, STRING_CLASS);
 
-  /** Matches {@link String#split(String)} and {@link String#split(String, int)}. */
+  /// Matches [String#split(String)] and [String#split(String, int)].
   public static final Matcher<ExpressionTree> STRING_SPLIT_METHOD =
       instanceMethod().onExactClass(STRING_CLASS).named("split");
 
-  /** Matches {@link String#splitWithDelimiters(String, int)}. */
+  /// Matches [String#splitWithDelimiters(String, int)].
   public static final Matcher<ExpressionTree> STRING_SPLIT_WITH_DELIMITERS_METHOD =
       instanceMethod().onExactClass(STRING_CLASS).named("splitWithDelimiters");
 
-  /** Matches {@code String.split} and {@code String.splitWithDelimiters}. */
+  /// Matches `String.split` and `String.splitWithDelimiters`.
   public static final Matcher<ExpressionTree> STRING_SPLIT_METHODS =
       anyOf(STRING_SPLIT_METHOD, STRING_SPLIT_WITH_DELIMITERS_METHOD);
 
-  /** Matches {@code com.google.common.base.Splitter.onPattern(String)}. */
+  /// Matches `com.google.common.base.Splitter.onPattern(String)`.
   public static final Matcher<ExpressionTree> SPLITTER_ON_PATTERN_METHOD =
       staticMethod().onClass(SPLITTER_CLASS).named("onPattern");
 
-  /** Matches {@code com.google.common.base.Predicates.containsPattern(String)}. */
+  /// Matches `com.google.common.base.Predicates.containsPattern(String)`.
   public static final Matcher<ExpressionTree> PREDICATES_CONTAINS_PATTERN_METHOD =
       staticMethod().onClass(PREDICATES_CLASS).named("containsPattern");
 
@@ -127,11 +127,8 @@ public final class RegexMatchers {
           .or(SURROGATE)
           .negate();
 
-  /**
-   * Returns true if {@code regex} takes the non-regex fast path in {@link String#split(String,
-   * int)} and {@link String#splitWithDelimiters(String, int)} without compiling a {@link
-   * java.util.regex.Pattern}.
-   */
+  /// Returns true if `regex` takes the non-regex fast path in [String#split(String, int)] and
+  /// [String#splitWithDelimiters(String, int)] without compiling a [java.util.regex.Pattern].
   public static boolean isStringSplitFastPath(String regex) {
     return switch (regex.length()) {
       case 1 -> SPLIT_FAST_PATH_SINGLE_CHAR.matches(regex.charAt(0));

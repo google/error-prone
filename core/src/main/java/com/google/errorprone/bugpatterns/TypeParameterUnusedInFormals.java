@@ -79,10 +79,8 @@ public class TypeParameterUnusedInFormals extends BugChecker implements MethodTr
     return describeMatch(tree);
   }
 
-  /**
-   * A visitor that records the set of {@link com.sun.tools.javac.code.Type.TypeVar}s referenced by
-   * the current type.
-   */
+  /// A visitor that records the set of [com.sun.tools.javac.code.Type.TypeVar]s referenced by the
+  /// current type.
   private static class TypeParameterFinder extends Types.DefaultTypeVisitor<Void, Void> {
 
     static Set<Symbol.TypeSymbol> visit(Type type) {

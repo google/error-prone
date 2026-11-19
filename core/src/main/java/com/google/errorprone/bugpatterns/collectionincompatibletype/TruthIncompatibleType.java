@@ -58,7 +58,7 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import javax.inject.Inject;
 
-/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
+/// A [BugChecker]; see the associated [BugPattern] annotation for details.
 @BugPattern(summary = "Argument is not compatible with the subject's type.", severity = WARNING)
 public class TruthIncompatibleType extends BugChecker implements MethodInvocationTreeMatcher {
 
@@ -556,7 +556,7 @@ public class TruthIncompatibleType extends BugChecker implements MethodInvocatio
         .flatMap(x -> x);
   }
 
-  /** Whether this is a varargs method being invoked in a non-varargs way. */
+  /// Whether this is a varargs method being invoked in a non-varargs way.
   private static boolean isNonVarargsCall(
       MethodSymbol methodSymbol, long index, Type argumentType) {
     return methodSymbol.getParameters().size() - 1 == index

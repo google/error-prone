@@ -24,11 +24,9 @@ import com.sun.source.tree.TreeVisitor;
 import com.sun.tools.javac.tree.JCTree.JCDoWhileLoop;
 import org.jspecify.annotations.Nullable;
 
-/**
- * A {@link UTree} representation of a {@link DoWhileLoopTree}.
- *
- * @author lowasser@google.com (Louis Wasserman)
- */
+/// A [UTree] representation of a [DoWhileLoopTree].
+///
+/// @author lowasser@google.com (Louis Wasserman)
 @AutoValue
 abstract class UDoWhileLoop extends USimpleStatement implements DoWhileLoopTree {
   public static UDoWhileLoop create(UStatement body, UExpression condition) {

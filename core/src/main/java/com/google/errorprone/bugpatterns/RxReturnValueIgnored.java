@@ -43,7 +43,7 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
 import javax.inject.Inject;
 
-/** A {@link BugChecker}; see the associated {@link BugPattern} for details. */
+/// A [BugChecker]; see the associated [BugPattern] for details.
 @BugPattern(
     summary =
         "Returned Rx objects must be checked. Ignoring a returned Rx value means it is never "

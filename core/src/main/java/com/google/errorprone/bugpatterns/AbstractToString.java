@@ -58,58 +58,49 @@ import java.util.List;
 import java.util.Optional;
 import javax.lang.model.type.TypeKind;
 
-/**
- * An abstract matcher for implicit and explicit calls to {@code Object.toString()}, for use on
- * types that do not have a human-readable {@code toString()} implementation.
- *
- * <p>See examples in {@link StreamToString} and {@link ArrayToString}.
- */
+/// An abstract matcher for implicit and explicit calls to `Object.toString()`, for use on types
+/// that do not have a human-readable `toString()` implementation.
+///
+/// See examples in [StreamToString] and [ArrayToString].
 public abstract class AbstractToString extends BugChecker
     implements BinaryTreeMatcher,
         MethodInvocationTreeMatcher,
         MemberReferenceTreeMatcher,
         CompoundAssignmentTreeMatcher {
 
-  /** The type to match on. */
+  /// The type to match on.
   protected abstract TypePredicate typePredicate();
 
-  /**
-   * Constructs a fix for an implicit toString call, e.g. from string concatenation or from passing
-   * an argument to {@code println} or {@code StringBuilder.append}.
-   *
-   * @param stringifiedExpr the tree node for the expression being converted to a String
-   */
+  /// Constructs a fix for an implicit toString call, e.g. from string concatenation or from passing
+  /// an argument to `println` or `StringBuilder.append`.
+  ///
+  /// @param stringifiedExpr the tree node for the expression being converted to a String
   protected abstract Optional<Fix> implicitToStringFix(
       ExpressionTree stringifiedExpr, VisitorState state);
 
-  /** Adds the description message for match on the type without fixes. */
+  /// Adds the description message for match on the type without fixes.
   protected Optional<String> descriptionMessageForDefaultMatch(Type type, VisitorState state) {
     return Optional.empty();
   }
 
-  /** Whether this kind of toString call is allowable for this check. */
+  /// Whether this kind of toString call is allowable for this check.
   protected boolean allowableToStringKind(ToStringKind toStringKind) {
     return false;
   }
 
-  /**
-   * Constructs a fix for an explicit toString call, e.g. from {@code Object.toString()} or {@code
-   * String.valueOf()}.
-   *
-   * @param toStringCall the {@link MethodInvocationTree} corresponding to the explicit string
-   *     conversion: either {@code x.toString()} or {@code String.valueOf(x)}
-   * @param stringifiedExpr the {@link ExpressionTree} that is being converted to a string (the
-   *     receiver {@code x} in {@code x.toString()}, or the argument {@code x} in {@code
-   *     String.valueOf(x)})
-   */
+  /// Constructs a fix for an explicit toString call, e.g. from `Object.toString()` or
+  /// `String.valueOf()`.
+  ///
+  /// @param toStringCall the [MethodInvocationTree] corresponding to the explicit string
+  ///   conversion: either `x.toString()` or `String.valueOf(x)`
+  /// @param stringifiedExpr the [ExpressionTree] that is being converted to a string (the receiver
+  ///   `x` in `x.toString()`, or the argument `x` in `String.valueOf(x)`)
   protected abstract Optional<Fix> toStringFix(
       Tree toStringCall, ExpressionTree stringifiedExpr, VisitorState state);
 
-  /**
-   * Constructs a fix for a method reference to {@code toString()}, e.g. {@code Object::toString}.
-   *
-   * @param receiverType the type of the object {@code toString()} will be called on
-   */
+  /// Constructs a fix for a method reference to `toString()`, e.g. `Object::toString`.
+  ///
+  /// @param receiverType the type of the object `toString()` will be called on
   protected Optional<Fix> memberReferenceFix(
       MemberReferenceTree tree, Type receiverType, VisitorState state) {
     return Optional.empty();
@@ -402,9 +393,9 @@ public abstract class AbstractToString extends BugChecker
   }
 
   enum ToStringKind {
-    /** String concatenation, or an enclosing print method. */
+    /// String concatenation, or an enclosing print method.
     IMPLICIT,
-    /** {@code String.valueOf()} or {@code #toString()}. */
+    /// `String.valueOf()` or `#toString()`.
     EXPLICIT,
     FORMAT_METHOD,
     FLOGGER,

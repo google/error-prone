@@ -39,7 +39,7 @@ import com.sun.tools.javac.code.Type;
 import java.util.List;
 import javax.lang.model.element.ElementKind;
 
-/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
+/// A [BugChecker]; see the associated [BugPattern] annotation for details.
 @BugPattern(
     summary = "Prefer LinkageError for rethrowing ReflectiveOperationException as unchecked",
     severity = WARNING)

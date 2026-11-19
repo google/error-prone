@@ -50,7 +50,7 @@ import java.util.Optional;
 import javax.lang.model.element.Modifier;
 import org.jspecify.annotations.Nullable;
 
-/** Removes overrides which purely pass through to the method in the super class. */
+/// Removes overrides which purely pass through to the method in the super class.
 @BugPattern(
     summary = "This overriding method is redundant, and can be removed.",
     severity = WARNING)

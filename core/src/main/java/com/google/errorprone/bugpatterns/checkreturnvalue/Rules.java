@@ -33,15 +33,15 @@ import java.util.Optional;
 import java.util.function.BiPredicate;
 import java.util.stream.Stream;
 
-/** Factories for common kinds of {@link ResultUseRule}s. */
+/// Factories for common kinds of [ResultUseRule]s.
 public final class Rules {
 
-  /** Returns true if {@code method} returns the same type as its enclosing class. */
+  /// Returns true if `method` returns the same type as its enclosing class.
   static boolean returnsEnclosingType(MethodSymbol method, VisitorState state) {
     return isSameType(enclosingClass(method).type, method.getReturnType(), state);
   }
 
-  /** A {@link MethodRule} for Error Prone. */
+  /// A [MethodRule] for Error Prone.
   abstract static class ErrorProneMethodRule
       extends MethodRule<VisitorState, Symbol, MethodSymbol> {
     ErrorProneMethodRule() {
@@ -49,19 +49,15 @@ public final class Rules {
     }
   }
 
-  /**
-   * Returns a simple global rule that always returns the given defaults for methods and
-   * constructors.
-   */
+  /// Returns a simple global rule that always returns the given defaults for methods and
+  /// constructors.
   public static ResultUseRule<VisitorState, Symbol> globalDefault(
       Optional<ResultUsePolicy> methodDefault, Optional<ResultUsePolicy> constructorDefault) {
     return new SimpleGlobalRule("GLOBAL_DEFAULT", methodDefault, constructorDefault);
   }
 
-  /**
-   * Returns a {@link ResultUseRule} that maps annotations with the given {@code simpleName} to the
-   * given {@code policy}.
-   */
+  /// Returns a [ResultUseRule] that maps annotations with the given `simpleName` to the given
+  /// `policy`.
   public static ResultUseRule<VisitorState, Symbol> mapAnnotationSimpleName(
       String simpleName, ResultUsePolicy policy) {
     return new SimpleRule(
@@ -70,11 +66,8 @@ public final class Rules {
         policy);
   }
 
-  /**
-   * Returns a {@link ResultUseRule} that maps annotations on the current symbol, or on super
-   * methods if the symbol is a method symbol, with the given {@code simpleName} to the given {@code
-   * policy}.
-   */
+  /// Returns a [ResultUseRule] that maps annotations on the current symbol, or on super methods if
+  /// the symbol is a method symbol, with the given `simpleName` to the given `policy`.
   public static ResultUseRule<VisitorState, Symbol> mapInheritedAnnotationSimpleName(
       String simpleName, ResultUsePolicy policy) {
     return new SimpleRule(

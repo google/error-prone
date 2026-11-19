@@ -28,11 +28,9 @@ import com.sun.tools.javac.util.List;
 import java.util.Optional;
 import org.jspecify.annotations.Nullable;
 
-/**
- * {@link UTree} representation of an {@link IfTree}.
- *
- * @author lowasser@google.com (Louis Wasserman)
- */
+/// [UTree] representation of an [IfTree].
+///
+/// @author lowasser@google.com (Louis Wasserman)
 record UIf(UExpression condition, UStatement thenStatement, @Nullable UStatement elseStatement)
     implements UStatement, IfTree {
   @Override

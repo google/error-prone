@@ -44,7 +44,7 @@ import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import javax.lang.model.element.ElementKind;
 
-/** Detects locks on boxed primitives. */
+/// Detects locks on boxed primitives.
 @BugPattern(
     summary =
         "It is dangerous to use a boxed primitive as a lock as it can unintentionally lead to"
@@ -122,7 +122,7 @@ public class LockOnBoxedPrimitive extends BugChecker
     return NO_MATCH;
   }
 
-  /** Returns true if the expression tree is definitely referring to a boxed primitive. */
+  /// Returns true if the expression tree is definitely referring to a boxed primitive.
   private static boolean isDefinitelyBoxedPrimitive(ExpressionTree tree, VisitorState state) {
     return BOXED_PRIMITIVE.matches(tree, state);
   }

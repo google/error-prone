@@ -57,14 +57,12 @@ import java.util.Set;
 import java.util.function.Predicate;
 import javax.lang.model.element.Modifier;
 
-/**
- * A method body analyzer. Responsible for tracking the set of held locks, and checking accesses to
- * guarded members.
- *
- * @author cushon@google.com (Liam Miller-Cushon)
- */
+/// A method body analyzer. Responsible for tracking the set of held locks, and checking accesses to
+/// guarded members.
+///
+/// @author cushon@google.com (Liam Miller-Cushon)
 public final class HeldLockAnalyzer {
-  /** Methods which invoke lambdas on the same thread. */
+  /// Methods which invoke lambdas on the same thread.
   static final Matcher<ExpressionTree> INVOKES_LAMBDAS_IMMEDIATELY =
       anyOf(
           instanceMethod()
@@ -88,23 +86,19 @@ public final class HeldLockAnalyzer {
               .onClass("com.google.common.collect.Iterables")
               .namedAnyOf("tryFind", "any", "all", "indexOf"));
 
-  /** Listener interface for accesses to guarded members. */
+  /// Listener interface for accesses to guarded members.
   public interface LockEventListener {
 
-    /**
-     * Handles a guarded member access.
-     *
-     * @param tree The member access expression.
-     * @param guard The member's guard expression.
-     * @param locks The set of held locks.
-     */
+    /// Handles a guarded member access.
+    ///
+    /// @param tree The member access expression.
+    /// @param guard The member's guard expression.
+    /// @param locks The set of held locks.
     void handleGuardedAccess(ExpressionTree tree, GuardedByExpression guard, HeldLockSet locks);
   }
 
-  /**
-   * Analyzes a method body, tracking the set of held locks and checking accesses to guarded
-   * members.
-   */
+  /// Analyzes a method body, tracking the set of held locks and checking accesses to guarded
+  /// members.
   public static void analyze(
       VisitorState state, LockEventListener listener, Predicate<Tree> isSuppressed) {
     HeldLockSet locks = HeldLockSet.empty();
@@ -283,12 +277,10 @@ public final class HeldLockAnalyzer {
     }
   }
 
-  /**
-   * An abstraction over the lock classes we understand.
-   *
-   * @param className The fully-qualified name of the lock class.
-   * @param unlockMethod The method that releases the lock.
-   */
+  /// An abstraction over the lock classes we understand.
+  ///
+  /// @param className The fully-qualified name of the lock class.
+  /// @param unlockMethod The method that releases the lock.
   private record LockResource(String className, String unlockMethod) {
     Matcher<ExpressionTree> createUnlockMatcher() {
       return instanceMethod().onDescendantOf(className()).named(unlockMethod());
@@ -299,7 +291,7 @@ public final class HeldLockAnalyzer {
     }
   }
 
-  /** The set of supported lock classes. */
+  /// The set of supported lock classes.
   private static final ImmutableList<LockResource> LOCK_RESOURCES =
       ImmutableList.of(
           LockResource.create("java.util.concurrent.locks.Lock", "unlock"),
@@ -322,7 +314,7 @@ public final class HeldLockAnalyzer {
 
     private final Matcher<ExpressionTree> lockOperationMatcher;
 
-    /** Matcher for ReadWriteLock lock accessors. */
+    /// Matcher for ReadWriteLock lock accessors.
     private static final Matcher<ExpressionTree> READ_WRITE_ACCESSOR_MATCHER =
         Matchers.<ExpressionTree>anyOf(
             instanceMethod().onDescendantOf(READ_WRITE_LOCK_CLASS).named("readLock"),
@@ -342,12 +334,10 @@ public final class HeldLockAnalyzer {
       return null;
     }
 
-    /**
-     * Checks for locks that are released directly. Currently only {@link
-     * java.util.concurrent.locks.Lock#unlock()} is supported.
-     *
-     * <p>TODO(cushon): Semaphores, CAS, ... ?
-     */
+    /// Checks for locks that are released directly. Currently only
+    /// [java.util.concurrent.locks.Lock#unlock()] is supported.
+    ///
+    /// TODO(cushon): Semaphores, CAS, ... ?
     private void handleReleasedLocks(MethodInvocationTree tree) {
       if (!lockOperationMatcher.matches(tree, state)) {
         return;
@@ -373,13 +363,11 @@ public final class HeldLockAnalyzer {
     }
   }
 
-  /**
-   * Find the locks that are released in the given tree. (e.g. the 'finally' clause of a
-   * try/finally)
-   */
+  /// Find the locks that are released in the given tree. (e.g. the 'finally' clause of a
+  /// try/finally)
   static final class ReleasedLockFinder {
 
-    /** Matcher for methods that release lock resources. */
+    /// Matcher for methods that release lock resources.
     private static final Matcher<ExpressionTree> UNLOCK_MATCHER =
         Matchers.<ExpressionTree>anyOf(unlockMatchers());
 
@@ -394,36 +382,33 @@ public final class HeldLockAnalyzer {
     private ReleasedLockFinder() {}
   }
 
-  /**
-   * Utility for discovering the lock expressions that needs to be held when accessing specific
-   * guarded members.
-   */
+  /// Utility for discovering the lock expressions that needs to be held when accessing specific
+  /// guarded members.
   public static final class ExpectedLockCalculator {
 
     private static final GuardedByExpression.Factory F = new GuardedByExpression.Factory();
 
-    /**
-     * Determine the lock expression that needs to be held when accessing a specific guarded member.
-     *
-     * <p>If the lock expression resolves to an instance member, the result will be a select
-     * expression with the same base as the original guarded member access.
-     *
-     * <p>For example:
-     *
-     * <pre>{@code
-     * class MyClass {
-     *   final Object mu = new Object();
-     *   @GuardedBy("mu")
-     *   int x;
-     * }
-     * void m(MyClass myClass) {
-     *   myClass.x++;
-     * }
-     * }</pre>
-     *
-     * To determine the lock that must be held when accessing myClass.x, from is called with
-     * "myClass.x" and "mu", and returns "myClass.mu".
-     */
+    /// Determine the lock expression that needs to be held when accessing a specific guarded
+    /// member.
+    ///
+    /// If the lock expression resolves to an instance member, the result will be a select
+    /// expression with the same base as the original guarded member access.
+    ///
+    /// For example:
+    ///
+    /// ```
+    /// class MyClass {
+    ///   final Object mu = new Object();
+    ///   @GuardedBy("mu")
+    ///   int x;
+    /// }
+    /// void m(MyClass myClass) {
+    ///   myClass.x++;
+    /// }
+    /// ```
+    ///
+    /// To determine the lock that must be held when accessing myClass.x, from is called with
+    /// "myClass.x" and "mu", and returns "myClass.mu".
     public static Optional<GuardedByExpression> from(
         JCTree.JCExpression guardedMemberExpression,
         GuardedByExpression guard,
@@ -444,20 +429,16 @@ public final class HeldLockAnalyzer {
       return Optional.of(helper(guard, memberBase));
     }
 
-    /**
-     * Returns true for guard expressions that require an 'absolute' reference, i.e. where the
-     * expression to access the lock is always the same, regardless of how the guarded member is
-     * accessed.
-     *
-     * <p>E.g.:
-     *
-     * <ul>
-     *   <li>class object: 'TypeName.class'
-     *   <li>static access: 'TypeName.member'
-     *   <li>enclosing instance: 'Outer.this'
-     *   <li>enclosing instance member: 'Outer.this.member'
-     * </ul>
-     */
+    /// Returns true for guard expressions that require an 'absolute' reference, i.e. where the
+    /// expression to access the lock is always the same, regardless of how the guarded member is
+    /// accessed.
+    ///
+    /// E.g.:
+    ///
+    /// - class object: 'TypeName.class'
+    /// - static access: 'TypeName.member'
+    /// - enclosing instance: 'Outer.this'
+    /// - enclosing instance member: 'Outer.this.member'
     private static boolean isGuardReferenceAbsolute(GuardedByExpression guard) {
 
       GuardedByExpression instance = guard.kind() == Kind.SELECT ? getSelectInstance(guard) : guard;
@@ -465,7 +446,7 @@ public final class HeldLockAnalyzer {
       return instance.kind() != Kind.THIS;
     }
 
-    /** Gets the base expression of a (possibly nested) member select expression. */
+    /// Gets the base expression of a (possibly nested) member select expression.
     private static GuardedByExpression getSelectInstance(GuardedByExpression guard) {
       if (guard instanceof Select select) {
         return getSelectInstance(select.base());

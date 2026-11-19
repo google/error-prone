@@ -28,11 +28,9 @@ import com.google.errorprone.matchers.Matcher;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 
-/**
- * Points out if #ordinal() is called on a Protocol Buffer Enum.
- *
- * @author bhagwani@google.com (Sumit Bhagwani)
- */
+/// Points out if #ordinal() is called on a Protocol Buffer Enum.
+///
+/// @author bhagwani@google.com (Sumit Bhagwani)
 @BugPattern(
     summary = "To get the tag number of a protocol buffer enum, use getNumber() instead.",
     severity = ERROR)

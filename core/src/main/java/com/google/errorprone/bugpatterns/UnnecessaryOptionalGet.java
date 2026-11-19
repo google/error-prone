@@ -34,10 +34,8 @@ import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreeScanner;
 
-/**
- * A refactoring to replace Optional.get() with lambda arg in expressions passed as arg to member
- * functions of Optionals.
- */
+/// A refactoring to replace Optional.get() with lambda arg in expressions passed as arg to member
+/// functions of Optionals.
 @BugPattern(
     summary =
         "This code can be simplified by directly using the lambda parameters instead of calling"

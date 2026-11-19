@@ -21,14 +21,12 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-/**
- * Desired "before" version of a refactoring. Corresponds to matching methods annotated with {@link
- * AfterTemplate}.
- *
- * <p>Multiple {@code @BeforeTemplate}s can be provided to match multiple patterns.
- *
- * @author lowasser@google.com (Louis Wasserman)
- */
+/// Desired "before" version of a refactoring. Corresponds to matching methods annotated with
+/// [AfterTemplate].
+///
+/// Multiple `@BeforeTemplate`s can be provided to match multiple patterns.
+///
+/// @author lowasser@google.com (Louis Wasserman)
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.SOURCE)
 public @interface BeforeTemplate {}

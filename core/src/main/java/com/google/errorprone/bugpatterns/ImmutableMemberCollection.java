@@ -78,7 +78,7 @@ import java.util.regex.Pattern;
 import javax.inject.Inject;
 import javax.lang.model.element.Modifier;
 
-/** Refactoring to suggest Immutable types for member collection that are not mutated. */
+/// Refactoring to suggest Immutable types for member collection that are not mutated.
 @BugPattern(
     summary = "If you don't intend to mutate a member collection prefer using Immutable types.",
     severity = SUGGESTION)

@@ -30,15 +30,13 @@ import java.util.Optional;
 import java.util.TreeSet;
 import javax.lang.model.element.Name;
 
-/**
- * A simple <a href="https://en.wikipedia.org/wiki/Trie">trie</a> implementation.
- *
- * <p>Edges between trie nodes represent method parameters and each path represents some method
- * signature. This trie is an archetype that next method signatures must follow - we extend the trie
- * with new signatures reporting all ordering violations along the way.
- *
- * @author hanuszczak@google.com (Łukasz Hanuszczak)
- */
+/// A simple [trie](https://en.wikipedia.org/wiki/Trie) implementation.
+///
+/// Edges between trie nodes represent method parameters and each path represents some method
+/// signature. This trie is an archetype that next method signatures must follow - we extend the
+/// trie with new signatures reporting all ordering violations along the way.
+///
+/// @author hanuszczak@google.com (Łukasz Hanuszczak)
 class ParameterTrie {
 
   private final Map<Name, ParameterTrie> children;
@@ -47,38 +45,34 @@ class ParameterTrie {
     this.children = new HashMap<>();
   }
 
-  /**
-   * Extends the trie with parameters of {@code methodTree}.
-   *
-   * <p>If any ordering {@link ParameterOrderingViolation} is discovered during extension procedure,
-   * they are reported in the result.
-   *
-   * <p>The method signature is considered to violate the consistency if there exists a path in the
-   * archetype (the trie) that could be used but would require parameter reordering. The extension
-   * algorithm simply walks down the trie as long as possible until the signature has parameters
-   * matching existing edges in the trie. Once this is no longer possible, new nodes are the trie is
-   * extended with remaining parameters.
-   */
+  /// Extends the trie with parameters of `methodTree`.
+  ///
+  /// If any ordering [ParameterOrderingViolation] is discovered during extension procedure, they
+  /// are reported in the result.
+  ///
+  /// The method signature is considered to violate the consistency if there exists a path in the
+  /// archetype (the trie) that could be used but would require parameter reordering. The extension
+  /// algorithm simply walks down the trie as long as possible until the signature has parameters
+  /// matching existing edges in the trie. Once this is no longer possible, new nodes are the trie
+  /// is extended with remaining parameters.
   public Optional<ParameterOrderingViolation> extendAndComputeViolation(MethodTree methodTree) {
     return new ParameterTrieExtender(methodTree).execute(this);
   }
 
-  /**
-   * A convenience class used by {@link ParameterTrie#extendAndComputeViolation(MethodTree)} method.
-   *
-   * <p>The extension algorithm is inherently stateful. Because threading three state arguments in
-   * every recursive function invocation is inconvenient, we use this class to keep track of the
-   * state in class members.
-   *
-   * <p>The violation detection works like this: first a method signature (i.e. all the method
-   * parameters) is added to the trie. As long as it is possible the algorithm tries to find a
-   * parameter that can be followed using existing edges in the trie. When no such parameter is
-   * found, the trie extension procedure begins where remaining parameters are added to the trie in
-   * order in which they appear in the initial list. This whole procedure (a path that was followed
-   * during the process) determines a "correct", "consistent" ordering of the parameters. If the
-   * original input list of parameters has a different order that the one determined by the
-   * algorithm a violation is reported.
-   */
+  /// A convenience class used by [ParameterTrie#extendAndComputeViolation(MethodTree)] method.
+  ///
+  /// The extension algorithm is inherently stateful. Because threading three state arguments in
+  /// every recursive function invocation is inconvenient, we use this class to keep track of the
+  /// state in class members.
+  ///
+  /// The violation detection works like this: first a method signature (i.e. all the method
+  /// parameters) is added to the trie. As long as it is possible the algorithm tries to find a
+  /// parameter that can be followed using existing edges in the trie. When no such parameter is
+  /// found, the trie extension procedure begins where remaining parameters are added to the trie in
+  /// order in which they appear in the initial list. This whole procedure (a path that was followed
+  /// during the process) determines a "correct", "consistent" ordering of the parameters. If the
+  /// original input list of parameters has a different order that the one determined by the
+  /// algorithm a violation is reported.
   private static class ParameterTrieExtender {
 
     private final MethodTree methodTree;
@@ -93,12 +87,10 @@ class ParameterTrie {
       this.outputParameters = new ArrayList<>();
     }
 
-    /**
-     * Extends given {@code trie} with initial {@link MethodTree}.
-     *
-     * <p>If any {@link ParameterOrderingViolation} is found during the extension procedure, it is
-     * reported in the result.
-     */
+    /// Extends given `trie` with initial [MethodTree].
+    ///
+    /// If any [ParameterOrderingViolation] is found during the extension procedure, it is reported
+    /// in the result.
     Optional<ParameterOrderingViolation> execute(ParameterTrie trie) {
       Preconditions.checkArgument(trie != null);
 
@@ -107,14 +99,12 @@ class ParameterTrie {
       return validate();
     }
 
-    /**
-     * Initializes the input and output parameter collections.
-     *
-     * <p>After initialization, the input parameters should be equal to parameters of the given
-     * {@link MethodTree} and output parameters should be empty. After processing this should be
-     * reversed: input parameters list should be empty and output parameters should be an ordered
-     * version of parameters of the given {@link MethodTree}.
-     */
+    /// Initializes the input and output parameter collections.
+    ///
+    /// After initialization, the input parameters should be equal to parameters of the given
+    /// [MethodTree] and output parameters should be empty. After processing this should be
+    /// reversed: input parameters list should be empty and output parameters should be an ordered
+    /// version of parameters of the given [MethodTree].
     private void initialize() {
       for (int i = 0; i < getMethodTreeArity(methodTree); i++) {
         inputParameters.add(Parameter.create(methodTree, i));
@@ -122,13 +112,11 @@ class ParameterTrie {
       outputParameters.clear();
     }
 
-    /**
-     * Processes input parameters by walking along the trie as long as there is a path.
-     *
-     * <p>Once the walk is no longer possible (there is no trie child that matches one of the input
-     * parameters) the extender begins expansion procedure (see {@link
-     * ParameterTrieExtender#execute(ParameterTrie)}).
-     */
+    /// Processes input parameters by walking along the trie as long as there is a path.
+    ///
+    /// Once the walk is no longer possible (there is no trie child that matches one of the input
+    /// parameters) the extender begins expansion procedure (see
+    /// [ParameterTrieExtender#execute(ParameterTrie)]).
     private void walk(ParameterTrie trie) {
       Preconditions.checkArgument(trie != null);
 
@@ -147,17 +135,15 @@ class ParameterTrie {
       expand(trie);
     }
 
-    /**
-     * Expands the trie with leftover input parameters.
-     *
-     * <p>It is assumed that given {@code trie} does not have a key corresponding to any input
-     * parameter which should happen only if {@link ParameterTrieExtender#walk(ParameterTrie)} has
-     * nowhere else to go.
-     *
-     * <p>Only non-varargs parameters are added to the trie. Any varargs parameters should always be
-     * placed at the end of the method signature so it makes no sense to include them in the
-     * archetype.
-     */
+    /// Expands the trie with leftover input parameters.
+    ///
+    /// It is assumed that given `trie` does not have a key corresponding to any input parameter
+    /// which should happen only if [ParameterTrieExtender#walk(ParameterTrie)] has nowhere else to
+    /// go.
+    ///
+    /// Only non-varargs parameters are added to the trie. Any varargs parameters should always be
+    /// placed at the end of the method signature so it makes no sense to include them in the
+    /// archetype.
     private void expand(ParameterTrie trie) {
       Preconditions.checkArgument(trie != null);
 
@@ -176,17 +162,13 @@ class ParameterTrie {
       expand(allocatedTrie);
     }
 
-    /**
-     * Reports {@link ParameterOrderingViolation} if output parameters are not ordered as in input
-     * file.
-     *
-     * <p>This method simply goes through the list of output parameters (input parameters ordered by
-     * trie traversal algorithm). If a parameter at particular position differs from its original
-     * position a violation is reported.
-     *
-     * <p>If the ordering is consistent then there is no violation and an empty optional is
-     * returned.
-     */
+    /// Reports [ParameterOrderingViolation] if output parameters are not ordered as in input file.
+    ///
+    /// This method simply goes through the list of output parameters (input parameters ordered by
+    /// trie traversal algorithm). If a parameter at particular position differs from its original
+    /// position a violation is reported.
+    ///
+    /// If the ordering is consistent then there is no violation and an empty optional is returned.
     private Optional<ParameterOrderingViolation> validate() {
       ImmutableList.Builder<ParameterTree> actual = ImmutableList.builder();
       ImmutableList.Builder<ParameterTree> expected = ImmutableList.builder();
@@ -215,16 +197,14 @@ class ParameterTrie {
       }
     }
 
-    /** Returns a {@link ParameterTree} at {@code position} in the associated method. */
+    /// Returns a [ParameterTree] at `position` in the associated method.
     private ParameterTree getParameterTree(int position) {
       return ParameterTree.create(methodTree.getParameters().get(position));
     }
   }
 
-  /**
-   * A class used to represent a {@link ParameterTree} (which is essentially just a {@link
-   * com.sun.source.tree.VariableTree} and its original position within the {@link MethodTree}.
-   */
+  /// A class used to represent a [ParameterTree] (which is essentially just a
+  /// [com.sun.source.tree.VariableTree] and its original position within the [MethodTree].
   private record Parameter(ParameterTree tree, int position) {
     Name name() {
       return this.tree().name();
@@ -236,7 +216,7 @@ class ParameterTrie {
     }
   }
 
-  /** Returns arity (number of parameters) of given {@code methodTree}. */
+  /// Returns arity (number of parameters) of given `methodTree`.
   static int getMethodTreeArity(MethodTree methodTree) {
     return methodTree.getParameters().size();
   }

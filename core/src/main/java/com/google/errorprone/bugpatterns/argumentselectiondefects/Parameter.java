@@ -46,19 +46,17 @@ import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
 import java.util.List;
 import org.jspecify.annotations.Nullable;
 
-/**
- * Represents either a formal or actual parameter and its position in the argument list.
- *
- * @author andrewrice@google.com (Andrew Rice)
- */
+/// Represents either a formal or actual parameter and its position in the argument list.
+///
+/// @author andrewrice@google.com (Andrew Rice)
 final class Parameter {
   private static final ImmutableSet<String> METHODNAME_PREFIXES_TO_REMOVE =
       ImmutableSet.of("get", "set", "is");
 
-  /** We use this placeholder to indicate a name which is a null literal. */
+  /// We use this placeholder to indicate a name which is a null literal.
   @VisibleForTesting static final String NAME_NULL = "*NULL*";
 
-  /** We use this placeholder to indicate a name which we couldn't get a canonical string for. */
+  /// We use this placeholder to indicate a name which we couldn't get a canonical string for.
   @VisibleForTesting static final String NAME_NOT_PRESENT = "*NOT_PRESENT*";
 
   private final Type type;
@@ -66,10 +64,8 @@ final class Parameter {
   private final @Nullable VarSymbol symbol;
   private final @Nullable Tree tree;
 
-  /**
-   * Computed on first use, since most calls are rejected before any names are compared, and the
-   * name of each parameter is used for many pairs once they are.
-   */
+  /// Computed on first use, since most calls are rejected before any names are compared, and the
+  /// name of each parameter is used for many pairs once they are.
   private @Nullable String name;
 
   private Parameter(Type type, int index, @Nullable VarSymbol symbol, @Nullable Tree tree) {
@@ -136,10 +132,8 @@ final class Parameter {
     return tree != null && ASTHelpers.constValue(tree) != null;
   }
 
-  /**
-   * Return true if this parameter is assignable to the target parameter. This will consider
-   * subclassing, autoboxing and null.
-   */
+  /// Return true if this parameter is assignable to the target parameter. This will consider
+  /// subclassing, autoboxing and null.
   boolean isAssignableTo(Parameter target, VisitorState state) {
     if (state.getTypes().isSameType(type(), Type.noType)
         || state.getTypes().isSameType(target.type(), Type.noType)) {
@@ -171,24 +165,18 @@ final class Parameter {
     }
   }
 
-  /**
-   * Extract the name from an argument.
-   *
-   * <p>
-   *
-   * <ul>
-   *   <li>IdentifierTree - if the identifier is 'this' then use the name of the enclosing class,
-   *       otherwise use the name of the identifier
-   *   <li>MemberSelectTree - the name of its identifier
-   *   <li>NewClassTree - the name of the class being constructed
-   *   <li>Null literal - a wildcard name
-   *   <li>MethodInvocationTree - use the method name stripping off 'get', 'set', 'is' prefix. If
-   *       this results in an empty name then recursively search the receiver
-   * </ul>
-   *
-   * All other trees (including literals other than Null literal) do not have a name and this method
-   * will return the marker for an unknown name.
-   */
+  /// Extract the name from an argument.
+  ///
+  /// - IdentifierTree - if the identifier is 'this' then use the name of the enclosing class,
+  ///   otherwise use the name of the identifier
+  /// - MemberSelectTree - the name of its identifier
+  /// - NewClassTree - the name of the class being constructed
+  /// - Null literal - a wildcard name
+  /// - MethodInvocationTree - use the method name stripping off 'get', 'set', 'is' prefix. If this
+  ///   results in an empty name then recursively search the receiver
+  ///
+  /// All other trees (including literals other than Null literal) do not have a name and this
+  /// method will return the marker for an unknown name.
   @VisibleForTesting
   static String getArgumentName(Tree tree) {
     return switch (tree) {

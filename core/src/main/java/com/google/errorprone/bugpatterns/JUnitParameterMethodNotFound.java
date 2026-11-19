@@ -52,13 +52,11 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
 
-/**
- * Checks if the methods specified in {@code junitparams.Parameters} annotation to provide
- * parameters exists.
- *
- * <p>This checks for the required method in the current class and all the base classes. In case the
- * required method is present in a superclass, this check would generate a false positive.
- */
+/// Checks if the methods specified in `junitparams.Parameters` annotation to provide parameters
+/// exists.
+///
+/// This checks for the required method in the current class and all the base classes. In case the
+/// required method is present in a superclass, this check would generate a false positive.
 @BugPattern(summary = "The method for providing parameters was not found.", severity = ERROR)
 public class JUnitParameterMethodNotFound extends BugChecker implements MethodTreeMatcher {
 

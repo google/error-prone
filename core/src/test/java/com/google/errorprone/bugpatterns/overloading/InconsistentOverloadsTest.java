@@ -21,11 +21,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * Test cases for {@link InconsistentOverloads}.
- *
- * @author hanuszczak@google.com (Łukasz Hanuszczak)
- */
+/// Test cases for [InconsistentOverloads].
+///
+/// @author hanuszczak@google.com (Łukasz Hanuszczak)
 @RunWith(JUnit4.class)
 public final class InconsistentOverloadsTest {
   private final CompilationTestHelper compilationHelper =

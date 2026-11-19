@@ -51,7 +51,7 @@ import com.sun.tools.javac.code.Types;
 import javax.lang.model.element.ElementKind;
 import org.safere.Pattern;
 
-/** See the summary. */
+/// See the summary.
 @BugPattern(summary = "Possible class initialization deadlock", severity = WARNING)
 public class ClassInitializationDeadlock extends BugChecker implements BugChecker.ClassTreeMatcher {
 

@@ -92,9 +92,7 @@ import javax.inject.Inject;
 import javax.lang.model.element.ElementKind;
 import org.jspecify.annotations.Nullable;
 
-/**
- * @author eaftan@google.com (Eddie Aftandilian)
- */
+/// @author eaftan@google.com (Eddie Aftandilian)
 @BugPattern(
     altNames = {"ResultOfMethodCallIgnored", "ReturnValueIgnored"},
     summary = "The result of this call must be used",
@@ -198,10 +196,8 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
     return flags.getBoolean(flag).map(check -> check ? EXPECTED : OPTIONAL);
   }
 
-  /**
-   * Return a matcher for method invocations in which the method being called should be considered
-   * must-be-used.
-   */
+  /// Return a matcher for method invocations in which the method being called should be considered
+  /// must-be-used.
   @Override
   public Matcher<ExpressionTree> specializedMatcher() {
     return (tree, state) -> getMethodPolicy(tree, state).equals(EXPECTED);
@@ -269,14 +265,12 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
         .orElse(ImmutableMap.of());
   }
 
-  /**
-   * Validate {@code @CheckReturnValue} and {@link CanIgnoreReturnValue} usage on methods.
-   *
-   * <p>The annotations should not both be applied to the same method.
-   *
-   * <p>The annotations should not be applied to void-returning methods. Doing so makes no sense,
-   * because there is no return value to check.
-   */
+  /// Validate `@CheckReturnValue` and [CanIgnoreReturnValue] usage on methods.
+  ///
+  /// The annotations should not both be applied to the same method.
+  ///
+  /// The annotations should not be applied to void-returning methods. Doing so makes no sense,
+  /// because there is no return value to check.
   @Override
   public Description matchMethod(MethodTree tree, VisitorState state) {
     MethodSymbol method = ASTHelpers.getSymbol(tree);
@@ -317,10 +311,8 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
     return present.build();
   }
 
-  /**
-   * Validate that at most one of {@code CheckReturnValue} and {@code CanIgnoreReturnValue} are
-   * applied to a class (or interface or enum).
-   */
+  /// Validate that at most one of `CheckReturnValue` and `CanIgnoreReturnValue` are applied to a
+  /// class (or interface or enum).
   @Override
   public Description matchClass(ClassTree tree, VisitorState state) {
     ImmutableList<String> presentAnnotations = presentCrvRelevantAnnotations(getSymbol(tree));
@@ -427,7 +419,7 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
     API_ERASED_SIGNATURE,
   }
 
-  /** Returns a fix that adds {@code @CanIgnoreReturnValue} to the given symbol, if possible. */
+  /// Returns a fix that adds `@CanIgnoreReturnValue` to the given symbol, if possible.
   private static Fix fixAtDeclarationSite(MethodSymbol symbol, VisitorState state) {
     MethodTree method = findDeclaration(symbol, state);
     if (method == null || isGeneratedConstructor(method)) {

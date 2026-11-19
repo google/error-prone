@@ -32,10 +32,8 @@ import com.sun.source.tree.MethodInvocationTree;
 import java.time.temporal.ChronoUnit;
 import java.util.EnumSet;
 
-/**
- * Bans calls to {@code Period.get(temporalUnit)} where {@code temporalUnit} is not {@code YEARS},
- * {@code MONTHS}, or {@code DAYS}.
- */
+/// Bans calls to `Period.get(temporalUnit)` where `temporalUnit` is not `YEARS`, `MONTHS`, or
+/// `DAYS`.
 @BugPattern(
     summary = "Period.get() only works with YEARS, MONTHS, or DAYS.",
     explanation =

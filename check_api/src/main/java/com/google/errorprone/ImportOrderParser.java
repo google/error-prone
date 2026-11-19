@@ -17,15 +17,13 @@ package com.google.errorprone;
 
 import com.google.errorprone.apply.ImportOrganizer;
 
-/** Parse import order strings. */
+/// Parse import order strings.
 public final class ImportOrderParser {
 
-  /**
-   * Parse import order string and create appropriate {@link ImportOrganizer}.
-   *
-   * @param importOrder the import order, either static-first or static-last.
-   * @return the {@link ImportOrganizer}
-   */
+  /// Parse import order string and create appropriate [ImportOrganizer].
+  ///
+  /// @param importOrder the import order, either static-first or static-last.
+  /// @return the [ImportOrganizer]
   public static ImportOrganizer getImportOrganizer(String importOrder) {
     return switch (importOrder) {
       case "static-first" -> ImportOrganizer.STATIC_FIRST_ORGANIZER;

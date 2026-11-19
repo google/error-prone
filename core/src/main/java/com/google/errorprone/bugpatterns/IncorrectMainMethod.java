@@ -38,7 +38,7 @@ import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Types;
 import javax.lang.model.element.Modifier;
 
-/** See BugPattern annotation. */
+/// See BugPattern annotation.
 @BugPattern(summary = "'main' methods must be public, static, and void", severity = WARNING)
 public final class IncorrectMainMethod extends BugChecker implements MethodTreeMatcher {
 

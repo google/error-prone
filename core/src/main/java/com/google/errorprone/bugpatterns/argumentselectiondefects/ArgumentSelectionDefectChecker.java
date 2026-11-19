@@ -34,24 +34,21 @@ import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 
-/**
- * Checks the lexical distance between method parameter names and the argument names at call sites.
- * If another permutation of the arguments produces a lower distance then it is possible that the
- * programmer has accidentally reordered them.
- *
- * <p>Rice, Andrew, et al. <a href="https://ai.google/research/pubs/pub46317">"Detecting argument
- * selection defects"</a>. Proceedings of the ACM on Programming Languages OOPSLA (2017).
- *
- * <p>Terminology:
- *
- * <ul>
- *   <li>Formal parameter - as given in the definition of the method
- *   <li>Actual parameter - as used in the invocation of the method
- *   <li>Parameter - either a formal or actual parameter
- * </ul>
- *
- * @author andrewrice@google.com (Andrew Rice)
- */
+/// Checks the lexical distance between method parameter names and the argument names at call sites.
+/// If another permutation of the arguments produces a lower distance then it is possible that the
+/// programmer has accidentally reordered them.
+///
+/// Rice, Andrew, et al. ["Detecting argument selection
+/// defects"](https://ai.google/research/pubs/pub46317). Proceedings of the ACM on Programming
+/// Languages OOPSLA (2017).
+///
+/// Terminology:
+///
+/// - Formal parameter - as given in the definition of the method
+/// - Actual parameter - as used in the invocation of the method
+/// - Parameter - either a formal or actual parameter
+///
+/// @author andrewrice@google.com (Andrew Rice)
 @BugPattern(
     summary = "Arguments are in the wrong order or could be commented for clarity.",
     severity = WARNING)
@@ -125,12 +122,11 @@ public class ArgumentSelectionDefectChecker extends BugChecker
         .build();
   }
 
-  /**
-   * Computes the distance between a formal and actual parameter. If either is a null literal then
-   * the distance is zero (null matches everything). If both have a name then we compute the
-   * normalised NeedlemanWunschEditDistance. Otherwise, one of the names is unknown and so we return
-   * 0 distance between it and its original parameter and infinite distance between all others.
-   */
+  /// Computes the distance between a formal and actual parameter. If either is a null literal then
+  /// the distance is zero (null matches everything). If both have a name then we compute the
+  /// normalised NeedlemanWunschEditDistance. Otherwise, one of the names is unknown and so we
+  /// return 0 distance between it and its original parameter and infinite distance between all
+  /// others.
   private static double defaultDistanceFunction(ParameterPair pair) {
     if (pair.formal().isNullLiteral() || pair.actual().isNullLiteral()) {
       return 0.0;

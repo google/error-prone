@@ -34,11 +34,9 @@ import com.google.errorprone.matchers.Matcher;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 
-/**
- * This checker bans calls to {@code ZoneId.of("Z")} in favor of {@link java.time.ZoneOffset#UTC}.
- *
- * @author kak@google.com (Kurt Alfred Kluever)
- */
+/// This checker bans calls to `ZoneId.of("Z")` in favor of [java.time.ZoneOffset#UTC].
+///
+/// @author kak@google.com (Kurt Alfred Kluever)
 @BugPattern(
     summary = "Use ZoneOffset.UTC instead of ZoneId.of(\"Z\").",
     explanation =

@@ -23,11 +23,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * Tests for {@link UParens}.
- *
- * @author lowasser@google.com (Louis Wasserman)
- */
+/// Tests for [UParens].
+///
+/// @author lowasser@google.com (Louis Wasserman)
 @RunWith(JUnit4.class)
 public class UParensTest extends AbstractUTreeTest {
   @Test

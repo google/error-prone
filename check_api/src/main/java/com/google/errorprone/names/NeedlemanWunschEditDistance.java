@@ -19,40 +19,35 @@ package com.google.errorprone.names;
 import com.google.common.base.Ascii;
 import com.google.common.primitives.Ints;
 
-/**
- * The Needleman-Wunsch algorithm for finding least-cost string edit distances between pairs of
- * strings. Like Levenshtein, but this version allows for a sequence of adjacent
- * deletions/insertions to cost less than the total cost of each individual deletion/insertion, so
- * that, for example editing {@code Christopher} into {@code Chris} (dropping 6 characters) is not 6
- * times as expensive as editing {@code Christopher} into {@code Christophe}.
- *
- * <p>See https://en.wikipedia.org/wiki/Needleman-Wunsch_algorithm
- *
- * @author alanw@google.com (Alan Wendt)
- */
+/// The Needleman-Wunsch algorithm for finding least-cost string edit distances between pairs of
+/// strings. Like Levenshtein, but this version allows for a sequence of adjacent
+/// deletions/insertions to cost less than the total cost of each individual deletion/insertion, so
+/// that, for example editing `Christopher` into `Chris` (dropping 6 characters) is not 6 times as
+/// expensive as editing `Christopher` into `Christophe`.
+///
+/// See https://en.wikipedia.org/wiki/Needleman-Wunsch_algorithm
+///
+/// @author alanw@google.com (Alan Wendt)
 public final class NeedlemanWunschEditDistance {
 
   private NeedlemanWunschEditDistance() {
     /* disallow instantiation */
   }
 
-  /**
-   * Returns the edit distance between two strings. Levenshtein charges the same cost for each
-   * insertion or deletion. This algorithm is slightly more general in that it charges a sequence of
-   * adjacent insertions/deletions an up-front cost plus an incremental cost per insert/delete
-   * operation. The idea is that Christopher -&gt; Chris should be less than 6 times as expensive as
-   * Christopher -&gt; Christophe. The algorithm used to calculate this distance takes time and
-   * space proportional to the product of {@code source.length()} and {@code target.length()} to
-   * build the 3 arrays.
-   *
-   * @param source source string.
-   * @param target target string
-   * @param caseSensitive if true, case is used in comparisons and 'a' != 'A'.
-   * @param changeCost cost of changing one character
-   * @param openGapCost cost to open a gap to insert or delete some characters.
-   * @param continueGapCost marginal cost to insert or delete next character.
-   * @return edit distance between the source and target strings.
-   */
+  /// Returns the edit distance between two strings. Levenshtein charges the same cost for each
+  /// insertion or deletion. This algorithm is slightly more general in that it charges a sequence
+  /// of adjacent insertions/deletions an up-front cost plus an incremental cost per insert/delete
+  /// operation. The idea is that Christopher -> Chris should be less than 6 times as expensive as
+  /// Christopher -> Christophe. The algorithm used to calculate this distance takes time and space
+  /// proportional to the product of `source.length()` and `target.length()` to build the 3 arrays.
+  ///
+  /// @param source source string.
+  /// @param target target string
+  /// @param caseSensitive if true, case is used in comparisons and 'a' != 'A'.
+  /// @param changeCost cost of changing one character
+  /// @param openGapCost cost to open a gap to insert or delete some characters.
+  /// @param continueGapCost marginal cost to insert or delete next character.
+  /// @return edit distance between the source and target strings.
   public static int getEditDistance(
       String source,
       String target,
@@ -157,7 +152,7 @@ public final class NeedlemanWunschEditDistance {
         costOfEditScriptEndingWithInsert);
   }
 
-  /** Return the worst case edit distance between strings of this length */
+  /// Return the worst case edit distance between strings of this length
   public static int getWorstCaseEditDistance(
       int sourceLength, int targetLength, int changeCost, int openGapCost, int continueGapCost) {
 
@@ -178,10 +173,8 @@ public final class NeedlemanWunschEditDistance {
     return Math.min(totChangeCost, blowAwayCost);
   }
 
-  /**
-   * Returns a normalized edit distance between 0 and 1. This is useful if you are comparing or
-   * aggregating distances of different pairs of strings
-   */
+  /// Returns a normalized edit distance between 0 and 1. This is useful if you are comparing or
+  /// aggregating distances of different pairs of strings
   public static double getNormalizedEditDistance(
       String source,
       String target,
@@ -201,10 +194,8 @@ public final class NeedlemanWunschEditDistance {
                 source.length(), target.length(), changeCost, openGapCost, continueGapCost);
   }
 
-  /**
-   * Return the cost of a script consisting of a contiguous sequence of insertions or a contiguous
-   * sequence of deletions.
-   */
+  /// Return the cost of a script consisting of a contiguous sequence of insertions or a contiguous
+  /// sequence of deletions.
   private static int scriptCost(int openGapCost, int continueGapCost, int scriptLength) {
     return (scriptLength == 0) ? 0 : openGapCost + scriptLength * continueGapCost;
   }

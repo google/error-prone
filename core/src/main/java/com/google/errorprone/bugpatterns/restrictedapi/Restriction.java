@@ -36,7 +36,7 @@ import java.util.stream.Stream;
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.type.TypeMirror;
 
-/** Details of a restriction declared via an annotation like {@code @RestrictedApi}. */
+/// Details of a restriction declared via an annotation like `@RestrictedApi`.
 public record Restriction(
     String explanation,
     String link,
@@ -68,10 +68,8 @@ public record Restriction(
     }
   }
 
-  /**
-   * Validates path restrictions on an annotation, returning an error message if {@code
-   * allowedPaths} or {@code allowedOnPath} is invalid or if both are specified.
-   */
+  /// Validates path restrictions on an annotation, returning an error message if `allowedPaths` or
+  /// `allowedOnPath` is invalid or if both are specified.
   public static Optional<String> validateAnnotation(
       AnnotationMirror attribute, Symbol annotationSymbol) {
     PathRestrictions paths = PathRestrictions.from(attribute);
@@ -101,7 +99,7 @@ public record Restriction(
     return Optional.empty();
   }
 
-  /** Parses a {@link Restriction} from an {@link AnnotationMirror}. */
+  /// Parses a [Restriction] from an [AnnotationMirror].
   public static Optional<Restriction> from(AnnotationMirror attribute) {
     if (attribute == null) {
       return Optional.empty();
@@ -152,7 +150,7 @@ public record Restriction(
             warningOnlyForRefactoring));
   }
 
-  /** Returns true if usage at {@code where} is exempt by path or test-only target rules. */
+  /// Returns true if usage at `where` is exempt by path or test-only target rules.
   public boolean isPathOrTestonlyExempt(Tree where, VisitorState state) {
     if (!allowedPaths.isEmpty() && !allowedOnPath.isEmpty()) {
       throw new IllegalArgumentException(
@@ -185,13 +183,13 @@ public record Restriction(
     return false;
   }
 
-  /** Returns true if usage at {@code where} is permitted by an allowlist annotation. */
+  /// Returns true if usage at `where` is permitted by an allowlist annotation.
   public boolean isAllowlisted(Tree where, VisitorState state) {
     return !allowlistAnnotations.isEmpty()
         && selfOrEnclosing(Matchers.hasAnyAnnotation(allowlistAnnotations)).matches(where, state);
   }
 
-  /** Returns true if usage at {@code where} is exempt by path, test-only target, or allowlist. */
+  /// Returns true if usage at `where` is exempt by path, test-only target, or allowlist.
   public boolean isAllowed(Tree where, VisitorState state) {
     return isPathOrTestonlyExempt(where, state) || isAllowlisted(where, state);
   }

@@ -21,7 +21,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** {@link HashtableContains}Test */
+/// [HashtableContains]Test
 @RunWith(JUnit4.class)
 public class HashtableContainsTest {
   private final CompilationTestHelper compilationHelper =

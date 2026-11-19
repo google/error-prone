@@ -22,7 +22,7 @@ import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.annotations.Immutable;
 import java.util.stream.Stream;
 
-/** Describes Javadoc tags, and contains lists of valid tags. */
+/// Describes Javadoc tags, and contains lists of valid tags.
 @Immutable
 record JavadocTag(String name, TagType type) {
   private static final ImmutableSet<JavadocTag> COMMON_TAGS =

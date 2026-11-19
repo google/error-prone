@@ -26,11 +26,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * Unit tests for {@link Nullness}.
- *
- * @author eaftan@google.com (Eddie Aftandilian)
- */
+/// Unit tests for [Nullness].
+///
+/// @author eaftan@google.com (Eddie Aftandilian)
 @RunWith(JUnit4.class)
 public class NullnessTest {
   @Test

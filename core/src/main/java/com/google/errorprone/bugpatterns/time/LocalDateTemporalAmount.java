@@ -31,10 +31,8 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.sun.source.tree.MethodInvocationTree;
 
-/**
- * Bans calls to {@code LocalDate.plus(TemporalAmount)} and {@code LocalDate.minus(TemporalAmount)}
- * where the {@link java.time.temporal.TemporalAmount} is a non-zero {@link java.time.Duration}.
- */
+/// Bans calls to `LocalDate.plus(TemporalAmount)` and `LocalDate.minus(TemporalAmount)` where the
+/// [java.time.temporal.TemporalAmount] is a non-zero [java.time.Duration].
 @BugPattern(
     summary =
         "LocalDate.plus() and minus() does not work with Durations. LocalDate represents civil"

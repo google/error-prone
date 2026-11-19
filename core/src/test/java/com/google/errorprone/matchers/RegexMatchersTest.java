@@ -39,7 +39,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.junit.Test;
 
-/** Tests for {@link RegexMatchers}. */
+/// Tests for [RegexMatchers].
 public final class RegexMatchersTest {
 
   private final CompilationTestHelper compilationHelper =
@@ -154,7 +154,7 @@ public final class RegexMatchersTest {
     assertThat(isStringSplitFastPath(",,")).isFalse();
   }
 
-  /** BugChecker for testing {@link RegexMatchers}. */
+  /// BugChecker for testing [RegexMatchers].
   @BugPattern(summary = "Reports matched regex methods", severity = SeverityLevel.WARNING)
   public static final class TestRegexMethodChecker extends BugChecker
       implements MethodInvocationTreeMatcher {

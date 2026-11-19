@@ -42,7 +42,7 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import java.util.List;
 import javax.lang.model.element.Modifier;
 
-/** See summary for details. */
+/// See summary for details.
 @BugPattern(
     summary =
         "Defaults for AutoValue Builders should be set in the factory method returning Builder"

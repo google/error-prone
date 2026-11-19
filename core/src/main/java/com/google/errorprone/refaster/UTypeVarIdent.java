@@ -29,12 +29,9 @@ import com.sun.tools.javac.tree.JCTree.JCExpression;
 import javax.lang.model.element.ElementKind;
 import org.jspecify.annotations.Nullable;
 
-/**
- * Identifier for a type variable in an AST; this is a syntactic representation of a {@link
- * UTypeVar}.
- *
- * @author lowasser@google.com (Louis Wasserman)
- */
+/// Identifier for a type variable in an AST; this is a syntactic representation of a [UTypeVar].
+///
+/// @author lowasser@google.com (Louis Wasserman)
 @AutoValue
 abstract class UTypeVarIdent extends UIdent {
   private static final TreeVisitor<Boolean, Void> QUALIFIED_FROM_PACKAGE =

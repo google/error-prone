@@ -36,7 +36,7 @@ import com.sun.source.tree.MethodInvocationTree;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.tree.JCTree;
 
-/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
+/// A [BugChecker]; see the associated [BugPattern] annotation for details.
 @BugPattern(
     summary = "The argument to Class#isInstance(Object) should not be a Class",
     severity = ERROR)
@@ -51,7 +51,7 @@ public class IsInstanceOfClass extends BugChecker implements MethodInvocationTre
               // test for the same _erased_ type.
               Matchers.<ExpressionTree>isSubtypeOf("java.lang.Class")));
 
-  /** Suggests removing getClass() or changing to Class.class. */
+  /// Suggests removing getClass() or changing to Class.class.
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
     if (!INSTANCE_OF_CLASS.matches(tree, state)) {

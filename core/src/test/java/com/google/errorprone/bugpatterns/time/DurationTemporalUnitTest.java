@@ -20,7 +20,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** Tests for {@link DurationTemporalUnit}. */
+/// Tests for [DurationTemporalUnit].
 @RunWith(JUnit4.class)
 public class DurationTemporalUnitTest {
   private final CompilationTestHelper helper =

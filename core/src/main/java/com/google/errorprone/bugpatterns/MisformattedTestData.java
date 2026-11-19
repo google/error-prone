@@ -42,7 +42,7 @@ import com.sun.source.tree.MethodInvocationTree;
 import java.util.ArrayList;
 import java.util.List;
 
-/** See the summary. */
+/// See the summary.
 @BugPattern(
     severity = WARNING,
     summary = "This test data will be more readable if correctly formatted.")

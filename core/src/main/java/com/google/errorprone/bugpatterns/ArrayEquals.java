@@ -35,23 +35,19 @@ import com.google.errorprone.matchers.Matcher;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
 
-/**
- * @author eaftan@google.com (Eddie Aftandilian)
- */
+/// @author eaftan@google.com (Eddie Aftandilian)
 @BugPattern(summary = "Reference equality used to compare arrays", severity = ERROR)
 public class ArrayEquals extends BugChecker implements MethodInvocationTreeMatcher {
-  /** Matches when the equals instance method is used to compare two arrays. */
+  /// Matches when the equals instance method is used to compare two arrays.
   private static final Matcher<MethodInvocationTree> instanceEqualsMatcher =
       allOf(instanceMethod().onClass(isArray()).named("equals"), argument(0, isArrayType()));
 
-  /** Matches when {@link java.util.Objects#equals}-like methods compare two arrays. */
+  /// Matches when [java.util.Objects#equals]-like methods compare two arrays.
   private static final Matcher<MethodInvocationTree> staticEqualsMatcher =
       allOf(staticEqualsInvocation(), argument(0, isArrayType()), argument(1, isArrayType()));
 
-  /**
-   * Suggests replacing with Arrays.equals(a, b). Also adds the necessary import statement for
-   * java.util.Arrays.
-   */
+  /// Suggests replacing with Arrays.equals(a, b). Also adds the necessary import statement for
+  /// java.util.Arrays.
   @Override
   public Description matchMethodInvocation(MethodInvocationTree t, VisitorState state) {
     String arg1;

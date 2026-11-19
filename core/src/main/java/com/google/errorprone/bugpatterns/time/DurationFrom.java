@@ -31,12 +31,9 @@ import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.Tree;
 import java.time.Period;
 
-/**
- * Bans calls to {@code Duration.from(temporalAmount)} where {@code temporalAmount} is a {@link
- * Period}.
- *
- * @author kak@google.com (Kurt Alfred Kluever)
- */
+/// Bans calls to `Duration.from(temporalAmount)` where `temporalAmount` is a [Period].
+///
+/// @author kak@google.com (Kurt Alfred Kluever)
 @BugPattern(
     summary = "Duration.from(Duration) returns itself; from(Period) throws a runtime exception.",
     explanation =

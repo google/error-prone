@@ -23,7 +23,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** {@link MissingCasesInEnumSwitch}Test */
+/// [MissingCasesInEnumSwitch]Test
 @RunWith(JUnit4.class)
 public class MissingCasesInEnumSwitchTest {
   private final CompilationTestHelper compilationHelper =

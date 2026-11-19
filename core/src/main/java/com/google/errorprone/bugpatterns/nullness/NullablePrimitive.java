@@ -39,9 +39,7 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
 import java.util.List;
 
-/**
- * @author sebastian.h.monte@gmail.com (Sebastian Monte)
- */
+/// @author sebastian.h.monte@gmail.com (Sebastian Monte)
 @BugPattern(
     summary =
         "Nullness annotations should not be used for primitive types since they cannot be null",

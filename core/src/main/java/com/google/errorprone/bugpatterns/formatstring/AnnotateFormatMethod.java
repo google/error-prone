@@ -43,7 +43,7 @@ import com.sun.tools.javac.code.Symbol.VarSymbol;
 import java.util.List;
 import org.jspecify.annotations.Nullable;
 
-/** A BugPattern; see the summary. */
+/// A BugPattern; see the summary.
 @BugPattern(
     summary =
         "This method uses a pair of parameters as a format string and its arguments, but the"

@@ -32,7 +32,7 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.ThrowTree;
 
-/** Bugpattern to discourage throwing base exception classes. */
+/// Bugpattern to discourage throwing base exception classes.
 @BugPattern(
     summary =
         "Base exception classes should be treated as abstract. If the exception is intended to be"

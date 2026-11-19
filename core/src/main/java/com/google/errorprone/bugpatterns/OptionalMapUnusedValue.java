@@ -33,7 +33,7 @@ import com.sun.source.tree.LambdaExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.Tree.Kind;
 
-/** Replaces {@code Optional.map} with {@code Optional.ifPresent} if the value is unused. */
+/// Replaces `Optional.map` with `Optional.ifPresent` if the value is unused.
 @BugPattern(
     summary = "Optional.ifPresent is preferred over Optional.map when the return value is unused",
     severity = ERROR)

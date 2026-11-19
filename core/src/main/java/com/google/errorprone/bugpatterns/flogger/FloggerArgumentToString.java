@@ -66,7 +66,7 @@ import javax.lang.model.type.TypeKind;
 import org.jspecify.annotations.Nullable;
 import org.safere.Pattern;
 
-/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
+/// A [BugChecker]; see the associated [BugPattern] annotation for details.
 @BugPattern(
     summary =
         "Use Flogger's printf-style formatting instead of explicitly converting arguments to"
@@ -75,13 +75,11 @@ import org.safere.Pattern;
     severity = WARNING)
 public class FloggerArgumentToString extends BugChecker implements MethodInvocationTreeMatcher {
 
-  /**
-   * Match any unescaped '%' and capture probable terms (including the '%'). Note that this
-   * expression also captures "%n" (newline) which we convert in-place to an escaped "\n".
-   *
-   * <p>Printf terms do not currently support specifying an index (e.g. {@code "%1$d"}) as this is
-   * used incredibly rarely and not worth automating.
-   */
+  /// Match any unescaped '%' and capture probable terms (including the '%'). Note that this
+  /// expression also captures "%n" (newline) which we convert in-place to an escaped "\n".
+  ///
+  /// Printf terms do not currently support specifying an index (e.g. `"%1$d"`) as this is used
+  /// incredibly rarely and not worth automating.
   private static final Pattern PRINTF_TERM_CAPTURE_PATTERN =
       Pattern.compile(
           // Skip escaped pairs of '%' before the next term.
@@ -89,10 +87,8 @@ public class FloggerArgumentToString extends BugChecker implements MethodInvocat
               // Capture an unescaped '%' and anything up to the first letter.
               + "(%[^%a-zA-Z]*[a-zA-Z])");
 
-  /**
-   * Validate captured printf terms (minus the leading '%'). This expression MUST NOT risk having
-   * false positives and anything we match (other than "%n") must be 100% legal in Flogger.
-   */
+  /// Validate captured printf terms (minus the leading '%'). This expression MUST NOT risk having
+  /// false positives and anything we match (other than "%n") must be 100% legal in Flogger.
   private static final Pattern PRINTF_TERM_VALIDATION_PATTERN =
       Pattern.compile(
           // Simple: %c, %b and %n (newline)

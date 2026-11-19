@@ -52,7 +52,7 @@ import com.sun.tools.javac.code.TypeTag;
 import java.util.List;
 import org.jspecify.annotations.Nullable;
 
-/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
+/// A [BugChecker]; see the associated [BugPattern] annotation for details.
 @BugPattern(summary = "This loop can be replaced with an enhanced for loop.", severity = SUGGESTION)
 public class ForEachIterable extends BugChecker implements VariableTreeMatcher {
 
@@ -80,15 +80,13 @@ public class ForEachIterable extends BugChecker implements VariableTreeMatcher {
     return NO_MATCH;
   }
 
-  /**
-   * Match for loops that can be rewritten to enhanced-for, e.g.:
-   *
-   * <pre>{@code
-   * for (Iterator<T> iterator = list.iterator(); iterator.hasNext(); ) {
-   *   doSomething(iterator.next());
-   * }
-   * }</pre>
-   */
+  /// Match for loops that can be rewritten to enhanced-for, e.g.:
+  ///
+  /// ```
+  /// for (Iterator<T> iterator = list.iterator(); iterator.hasNext(); ) {
+  ///   doSomething(iterator.next());
+  /// }
+  /// ```
   private Description matchFor(VariableTree tree, ForLoopTree forTree, VisitorState state) {
     List<? extends StatementTree> initializer = forTree.getInitializer();
     if (initializer.size() != 1 || !getOnlyElement(initializer).equals(tree)) {

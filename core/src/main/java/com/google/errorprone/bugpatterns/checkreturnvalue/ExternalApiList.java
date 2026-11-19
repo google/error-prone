@@ -43,15 +43,15 @@ import java.nio.file.Paths;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-/** External source of information about API return value ignorability. */
+/// External source of information about API return value ignorability.
 public final class ExternalApiList extends ErrorProneMethodRule {
 
-  /** Returns a rule using an external list of APIs to treat as @CanIgnoreReturnValue. */
+  /// Returns a rule using an external list of APIs to treat as @CanIgnoreReturnValue.
   public static ResultUseRule<VisitorState, Symbol> externalIgnorableList() {
     return new ExternalApiList(EXTERNAL_API_IGNORABLE_LIST, ResultUsePolicy.OPTIONAL);
   }
 
-  /** Returns a rule using an external list of APIs to treat as unspecified. */
+  /// Returns a rule using an external list of APIs to treat as unspecified.
   public static ResultUseRule<VisitorState, Symbol> externalUnspecifiedList() {
     return new ExternalApiList(EXTERNAL_API_UNSPECIFIED_LIST, ResultUsePolicy.UNSPECIFIED);
   }
@@ -97,7 +97,7 @@ public final class ExternalApiList extends ErrorProneMethodRule {
         : Optional.empty();
   }
 
-  /** Encapsulates asking "does this API match the list of APIs I care about"? */
+  /// Encapsulates asking "does this API match the list of APIs I care about"?
   @FunctionalInterface
   interface MethodPredicate {
     boolean methodMatches(MethodSymbol methodSymbol, VisitorState state);

@@ -43,14 +43,12 @@ import org.checkerframework.errorprone.dataflow.cfg.UnderlyingAST;
 import org.checkerframework.errorprone.dataflow.cfg.builder.CFGBuilder;
 import org.jspecify.annotations.Nullable;
 
-/**
- * Provides a wrapper around {@link org.checkerframework.errorprone.dataflow.analysis.Analysis}.
- *
- * @author konne@google.com (Konstantin Weitz)
- */
+/// Provides a wrapper around [org.checkerframework.errorprone.dataflow.analysis.Analysis].
+///
+/// @author konne@google.com (Konstantin Weitz)
 public final class DataFlow {
 
-  /** A pair of Analysis and ControlFlowGraph. */
+  /// A pair of Analysis and ControlFlowGraph.
   public interface Result<
       A extends AbstractValue<A>, S extends Store<S>, T extends TransferFunction<A, S>> {
     Analysis<A, S, T> getAnalysis();
@@ -142,15 +140,13 @@ public final class DataFlow {
     return null;
   }
 
-  /**
-   * Run the {@code transfer} dataflow analysis over the method or lambda which is the leaf of the
-   * {@code methodPath}.
-   *
-   * <p>For caching, we make the following assumptions: - if two paths to methods are {@code equal},
-   * their control flow graph is the same. - if two transfer functions are {@code equal}, and are
-   * run over the same control flow graph, the analysis result is the same. - for all contexts, the
-   * analysis result is the same.
-   */
+  /// Run the `transfer` dataflow analysis over the method or lambda which is the leaf of the
+  /// `methodPath`.
+  ///
+  /// For caching, we make the following assumptions: - if two paths to methods are `equal`, their
+  /// control flow graph is the same. - if two transfer functions are `equal`, and are run over the
+  /// same control flow graph, the analysis result is the same. - for all contexts, the analysis
+  /// result is the same.
   private static <
           A extends AbstractValue<A>, S extends Store<S>, T extends ForwardTransferFunction<A, S>>
       Result<A, S, T> methodDataflow(TreePath methodPath, Context context, T transfer) {
@@ -174,20 +170,18 @@ public final class DataFlow {
     };
   }
 
-  /**
-   * Runs the {@code transfer} dataflow analysis to compute the abstract value of the expression
-   * which is the leaf of {@code exprPath}.
-   *
-   * <p>The expression must be part of a method, lambda, or initializer (inline field initializer or
-   * initializer block). Example of an expression outside of such constructs is the identifier in an
-   * import statement.
-   *
-   * <p>Note that for initializers, each inline field initializer or initializer block is treated
-   * separately. I.e., we don't merge all initializers into one virtual block for dataflow.
-   *
-   * @return dataflow result for the given expression or {@code null} if the expression is not part
-   *     of a method, lambda or initializer
-   */
+  /// Runs the `transfer` dataflow analysis to compute the abstract value of the expression which is
+  /// the leaf of `exprPath`.
+  ///
+  /// The expression must be part of a method, lambda, or initializer (inline field initializer or
+  /// initializer block). Example of an expression outside of such constructs is the identifier in
+  /// an import statement.
+  ///
+  /// Note that for initializers, each inline field initializer or initializer block is treated
+  /// separately. I.e., we don't merge all initializers into one virtual block for dataflow.
+  ///
+  /// @return dataflow result for the given expression or `null` if the expression is not part of a
+  ///   method, lambda or initializer
   public static <
           A extends AbstractValue<A>, S extends Store<S>, T extends ForwardTransferFunction<A, S>>
       @Nullable A expressionDataflow(TreePath exprPath, Context context, T transfer) {

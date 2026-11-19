@@ -52,7 +52,7 @@ import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import javax.inject.Inject;
 
-/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
+/// A [BugChecker]; see the associated [BugPattern] annotation for details.
 @BugPattern(
     altNames = "MustBeClosed",
     summary =
@@ -85,10 +85,8 @@ public class MustBeClosedChecker extends AbstractMustBeClosedChecker
         flags.getBoolean("MustBeClosedChecker:MatchMethodReferences").orElse(true);
   }
 
-  /**
-   * Check that the {@code MustBeClosed} annotation is only used for constructors of AutoCloseables
-   * and methods that return an AutoCloseable.
-   */
+  /// Check that the `MustBeClosed` annotation is only used for constructors of AutoCloseables and
+  /// methods that return an AutoCloseable.
   @Override
   public Description matchMethod(MethodTree tree, VisitorState state) {
     // Scan the whole method at once, to avoid name clashes for resource variables.

@@ -29,11 +29,9 @@ import java.util.ArrayList;
 import java.util.List;
 import org.jspecify.annotations.Nullable;
 
-/**
- * Identifier for a class type.
- *
- * @author lowasser@google.com (Louis Wasserman)
- */
+/// Identifier for a class type.
+///
+/// @author lowasser@google.com (Louis Wasserman)
 @AutoValue
 abstract class UClassIdent extends UIdent {
   @VisibleForTesting

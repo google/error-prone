@@ -31,10 +31,8 @@ import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.SynchronizedTree;
 import com.sun.source.tree.Tree;
 
-/**
- * Bug checker to detect the usage of lock on the class other than the enclosing class of the code
- * block.
- */
+/// Bug checker to detect the usage of lock on the class other than the enclosing class of the code
+/// block.
 @BugPattern(
     summary =
         "Lock on the class other than the enclosing class of the code block can unintentionally"

@@ -31,11 +31,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * Tests for {@link Bindings}.
- *
- * @author lowasser@google.com (Louis Wasserman)
- */
+/// Tests for [Bindings].
+///
+/// @author lowasser@google.com (Louis Wasserman)
 @RunWith(JUnit4.class)
 public class BindingsTest extends AbstractUTreeTest {
   private static class Key extends Bindings.Key<String> {

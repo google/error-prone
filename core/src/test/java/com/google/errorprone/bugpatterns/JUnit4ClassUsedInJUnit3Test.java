@@ -21,9 +21,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * @author jdesprez@google.com (Julien Desprez)
- */
+/// @author jdesprez@google.com (Julien Desprez)
 @RunWith(JUnit4.class)
 public class JUnit4ClassUsedInJUnit3Test {
 

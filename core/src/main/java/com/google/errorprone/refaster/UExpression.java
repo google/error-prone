@@ -17,11 +17,9 @@ package com.google.errorprone.refaster;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
 
-/**
- * {@link UTree} version of {@link ExpressionTree}.
- *
- * @author lowasser@google.com (Louis Wasserman)
- */
+/// [UTree] version of [ExpressionTree].
+///
+/// @author lowasser@google.com (Louis Wasserman)
 public abstract class UExpression extends UTree<JCExpression> implements ExpressionTree {
   public UExpression negate() {
     return UUnary.create(Kind.LOGICAL_COMPLEMENT, this);

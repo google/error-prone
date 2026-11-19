@@ -19,11 +19,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * Tests for {@link ModifySourceCollectionInStream} bugpattern.
- *
- * @author deltazulu@google.com (Donald Duo Zhao)
- */
+/// Tests for [ModifySourceCollectionInStream] bugpattern.
+///
+/// @author deltazulu@google.com (Donald Duo Zhao)
 @RunWith(JUnit4.class)
 public class ModifySourceCollectionInStreamTest {
 

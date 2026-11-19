@@ -93,7 +93,7 @@ import javax.lang.model.element.ElementKind;
 import javax.lang.model.type.TypeKind;
 import org.jspecify.annotations.Nullable;
 
-/** Checks for chains of if statements that may be converted to a switch. */
+/// Checks for chains of if statements that may be converted to a switch.
 @BugPattern(severity = WARNING, summary = "This if-chain may be converted into a switch")
 public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
   // Types that are allowed for CaseConstant expressions to be assignable to in a switch, as
@@ -141,7 +141,7 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
     return analyzeIfTree(ifTree, visitorState);
   }
 
-  /** Analyzes the tree rooted at {@code IfTree} for conversion to a switch. */
+  /// Analyzes the tree rooted at `IfTree` for conversion to a switch.
   private Description analyzeIfTree(IfTree ifTree, VisitorState state) {
     // Match only at start of chain; no if-within-if
     for (Tree tree : state.getPath().getParentPath()) {
@@ -197,7 +197,7 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
         : buildDescription(ifTree).addAllFixes(suggestedFixes).build();
   }
 
-  /** Compute the position range of the source code for the {@code IfTree} */
+  /// Compute the position range of the source code for the `IfTree`
   private static Range<Integer> computeIfTreeSourceRange(IfTree ifTree, VisitorState state) {
     ImmutableList<StatementTree> subsequentIfStatements = getSubsequentStatementsInBlock(state);
     if (subsequentIfStatements.isEmpty()) {
@@ -207,11 +207,9 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
         getStartPosition(ifTree), state.getEndPosition(subsequentIfStatements.get(0)));
   }
 
-  /**
-   * Within the context of the right-hand-side of the arrow of a `case`, strips any redundant
-   * surrounding braces. The returned value is either the input {@code StatementTree}, or a subtree
-   * of the input that excludes the unnecessary braces.
-   */
+  /// Within the context of the right-hand-side of the arrow of a `case`, strips any redundant
+  /// surrounding braces. The returned value is either the input `StatementTree`, or a subtree of
+  /// the input that excludes the unnecessary braces.
   private static StatementTree stripUnnecessaryBracesForArrowRhs(StatementTree statementTree) {
 
     StatementTree at = statementTree;
@@ -239,10 +237,8 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
     return at;
   }
 
-  /**
-   * Determines whether the given statement tree needs to be wrapped in braces when used on the
-   * right hand side of the arrow of a `case`.
-   */
+  /// Determines whether the given statement tree needs to be wrapped in braces when used on the
+  /// right hand side of the arrow of a `case`.
   public static boolean needsBracesForArrowRhs(StatementTree statementTree) {
     Kind statementTreeKind = statementTree.getKind();
 
@@ -258,11 +254,9 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
     return true;
   }
 
-  /**
-   * Renders Java source code for a {@code switch} statement, as specified by the supplied internal
-   * representations. Context is extracted from the {@code VisitorState} and {@code
-   * SuggestedFix.Builder} where needed.
-   */
+  /// Renders Java source code for a `switch` statement, as specified by the supplied internal
+  /// representations. Context is extracted from the `VisitorState` and `SuggestedFix.Builder` where
+  /// needed.
   private static String prettyPrint(
       List<CaseIr> cases,
       ExpressionTree subject,
@@ -387,23 +381,19 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
     return sb.toString();
   }
 
-  /**
-   * Returns a range that encloses the given comment, offset by the given start position of the if
-   * tree.
-   */
+  /// Returns a range that encloses the given comment, offset by the given start position of the if
+  /// tree.
   private static Range<Integer> buildCommentRange(ErrorProneComment comment, int ifTreeStart) {
     return Range.closedOpen(comment.getPos() + ifTreeStart, comment.getEndPos() + ifTreeStart);
   }
 
-  /**
-   * Returns whether a type pattern for the supplied {@code Type} must be prefixed with a modifier
-   * in order to be successfully parsed as a {@code case} label.
-   *
-   * <p>Empirically, javac cannot parse a generic array type in a {@code case} label unless the
-   * pattern starts with a modifier: {@code case List<?>[] l} is rejected with "illegal start of
-   * expression", whereas {@code case final List<?>[] l} is accepted. (Both appear to be permitted
-   * by the formal grammar for a TypePattern specified in JLS 21 § 14.30.1.)
-   */
+  /// Returns whether a type pattern for the supplied `Type` must be prefixed with a modifier in
+  /// order to be successfully parsed as a `case` label.
+  ///
+  /// Empirically, javac cannot parse a generic array type in a `case` label unless the pattern
+  /// starts with a modifier: `case List<?>[] l` is rejected with "illegal start of expression",
+  /// whereas `case final List<?>[] l` is accepted. (Both appear to be permitted by the formal
+  /// grammar for a TypePattern specified in JLS 21 § 14.30.1.)
   private static boolean typePatternRequiresFinal(Type type, VisitorState state) {
     Types types = state.getTypes();
     if (!types.isArray(type)) {
@@ -417,16 +407,14 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
     return !elementType.tsym.getTypeParameters().isEmpty();
   }
 
-  /**
-   * Renders Java source code representation of the supplied {@code Type} that is suitable for use
-   * in fixes, where any raw types are replaced with wildcard types. For example, `List` becomes
-   * `List<?>`.
-   *
-   * <p>Array types are rendered by applying the same treatment to the element type, so {@code
-   * List[]} becomes {@code List<?>[]} and {@code List<?>[]} is preserved rather than being erased
-   * to {@code List[]}. When {@code eraseGenericArrayTypeArguments} is set, the element type's
-   * arguments are instead erased, so that {@code List<?>[]} renders as {@code List[]}.
-   */
+  /// Renders Java source code representation of the supplied `Type` that is suitable for use in
+  /// fixes, where any raw types are replaced with wildcard types. For example, `List` becomes
+  /// `List<?>`.
+  ///
+  /// Array types are rendered by applying the same treatment to the element type, so `List[]`
+  /// becomes `List<?>[]` and `List<?>[]` is preserved rather than being erased to `List[]`. When
+  /// `eraseGenericArrayTypeArguments` is set, the element type's arguments are instead erased, so
+  /// that `List<?>[]` renders as `List[]`.
   private static String printRawTypesAsWildcards(
       Type type,
       VisitorState state,
@@ -473,13 +461,10 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
     return sb.toString();
   }
 
-  /**
-   * Determines whether a {@code switch} having the given {@code subject} and {@code cases} would
-   * implicitly throw in the event that the {@code subject} is {@code null} at runtime. Here,
-   * implicitly throwing means that an exception would be thrown, and further that the {@code throw}
-   * would not be caused by logic in any of the supplied {@code cases}. (If the subject cannot be
-   * assigned {@code null}, returns {@code false}.)
-   */
+  /// Determines whether a `switch` having the given `subject` and `cases` would implicitly throw in
+  /// the event that the `subject` is `null` at runtime. Here, implicitly throwing means that an
+  /// exception would be thrown, and further that the `throw` would not be caused by logic in any of
+  /// the supplied `cases`. (If the subject cannot be assigned `null`, returns `false`.)
   private static boolean switchOnNullWouldImplicitlyThrow(
       ExpressionTree subject, List<CaseIr> cases) {
     return !getType(subject).isPrimitive()
@@ -488,11 +473,9 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
         && cases.stream().noneMatch(CaseIr::hasCaseNull);
   }
 
-  /**
-   * Determines whether the given case IR has a "guarded" pattern. As defined in the JLS,
-   * "unguarded" means that either there is no guard or the guard is the boolean literal `true`, and
-   * "guarded" is the logical negation of "unguarded".
-   */
+  /// Determines whether the given case IR has a "guarded" pattern. As defined in the JLS,
+  /// "unguarded" means that either there is no guard or the guard is the boolean literal `true`,
+  /// and "guarded" is the logical negation of "unguarded".
   private static boolean isGuarded(CaseIr caseIr) {
     // Not a pattern
     if (caseIr.instanceOfOptional().isEmpty()) {
@@ -511,13 +494,11 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
         && b);
   }
 
-  /**
-   * Analyzes the supplied case IRs for a switch statement for issues related default/unconditional
-   * cases. If deemed necessary, this method injects a `default` and/or `case null` into the
-   * supplied case IRs. If the supplied case IRs cannot be used to form a syntactically valid switch
-   * statement, returns `Optional.empty()`. Precondition: the list of supplied cases must not
-   * contain any dominance violations.
-   */
+  /// Analyzes the supplied case IRs for a switch statement for issues related default/unconditional
+  /// cases. If deemed necessary, this method injects a `default` and/or `case null` into the
+  /// supplied case IRs. If the supplied case IRs cannot be used to form a syntactically valid
+  /// switch statement, returns `Optional.empty()`. Precondition: the list of supplied cases must
+  /// not contain any dominance violations.
   private Optional<List<CaseIr>> maybeFixDefaultNullAndUnconditional(
       List<CaseIr> cases,
       ExpressionTree subject,
@@ -682,13 +663,11 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
         : Optional.of(cases);
   }
 
-  /**
-   * Analyzes the supplied case IRs for a switch statement. If deemed likely possible, this method
-   * pulls up the statement subsequent to the if statement into the switch under a default case, and
-   * removes it in the {@code SuggestedFix.Builder}. If deemed not likely possible, returns the
-   * original case IRs. Note that this method does not fully validate the resulting case IRs, but
-   * rather only partially validates them with respect to pull-up.
-   */
+  /// Analyzes the supplied case IRs for a switch statement. If deemed likely possible, this method
+  /// pulls up the statement subsequent to the if statement into the switch under a default case,
+  /// and removes it in the `SuggestedFix.Builder`. If deemed not likely possible, returns the
+  /// original case IRs. Note that this method does not fully validate the resulting case IRs, but
+  /// rather only partially validates them with respect to pull-up.
   private Optional<List<CaseIr>> maybePullUp(
       List<CaseIr> cases,
       VisitorState state,
@@ -742,10 +721,8 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
     return Optional.of(casesCopy);
   }
 
-  /**
-   * Analyzes the supplied case IRs for duplicate constants (primitives, enum values, or `null`). If
-   * any duplicates are found, returns {@code Optional.empty()}.
-   */
+  /// Analyzes the supplied case IRs for duplicate constants (primitives, enum values, or `null`).
+  /// If any duplicates are found, returns `Optional.empty()`.
   private static Optional<List<CaseIr>> maybeDetectDuplicateConstants(List<CaseIr> cases) {
 
     Set<Object> seenConstants = new HashSet<>();
@@ -797,12 +774,10 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
     return Optional.of(cases);
   }
 
-  /**
-   * Analyzes the supplied case IRs for dominance violations across distinct cases. If a dominance
-   * violation is detected and {@code canReorderCases} is {@code true}, attempts to fix the problem
-   * by reordering cases so that no violation is present. If a dominance violation exists and cannot
-   * be corrected by this algorithm, returns {@code Optional.empty()}.
-   */
+  /// Analyzes the supplied case IRs for dominance violations across distinct cases. If a dominance
+  /// violation is detected and `canReorderCases` is `true`, attempts to fix the problem by
+  /// reordering cases so that no violation is present. If a dominance violation exists and cannot
+  /// be corrected by this algorithm, returns `Optional.empty()`.
   private static Optional<List<CaseIr>> maybeFixDominance(
       List<CaseIr> cases, VisitorState state, ExpressionTree subject, boolean canReorderCases) {
 
@@ -857,10 +832,7 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
     return Optional.of(casesToInsert);
   }
 
-  /**
-   * Checks whether the supplied case IRs contain a dominance violation, returning {@code true} if
-   * so.
-   */
+  /// Checks whether the supplied case IRs contain a dominance violation, returning `true` if so.
   private static boolean hasDominanceViolation(
       List<CaseIr> cases, VisitorState state, ExpressionTree subject) {
     List<CaseIr> casesCopy = new ArrayList<>(cases);
@@ -878,11 +850,9 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
     return false;
   }
 
-  /**
-   * Analyzes the supplied if statement (current level only, no recursion) for the purposes of
-   * converting it to a switch statement. Returns the analysis state following the analysis of the
-   * if statement at this level.
-   */
+  /// Analyzes the supplied if statement (current level only, no recursion) for the purposes of
+  /// converting it to a switch statement. Returns the analysis state following the analysis of the
+  /// if statement at this level.
   private IfChainAnalysisState analyzeIfStatement(
       IfChainAnalysisState ifChainAnalysisState,
       ExpressionTree condition,
@@ -950,7 +920,7 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
         ImmutableSet.copyOf(handledEnumValues));
   }
 
-  /** Determines whether any yield or break statements are present in the tree. */
+  /// Determines whether any yield or break statements are present in the tree.
   private static boolean hasBreakOrYieldInTree(Tree tree) {
     Boolean result =
         new TreeScanner<Boolean, Void>() {
@@ -973,7 +943,7 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
     return Objects.equals(result, true);
   }
 
-  /** Determines whether any {@code if} statement is present in the tree. */
+  /// Determines whether any `if` statement is present in the tree.
   private static boolean hasIfInTree(Tree tree) {
     Boolean result =
         new TreeScanner<Boolean, Void>() {
@@ -991,13 +961,11 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
     return Objects.equals(result, true);
   }
 
-  /**
-   * Validates whether the predicate of the if statement can be converted by this checker to a
-   * switch, returning the expression being switched on if so. If it cannot be converted by this
-   * checker, returns {@code Optional.empty()}. Note that this checker's conversion is best-effort,
-   * so even if this method returns {@code Optional.empty()} the predicate may still be convertible
-   * by some other (unsupported) means.
-   */
+  /// Validates whether the predicate of the if statement can be converted by this checker to a
+  /// switch, returning the expression being switched on if so. If it cannot be converted by this
+  /// checker, returns `Optional.empty()`. Note that this checker's conversion is best-effort, so
+  /// even if this method returns `Optional.empty()` the predicate may still be convertible by some
+  /// other (unsupported) means.
   private Optional<ExpressionTree> validatePredicateForSubject(
       ExpressionTree predicate,
       Optional<ExpressionTree> subject,
@@ -1131,11 +1099,9 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
     return tree.getKind() == Kind.BOOLEAN_LITERAL;
   }
 
-  /**
-   * Validates whether the {@code binaryTree} represents a series of conditional-ORs that can be
-   * converted to a single switch case having multiple expressions, returning the subject if so.
-   * Otherwise, returns {@code Optional.empty()}.
-   */
+  /// Validates whether the `binaryTree` represents a series of conditional-ORs that can be
+  /// converted to a single switch case having multiple expressions, returning the subject if so.
+  /// Otherwise, returns `Optional.empty()`.
   private Optional<ExpressionTree> validateConditionalOrsForSubject(
       BinaryTree binaryTree, ValidateCommonParams params) {
 
@@ -1295,28 +1261,24 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
     return expression.getKind() == Kind.NULL_LITERAL;
   }
 
-  /**
-   * Determines whether the given expression may be rendered as a {@code CaseConstant} of a {@code
-   * switch}, which JLS 21 §14.11.1 requires to be a constant expression (JLS 21 §15.29) or the
-   * {@code null} literal. (Enum constants are also permitted, but are handled separately by {@link
-   * #validateEnumPredicateForSubject}.)
-   *
-   * <p>Note that this is deliberately narrower than {@code
-   * SwitchUtils.COMPILE_TIME_CONSTANT_MATCHER}, which additionally accepts expressions that javac
-   * does not fold to a constant, such as a parameter annotated {@code @CompileTimeConstant} or a
-   * conditional expression with a non-constant condition. Using those as a case constant would
-   * produce code that does not compile ("constant expression required").
-   */
+  /// Determines whether the given expression may be rendered as a `CaseConstant` of a `switch`,
+  /// which JLS 21 §14.11.1 requires to be a constant expression (JLS 21 §15.29) or the `null`
+  /// literal. (Enum constants are also permitted, but are handled separately by
+  /// [#validateEnumPredicateForSubject].)
+  ///
+  /// Note that this is deliberately narrower than `SwitchUtils.COMPILE_TIME_CONSTANT_MATCHER`,
+  /// which additionally accepts expressions that javac does not fold to a constant, such as a
+  /// parameter annotated `@CompileTimeConstant` or a conditional expression with a non-constant
+  /// condition. Using those as a case constant would produce code that does not compile ("constant
+  /// expression required").
   private static boolean isCaseConstant(ExpressionTree expression) {
     return isNull(expression) || constValue(expression) != null;
   }
 
-  /**
-   * Determines whether the {@code subject} expression "matches" the given {@code expression}. If
-   * {@code enableSafe} is true, then matching means that the subject must be referring to the same
-   * variable or constant expression. If {@code enableSafe} is false, then we also allow expressions
-   * that have potential side-effects.
-   */
+  /// Determines whether the `subject` expression "matches" the given `expression`. If `enableSafe`
+  /// is true, then matching means that the subject must be referring to the same variable or
+  /// constant expression. If `enableSafe` is false, then we also allow expressions that have
+  /// potential side-effects.
   private boolean subjectMatches(
       ExpressionTree subject, ExpressionTree expression, VisitorState state) {
 
@@ -1412,16 +1374,14 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
     return Optional.of(expression);
   }
 
-  /**
-   * Returns the source position at which the next case to be added begins, namely the end of the
-   * last case that is not a synthesized {@code default}.
-   *
-   * <p>A synthesized {@code default} covers the {@code else} statement (so that comments within it
-   * are preserved), and thus its range can extend beyond the start position of a case that is added
-   * afterwards. That happens while speculatively validating the disjuncts of a predicate such as
-   * {@code x instanceof Foo || x == 1}: each disjunct appends a case (and possibly a {@code
-   * default}) that is subsequently discarded and replaced by a single, grouped case.
-   */
+  /// Returns the source position at which the next case to be added begins, namely the end of the
+  /// last case that is not a synthesized `default`.
+  ///
+  /// A synthesized `default` covers the `else` statement (so that comments within it are
+  /// preserved), and thus its range can extend beyond the start position of a case that is added
+  /// afterwards. That happens while speculatively validating the disjuncts of a predicate such as
+  /// `x instanceof Foo || x == 1`: each disjunct appends a case (and possibly a `default`) that is
+  /// subsequently discarded and replaced by a single, grouped case.
   private static int nextCaseStartPosition(List<CaseIr> cases, Range<Integer> ifTreeRange) {
     return Streams.findLast(cases.stream().filter(caseIr -> !caseIr.hasDefault()))
         .map(caseIr -> caseIr.caseSourceCodeRange().upperEndpoint())
@@ -1608,18 +1568,16 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
     return Optional.of(testExpression);
   }
 
-  /**
-   * Determines whether the supplied expression and subject (if present) have the same Java source
-   * code. Note that this is just a textual comparison, and does not consider code structure,
-   * comments, etc.
-   */
+  /// Determines whether the supplied expression and subject (if present) have the same Java source
+  /// code. Note that this is just a textual comparison, and does not consider code structure,
+  /// comments, etc.
   private static boolean expressionSourceMatches(
       ExpressionTree subject, ExpressionTree expression, VisitorState state) {
 
     return state.getSourceForNode(subject).equals(state.getSourceForNode(expression));
   }
 
-  /** Retrieves a list of all statements (if any) following the current path, if any. */
+  /// Retrieves a list of all statements (if any) following the current path, if any.
   private static ImmutableList<StatementTree> getSubsequentStatementsInBlock(VisitorState state) {
     TreePath path = state.getPath();
     if (!(path.getParentPath().getLeaf() instanceof BlockTree blockTree)) {
@@ -1630,12 +1588,10 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
         statements.subList(statements.indexOf(path.getLeaf()) + 1, statements.size()));
   }
 
-  /**
-   * Finds the intersection of two types, or {@code null} if there is no such intersection. This is
-   * not quite the same thing as the "Intersection Types" defined JLS 21 § 4.9 (it is not a distinct
-   * type; there is no {@code IntersectionTypeTree}) although they are similar in that the
-   * (non-null) return value can be assigned to both types.
-   */
+  /// Finds the intersection of two types, or `null` if there is no such intersection. This is not
+  /// quite the same thing as the "Intersection Types" defined JLS 21 § 4.9 (it is not a distinct
+  /// type; there is no `IntersectionTypeTree`) although they are similar in that the (non-null)
+  /// return value can be assigned to both types.
   public static @Nullable Type intersectTypes(Type type1, Type type2, VisitorState state) {
     com.sun.tools.javac.code.Type lower = null;
     if (isSubtype(type1, type2, state)) {
@@ -1649,7 +1605,7 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
     return lower;
   }
 
-  /** Performs a detailed analysis of the if-chain, generating suggested fixes as needed. */
+  /// Performs a detailed analysis of the if-chain, generating suggested fixes as needed.
   private List<SuggestedFix> deepAnalysisOfIfChain(
       List<CaseIr> cases,
       IfChainAnalysisState finalIfChainAnalysisState,
@@ -1744,12 +1700,9 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
     return suggestedFixes;
   }
 
-  /**
-   * Returns a map from yield trees to the scope that they are yielding to. Special case: when
-   * yielding to the scope of somewhere above {@code tree}, {@code tree} itself is used as a
-   * sentinel value (no attempt is made to search up the AST from {@code tree} for the actual
-   * scope).
-   */
+  /// Returns a map from yield trees to the scope that they are yielding to. Special case: when
+  /// yielding to the scope of somewhere above `tree`, `tree` itself is used as a sentinel value (no
+  /// attempt is made to search up the AST from `tree` for the actual scope).
   private static Map<Tree, Tree> analyzeYieldControlFlow(Tree tree, VisitorState state) {
     ArrayDeque<Tree> yieldScope = new ArrayDeque<>();
     yieldScope.push(tree);
@@ -1773,9 +1726,7 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
     return result;
   }
 
-  /**
-   * If a finding is available, build a {@code SuggestedFix} for it and add to the suggested fixes.
-   */
+  /// If a finding is available, build a `SuggestedFix` for it and add to the suggested fixes.
   private static void maybeBuildAndAddSuggestedFix(
       Optional<List<CaseIr>> fixedCasesOptional,
       SuggestedFix.Builder suggestedFixBuilder,
@@ -1806,7 +1757,7 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
     }
   }
 
-  /** Returns whether the {@code CaseIr} represents an unconditional pattern. */
+  /// Returns whether the `CaseIr` represents an unconditional pattern.
   private static boolean isUnconditionalPattern(
       CaseIr caseIr, VisitorState state, ExpressionTree subject) {
     // The guard is the condition
@@ -1823,11 +1774,9 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
     return false;
   }
 
-  /**
-   * If the {@code CaseIr} contains multiple {@code InstanceOfIr}s, check for and attempt to fix any
-   * internal dominance violations. Returns {@code Optional.empty} if an internal dominance
-   * violation exists that cannot be fixed.
-   */
+  /// If the `CaseIr` contains multiple `InstanceOfIr`s, check for and attempt to fix any internal
+  /// dominance violations. Returns `Optional.empty` if an internal dominance violation exists that
+  /// cannot be fixed.
   private static Optional<CaseIr> maybeFixInternalDominance(
       CaseIr caseIr, VisitorState state, ExpressionTree subject) {
 
@@ -1878,12 +1827,10 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
     return Optional.empty();
   }
 
-  /**
-   * Compute whether the RHS is dominated by the LHS.
-   *
-   * <p>Domination refers to the notion of "is dominated" defined in e.g. JLS 21 § 14.11.1. Note
-   * that this method does not support record types, which simplifies implementation.
-   */
+  /// Compute whether the RHS is dominated by the LHS.
+  ///
+  /// Domination refers to the notion of "is dominated" defined in e.g. JLS 21 § 14.11.1. Note that
+  /// this method does not support record types, which simplifies implementation.
   private static boolean isDominatedBy(
       CaseIr lhs, CaseIr rhs, VisitorState state, ExpressionTree subject) {
 
@@ -2008,7 +1955,7 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
     return false;
   }
 
-  /** Container for parameters common to predicate validation methods. */
+  /// Container for parameters common to predicate validation methods.
   private record ValidateCommonParams(
       Optional<ExpressionTree> subject,
       List<CaseIr> cases,
@@ -2037,18 +1984,16 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
     }
   }
 
-  /**
-   * Intermediate representation of a single `x instanceof Y` or `x instanceof Y y` expression.
-   *
-   * <p>Those two forms are mutually exclusive, so they are modelled as separate implementations
-   * rather than as a single type with optional fields. This makes the distinction structural, so
-   * that javac can check that every consumer handles both.
-   */
+  /// Intermediate representation of a single `x instanceof Y` or `x instanceof Y y` expression.
+  ///
+  /// Those two forms are mutually exclusive, so they are modelled as separate implementations
+  /// rather than as a single type with optional fields. This makes the distinction structural, so
+  /// that javac can check that every consumer handles both.
   private sealed interface InstanceOfIr {
-    /** In the examples above, the type would be `Y`. */
+    /// In the examples above, the type would be `Y`.
     Tree type();
 
-    /** An `x instanceof Y y` expression, which declares the pattern variable `y`. */
+    /// An `x instanceof Y y` expression, which declares the pattern variable `y`.
     record BindingPattern(VariableTree patternVariable, Tree type) implements InstanceOfIr {
       public BindingPattern {
         checkArgument(patternVariable != null);
@@ -2056,7 +2001,7 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
       }
     }
 
-    /** An `x instanceof Y` expression, which declares no pattern variable. */
+    /// An `x instanceof Y` expression, which declares no pattern variable.
     record TypeTest(Tree type) implements InstanceOfIr {
       public TypeTest {
         checkArgument(type != null);
@@ -2064,11 +2009,9 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
     }
   }
 
-  /**
-   * This record is an intermediate representation of a single case in a switch statement that is
-   * being synthesized. Its scope is roughly equivalent to a `CaseTree` in Java's AST, although does
-   * not cover all of the same functionality.
-   */
+  /// This record is an intermediate representation of a single case in a switch statement that is
+  /// being synthesized. Its scope is roughly equivalent to a `CaseTree` in Java's AST, although
+  /// does not cover all of the same functionality.
   private record CaseIr(
       boolean hasCaseNull,
       boolean hasDefault,
@@ -2102,11 +2045,9 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
     }
   }
 
-  /**
-   * Container for the subject (of an if predicate) and one of the following: a (non-empty) list of
-   * expressions that can match that subject in the given case, or a list of `instanceof` patterns
-   * that can match that subject.
-   */
+  /// Container for the subject (of an if predicate) and one of the following: a (non-empty) list of
+  /// expressions that can match that subject in the given case, or a list of `instanceof` patterns
+  /// that can match that subject.
   private record SubjectAndCaseExpressionsOrInstanceOfs(
       ExpressionTree subject, List<ExpressionTree> expressions, List<InstanceOfIr> instanceOfs) {
     SubjectAndCaseExpressionsOrInstanceOfs {
@@ -2115,7 +2056,7 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
     }
   }
 
-  /** This record represents the current state of the analysis of an if-chain. */
+  /// This record represents the current state of the analysis of an if-chain.
   private record IfChainAnalysisState(
       // The expression to be switched on (if known)
       Optional<ExpressionTree> subjectOptional,

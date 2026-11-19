@@ -24,34 +24,28 @@ import com.sun.source.tree.UnaryTree;
 import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.tree.JCTree.JCUnary;
 
-/**
- * This class is responsible for analyzing an expression and telling if the expression can have side
- * effects. This class is used by calling the static {@link #hasSideEffect(ExpressionTree)} method.
- *
- * <p>A side-effect is what that would change the state of the program. Here are examples of
- * expressions that could possibly change the state of a program.
- *
- * <ul>
- *   <li>Any function call: toString(), hashCode(), setX(value), etc.
- *   <li>Unary expression: i += 1, i++, --j
- *   <li>New expression: new SomeClass()
- * </ul>
- *
- * <p>Everything besides the above examples is considered side-effect free.
- *
- * <p>The analysis in this class initially assumes that the expression is side-effect free and then
- * tries to prove it wrong.
- */
+/// This class is responsible for analyzing an expression and telling if the expression can have
+/// side effects. This class is used by calling the static [#hasSideEffect(ExpressionTree)] method.
+///
+/// A side-effect is what that would change the state of the program. Here are examples of
+/// expressions that could possibly change the state of a program.
+///
+/// - Any function call: toString(), hashCode(), setX(value), etc.
+/// - Unary expression: i += 1, i++, --j
+/// - New expression: new SomeClass()
+///
+/// Everything besides the above examples is considered side-effect free.
+///
+/// The analysis in this class initially assumes that the expression is side-effect free and then
+/// tries to prove it wrong.
 public final class SideEffectAnalysis extends TreeScanner<Void, Void> {
 
   private boolean hasSideEffect = false;
 
   private SideEffectAnalysis() {}
 
-  /**
-   * Tries to establish whether {@code expression} is side-effect free. The heuristics here are very
-   * conservative.
-   */
+  /// Tries to establish whether `expression` is side-effect free. The heuristics here are very
+  /// conservative.
   public static boolean hasSideEffect(ExpressionTree expression) {
     if (expression == null) {
       return false;

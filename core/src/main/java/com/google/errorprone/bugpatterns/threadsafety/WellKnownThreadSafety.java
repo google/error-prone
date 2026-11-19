@@ -23,7 +23,7 @@ import com.google.errorprone.ErrorProneFlags;
 import java.util.List;
 import javax.inject.Inject;
 
-/** A collection of types with known thread safety. */
+/// A collection of types with known thread safety.
 public final class WellKnownThreadSafety implements ThreadSafetyKnownTypes {
   @Inject
   WellKnownThreadSafety(ErrorProneFlags flags, WellKnownMutability wellKnownMutability) {
@@ -50,7 +50,7 @@ public final class WellKnownThreadSafety implements ThreadSafetyKnownTypes {
     return knownUnsafeClasses;
   }
 
-  /** Types that are known to be threadsafe. */
+  /// Types that are known to be threadsafe.
   private final ImmutableMap<String, AnnotationInfo> knownThreadSafeClasses;
 
   @SuppressWarnings("UnnecessarilyFullyQualified") // intentional
@@ -181,6 +181,6 @@ public final class WellKnownThreadSafety implements ThreadSafetyKnownTypes {
         .build();
   }
 
-  /** Types that are known to be mutable. */
+  /// Types that are known to be mutable.
   private final ImmutableSet<String> knownUnsafeClasses;
 }

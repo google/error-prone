@@ -40,7 +40,7 @@ import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.Tree;
 import javax.lang.model.element.ElementKind;
 
-/** A BugPattern; see the summary. */
+/// A BugPattern; see the summary.
 @BugPattern(
     summary =
         "Using a Void-typed variable is potentially confusing, and can be replaced with a literal"

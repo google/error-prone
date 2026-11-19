@@ -33,10 +33,8 @@ import com.sun.source.tree.InstanceOfTree;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Types;
 
-/**
- * @author sulku@google.com (Marsela Sulku)
- * @author mariasam@google.com (Maria Sam)
- */
+/// @author sulku@google.com (Marsela Sulku)
+/// @author mariasam@google.com (Maria Sam)
 @BugPattern(
     summary =
         "Nested instanceOf conditions of disjoint types create blocks of code that never execute",
@@ -92,11 +90,9 @@ public class NestedInstanceOfConditions extends BugChecker implements IfTreeMatc
     }
   }
 
-  /**
-   * Matches if current tree is an if tree with an instanceof statement as a condition that checks
-   * if an expression is an instanceof a type that is disjoint from the matcher's type that is set
-   * beforehand.
-   */
+  /// Matches if current tree is an if tree with an instanceof statement as a condition that checks
+  /// if an expression is an instanceof a type that is disjoint from the matcher's type that is set
+  /// beforehand.
   private record NestedInstanceOfMatcher(ExpressionTree expressionTree, Tree typeTree)
       implements Matcher<Tree> {
     @Override

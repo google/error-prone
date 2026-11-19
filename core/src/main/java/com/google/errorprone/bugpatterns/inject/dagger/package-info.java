@@ -14,5 +14,5 @@
  * limitations under the License.
  */
 
-/** Bug patterns related to <a href="https://dagger.dev/">Dagger</a>. */
+/// Bug patterns related to [Dagger](https://dagger.dev/).
 package com.google.errorprone.bugpatterns.inject.dagger;

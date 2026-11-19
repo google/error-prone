@@ -47,7 +47,7 @@ import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
 
-/** Discourages builder instance methods that do not return 'this'. */
+/// Discourages builder instance methods that do not return 'this'.
 @BugPattern(summary = "Builder instance method does not return 'this'", severity = WARNING)
 public class BuilderReturnThis extends BugChecker implements MethodTreeMatcher {
 

@@ -40,7 +40,7 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import javax.inject.Inject;
 
-/** A {@link BugPattern}; see the summary. */
+/// A [BugPattern]; see the summary.
 @BugPattern(
     summary = "This assertion will always fail or succeed.",
     altNames = "TruthSelfEquals",

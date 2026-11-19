@@ -73,7 +73,7 @@ import javax.inject.Inject;
 import javax.lang.model.element.ElementKind;
 import org.jspecify.annotations.Nullable;
 
-/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
+/// A [BugChecker]; see the associated [BugPattern] annotation for details.
 @BugPattern(summary = "Minimize the amount of logic in assertThrows", severity = WARNING)
 public class AssertThrowsMinimizer extends BugChecker implements MethodTreeMatcher {
 

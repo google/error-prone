@@ -49,9 +49,7 @@ import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.TypeTag;
 import java.util.Optional;
 
-/**
- * @author amesbah@google.com (Ali Mesbah)
- */
+/// @author amesbah@google.com (Ali Mesbah)
 @BugPattern(
     summary =
         "Use Java's utility functional interfaces instead of Function<A, B> for primitive types.",
@@ -121,29 +119,28 @@ public class LambdaFunctionalInterface extends BugChecker implements MethodTreeM
           .put("java.util.function.ToLongFunction<T>", "applyAsLong")
           .buildOrThrow();
 
-  /**
-   * Identifies methods with parameters that have a generic argument with Int, Long, or Double. If
-   * pre-conditions are met, it refactors them to the primitive specializations.
-   *
-   * <pre>PreConditions:
-   * (1): The method declaration has to be private (to do a safe refactoring)
-   * (2): Its parameters have to meet the following conditions:
-   *    2.1 Contain type java.util.function.Function
-   *    2.2 At least one argument type of the Function must be Integer, Long, or Double
-   * (3): All its invocations in the top-level enclosing class have to meet the following
-   * conditions as well:
-   *    3.1: lambda argument of Kind.LAMBDA_EXPRESSION
-   *    3.2: same as 2.1
-   *    3.3: same as 2.2
-   * </pre>
-   *
-   * <pre>
-   * Refactoring Changes for matched methods:
-   * (1) Add the imports
-   * (2) Change the method signature to use utility function instead of Function
-   * (3) Find and change the 'apply' calls to the corresponding applyAsT
-   * </pre>
-   */
+  /// Identifies methods with parameters that have a generic argument with Int, Long, or Double. If
+  /// pre-conditions are met, it refactors them to the primitive specializations.
+  ///
+  /// ```
+  /// PreConditions:
+  /// (1): The method declaration has to be private (to do a safe refactoring)
+  /// (2): Its parameters have to meet the following conditions:
+  ///    2.1 Contain type java.util.function.Function
+  ///    2.2 At least one argument type of the Function must be Integer, Long, or Double
+  /// (3): All its invocations in the top-level enclosing class have to meet the following
+  /// conditions as well:
+  ///    3.1: lambda argument of Kind.LAMBDA_EXPRESSION
+  ///    3.2: same as 2.1
+  ///    3.3: same as 2.2
+  /// ```
+  ///
+  /// ```
+  /// Refactoring Changes for matched methods:
+  /// (1) Add the imports
+  /// (2) Change the method signature to use utility function instead of Function
+  /// (3) Find and change the 'apply' calls to the corresponding applyAsT
+  /// ```
   @Override
   public Description matchMethod(MethodTree tree, VisitorState state) {
 

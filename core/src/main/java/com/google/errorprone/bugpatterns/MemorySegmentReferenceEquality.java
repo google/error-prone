@@ -27,7 +27,7 @@ import com.google.errorprone.suppliers.Supplier;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.tools.javac.code.Type;
 
-/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
+/// A [BugChecker]; see the associated [BugPattern] annotation for details.
 @BugPattern(summary = "Do not compare MemorySegments using reference equality.", severity = ERROR)
 public final class MemorySegmentReferenceEquality extends AbstractReferenceEquality {
 

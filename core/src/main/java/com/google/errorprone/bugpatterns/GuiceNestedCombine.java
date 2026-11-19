@@ -38,7 +38,7 @@ import com.sun.source.tree.MethodInvocationTree;
 import com.sun.tools.javac.code.Type;
 import java.util.List;
 
-/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
+/// A [BugChecker]; see the associated [BugPattern] annotation for details.
 @BugPattern(summary = "Nesting Modules.combine() here is unnecessary.", severity = WARNING)
 public final class GuiceNestedCombine extends BugChecker implements MethodInvocationTreeMatcher {
   private static final Matcher<ExpressionTree> MODULES_COMBINE_METHOD =

@@ -34,21 +34,16 @@ import java.util.function.BiConsumer;
 import java.util.function.Predicate;
 import org.jspecify.annotations.Nullable;
 
-/**
- * A type-safe binding environment mapping {@code Bindings.Key<V>} keys to values of type {@code V}.
- *
- * <p>Bindings are represented as a persistent linked chain. Adding a binding creates a new {@link
- * Node} pointing to the current head as its parent, and lookups traverse parent references towards
- * the root, naturally shadowing earlier bindings for the same key. Forking a {@code Bindings}
- * instance shares the underlying node chain with zero entry copying.
- *
- * @author Louis Wasserman
- */
+/// A type-safe binding environment mapping `Bindings.Key<V>` keys to values of type `V`.
+///
+/// Bindings are represented as a persistent linked chain. Adding a binding creates a new [Node]
+/// pointing to the current head as its parent, and lookups traverse parent references towards the
+/// root, naturally shadowing earlier bindings for the same key. Forking a `Bindings` instance
+/// shares the underlying node chain with zero entry copying.
+///
+/// @author Louis Wasserman
 public class Bindings {
-  /**
-   * A key type for a {@code Binding}. Users must subclass {@code Key} with a specific literal
-   * {@code V} type.
-   */
+  /// A key type for a `Binding`. Users must subclass `Key` with a specific literal `V` type.
   public abstract static class Key<V> {
     private final String identifier;
 

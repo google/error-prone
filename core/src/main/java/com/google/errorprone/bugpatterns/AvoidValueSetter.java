@@ -42,7 +42,7 @@ import com.sun.tools.javac.code.Type;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
-/** A bugpattern; see the summary. */
+/// A bugpattern; see the summary.
 @BugPattern(
     summary =
         "Prefer using the enum-accepting rather than the int-accepting setter for enum fields.",

@@ -24,34 +24,26 @@ import com.sun.source.tree.Tree;
 import com.sun.source.util.TreePath;
 import java.util.List;
 
-/**
- * A {@link MultiMatcher} that applies a matcher across multiple children of a single ancestor node.
- * Configurable to return true if any of, all of, or the last node matches. In the any or last of
- * cases, provides access to the node that matched.
- *
- * @author eaftan@google.com (Eddie Aftandilian)
- * @param <T> the type of the node to match on
- * @param <N> the type of the subnode that the given matcher should match
- */
+/// A [MultiMatcher] that applies a matcher across multiple children of a single ancestor node.
+/// Configurable to return true if any of, all of, or the last node matches. In the any or last of
+/// cases, provides access to the node that matched.
+///
+/// @author eaftan@google.com (Eddie Aftandilian)
+/// @param <T> the type of the node to match on
+/// @param <N> the type of the subnode that the given matcher should match
 public abstract class ChildMultiMatcher<T extends Tree, N extends Tree>
     implements MultiMatcher<T, N> {
 
   public enum MatchType {
-    /**
-     * Matches if all of the child elements match the matcher. If the parent element has no child
-     * elements, this matcher returns true.
-     */
+    /// Matches if all of the child elements match the matcher. If the parent element has no child
+    /// elements, this matcher returns true.
     ALL,
-    /**
-     * Matches if at least one of the child elements match the matcher. If the parent element has no
-     * child elements, this matcher returns false.
-     */
+    /// Matches if at least one of the child elements match the matcher. If the parent element has
+    /// no child elements, this matcher returns false.
     AT_LEAST_ONE,
-    /**
-     * Matches if the last child element matches the matcher, regardless of whether or not any of
-     * the other child elements would match the matcher. If the parent element has no child
-     * elements, this matcher returns false.
-     */
+    /// Matches if the last child element matches the matcher, regardless of whether or not any of
+    /// the other child elements would match the matcher. If the parent element has no child
+    /// elements, this matcher returns false.
     LAST
   }
 
@@ -79,10 +71,8 @@ public abstract class ChildMultiMatcher<T extends Tree, N extends Tree>
     }
   }
 
-  /**
-   * A matcher that operates over a list of nodes, each of which includes an AST node and a
-   * VisitorState with a TreePath for the given node.
-   */
+  /// A matcher that operates over a list of nodes, each of which includes an AST node and a
+  /// VisitorState with a TreePath for the given node.
   private abstract static class ListMatcher<N extends Tree> {
     abstract MatchResult<N> matches(List<Matchable<N>> matchables, Matcher<N> nodeMatcher);
 
@@ -95,7 +85,7 @@ public abstract class ChildMultiMatcher<T extends Tree, N extends Tree>
     }
   }
 
-  /** A matcher that returns true if all nodes in the list match. */
+  /// A matcher that returns true if all nodes in the list match.
   private static class AllMatcher<N extends Tree> extends ListMatcher<N> {
     @Override
     public MatchResult<N> matches(List<Matchable<N>> matchables, Matcher<N> nodeMatcher) {
@@ -110,7 +100,7 @@ public abstract class ChildMultiMatcher<T extends Tree, N extends Tree>
     }
   }
 
-  /** A matcher that returns true if at least one node in the list matches. */
+  /// A matcher that returns true if at least one node in the list matches.
   private static class AtLeastOneMatcher<N extends Tree> extends ListMatcher<N> {
     @Override
     public MatchResult<N> matches(List<Matchable<N>> matchables, Matcher<N> nodeMatcher) {
@@ -125,7 +115,7 @@ public abstract class ChildMultiMatcher<T extends Tree, N extends Tree>
     }
   }
 
-  /** A matcher that returns true if the last node in the list matches. */
+  /// A matcher that returns true if the last node in the list matches.
   private static class LastMatcher<N extends Tree> extends ListMatcher<N> {
     @Override
     public MatchResult<N> matches(List<Matchable<N>> matchables, Matcher<N> nodeMatcher) {
@@ -139,7 +129,7 @@ public abstract class ChildMultiMatcher<T extends Tree, N extends Tree>
     }
   }
 
-  /** The matcher to apply to the subnodes in question. */
+  /// The matcher to apply to the subnodes in question.
   protected final Matcher<N> nodeMatcher;
 
   private final ListMatcher<N> listMatcher;
@@ -165,11 +155,9 @@ public abstract class ChildMultiMatcher<T extends Tree, N extends Tree>
     return MultiMatchResult.create(matchResult.matches(), matchResult.matchingNodes());
   }
 
-  /**
-   * Returns the set of child nodes to match. The nodes must be immediate children of the current
-   * node to ensure the TreePath calculation is correct. MultiMatchers with other requirements
-   * should not subclass ChildMultiMatcher.
-   */
+  /// Returns the set of child nodes to match. The nodes must be immediate children of the current
+  /// node to ensure the TreePath calculation is correct. MultiMatchers with other requirements
+  /// should not subclass ChildMultiMatcher.
   @ForOverride
   protected abstract Iterable<? extends N> getChildNodes(T tree, VisitorState state);
 }

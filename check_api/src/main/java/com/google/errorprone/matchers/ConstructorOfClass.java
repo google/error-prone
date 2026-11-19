@@ -23,11 +23,9 @@ import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
 
-/**
- * Applies the given matcher to the constructor(s) of the given class.
- *
- * @author eaftan@google.com (Eddie Aftandilian)
- */
+/// Applies the given matcher to the constructor(s) of the given class.
+///
+/// @author eaftan@google.com (Eddie Aftandilian)
 public class ConstructorOfClass extends ChildMultiMatcher<ClassTree, MethodTree> {
 
   public ConstructorOfClass(MatchType matchType, Matcher<MethodTree> nodeMatcher) {

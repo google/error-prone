@@ -74,7 +74,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** Tests for {@link ScannerSupplier}. */
+/// Tests for [ScannerSupplier].
 @RunWith(JUnit4.class)
 public class ScannerSupplierTest {
 
@@ -153,7 +153,7 @@ public class ScannerSupplierTest {
     assertScanner(ss).hasEnabledChecks(class1);
   }
 
-  /** Another check with the canonical name ArrayEquals, for testing. */
+  /// Another check with the canonical name ArrayEquals, for testing.
   @BugPattern(name = "ArrayEquals", summary = "", severity = ERROR)
   public static class OtherArrayEquals extends BugChecker {}
 
@@ -595,7 +595,7 @@ public class ScannerSupplierTest {
     assertScanner(overrides).hasEnabledChecks(/* empty */ );
   }
 
-  /** An unsuppressible version of {@link PackageLocation}. */
+  /// An unsuppressible version of [PackageLocation].
   @BugPattern(
       name = "PackageLocation",
       summary = "",
@@ -654,7 +654,7 @@ public class ScannerSupplierTest {
     }
   }
 
-  /** A check missing `@Inject`. */
+  /// A check missing `@Inject`.
   @SuppressWarnings("InjectOnBugCheckers") // intentional for testing
   @BugPattern(summary = "", severity = ERROR)
   public static class MissingInject extends BugChecker {

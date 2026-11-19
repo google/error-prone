@@ -20,11 +20,9 @@ import com.google.errorprone.VisitorState;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.VariableTree;
 
-/**
- * Matches if the given matcher matches all of/any of the parameters to this method.
- *
- * @author eaftan@google.com (Eddie Aftandilian)
- */
+/// Matches if the given matcher matches all of/any of the parameters to this method.
+///
+/// @author eaftan@google.com (Eddie Aftandilian)
 public class MethodHasParameters extends ChildMultiMatcher<MethodTree, VariableTree> {
 
   public MethodHasParameters(MatchType matchType, Matcher<VariableTree> nodeMatcher) {

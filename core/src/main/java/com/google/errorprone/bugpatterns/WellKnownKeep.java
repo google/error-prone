@@ -34,16 +34,13 @@ import com.sun.tools.javac.code.Type;
 import java.util.List;
 import javax.inject.Inject;
 
-/** A collection of annotations to treat as if they were annotated with {@code @Keep}. */
+/// A collection of annotations to treat as if they were annotated with `@Keep`.
 public final class WellKnownKeep {
 
-  /**
-   * Annotations that exempt variables from being considered unused.
-   *
-   * <p>Try to avoid adding more annotations here. Annotating these annotations with {@code @Keep}
-   * has the same effect; this list is chiefly for third-party annotations which cannot be
-   * annotated.
-   */
+  /// Annotations that exempt variables from being considered unused.
+  ///
+  /// Try to avoid adding more annotations here. Annotating these annotations with `@Keep` has the
+  /// same effect; this list is chiefly for third-party annotations which cannot be annotated.
   private static final ImmutableSet<String> EXEMPTING_VARIABLE_ANNOTATIONS =
       ImmutableSet.of(
           "com.google.gson.annotations.Expose",
@@ -81,13 +78,10 @@ public final class WellKnownKeep {
           "org.springframework.boot.test.mock.mockito.MockBean",
           "org.springframework.test.context.bean.override.mockito.MockitoBean");
 
-  /**
-   * Annotations that exempt methods from being considered unused.
-   *
-   * <p>Try to avoid adding more annotations here. Annotating these annotations with {@code @Keep}
-   * has the same effect; this list is chiefly for third-party annotations which cannot be
-   * annotated.
-   */
+  /// Annotations that exempt methods from being considered unused.
+  ///
+  /// Try to avoid adding more annotations here. Annotating these annotations with `@Keep` has the
+  /// same effect; this list is chiefly for third-party annotations which cannot be annotated.
   private static final ImmutableSet<String> EXEMPTING_METHOD_ANNOTATIONS =
       ImmutableSet.<String>builder()
           .addAll(InjectMatchers.INJECT_ANNOTATIONS)
@@ -227,10 +221,8 @@ public final class WellKnownKeep {
     return false;
   }
 
-  /**
-   * Looks at the list of {@code annotations} and see if there is any annotation which exists {@code
-   * exemptingAnnotations}.
-   */
+  /// Looks at the list of `annotations` and see if there is any annotation which exists
+  /// `exemptingAnnotations`.
   private static boolean exemptedByAnnotation(
       List<? extends AnnotationTree> annotations, ImmutableSet<String> exemptingAnnotations) {
     for (AnnotationTree annotation : annotations) {

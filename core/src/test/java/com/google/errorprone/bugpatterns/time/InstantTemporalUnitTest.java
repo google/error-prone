@@ -24,7 +24,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** Tests for {@link InstantTemporalUnit}. */
+/// Tests for [InstantTemporalUnit].
 @RunWith(JUnit4.class)
 public final class InstantTemporalUnitTest {
   private final CompilationTestHelper helper =

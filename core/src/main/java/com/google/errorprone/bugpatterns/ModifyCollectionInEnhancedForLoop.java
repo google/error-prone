@@ -41,9 +41,7 @@ import com.sun.source.tree.Tree;
 import com.sun.source.util.TreePath;
 import java.util.List;
 
-/**
- * @author anishvisaria98@gmail.com (Anish Visaria)
- */
+/// @author anishvisaria98@gmail.com (Anish Visaria)
 @BugPattern(
     summary =
         "Modifying a collection while iterating over it in a loop may cause a"
@@ -118,7 +116,7 @@ public class ModifyCollectionInEnhancedForLoop extends BugChecker
     };
   }
 
-  /** Returns true if {@code collection} is modified by an enclosing loop. */
+  /// Returns true if `collection` is modified by an enclosing loop.
   private static boolean enclosingLoop(VisitorState state, ExpressionTree collection) {
     for (Tree node : state.getPath()) {
       switch (node) {
@@ -142,10 +140,7 @@ public class ModifyCollectionInEnhancedForLoop extends BugChecker
     return false;
   }
 
-  /**
-   * Returns true if {@code loopExpression} is defined over the same collection as {@code
-   * collection}.
-   */
+  /// Returns true if `loopExpression` is defined over the same collection as `collection`.
   private static boolean sameCollection(
       ExpressionTree collection, ExpressionTree loopExpression, VisitorState state) {
     if (sameVariable(collection, loopExpression)) {

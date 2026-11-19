@@ -41,7 +41,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import javax.lang.model.element.Modifier;
 
-/** {@code @BeforeClass} or {@code @AfterClass} should be applied to static methods. */
+/// `@BeforeClass` or `@AfterClass` should be applied to static methods.
 @BugPattern(summary = "This method should be static", severity = ERROR)
 public class JUnit4ClassAnnotationNonStatic extends BugChecker implements MethodTreeMatcher {
 

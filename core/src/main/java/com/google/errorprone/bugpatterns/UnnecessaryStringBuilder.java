@@ -54,7 +54,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.lang.model.element.ElementKind;
 
-/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
+/// A [BugChecker]; see the associated [BugPattern] annotation for details.
 @BugPattern(
     summary =
         "Prefer string concatenation over explicitly using `StringBuilder#append`, since `+` reads"
@@ -145,10 +145,8 @@ public class UnnecessaryStringBuilder extends BugChecker implements NewClassTree
     return NO_MATCH;
   }
 
-  /**
-   * Returns true if the StringBuilder is assigned to a variable, and the type of the variable can
-   * safely be refactored to be a String.
-   */
+  /// Returns true if the StringBuilder is assigned to a variable, and the type of the variable can
+  /// safely be refactored to be a String.
   boolean isRewritableVariable(VariableTree variableTree, VisitorState state) {
     Symbol sym = getSymbol(variableTree);
     if (!sym.getKind().equals(ElementKind.LOCAL_VARIABLE)) {

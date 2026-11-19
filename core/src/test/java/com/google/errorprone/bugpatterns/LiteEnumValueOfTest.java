@@ -21,11 +21,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * Tests for {@link LiteEnumValueOf}.
- *
- * @author bhagwani@google.com (Sumit Bhagwani)
- */
+/// Tests for [LiteEnumValueOf].
+///
+/// @author bhagwani@google.com (Sumit Bhagwani)
 @RunWith(JUnit4.class)
 public final class LiteEnumValueOfTest {
 

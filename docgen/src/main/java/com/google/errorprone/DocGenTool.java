@@ -40,10 +40,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.StreamSupport;
 
-/**
- * Utility main which consumes the same tab-delimited text file and generates GitHub pages for the
- * BugPatterns.
- */
+/// Utility main which consumes the same tab-delimited text file and generates GitHub pages for the
+/// BugPatterns.
 public final class DocGenTool {
 
   @Parameters(separators = "=")

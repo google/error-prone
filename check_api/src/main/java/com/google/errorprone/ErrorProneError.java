@@ -28,10 +28,8 @@ import com.sun.tools.javac.util.JCDiagnostic.DiagnosticType;
 import com.sun.tools.javac.util.Log;
 import javax.tools.JavaFileObject;
 
-/**
- * Wraps an unrecoverable error that occurs during analysis with the source position that triggered
- * the crash.
- */
+/// Wraps an unrecoverable error that occurs during analysis with the source position that triggered
+/// the crash.
 public class ErrorProneError extends Error {
 
   private final String checkName;
