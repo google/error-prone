@@ -218,6 +218,42 @@ public final class ErrorProneAnalyzer implements TaskListener {
     out.flush();
   }
 
+  private boolean docCommentTreeTransformerInitialized = false;
+
+  @Override
+  public void started(TaskEvent taskEvent) {
+    // Initialize before any annotation processor can read a doc comment.
+    if (!docCommentTreeTransformerInitialized) {
+      initDocCommentTreeTransformer();
+      docCommentTreeTransformerInitialized = true;
+    }
+  }
+
+  /**
+   * Initializes the transformer javac uses for Markdown doc comments on JDK 23+.
+   *
+   * <p>javac looks up the transformer with the thread's context class loader the first time it
+   * parses a doc comment. Some build tools, like Maven when running javac in-process, use a context
+   * class loader that can't see the JDK's transformer, so Markdown doc comments would have no
+   * links. Looking it up with javac's class loader matches a standalone javac.
+   */
+  private void initDocCommentTreeTransformer() {
+    if (Runtime.version().feature() < 23) {
+      return;
+    }
+    JavacTrees trees = JavacTrees.instance(context);
+    Thread thread = Thread.currentThread();
+    ClassLoader contextClassLoader = thread.getContextClassLoader();
+    thread.setContextClassLoader(JavacTrees.class.getClassLoader());
+    try {
+      JavacTrees.class.getMethod("initDocCommentTreeTransformer").invoke(trees);
+    } catch (ReflectiveOperationException e) {
+      throw new LinkageError(e.getMessage(), e);
+    } finally {
+      thread.setContextClassLoader(contextClassLoader);
+    }
+  }
+
   @Override
   public void finished(TaskEvent taskEvent) {
     if (taskEvent.getKind() == Kind.COMPILATION) {
