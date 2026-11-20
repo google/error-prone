@@ -339,6 +339,41 @@ public class UnnamedVariableTest {
         .doTest();
   }
 
+  // TODO(b/585664542): The output doesn't compile, since javac can't infer the generic methods'
+  // type variables without a target type. The explicit types should be kept.
+  @Test
+  public void localVariable_polyExpressionArgumentToGenericMethod() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import java.util.List;
+            import java.util.Optional;
+
+            class Test {
+              void f() {
+                List<Runnable> unused = List.of(() -> {});
+                Optional<Runnable> unused2 = Optional.of(this::f);
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            import java.util.List;
+            import java.util.Optional;
+
+            class Test {
+              void f() {
+                var _ = List.of(() -> {});
+                var _ = Optional.of(this::f);
+              }
+            }
+            """)
+        .allowBreakingChanges()
+        .doTest();
+  }
+
   @Test
   public void alreadyVar() {
     refactoringHelper
