@@ -197,6 +197,40 @@ public class UnnamedVariableTest {
   }
 
   @Test
+  public void tryWithResources_methodReference() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import java.io.Closeable;
+            import java.io.IOException;
+
+            class Test {
+              void closeWriter() {}
+
+              void f() throws IOException {
+                try (Closeable unused = this::closeWriter) {}
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            import java.io.Closeable;
+            import java.io.IOException;
+
+            class Test {
+              void closeWriter() {}
+
+              void f() throws IOException {
+                try (Closeable _ = this::closeWriter) {}
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
   public void forLoop() {
     refactoringHelper
         .addInputLines(
@@ -608,6 +642,186 @@ public class UnnamedVariableTest {
                 // TODO(b/583896675): Do not emit @Nullable var _ when @Nullable is a TYPE_USE
                 // annotation.
                 @Nullable var _ = "hello";
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void localVariable_polyAndArrayInitializers() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import java.util.function.Consumer;
+
+            class Test {
+              void bar() {}
+
+              void f(boolean flag, Runnable fallback) {
+                Runnable unused = this::bar;
+                Runnable unused2 = (this::bar);
+                Runnable unused3 = () -> {};
+                Consumer<String> unused4 = x -> System.out.println(x);
+                int[] unused5 = {1, 2};
+                int[] unused6 = new int[] {1, 2};
+                Runnable unused7 = flag ? this::bar : () -> {};
+                Runnable unused8 = flag ? null : fallback;
+                Object unused9 = flag ? null : null;
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            import java.util.function.Consumer;
+
+            class Test {
+              void bar() {}
+
+              void f(boolean flag, Runnable fallback) {
+                Runnable _ = this::bar;
+                Runnable _ = (this::bar);
+                Runnable _ = () -> {};
+                Consumer<String> _ = x -> System.out.println(x);
+                int[] _ = {1, 2};
+                var _ = new int[] {1, 2};
+                Runnable _ = flag ? this::bar : () -> {};
+                var _ = flag ? null : fallback;
+                Object _ = flag ? null : null;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void localVariable_switchExpressionInitializers() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              void bar() {}
+
+              void f(int i) {
+                String unused =
+                    switch (i) {
+                      case 0 -> "a";
+                      case 1 -> {
+                        yield "b";
+                      }
+                      default -> throw new IllegalStateException();
+                    };
+                Runnable unused2 =
+                    switch (i) {
+                      case 0 -> this::bar;
+                      default -> () -> {};
+                    };
+                Runnable unused3 =
+                    switch (i) {
+                      case 0 -> {
+                        yield this::bar;
+                      }
+                      default -> {
+                        yield () -> {};
+                      }
+                    };
+                Runnable unused4 =
+                    switch (i) {
+                      case 0:
+                        yield this::bar;
+                      default:
+                        yield () -> {};
+                    };
+                String unused5 =
+                    switch (i) {
+                      case 0 -> {
+                        int j =
+                            switch (i) {
+                              default -> {
+                                yield 1;
+                              }
+                            };
+                        Runnable r =
+                            () -> {
+                              String s =
+                                  switch (j) {
+                                    default -> {
+                                      yield "s";
+                                    }
+                                  };
+                            };
+                        yield "c";
+                      }
+                      default -> "d";
+                    };
+                Object unused6 = (Runnable) () -> {};
+                Thread unused7 = new Thread(this::bar);
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              void bar() {}
+
+              void f(int i) {
+                var _ =
+                    switch (i) {
+                      case 0 -> "a";
+                      case 1 -> {
+                        yield "b";
+                      }
+                      default -> throw new IllegalStateException();
+                    };
+                Runnable _ =
+                    switch (i) {
+                      case 0 -> this::bar;
+                      default -> () -> {};
+                    };
+                Runnable _ =
+                    switch (i) {
+                      case 0 -> {
+                        yield this::bar;
+                      }
+                      default -> {
+                        yield () -> {};
+                      }
+                    };
+                Runnable _ =
+                    switch (i) {
+                      case 0:
+                        yield this::bar;
+                      default:
+                        yield () -> {};
+                    };
+                String _ =
+                    switch (i) {
+                      case 0 -> {
+                        int j =
+                            switch (i) {
+                              default -> {
+                                yield 1;
+                              }
+                            };
+                        Runnable _ =
+                            () -> {
+                              var _ =
+                                  switch (j) {
+                                    default -> {
+                                      yield "s";
+                                    }
+                                  };
+                            };
+                        yield "c";
+                      }
+                      default -> "d";
+                    };
+                var _ = (Runnable) () -> {};
+                var _ = new Thread(this::bar);
               }
             }
             """)
