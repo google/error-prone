@@ -105,7 +105,11 @@ public final class MisformattedTestData extends BugChecker implements Compilatio
       Formatter formatter = new Formatter();
       String formattedSource;
       try {
-        formattedSource = formatter.formatSourceAndFixImports(string);
+        var sourceWithProtectedBugMarkers =
+            SourceWithProtectedBugMarkers.protectBugMarkerComments(string);
+        formattedSource =
+            sourceWithProtectedBugMarkers.restore(
+                formatter.formatSourceAndFixImports(sourceWithProtectedBugMarkers.source()));
       } catch (FormatterException exception) {
         continue;
       }
@@ -155,6 +159,68 @@ public final class MisformattedTestData extends BugChecker implements Compilatio
           .named("addOutputLines");
 
   private static final Splitter LINE_SPLITTER = Splitter.on('\n');
+
+  private record SourceWithProtectedBugMarkers(
+      String source, String placeholderPrefix, List<String> comments) {
+
+    private static final String DIAGNOSTIC_CONTAINS_MARKER = "// BUG: Diagnostic contains:";
+
+    private static final String DIAGNOSTIC_MATCHES_MARKER = "// BUG: Diagnostic matches:";
+
+    /**
+     * Replace error diagnostic comments with placeholders so they are not modified during
+     * formatting
+     */
+    private static SourceWithProtectedBugMarkers protectBugMarkerComments(String source) {
+      String placeholderPrefix = "__EP_BUG_MARKER_";
+      while (source.contains(placeholderPrefix)) {
+        placeholderPrefix += "_";
+      }
+
+      List<String> comments = new ArrayList<>();
+      List<String> lines = LINE_SPLITTER.splitToList(source);
+      StringBuilder result = new StringBuilder(source.length());
+      boolean inBugMarkerComment = false;
+      for (int i = 0; i < lines.size(); i++) {
+        String line = lines.get(i);
+        String trimmedLine = line.trim();
+        boolean startsBugMarkerComment =
+            line.indexOf(DIAGNOSTIC_CONTAINS_MARKER) != -1
+                || line.indexOf(DIAGNOSTIC_MATCHES_MARKER) != -1;
+        if (!startsBugMarkerComment && !(inBugMarkerComment && trimmedLine.startsWith("//"))) {
+          inBugMarkerComment = false;
+        } else {
+          inBugMarkerComment = true;
+          int commentStart = line.indexOf("//");
+          // still strip trailing whitespace from bug marker comments, as DiagnosticTestHelper also
+          // ignores such whitespace
+          comments.add(line.substring(commentStart).stripTrailing());
+          line =
+              line.substring(0, commentStart)
+                  + SourceWithProtectedBugMarkers.placeholder(
+                      placeholderPrefix, comments.size() - 1);
+        }
+        if (i > 0) {
+          result.append('\n');
+        }
+        result.append(line);
+      }
+      return new SourceWithProtectedBugMarkers(result.toString(), placeholderPrefix, comments);
+    }
+
+    /** restore original diagnostic comments into the formatted test input source */
+    private String restore(String formattedSource) {
+      for (int i = 0; i < comments.size(); i++) {
+        formattedSource =
+            formattedSource.replace(placeholder(placeholderPrefix, i), comments.get(i));
+      }
+      return formattedSource;
+    }
+
+    private static String placeholder(String prefix, int index) {
+      return "// " + prefix + index + "__";
+    }
+  }
 
   private static String escape(String line) {
     return ESCAPER.escape(line).replace("\"\"\"", "\\\"\"\"");
