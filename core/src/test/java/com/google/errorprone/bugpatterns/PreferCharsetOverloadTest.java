@@ -16,6 +16,7 @@
 package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
+import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -461,6 +462,89 @@ public class PreferCharsetOverloadTest {
             }
             """)
         .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void inaccessibleOverloads() {
+    helper
+        .addInputLines(
+            "Writer.java",
+            """
+            import java.nio.charset.Charset;
+
+            class Writer {
+              Writer(String encoding) {}
+              private Writer(Charset encoding) {}
+              void setEncoding(String encoding) {}
+              private void setEncoding(Charset encoding) {}
+            }
+            """)
+        .expectUnchanged()
+        .addInputLines(
+            "Caller.java",
+            """
+            class Caller {
+              void configure(String encoding) {
+                new Writer(encoding).setEncoding(encoding);
+              }
+            }
+            """)
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void privateOverloadAccessibleInDeclaringClass() {
+    CompilationTestHelper.newInstance(PreferCharsetOverload.class, getClass())
+        .addSourceLines(
+            "Writer.java",
+            """
+            import java.nio.charset.Charset;
+
+            class Writer {
+              void setEncoding(String encoding) {}
+              private void setEncoding(Charset encoding) {}
+
+              void configure(String value) {
+                // BUG: Diagnostic contains: Prefer calling overloads
+                setEncoding(value);
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void protectedOverloadAcrossPackages() {
+    CompilationTestHelper.newInstance(PreferCharsetOverload.class, getClass())
+        .addSourceLines(
+            "a/Base.java",
+            """
+            package a;
+            import java.nio.charset.Charset;
+
+            public class Base {
+              public void setEncoding(String encoding) {}
+              protected void setEncoding(Charset encoding) {}
+            }
+            """)
+        .addSourceLines(
+            "b/Sub.java",
+            """
+            package b;
+            import a.Base;
+
+            class Sub extends Base {
+              void test(Base other, String value) {
+                other.setEncoding(value);
+                // BUG: Diagnostic contains: Prefer calling overloads
+                setEncoding(value);
+                // BUG: Diagnostic contains: Prefer calling overloads
+                super.setEncoding(value);
+              }
+            }
+            """)
         .doTest();
   }
 }
