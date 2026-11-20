@@ -247,4 +247,58 @@ public final class InvalidBlockTagTest {
         .setArgs("-XepOpt:Javadoc:customBlockTags=customTag1,customTag2")
         .doTest();
   }
+
+  @Test
+  public void standardBlockTags() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            /**
+             * Documents the type.
+             * @hidden
+             * @spec https://example.com Title
+             * @serial include
+             */
+            class Test {
+              /**
+               * Hides this type.
+               * @hidden
+               */
+              static class Nested {}
+
+              /** @hidden */
+              void method() {}
+
+              /** @hidden */
+              int field;
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void rejectedBlockTags() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            // BUG: Diagnostic contains: @provides
+            /** @provides com.example.Service */
+            class Provides {}
+
+            // BUG: Diagnostic contains: @uses
+            /** @uses com.example.Service */
+            class Uses {}
+
+            // BUG: Diagnostic contains: @index is not a valid block tag
+            /** @index term */
+            class Index {}
+
+            // BUG: Diagnostic contains: @return
+            /** {@return nope} */
+            class ReturnOnType {}
+            """)
+        .doTest();
+  }
 }
