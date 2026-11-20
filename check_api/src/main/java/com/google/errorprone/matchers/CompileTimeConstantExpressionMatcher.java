@@ -18,6 +18,7 @@ package com.google.errorprone.matchers;
 
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.anything;
+import static com.google.errorprone.matchers.Matchers.constructor;
 import static com.google.errorprone.matchers.Matchers.nullLiteral;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
 import static com.google.errorprone.matchers.Matchers.toType;
@@ -35,6 +36,7 @@ import com.sun.source.tree.CaseTree.CaseKind;
 import com.sun.source.tree.ConditionalExpressionTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
+import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.ParenthesizedTree;
 import com.sun.source.tree.SwitchExpressionTree;
 import com.sun.source.tree.ThrowTree;
@@ -67,6 +69,9 @@ import com.sun.tools.javac.code.Symbol.VarSymbol;
  *       {@link String}s.
  *   <li>A switch expression where all case bodies are compile-time constants.
  *   <li>A conditional expression (a ? b : c) where both branches are compile-time constants.
+ *   <li>A call to a well-known constructor, e.g. from a Java standard library class, where all
+ *       arguments are compile-time constants and the resulting object is immutable. (See {@link
+ *       #COMPATIBLE_CONSTRUCTORS} below for the complete list.)
  *   <li>The result of an invocation of one of the following immutable collection factory methods,
  *       where all arguments are compile-time constants:
  *       <ul>
@@ -160,6 +165,18 @@ public class CompileTimeConstantExpressionMatcher implements Matcher<ExpressionT
       }
 
       @Override
+      public Boolean visitNewClass(NewClassTree tree, Void unused) {
+        if (tree.getClassBody() != null || !COMPATIBLE_CONSTRUCTORS.matches(tree, state)) {
+          return false;
+        }
+        ExpressionTree enclosing = tree.getEnclosingExpression();
+        if (enclosing != null && !enclosing.accept(this, null)) {
+          return false;
+        }
+        return tree.getArguments().stream().allMatch(a -> a.accept(this, null));
+      }
+
+      @Override
       public Boolean visitBinary(BinaryTree tree, Void unused) {
         return defaultAction(tree, null)
             || (tree.getKind().equals(Kind.PLUS)
@@ -210,6 +227,56 @@ public class CompileTimeConstantExpressionMatcher implements Matcher<ExpressionT
     return node instanceof ExpressionTree expressionTree
         && COMPATIBLE_FIELDS.matches(expressionTree, state);
   }
+
+  /**
+   * Matches constructors that are known to produce compile-time constants if their arguments are
+   * all compile-time constants, but are defined "upstream" of this check and therefore cannot be
+   * annotated {@code @CompileTimeConstant} themselves.
+   *
+   * <p>The class must be immutable to be included here. (It can seem valid to include a mutable
+   * class {@code T}'s constructor if it doesn't depend on any runtime state, but that causes
+   * constness issues (like b/576770029) unless the lint can forbid operations mutate the object.)
+   */
+  private static final Matcher<ExpressionTree> COMPATIBLE_CONSTRUCTORS =
+      anyOf(
+          constructor().forClass("java.lang.Integer"),
+          constructor().forClass("java.lang.Long"),
+          constructor().forClass("java.lang.Short"),
+          constructor().forClass("java.lang.Byte"),
+          constructor().forClass("java.lang.Character"),
+          constructor().forClass("java.lang.Boolean"),
+          constructor().forClass("java.lang.Float"),
+          constructor().forClass("java.lang.Double"),
+
+          // TODO(b/576770029): Allow the byte[], char[], and int[] String constructors.
+          // String(byte[]) and String(byte[], int, int)) are disallowed because they use the
+          // default charset, which is not a compile-time constant.
+          constructor().forClass("java.lang.String").withNoParameters(),
+          constructor().forClass("java.lang.String").withParameters("java.lang.String"),
+
+          // TODO(b/576770029): Allow the byte[] BigInteger constructors and char[] BigDecimal
+          // constructors.
+          constructor().forClass("java.math.BigInteger").withParameters("java.lang.String"),
+          constructor().forClass("java.math.BigInteger").withParameters("java.lang.String", "int"),
+          constructor().forClass("java.math.BigDecimal").withParameters("double"),
+          constructor()
+              .forClass("java.math.BigDecimal")
+              .withParameters("double", "java.math.MathContext"),
+          constructor().forClass("java.math.BigDecimal").withParameters("int"),
+          constructor()
+              .forClass("java.math.BigDecimal")
+              .withParameters("int", "java.math.MathContext"),
+          constructor().forClass("java.math.BigDecimal").withParameters("long"),
+          constructor()
+              .forClass("java.math.BigDecimal")
+              .withParameters("long", "java.math.MathContext"),
+          constructor().forClass("java.math.BigDecimal").withParameters("java.lang.String"),
+          constructor()
+              .forClass("java.math.BigDecimal")
+              .withParameters("java.lang.String", "java.math.MathContext"),
+          constructor().forClass("java.math.MathContext"),
+          constructor().forClass("java.util.Locale"),
+          constructor().forClass("java.util.UUID"));
 
   /**
    * Matches static final fields that are known to be compile-time constants, but are "upstream" of

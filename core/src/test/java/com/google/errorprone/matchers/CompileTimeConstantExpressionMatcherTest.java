@@ -353,6 +353,67 @@ public class CompileTimeConstantExpressionMatcherTest {
   }
 
   @Test
+  public void compatibleConstructors() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            package test;
+
+            import com.google.errorprone.annotations.CompileTimeConstant;
+            import java.math.BigDecimal;
+            import java.math.BigInteger;
+            import java.math.MathContext;
+            import java.math.RoundingMode;
+            import java.util.Locale;
+            import java.util.UUID;
+
+            public class Test {
+              public void m(
+                  @CompileTimeConstant String ctcString,
+                  String nonCtcString,
+                  @CompileTimeConstant char[] ctcCharArray) {
+                // BUG: Diagnostic contains: true
+                String s1 = new String();
+                // BUG: Diagnostic contains: true
+                String s2 = new String(ctcString);
+                // BUG: Diagnostic contains: false
+                String s3 = new String(nonCtcString);
+                // BUG: Diagnostic contains: false
+                String s4 = new String(ctcCharArray);
+                // BUG: Diagnostic contains: true
+                Integer i1 = new Integer(42);
+                // BUG: Diagnostic contains: true
+                BigInteger bi1 = new BigInteger("12345");
+                // BUG: Diagnostic contains: true
+                BigInteger bi2 = new BigInteger("ff", 16);
+                // BUG: Diagnostic contains: false
+                BigInteger bi3 = new BigInteger(nonCtcString);
+                // BUG: Diagnostic contains: false
+                BigInteger biAnon = new BigInteger("12345") {};
+                // BUG: Diagnostic contains: true
+                MathContext mc = new MathContext(10, RoundingMode.HALF_UP);
+                // BUG: Diagnostic contains: true
+                BigDecimal bd1 = new BigDecimal("12.34", MathContext.DECIMAL64);
+                // BUG: Diagnostic contains: true
+                BigDecimal bd2 = new BigDecimal(42L);
+                // BUG: Diagnostic contains: false
+                BigDecimal bd3 = new BigDecimal(BigInteger.ONE);
+                // BUG: Diagnostic contains: false
+                BigDecimal bd4 = new BigDecimal(ctcCharArray);
+                // BUG: Diagnostic contains: true
+                Locale loc = new Locale("en", "US");
+                // BUG: Diagnostic contains: true
+                UUID uuid = new UUID(0L, 1L);
+                // BUG: Diagnostic contains: false
+                Object obj = new Object();
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
   public void compatibleFields() {
     testHelper
         .addSourceLines(

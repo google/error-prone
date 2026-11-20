@@ -20,6 +20,8 @@ expressions, specifically:
 *   a concatenation expression of compile-time constant `String`s, or
 *   a switch expressions where all case bodies are compile-time constants, or
 *   a ternary expressions with both branches being compile-time constants, or
+*   a call to a well-known constructor of an immutable type, where all arguments
+    are compile-time constants, or
 *   a call to one of the known immutable collection factory methods, where the
     provided elements are all compile-time constants.
 
