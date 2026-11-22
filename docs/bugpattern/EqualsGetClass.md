@@ -38,9 +38,9 @@ Although these same advantages *can* be achieved via composition, it's no longer
 quite "for free"; the frequent need to call `myColoredPoint.asPoint()` is a pain
 that feels unjustified, and thus subclassing is often chosen.
 
-Unfortunately, `equals` now creates a big problem. Two `Points` should be seen
+Unfortunately, `equals` now creates a big problem. Two `Point`s should be seen
 as interchangeable whenever they have the same `x` and `y` coordinates. But two
-`ColoredPoints` are only equivalent if their coordinates *and* color are the
+`ColoredPoint`s are only equivalent if their coordinates *and* color are the
 same. This, plus the general contract of `equals` (e.g. symmetry), ends up
 forcing `Point(1, 2)` to respond `false` if asked whether it is equal to
 `ColoredPoint(1, 2, BLUE)`.
