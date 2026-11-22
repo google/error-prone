@@ -33,6 +33,7 @@ import com.sun.source.tree.LambdaExpressionTree;
 import com.sun.source.tree.ParenthesizedTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
+import com.sun.source.util.TreePath;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 
 /** A BugPattern; see the summary. */
@@ -45,7 +46,17 @@ public final class AssignmentExpression extends BugChecker implements Assignment
 
   @Override
   public Description matchAssignment(AssignmentTree tree, VisitorState state) {
-    Tree parent = state.getPath().getParentPath().getLeaf();
+    TreePath parentPath = state.getPath().getParentPath();
+    // Exempt the C-ism of (foo = getFoo()) != null, etc. before unwrapping parens.
+    if (parentPath.getLeaf() instanceof ParenthesizedTree
+        && parentPath.getParentPath().getLeaf() instanceof BinaryTree) {
+      return Description.NO_MATCH;
+    }
+    // Unwrap ParenthesizedTree for parenthesis-invariant matching.
+    while (parentPath.getLeaf() instanceof ParenthesizedTree) {
+      parentPath = parentPath.getParentPath();
+    }
+    Tree parent = parentPath.getLeaf();
     if (parent instanceof ExpressionStatementTree) {
       return Description.NO_MATCH;
     }
@@ -53,11 +64,6 @@ public final class AssignmentExpression extends BugChecker implements Assignment
       return Description.NO_MATCH;
     }
     if (parent instanceof LambdaExpressionTree) {
-      return Description.NO_MATCH;
-    }
-    // Exempt the C-ism of (foo = getFoo()) != null, etc.
-    if (parent instanceof ParenthesizedTree
-        && state.getPath().getParentPath().getParentPath().getLeaf() instanceof BinaryTree) {
       return Description.NO_MATCH;
     }
     // Detect duplicate assignments: a = a = foo() so that we can generate a fix.
