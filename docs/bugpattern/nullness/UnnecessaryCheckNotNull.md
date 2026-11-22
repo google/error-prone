@@ -1,5 +1,5 @@
-There are various libraries available to check if a variable is null or not.
-Most notable ones are :
+There are various libraries available to check if a variable is null or not. The
+most notable ones are:
 
 *   `com.google.common.base.Preconditions.checkNotNull`
 *   `com.google.common.base.Verify.verifyNotNull`
