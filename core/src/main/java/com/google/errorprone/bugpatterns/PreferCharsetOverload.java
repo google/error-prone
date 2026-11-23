@@ -24,11 +24,17 @@ import static com.google.errorprone.util.ASTHelpers.findMatchingMethods;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
+import static java.nio.charset.StandardCharsets.ISO_8859_1;
+import static java.nio.charset.StandardCharsets.US_ASCII;
+import static java.nio.charset.StandardCharsets.UTF_16;
+import static java.nio.charset.StandardCharsets.UTF_16BE;
+import static java.nio.charset.StandardCharsets.UTF_16LE;
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Comparator.comparingInt;
 
-import com.google.common.base.Ascii;
 import com.google.common.base.CaseFormat;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -48,6 +54,8 @@ import com.sun.source.tree.Tree.Kind;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
@@ -264,15 +272,16 @@ public final class PreferCharsetOverload extends BugChecker
    * <p>The replacement strategy is as follows:
    *
    * <ol>
-   *   <li>static import {@code StandardCharsets} constants (e.g., {@code UTF_8}, {@code
-   *       ISO_8859_1}, etc.)
+   *   <li>static import {@code StandardCharsets} constants for constant names or aliases of
+   *       standard charsets (e.g., {@code UTF_8} for {@code "utf8"}, {@code ISO_8859_1} for {@code
+   *       "latin1"}, etc.)
    *   <li>unwrap decomposed {@code Charset} calls (e.g., {@code charset.name()}, {@code
    *       charset.displayName()}, etc.)
    *   <li>fallback to {@code Charset.forName()}
    * </ol>
    *
    * @return true if a replacement was successfully added to the {@code fix} builder, or false if no
-   *     fix could be determined (e.g., for null literals).
+   *     fix could be determined (e.g., for null literals or unsupported charset names).
    */
   private static boolean suggestParamFix(
       ExpressionTree stringExpr, VisitorState state, SuggestedFix.Builder fix) {
@@ -280,11 +289,20 @@ public final class PreferCharsetOverload extends BugChecker
       return false;
     }
 
-    String constantName = getStandardCharsetConstant(constValue(stringExpr, String.class));
-    if (constantName != null) {
-      fix.addStaticImport("java.nio.charset.StandardCharsets." + constantName);
-      fix.replace(stringExpr, constantName);
-      return true;
+    String charsetName = constValue(stringExpr, String.class);
+    if (charsetName != null) {
+      Charset resolvedCharset = lookUpCharset(charsetName);
+      if (resolvedCharset == null) {
+        // Not a supported charset (e.g. "UTF_8" isn't an alias of UTF-8), so there's no equivalent
+        // Charset to suggest.
+        return false;
+      }
+      String constantName = STANDARD_CHARSET_CONSTANTS.get(resolvedCharset);
+      if (constantName != null) {
+        fix.addStaticImport("java.nio.charset.StandardCharsets." + constantName);
+        fix.replace(stringExpr, constantName);
+        return true;
+      }
     }
 
     if (CHARSET_DECOMPOSITION_MATCHER.matches(stringExpr, state)) {
@@ -297,28 +315,25 @@ public final class PreferCharsetOverload extends BugChecker
     return true;
   }
 
-  /**
-   * Returns the name of the {@link java.nio.charset.StandardCharsets} constant if the given charset
-   * name matches a known standard charset (otherwise returns {@code null}).
-   */
-  private static @Nullable String getStandardCharsetConstant(@Nullable String charsetName) {
-    if (charsetName == null) {
+  /** Returns the charset with the given name or alias, or {@code null} if it isn't supported. */
+  private static @Nullable Charset lookUpCharset(String charsetName) {
+    try {
+      return Charset.forName(charsetName);
+    } catch (IllegalArgumentException e) {
+      // IllegalCharsetNameException or UnsupportedCharsetException
       return null;
     }
-
-    // Normalize the charset name to handle various common formats like "UTF-8", "UTF8", and
-    // "utf_8" consistently.
-    String normalized = Ascii.toUpperCase(charsetName).replace("-", "").replace("_", "");
-    return switch (normalized) {
-      case "UTF8" -> "UTF_8";
-      case "ISO88591" -> "ISO_8859_1";
-      case "USASCII", "ASCII" -> "US_ASCII";
-      case "UTF16" -> "UTF_16";
-      case "UTF16BE" -> "UTF_16BE";
-      case "UTF16LE" -> "UTF_16LE";
-      default -> null;
-    };
   }
+
+  /** The names of the {@link StandardCharsets} constants, keyed by their values. */
+  private static final ImmutableMap<Charset, String> STANDARD_CHARSET_CONSTANTS =
+      ImmutableMap.of(
+          UTF_8, "UTF_8",
+          ISO_8859_1, "ISO_8859_1",
+          US_ASCII, "US_ASCII",
+          UTF_16, "UTF_16",
+          UTF_16BE, "UTF_16BE",
+          UTF_16LE, "UTF_16LE");
 
   private static final Supplier<Type> CHARSET_TYPE = typeFromString("java.nio.charset.Charset");
 }
