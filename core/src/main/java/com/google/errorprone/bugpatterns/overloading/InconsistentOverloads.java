@@ -19,6 +19,7 @@ package com.google.errorprone.bugpatterns.overloading;
 import static com.google.common.collect.ImmutableList.sortedCopyOf;
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
+import static com.google.errorprone.util.ASTHelpers.hasDirectAnnotationWithSimpleName;
 import static java.util.Comparator.comparingInt;
 import static java.util.stream.Collectors.groupingBy;
 
@@ -147,6 +148,8 @@ public final class InconsistentOverloads extends BugChecker implements ClassTree
         .filter(MethodTree.class::isInstance)
         .map(MethodTree.class::cast)
         .filter(m -> !isSuppressed(m, state))
+        // @InlineMe methods will be inlined away, so their parameter order doesn't matter.
+        .filter(m -> !hasDirectAnnotationWithSimpleName(m, "InlineMe"))
         .collect(toImmutableList());
   }
 }
