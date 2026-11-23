@@ -66,10 +66,12 @@ If this code is within an Error Prone check for comparing `Type`(s), all of the
 same annotation processing APIs discussed above are available, but there are
 some additional options.
 
-*   Types can be looked up with `VisitorState`:
+*   Reference types can be matched with a `static final ClassName` constant:
 
-    ```
-    ASTHelpers.isSameType(type, visitorState.getTypeFromString("com.package.SomeObject"), state)
+    ```java
+    private static final ClassName SOME_OBJECT = ClassName.of("com.package.SomeObject");
+    ...
+    ASTHelpers.isSameType(type, SOME_OBJECT, state)
     ```
 
 *   Some types from `java.base` are available as cached instances in javac's
