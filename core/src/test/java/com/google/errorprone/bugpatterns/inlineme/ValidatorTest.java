@@ -30,6 +30,80 @@ public class ValidatorTest {
       CompilationTestHelper.newInstance(Validator.class, getClass());
 
   @Test
+  public void instanceMethod_builderChainCallingPackagePrivateOverload() {
+    helper
+        .addSourceLines(
+            "Builder.java",
+            """
+            package com.google.foo;
+
+            import java.util.Optional;
+
+            public final class Builder {
+              public static Builder newBuilder() {
+                return new Builder();
+              }
+
+              public Builder setPath(String path) {
+                return this;
+              }
+
+              Builder setPath(Optional<String> path) {
+                return this;
+              }
+
+              public String build() {
+                return "";
+              }
+            }
+            """)
+        .addSourceLines(
+            "Client.java",
+            """
+            package com.google.foo;
+
+            import com.google.errorprone.annotations.InlineMe;
+            import java.util.Optional;
+
+            public final class Client {
+              @InlineMe(
+                  replacement = "Builder.newBuilder().setPath(path).build()",
+                  imports = "com.google.foo.Builder")
+              @Deprecated
+              // BUG: Diagnostic contains: API elements: Builder.setPath(Optional<String>)
+              public String create(Optional<String> path) {
+                return Builder.newBuilder().setPath(path).build();
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void staticMethod_privateConstructor() {
+    helper
+        .addSourceLines(
+            "Client.java",
+            """
+            package com.google.foo;
+
+            import com.google.errorprone.annotations.InlineMe;
+
+            public final class Client {
+              private Client(String name) {}
+
+              @InlineMe(replacement = "new Client(name)", imports = "com.google.foo.Client")
+              @Deprecated
+              // BUG: Diagnostic contains: deprecated or less visible API elements: Client(String)
+              public static Client create(String name) {
+                return new Client(name);
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
   public void staticFactoryToConstructor() {
     helper
         .addSourceLines(

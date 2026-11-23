@@ -18,12 +18,14 @@ package com.google.errorprone.bugpatterns.inlineme;
 
 import static com.google.common.base.Preconditions.checkState;
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
+import static com.google.errorprone.util.ASTHelpers.enclosingClass;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import static com.google.errorprone.util.ASTHelpers.isSuper;
 import static com.google.errorprone.util.ASTHelpers.methodCanBeOverridden;
 import static com.google.errorprone.util.AnnotationNames.DEPRECATED_ANNOTATION;
 import static com.google.errorprone.util.AnnotationNames.DO_NOT_CALL_ANNOTATION;
+import static com.google.errorprone.util.Signatures.prettyMethodSignature;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.VisitorState;
@@ -215,7 +217,7 @@ record InlinabilityResult(
       return fromError(
           InlineValidationErrorReason.CALLS_DEPRECATED_OR_PRIVATE_APIS,
           body,
-          state.getSourceForNode(privateOrDeprecatedApi));
+          describeApi(privateOrDeprecatedApi, methodSym, state));
     }
 
     if (hasArgumentInPossiblyNonExecutedPosition(methodTree, body)) {
@@ -233,6 +235,20 @@ record InlinabilityResult(
     }
 
     return inlinable(body);
+  }
+
+  /**
+   * Describes an API element that the body may not reference. Method and constructor calls are
+   * described by their signature, because their source includes the whole receiver chain (e.g.,
+   * {@code Foo.newBuilder().setBar(bar)}), hiding which method is at fault.
+   */
+  private static String describeApi(Tree tree, MethodSymbol methodSym, VisitorState state) {
+    return switch (tree) {
+      case MethodInvocationTree mit ->
+          prettyMethodSignature(enclosingClass(methodSym), getSymbol(mit));
+      case NewClassTree nct -> prettyMethodSignature(enclosingClass(methodSym), getSymbol(nct));
+      default -> state.getSourceForNode(tree);
+    };
   }
 
   private static Symbol usesVariablesMultipleTimes(
