@@ -26,6 +26,7 @@ import static com.google.errorprone.util.ASTHelpers.isSameType;
 import com.google.common.base.Enums;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.ClassName;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.NewClassTreeMatcher;
@@ -271,7 +272,9 @@ public class ValueClassIdentity extends BugChecker
     return (VALUE_MODIFIER != null
             && sym.getModifiers().contains(VALUE_MODIFIER)
             && !sym.getModifiers().contains(Modifier.ABSTRACT))
-        || ASTHelpers.hasAnnotation(sym, "jdk.internal.ValueBased", state)
+        || ASTHelpers.hasAnnotation(sym, VALUE_BASED, state)
         || VALUE_CLASSES_BESIDES_PRIMITIVE_WRAPPERS.contains(sym.getQualifiedName().toString());
   }
+
+  private static final ClassName VALUE_BASED = ClassName.of("jdk.internal.ValueBased");
 }

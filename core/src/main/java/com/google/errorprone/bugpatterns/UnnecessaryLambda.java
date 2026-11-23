@@ -24,6 +24,7 @@ import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.fixes.SuggestedFixes.prettyType;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.matchers.InjectMatchers.GUICE_BIND_ANNOTATION;
 import static com.google.errorprone.util.ASTHelpers.enclosingClass;
 import static com.google.errorprone.util.ASTHelpers.enclosingPackage;
 import static com.google.errorprone.util.ASTHelpers.getModifiers;
@@ -146,7 +147,7 @@ public class UnnecessaryLambda extends BugChecker
         || !sym.getModifiers().contains(Modifier.FINAL)) {
       return NO_MATCH;
     }
-    if (ASTHelpers.hasAnnotation(tree, "com.google.inject.testing.fieldbinder.Bind", state)) {
+    if (ASTHelpers.hasAnnotation(tree, GUICE_BIND_ANNOTATION, state)) {
       return NO_MATCH;
     }
     Tree type = tree.getType();

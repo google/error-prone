@@ -45,14 +45,14 @@ public final class SystemOut extends BugChecker
     implements MethodInvocationTreeMatcher, MemberSelectTreeMatcher {
 
   private static final Matcher<ExpressionTree> BAD_FIELDS =
-      staticField().onClass(System.class.getName()).namedAnyOf("out", "err");
+      staticField().onClass("java.lang.System").namedAnyOf("out", "err");
 
   private static final Matcher<ExpressionTree> BAD_METHODS =
       anyOf(
           staticMethod().onClass("java.lang.IO").namedAnyOf("print", "println"),
-          staticMethod().onClass(Thread.class.getName()).named("dumpStack").withNoParameters(),
+          staticMethod().onClass("java.lang.Thread").named("dumpStack").withNoParameters(),
           instanceMethod()
-              .onDescendantOf(Throwable.class.getName())
+              .onDescendantOf("java.lang.Throwable")
               .named("printStackTrace")
               .withNoParameters());
 

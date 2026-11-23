@@ -29,7 +29,6 @@ import static com.google.errorprone.util.AnnotationNames.BUG_PATTERN_ANNOTATION;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.ClassName;
-import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -39,8 +38,10 @@ import com.sun.source.tree.MethodTree;
 /** A BugPattern; see the summary. */
 @BugPattern(severity = WARNING, summary = "BugChecker constructors should be marked @Inject.")
 public final class InjectOnBugCheckers extends BugChecker implements MethodTreeMatcher {
-  private static final ClassName BUG_CHECKER = ClassName.of(BugChecker.class.getName());
-  private static final ClassName ERROR_PRONE_FLAGS = ClassName.of(ErrorProneFlags.class.getName());
+  private static final ClassName BUG_CHECKER =
+      ClassName.of("com.google.errorprone.bugpatterns.BugChecker");
+  private static final ClassName ERROR_PRONE_FLAGS =
+      ClassName.of("com.google.errorprone.ErrorProneFlags");
 
   @Override
   public Description matchMethod(MethodTree tree, VisitorState state) {

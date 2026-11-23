@@ -60,8 +60,8 @@ import static com.sun.source.tree.Tree.Kind.XOR_ASSIGNMENT;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.ClassName;
 import com.google.errorprone.VisitorState;
-import com.google.errorprone.annotations.NoAllocation;
 import com.google.errorprone.bugpatterns.BugChecker.AssignmentTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.BinaryTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.CompoundAssignmentTreeMatcher;
@@ -145,10 +145,10 @@ public class NoAllocationChecker extends BugChecker
       "is disallowed in methods annotated with @NoAllocation";
 
   private static final Matcher<MethodTree> noAllocationMethodMatcher =
-      hasAnnotation(NoAllocation.class.getName());
+      hasAnnotation("com.google.errorprone.annotations.NoAllocation");
 
   private static final Matcher<MethodInvocationTree> noAllocationMethodInvocationMatcher =
-      symbolHasAnnotation(NoAllocation.class.getName());
+      symbolHasAnnotation("com.google.errorprone.annotations.NoAllocation");
 
   private static final Matcher<ExpressionTree> anyExpression = anything();
 
@@ -382,12 +382,12 @@ public class NoAllocationChecker extends BugChecker
 
   @Override
   public Description matchMethod(MethodTree tree, VisitorState state) {
-    if (hasAnnotation(NoAllocation.class).matches(tree, state)) {
+    if (hasAnnotation("com.google.errorprone.annotations.NoAllocation").matches(tree, state)) {
       return NO_MATCH;
     }
     MethodSymbol symbol = ASTHelpers.getSymbol(tree);
     return streamSuperMethods(symbol, state.getTypes())
-        .filter(s -> ASTHelpers.hasAnnotation(s, NoAllocation.class.getName(), state))
+        .filter(s -> ASTHelpers.hasAnnotation(s, NO_ALLOCATION, state))
         .findAny()
         .map(s -> {
           String message =
@@ -399,7 +399,7 @@ public class NoAllocationChecker extends BugChecker
               .setMessage(message)
               .addFix(
                   SuggestedFix.builder()
-                      .addImport(NoAllocation.class.getName())
+                      .addImport("com.google.errorprone.annotations.NoAllocation")
                       .prefixWith(tree, "@NoAllocation ")
                       .build())
               .build();
@@ -507,4 +507,7 @@ public class NoAllocationChecker extends BugChecker
                 + COMMON_MESSAGE_SUFFIX)
         .build();
   }
+
+  private static final ClassName NO_ALLOCATION =
+      ClassName.of("com.google.errorprone.annotations.NoAllocation");
 }

@@ -435,7 +435,10 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
     }
     SuggestedFix.Builder fix = SuggestedFix.builder();
     fix.prefixWith(
-        method, "@" + qualifyType(state, fix, CanIgnoreReturnValue.class.getName()) + " ");
+        method,
+        "@"
+            + qualifyType(state, fix, "com.google.errorprone.annotations.CanIgnoreReturnValue")
+            + " ");
     getAnnotationsWithSimpleName(method.getModifiers().getAnnotations(), CHECK_RETURN_VALUE)
         .forEach(fix::delete);
     fix.setShortDescription("Annotate the method with @CanIgnoreReturnValue");

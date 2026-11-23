@@ -22,6 +22,8 @@ import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.getEnclosedElements;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import static com.google.errorprone.util.ASTHelpers.streamSuperMethods;
+import static com.google.errorprone.util.AnnotationNames.DEPRECATED_ANNOTATION;
+import static com.google.errorprone.util.AnnotationNames.OVERRIDE_ANNOTATION;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
@@ -60,7 +62,7 @@ public class MissingOverride extends BugChecker implements MethodTreeMatcher {
     if (sym.isStatic()) {
       return NO_MATCH;
     }
-    if (hasAnnotation(sym, Override.class.getName(), state)) {
+    if (hasAnnotation(sym, OVERRIDE_ANNOTATION, state)) {
       return NO_MATCH;
     }
     if (ignoreInterfaceOverrides && sym.enclClass().isInterface()) {
@@ -91,7 +93,7 @@ public class MissingOverride extends BugChecker implements MethodTreeMatcher {
         .filter(unused -> ASTHelpers.getGeneratedBy(state).isEmpty())
         // to allow deprecated methods to be removed non-atomically, we permit overrides of
         // @Deprecated to skip the annotation
-        .filter(override -> !hasAnnotation(override, Deprecated.class.getName(), state))
+        .filter(override -> !hasAnnotation(override, DEPRECATED_ANNOTATION, state))
         .map(override ->
             buildDescription(tree)
                 .addFix(SuggestedFix.prefixWith(tree, "@Override "))

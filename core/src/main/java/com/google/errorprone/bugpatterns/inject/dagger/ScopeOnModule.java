@@ -17,6 +17,7 @@
 package com.google.errorprone.bugpatterns.inject.dagger;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
+import static com.google.errorprone.matchers.InjectMatchers.JAVAX_SCOPE_ANNOTATION;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 
@@ -46,7 +47,7 @@ public final class ScopeOnModule extends BugChecker implements ClassTreeMatcher 
     List<SuggestedFix> fixes = new ArrayList<>();
     for (AnnotationTree annotation : classTree.getModifiers().getAnnotations()) {
       Symbol annotationType = getSymbol(annotation.getAnnotationType());
-      if (hasAnnotation(annotationType, "javax.inject.Scope", state)) {
+      if (hasAnnotation(annotationType, JAVAX_SCOPE_ANNOTATION, state)) {
         fixes.add(SuggestedFix.delete(annotation));
       }
     }

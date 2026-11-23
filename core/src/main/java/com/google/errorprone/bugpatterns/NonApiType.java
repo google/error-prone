@@ -33,6 +33,7 @@ import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import static com.google.errorprone.util.ASTHelpers.isRecord;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
 import static com.google.errorprone.util.ASTHelpers.streamSuperMethods;
+import static com.google.errorprone.util.AnnotationNames.AUTO_VALUE_BUILDER_ANNOTATION;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
@@ -61,6 +62,7 @@ import javax.lang.model.element.Modifier;
     // something about reducing build visibility
     severity = WARNING)
 public final class NonApiType extends BugChecker implements MethodTreeMatcher {
+
   // TODO(kak): consider creating an annotation (e.g., `@NonApiType` or `@NotForPublicApi`) that
   // users could apply to their own types.
 
@@ -105,8 +107,7 @@ public final class NonApiType extends BugChecker implements MethodTreeMatcher {
               (type, state) ->
                   NON_GRAPH_WRAPPER.apply(type, state)
                       // NOTE(b/503669492): allow Optional parameters in @AutoValue.Builder methods
-                      && !hasAnnotation(
-                          type.tsym, "com.google.auto.value.AutoValue.Builder", state),
+                      && !hasAnnotation(type.tsym, AUTO_VALUE_BUILDER_ANNOTATION, state),
               "Avoid Optional parameters. " + OPTIONAL_AS_PARAM_LINK,
               ApiElementType.PARAMETER),
           withPublicVisibility(

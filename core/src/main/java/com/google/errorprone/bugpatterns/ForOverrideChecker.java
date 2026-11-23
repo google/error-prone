@@ -19,6 +19,7 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.util.ASTHelpers.findSuperMethodInType;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
+import static com.google.errorprone.util.AnnotationNames.FOR_OVERRIDE_ANNOTATION;
 
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugPattern;
@@ -58,7 +59,6 @@ import org.jspecify.annotations.Nullable;
 public class ForOverrideChecker extends BugChecker
     implements MethodInvocationTreeMatcher, MethodTreeMatcher {
 
-  private static final String FOR_OVERRIDE = "com.google.errorprone.annotations.ForOverride";
   private static final String MESSAGE_BASE = "Method annotated @ForOverride ";
 
   @Override
@@ -199,12 +199,12 @@ public class ForOverrideChecker extends BugChecker
     // A loop rather than a stream, since this runs for every method invocation.
     Types types = state.getTypes();
     ImmutableList.Builder<MethodSymbol> result = ImmutableList.builder();
-    if (hasAnnotation(method, FOR_OVERRIDE, state)) {
+    if (hasAnnotation(method, FOR_OVERRIDE_ANNOTATION, state)) {
       result.add(method);
     }
     for (Type type : types.closure(method.owner.type)) {
       MethodSymbol superMethod = findSuperMethodInType(method, type, types);
-      if (superMethod != null && hasAnnotation(superMethod, FOR_OVERRIDE, state)) {
+      if (superMethod != null && hasAnnotation(superMethod, FOR_OVERRIDE_ANNOTATION, state)) {
         result.add(superMethod);
       }
     }

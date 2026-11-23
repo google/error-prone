@@ -21,6 +21,10 @@ import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.fixes.SuggestedFixes.qualifyType;
+import static com.google.errorprone.matchers.InjectMatchers.DAGGER_COMPONENT_BUILDER_ANNOTATION;
+import static com.google.errorprone.matchers.InjectMatchers.DAGGER_PRODUCTION_COMPONENT_BUILDER_ANNOTATION;
+import static com.google.errorprone.matchers.InjectMatchers.DAGGER_PRODUCTION_SUBCOMPONENT_BUILDER_ANNOTATION;
+import static com.google.errorprone.matchers.InjectMatchers.DAGGER_SUBCOMPONENT_BUILDER_ANNOTATION;
 import static com.google.errorprone.matchers.ProtobufMatchers.MESSAGE_LITE_BUILDER;
 import static com.google.errorprone.util.ASTHelpers.getAnnotationWithSimpleName;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
@@ -95,10 +99,10 @@ public final class CanIgnoreReturnValueSuggester extends BugChecker implements M
           // keep-sorted start
           AUTO_BUILDER_ANNOTATION,
           AUTO_VALUE_BUILDER_ANNOTATION,
-          ClassName.of("dagger.Component.Builder"),
-          ClassName.of("dagger.Subcomponent.Builder"),
-          ClassName.of("dagger.producers.ProductionComponent.Builder"),
-          ClassName.of("dagger.producers.ProductionSubcomponent.Builder")
+          DAGGER_COMPONENT_BUILDER_ANNOTATION,
+          DAGGER_PRODUCTION_COMPONENT_BUILDER_ANNOTATION,
+          DAGGER_PRODUCTION_SUBCOMPONENT_BUILDER_ANNOTATION,
+          DAGGER_SUBCOMPONENT_BUILDER_ANNOTATION
           // keep-sorted end
           );
 

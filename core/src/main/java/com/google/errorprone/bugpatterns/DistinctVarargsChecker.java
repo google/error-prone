@@ -23,10 +23,10 @@ import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 import static com.google.errorprone.suppliers.Suppliers.OBJECT_TYPE;
 import static com.google.errorprone.suppliers.Suppliers.OBJECT_TYPE_ARRAY;
 import static com.google.errorprone.suppliers.Suppliers.arrayOf;
-import static com.google.errorprone.suppliers.Suppliers.typeFromString;
 
 import com.google.common.collect.ImmutableListMultimap;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.ClassName;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -95,7 +95,7 @@ public final class DistinctVarargsChecker extends BugChecker
               .onClass("com.google.common.util.concurrent.Futures")
               .namedAnyOf("whenAllSucceed", "whenAllComplete")
               .withParametersOfType(
-                  arrayOf(typeFromString("com.google.common.util.concurrent.ListenableFuture"))),
+                  arrayOf(ClassName.of("com.google.common.util.concurrent.ListenableFuture"))),
           staticMethod()
               .onClassAny(
                   "com.google.common.primitives.Ints",

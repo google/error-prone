@@ -22,6 +22,7 @@ import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
+import static com.google.errorprone.util.AnnotationNames.BUG_PATTERN_ANNOTATION;
 import static com.google.errorprone.util.MoreAnnotations.getValue;
 
 import com.google.errorprone.BugPattern;
@@ -42,8 +43,8 @@ import java.util.Optional;
     severity = WARNING)
 public final class BugPatternNaming extends BugChecker implements ClassTreeMatcher {
 
-  private static final ClassName BUG_CHECKER = ClassName.of(BugChecker.class.getName());
-  private static final ClassName BUG_PATTERN = ClassName.of(BugPattern.class.getName());
+  private static final ClassName BUG_CHECKER =
+      ClassName.of("com.google.errorprone.bugpatterns.BugChecker");
 
   @Override
   public Description matchClass(ClassTree tree, VisitorState state) {
@@ -51,7 +52,7 @@ public final class BugPatternNaming extends BugChecker implements ClassTreeMatch
       return NO_MATCH;
     }
     var classSymbol = getSymbol(tree);
-    var attribute = classSymbol.attribute(BUG_PATTERN.symbol(state));
+    var attribute = classSymbol.attribute(BUG_PATTERN_ANNOTATION.symbol(state));
     if (attribute == null) {
       // e.g. abstract subtypes of BugChecker
       return NO_MATCH;
@@ -70,7 +71,8 @@ public final class BugPatternNaming extends BugChecker implements ClassTreeMatch
 
   private Optional<Description> removeName(ClassTree tree, VisitorState state) {
     return tree.getModifiers().getAnnotations().stream()
-        .filter(anno -> isSameType(getType(anno.getAnnotationType()), BUG_PATTERN, state))
+        .filter(
+            anno -> isSameType(getType(anno.getAnnotationType()), BUG_PATTERN_ANNOTATION, state))
         .findFirst()
         .flatMap(anno ->
             anno.getArguments().stream()

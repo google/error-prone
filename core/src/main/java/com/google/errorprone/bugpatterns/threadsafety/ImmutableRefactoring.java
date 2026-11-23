@@ -22,6 +22,7 @@ import static com.google.errorprone.util.ASTHelpers.getAnnotationsWithSimpleName
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.ClassName;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.Immutable;
 import com.google.errorprone.bugpatterns.BugChecker;
@@ -68,7 +69,7 @@ public class ImmutableRefactoring extends BugChecker implements CompilationUnitT
         tree.getImports().stream()
             .filter(i -> {
               Symbol s = ASTHelpers.getSymbol(i.getQualifiedIdentifier());
-              return s != null && s.getQualifiedName().contentEquals(JSR_305_IMMUTABLE);
+              return s != null && s.flatName().equals(IMMUTABLE.binaryName(state));
             })
             .findFirst();
     if (immutableImport.isEmpty()) {
@@ -78,7 +79,7 @@ public class ImmutableRefactoring extends BugChecker implements CompilationUnitT
     new TreePathScanner<Void, Void>() {
       @Override
       public Void visitClass(ClassTree node, Void unused) {
-        if (!ASTHelpers.hasAnnotation(node, JSR_305_IMMUTABLE, state)) {
+        if (!ASTHelpers.hasAnnotation(node, IMMUTABLE, state)) {
           return super.visitClass(node, null);
         }
         boolean violator =
@@ -99,7 +100,9 @@ public class ImmutableRefactoring extends BugChecker implements CompilationUnitT
     }.scan(state.getPath(), null);
 
     SuggestedFix.Builder fixBuilder =
-        SuggestedFix.builder().removeImport(JSR_305_IMMUTABLE).addImport(Immutable.class.getName());
+        SuggestedFix.builder()
+            .removeImport(JSR_305_IMMUTABLE)
+            .addImport("com.google.errorprone.annotations.Immutable");
     for (ClassTree classTree : notOk) {
       getAnnotationsWithSimpleName(classTree.getModifiers().getAnnotations(), "Immutable")
           .forEach(fixBuilder::delete);
@@ -111,4 +114,6 @@ public class ImmutableRefactoring extends BugChecker implements CompilationUnitT
     }
     return describeMatch(immutableImport.get(), fixBuilder.build());
   }
+
+  private static final ClassName IMMUTABLE = ClassName.of(JSR_305_IMMUTABLE);
 }

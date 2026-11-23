@@ -52,7 +52,6 @@ import com.sun.tools.javac.code.Symbol;
 import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Optional;
-import java.util.concurrent.Executor;
 
 /** See summary for details. */
 @BugPattern(
@@ -101,11 +100,14 @@ public final class FutureTransformAsync extends BugChecker implements MethodInvo
 
   private static final Matcher<ExpressionTree> CALL_ASYNC_MATCHER =
       instanceMethod()
-          .onExactClassAny(ImmutableSet.of(Futures.FutureCombiner.class.getName()))
+          .onExactClassAny(
+              ImmutableSet.of("com.google.common.util.concurrent.Futures.FutureCombiner"))
           .named("callAsync");
 
   private static final Matcher<ExpressionTree> SUBMIT_ASYNC_MATCHER =
-      staticMethod().onClassAny(ImmutableSet.of(Futures.class.getName())).named("submitAsync");
+      staticMethod()
+          .onClassAny(ImmutableSet.of("com.google.common.util.concurrent.Futures"))
+          .named("submitAsync");
 
   private static final Matcher<ExpressionTree> IMMEDIATE_FUTURE =
       staticMethod()
@@ -124,7 +126,7 @@ public final class FutureTransformAsync extends BugChecker implements MethodInvo
           .named("immediateVoidFuture");
 
   private static final Matcher<LambdaExpressionTree> EXECUTOR =
-      Matchers.isSubtypeOf(Executor.class.getName());
+      Matchers.isSubtypeOf("java.util.concurrent.Executor");
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {

@@ -24,6 +24,7 @@ import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.StandardTags;
+import com.google.errorprone.ClassName;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.SuppressPackageLocation;
 import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
@@ -55,8 +56,7 @@ public class PackageLocation extends BugChecker implements CompilationUnitTreeMa
 
     // package-info annotations are special
     // TODO(cushon): fix the core suppression logic to handle this
-    if (hasAnnotation(
-        tree.getPackage(), "com.google.errorprone.annotations.SuppressPackageLocation", state)) {
+    if (hasAnnotation(tree.getPackage(), SUPPRESS_PACKAGE_LOCATION, state)) {
       return Description.NO_MATCH;
     }
 
@@ -84,4 +84,7 @@ public class PackageLocation extends BugChecker implements CompilationUnitTreeMa
             packageName, Joiner.on('/').join(expectedSuffix), Joiner.on('/').join(actualSuffix));
     return buildDescription(tree.getPackageName()).setMessage(message).build();
   }
+
+  private static final ClassName SUPPRESS_PACKAGE_LOCATION =
+      ClassName.of("com.google.errorprone.annotations.SuppressPackageLocation");
 }

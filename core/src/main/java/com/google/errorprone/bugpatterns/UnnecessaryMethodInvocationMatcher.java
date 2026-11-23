@@ -27,7 +27,6 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
-import com.google.errorprone.matchers.method.MethodMatchers.MethodMatcher;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
@@ -47,8 +46,9 @@ import java.util.List;
 public class UnnecessaryMethodInvocationMatcher extends BugChecker
     implements MethodInvocationTreeMatcher {
 
-  private static final ClassName MATCHERS = ClassName.of(Matchers.class.getName());
-  private static final ClassName METHOD_MATCHER = ClassName.of(MethodMatcher.class.getName());
+  private static final ClassName MATCHERS = ClassName.of("com.google.errorprone.matchers.Matchers");
+  private static final ClassName METHOD_MATCHER =
+      ClassName.of("com.google.errorprone.matchers.method.MethodMatchers.MethodMatcher");
   private static final Matcher<ExpressionTree> METHOD_INVOCATION =
       staticMethod().onClass(MATCHERS).named("methodInvocation");
   private static final Matcher<ExpressionTree> COMBINATOR =

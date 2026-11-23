@@ -36,6 +36,7 @@ import static javax.lang.model.element.Modifier.STATIC;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.ClassName;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.FormatMethod;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
@@ -197,7 +198,7 @@ public final class ChainedAssertionLosesContext extends BugChecker
      * sometimes it misses it, I believe because it can't decide between that and
      * IterableOfProtosSubject.iterableOfMessages.
      */
-    if (assertThatSymbol.owner.getQualifiedName().contentEquals(PROTO_TRUTH_CLASS)) {
+    if (assertThatSymbol.owner.flatName().equals(PROTO_TRUTH.binaryName(state))) {
       return FactoryMethodName.create(PROTO_TRUTH_CLASS, "protos");
     }
     ImmutableSet<MethodSymbol> factories =
@@ -293,4 +294,6 @@ public final class ChainedAssertionLosesContext extends BugChecker
 
   private static final Supplier<Type> COM_GOOGLE_COMMON_TRUTH_SUBJECT =
       typeFromString(SUBJECT_CLASS);
+
+  private static final ClassName PROTO_TRUTH = ClassName.of(PROTO_TRUTH_CLASS);
 }

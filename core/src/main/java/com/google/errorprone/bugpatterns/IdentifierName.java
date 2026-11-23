@@ -26,6 +26,7 @@ import static com.google.errorprone.fixes.SuggestedFixes.renameClassWithUses;
 import static com.google.errorprone.fixes.SuggestedFixes.renameMethodWithInvocations;
 import static com.google.errorprone.fixes.SuggestedFixes.renameVariable;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.matchers.JUnitMatchers.JUNIT4_IGNORE_ANNOTATION;
 import static com.google.errorprone.matchers.JUnitMatchers.TEST_CASE;
 import static com.google.errorprone.util.ASTHelpers.annotationsAmong;
 import static com.google.errorprone.util.ASTHelpers.canBeRemoved;
@@ -143,7 +144,7 @@ public final class IdentifierName extends BugChecker
       return NO_MATCH;
     }
     // It is a surprisingly common error to replace @Test with @Ignore to ignore a test.
-    if (hasAnnotation(symbol, "org.junit.Ignore", state)) {
+    if (hasAnnotation(symbol, JUNIT4_IGNORE_ANNOTATION, state)) {
       return NO_MATCH;
     }
     if (!findSuperMethods(symbol, state.getTypes()).isEmpty()) {

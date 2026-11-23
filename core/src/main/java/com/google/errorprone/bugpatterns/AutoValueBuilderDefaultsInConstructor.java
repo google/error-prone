@@ -23,6 +23,7 @@ import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
+import static com.google.errorprone.util.AnnotationNames.AUTO_VALUE_BUILDER_ANNOTATION;
 import static java.lang.String.join;
 
 import com.google.common.collect.ImmutableList;
@@ -57,7 +58,7 @@ public final class AutoValueBuilderDefaultsInConstructor extends BugChecker
     if (!symbol.isConstructor()) {
       return NO_MATCH;
     }
-    if (!hasAnnotation(symbol.owner, "com.google.auto.value.AutoValue.Builder", state)) {
+    if (!hasAnnotation(symbol.owner, AUTO_VALUE_BUILDER_ANNOTATION, state)) {
       return NO_MATCH;
     }
     ImmutableList<String> invocations =

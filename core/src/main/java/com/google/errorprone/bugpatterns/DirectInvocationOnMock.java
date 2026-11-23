@@ -34,6 +34,7 @@ import static java.lang.String.format;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.ClassName;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -134,7 +135,8 @@ public final class DirectInvocationOnMock extends BugChecker implements Compilat
         return symbol != null
             && (mocks.contains(symbol)
                 || symbol.getAnnotationMirrors().stream()
-                    .filter(am -> am.type.tsym.getQualifiedName().contentEquals("org.mockito.Mock"))
+                    .filter(
+                        am -> am.type.tsym.flatName().equals(ORG_MOCKITO_MOCK.binaryName(state)))
                     .findFirst()
                     .filter(am -> getValue((AnnotationMirror) am, "answer").isEmpty())
                     .isPresent());
@@ -202,4 +204,6 @@ public final class DirectInvocationOnMock extends BugChecker implements Compilat
           instanceMethod()
               .onDescendantOf("org.mockito.BDDMockito.BDDMyOngoingStubbing")
               .named("willCallRealMethod"));
+
+  private static final ClassName ORG_MOCKITO_MOCK = ClassName.of("org.mockito.Mock");
 }

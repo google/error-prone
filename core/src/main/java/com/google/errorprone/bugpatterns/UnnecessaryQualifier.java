@@ -25,8 +25,12 @@ import static com.google.errorprone.matchers.ChildMultiMatcher.MatchType.AT_LEAS
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.InjectMatchers.ASSISTED_ANNOTATION;
 import static com.google.errorprone.matchers.InjectMatchers.ASSISTED_INJECT_ANNOTATION;
+import static com.google.errorprone.matchers.InjectMatchers.DAGGER_COMPONENT_BUILDER_ANNOTATION;
 import static com.google.errorprone.matchers.InjectMatchers.DAGGER_PRODUCES_ANNOTATION;
+import static com.google.errorprone.matchers.InjectMatchers.DAGGER_PRODUCTION_COMPONENT_BUILDER_ANNOTATION;
+import static com.google.errorprone.matchers.InjectMatchers.DAGGER_PRODUCTION_SUBCOMPONENT_BUILDER_ANNOTATION;
 import static com.google.errorprone.matchers.InjectMatchers.DAGGER_PROVIDES_ANNOTATION;
+import static com.google.errorprone.matchers.InjectMatchers.DAGGER_SUBCOMPONENT_BUILDER_ANNOTATION;
 import static com.google.errorprone.matchers.InjectMatchers.GUICE_BINDING_ANNOTATION;
 import static com.google.errorprone.matchers.InjectMatchers.JAVAX_QUALIFIER_ANNOTATION;
 import static com.google.errorprone.matchers.JUnitMatchers.TEST_CASE;
@@ -250,18 +254,18 @@ public final class UnnecessaryQualifier extends BugChecker
           // keep-sorted start
           AUTO_FACTORY_ANNOTATION,
           ClassName.of("dagger.Component"),
-          ClassName.of("dagger.Component.Builder"),
           ClassName.of("dagger.Component.Factory"),
           ClassName.of("dagger.Subcomponent"),
-          ClassName.of("dagger.Subcomponent.Builder"),
           ClassName.of("dagger.Subcomponent.Factory"),
           ClassName.of("dagger.hilt.EntryPoint"),
           ClassName.of("dagger.producers.ProductionComponent"),
-          ClassName.of("dagger.producers.ProductionComponent.Builder"),
           ClassName.of("dagger.producers.ProductionComponent.Factory"),
           ClassName.of("dagger.producers.ProductionSubcomponent"),
-          ClassName.of("dagger.producers.ProductionSubcomponent.Builder"),
-          ClassName.of("dagger.producers.ProductionSubcomponent.Factory")
+          ClassName.of("dagger.producers.ProductionSubcomponent.Factory"),
+          DAGGER_COMPONENT_BUILDER_ANNOTATION,
+          DAGGER_PRODUCTION_COMPONENT_BUILDER_ANNOTATION,
+          DAGGER_PRODUCTION_SUBCOMPONENT_BUILDER_ANNOTATION,
+          DAGGER_SUBCOMPONENT_BUILDER_ANNOTATION
           // keep-sorted end
           );
 

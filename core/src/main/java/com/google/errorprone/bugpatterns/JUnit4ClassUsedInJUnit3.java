@@ -18,6 +18,7 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.matchers.JUnitMatchers.JUNIT4_RULE_ANNOTATION;
 import static com.google.errorprone.matchers.JUnitMatchers.isJUnit3TestClass;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.enclosingClass;
@@ -51,6 +52,8 @@ public class JUnit4ClassUsedInJUnit3 extends BugChecker
           staticMethod().onClass("org.junit.Assume").withAnyName(),
           enclosingClass(isJUnit3TestClass));
 
+  private static final Matcher<AnnotationTree> IS_RULE = isType(JUNIT4_RULE_ANNOTATION);
+
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
     // An Assume method has been called within a JUnit3 class
@@ -67,7 +70,7 @@ public class JUnit4ClassUsedInJUnit3 extends BugChecker
       return NO_MATCH;
     }
     // If we are inside a JUnit3 test class some annotations should not appear.
-    if (isType("org.junit.Rule").matches(tree, state)) {
+    if (IS_RULE.matches(tree, state)) {
       return makeDescription("@Rule", tree);
     }
 

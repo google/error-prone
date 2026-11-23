@@ -37,6 +37,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.ClassName;
 import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
@@ -505,7 +506,7 @@ public class JdkObsolete extends BugChecker
     if (description == NO_MATCH) {
       return NO_MATCH;
     }
-    if (owner.getQualifiedName().contentEquals("java.lang.StringBuffer")
+    if (owner.flatName().equals(STRING_BUFFER.binaryName(state))
         && androidMinSdkVersion.isPresent()
         && androidMinSdkVersion.get() < 34) {
       boolean[] found = {false};
@@ -768,4 +769,6 @@ public class JdkObsolete extends BugChecker
         .findFirst()
         .orElse(NO_MATCH);
   }
+
+  private static final ClassName STRING_BUFFER = ClassName.of("java.lang.StringBuffer");
 }

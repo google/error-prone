@@ -59,7 +59,6 @@ import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Symbol;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Stream;
 import javax.inject.Inject;
 import javax.lang.model.element.Modifier;
 
@@ -79,20 +78,22 @@ public final class ImmutableSetForContains extends BugChecker implements ClassTr
           isStatic(),
           hasModifier(Modifier.PRIVATE),
           hasModifier(Modifier.FINAL),
-          isSameType(ImmutableList.class));
+          isSameType("com.google.common.collect.ImmutableList"));
 
   private static final Matcher<Tree> EXCLUSIONS =
       anyOf(hasAnnotationWithSimpleName("Bind"), hasAnnotationWithSimpleName("Inject"));
 
   private static final Matcher<ExpressionTree> IMMUTABLE_LIST_FACTORIES =
-      staticMethod().onClass(ImmutableList.class.getName()).namedAnyOf("of", "copyOf");
+      staticMethod().onClass("com.google.common.collect.ImmutableList").namedAnyOf("of", "copyOf");
   private static final Matcher<ExpressionTree> IMMUTABLE_LIST_BUILD =
-      instanceMethod().onExactClass(ImmutableList.Builder.class.getName()).namedAnyOf("build");
+      instanceMethod()
+          .onExactClass("com.google.common.collect.ImmutableList.Builder")
+          .namedAnyOf("build");
   private static final Matcher<ExpressionTree> IMMUTABLE_COLLECTION =
-      instanceMethod().onExactClass(Stream.class.getName()).named("collect");
+      instanceMethod().onExactClass("java.util.stream.Stream").named("collect");
   private static final Matcher<ExpressionTree> IMMUTABLE_BUILDER_METHODS =
       instanceMethod()
-          .onExactClass(ImmutableList.Builder.class.getName())
+          .onExactClass("com.google.common.collect.ImmutableList.Builder")
           .namedAnyOf("add", "addAll");
 
   private final WellKnownKeep wellKnownKeep;
@@ -139,7 +140,7 @@ public final class ImmutableSetForContains extends BugChecker implements ClassTr
   private static SuggestedFix convertListToSetInit(VariableTree var, VisitorState state) {
     SuggestedFix.Builder fix =
         SuggestedFix.builder()
-            .addImport(ImmutableSet.class.getName())
+            .addImport("com.google.common.collect.ImmutableSet")
             .replace(stripParameters(var.getType()), "ImmutableSet");
     if (IMMUTABLE_LIST_FACTORIES.matches(var.getInitializer(), state)) {
       fix.replace(getReceiver(var.getInitializer()), "ImmutableSet");
@@ -191,7 +192,7 @@ public final class ImmutableSetForContains extends BugChecker implements ClassTr
 
     private static final Matcher<ExpressionTree> ALLOWED_FUNCTIONS_ON_LIST =
         instanceMethod()
-            .onExactClass(ImmutableList.class.getName())
+            .onExactClass("com.google.common.collect.ImmutableList")
             .namedAnyOf("contains", "containsAll", "isEmpty");
 
     // For each ImmutableList usage var, we will keep a map indicating if the var has been used in a

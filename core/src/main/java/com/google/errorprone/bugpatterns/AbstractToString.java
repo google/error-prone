@@ -30,7 +30,6 @@ import static com.google.errorprone.util.ASTHelpers.getType;
 
 import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
-import com.google.errorprone.annotations.FormatMethod;
 import com.google.errorprone.bugpatterns.BugChecker.BinaryTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.CompoundAssignmentTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MemberReferenceTreeMatcher;
@@ -141,7 +140,7 @@ public abstract class AbstractToString extends BugChecker
       instanceMethod().onDescendantOf("com.google.common.flogger.LoggingApi").named("log");
 
   private static final Matcher<ExpressionTree> FORMAT_METHOD =
-      symbolHasAnnotation(FormatMethod.class);
+      symbolHasAnnotation("com.google.errorprone.annotations.FormatMethod");
 
   private static final Matcher<ExpressionTree> STRING_FORMAT =
       anyOf(stringFormatInvocation(), stringFormattedInvocation());

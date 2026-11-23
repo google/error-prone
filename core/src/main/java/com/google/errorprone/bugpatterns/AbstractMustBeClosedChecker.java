@@ -41,6 +41,7 @@ import static com.google.errorprone.util.ASTHelpers.isInStaticInitializer;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
 import static com.google.errorprone.util.ASTHelpers.variableIsStaticFinal;
+import static com.google.errorprone.util.AnnotationNames.MUST_BE_CLOSED_ANNOTATION;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.base.CaseFormat;
@@ -77,7 +78,6 @@ import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Stream;
 import javax.lang.model.element.ElementKind;
 
 /**
@@ -85,12 +85,9 @@ import javax.lang.model.element.ElementKind;
  * {@link MustBeClosedChecker}.
  */
 public abstract class AbstractMustBeClosedChecker extends BugChecker {
-  private static final String MUST_BE_CLOSED_ANNOTATION_NAME =
-      MustBeClosed.class.getCanonicalName();
-
   /** Matches trees annotated with {@link MustBeClosed}. */
   protected static final Matcher<Tree> HAS_MUST_BE_CLOSED_ANNOTATION =
-      symbolHasAnnotation(MUST_BE_CLOSED_ANNOTATION_NAME);
+      symbolHasAnnotation(MUST_BE_CLOSED_ANNOTATION);
 
   private static final Matcher<ExpressionTree> CLOSE_METHOD =
       instanceMethod().onDescendantOf("java.lang.AutoCloseable").named("close");
@@ -304,7 +301,7 @@ public abstract class AbstractMustBeClosedChecker extends BugChecker {
           return Change.of(
               SuggestedFix.builder()
                   .prefixWith(callerMethodTree, "@MustBeClosed\n")
-                  .addImport(MustBeClosed.class.getCanonicalName())
+                  .addImport("com.google.errorprone.annotations.MustBeClosed")
                   .build());
         }
         case LambdaExpressionTree lambdaExpressionTree -> {
@@ -381,7 +378,7 @@ public abstract class AbstractMustBeClosedChecker extends BugChecker {
       ExpressionTree functionalExpression, VisitorState state) {
     if (hasAnnotation(
         state.getTypes().findDescriptorSymbol(getType(functionalExpression).tsym),
-        MUST_BE_CLOSED_ANNOTATION_NAME,
+        MUST_BE_CLOSED_ANNOTATION,
         state)) {
       return Optional.empty();
     }
@@ -564,5 +561,5 @@ public abstract class AbstractMustBeClosedChecker extends BugChecker {
         .anyMatch(value -> isSubtype(decoratorType, state.getTypeFromString(value), state));
   }
 
-  private static final ClassName STREAM = ClassName.of(Stream.class.getName());
+  private static final ClassName STREAM = ClassName.of("java.util.stream.Stream");
 }

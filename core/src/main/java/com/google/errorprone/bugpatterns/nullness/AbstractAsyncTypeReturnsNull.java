@@ -28,7 +28,6 @@ import static com.google.errorprone.util.ASTHelpers.streamSuperMethods;
 import static com.sun.source.tree.Tree.Kind.NULL_LITERAL;
 
 import com.google.common.collect.ImmutableSet;
-import com.google.common.util.concurrent.Futures;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.LambdaExpressionTreeMatcher;
@@ -130,7 +129,7 @@ abstract class AbstractAsyncTypeReturnsNull extends BugChecker
     return tree.getKind() == NULL_LITERAL
         ? SuggestedFix.builder()
             .replace(tree, "immediateFuture(null)")
-            .addStaticImport(Futures.class.getName() + ".immediateFuture")
+            .addStaticImport("com.google.common.util.concurrent.Futures.immediateFuture")
             .build()
         /*
          * TODO: cpovirk - Provide a variant of hasDefinitelyNullBranch that returns a Set<Tree> of

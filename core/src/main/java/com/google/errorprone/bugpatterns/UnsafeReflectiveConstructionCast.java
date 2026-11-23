@@ -35,7 +35,6 @@ import com.sun.source.tree.TypeCastTree;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Types;
-import java.lang.reflect.Constructor;
 
 /**
  * Checks unsafe instance creation via reflection.
@@ -53,13 +52,13 @@ import java.lang.reflect.Constructor;
 public class UnsafeReflectiveConstructionCast extends BugChecker implements TypeCastTreeMatcher {
 
   private static final Matcher<ExpressionTree> CLASS_FOR_NAME =
-      staticMethod().onClass(Class.class.getName()).named("forName");
+      staticMethod().onClass("java.lang.Class").named("forName");
   private static final Matcher<ExpressionTree> CLASS_GET_CONSTRUCTOR =
       instanceMethod()
-          .onExactClass(Class.class.getName())
+          .onExactClass("java.lang.Class")
           .namedAnyOf("getDeclaredConstructor", "getConstructor");
   private static final Matcher<ExpressionTree> CTOR_NEW_INSTANCE =
-      instanceMethod().onExactClass(Constructor.class.getName()).named("newInstance");
+      instanceMethod().onExactClass("java.lang.reflect.Constructor").named("newInstance");
 
   @Override
   public Description matchTypeCast(TypeCastTree typeCastTree, VisitorState state) {

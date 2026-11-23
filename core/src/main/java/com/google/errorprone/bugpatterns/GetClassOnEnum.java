@@ -37,7 +37,7 @@ import com.sun.source.tree.MethodInvocationTree;
 public class GetClassOnEnum extends BugChecker implements BugChecker.MethodInvocationTreeMatcher {
 
   private static final Matcher<ExpressionTree> ENUM_CLASS =
-      instanceMethod().onDescendantOf(Enum.class.getName()).named("getClass").withNoParameters();
+      instanceMethod().onDescendantOf("java.lang.Enum").named("getClass").withNoParameters();
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {

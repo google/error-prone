@@ -37,7 +37,6 @@ import com.sun.tools.javac.code.Type.WildcardType;
 import com.sun.tools.javac.code.TypeTag;
 import com.sun.tools.javac.tree.JCTree.JCLambda;
 import com.sun.tools.javac.tree.JCTree.JCLambda.ParameterKind;
-import java.nio.file.Path;
 import javax.lang.model.element.ElementKind;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
@@ -45,7 +44,7 @@ import javax.lang.model.element.ElementKind;
     summary = "Path implements Iterable<Path>; prefer Collection<Path> for clarity",
     severity = ERROR)
 public class IterablePathParameter extends BugChecker implements VariableTreeMatcher {
-  private static final ClassName PATH = ClassName.of(Path.class.getName());
+  private static final ClassName PATH = ClassName.of("java.nio.file.Path");
 
   @Override
   public Description matchVariable(VariableTree tree, VisitorState state) {

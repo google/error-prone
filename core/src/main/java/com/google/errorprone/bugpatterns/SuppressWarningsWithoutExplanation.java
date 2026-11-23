@@ -61,7 +61,7 @@ public final class SuppressWarningsWithoutExplanation extends BugChecker
     implements CompilationUnitTreeMatcher {
   private static final Matcher<AnnotationTree> SUPPRESS_WARNINGS =
       allOf(
-          isSameType(SuppressWarnings.class),
+          isSameType("java.lang.SuppressWarnings"),
           hasArgumentWithValue(
               "value",
               anyOf(

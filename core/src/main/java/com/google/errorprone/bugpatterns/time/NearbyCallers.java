@@ -24,8 +24,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
-import com.google.protobuf.GeneratedMessage;
-import com.google.protobuf.GeneratedMessageLite;
 import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionTree;
@@ -53,7 +51,8 @@ public final class NearbyCallers {
       allOf(
           instanceMethod()
               .onDescendantOfAny(
-                  GeneratedMessage.class.getName(), GeneratedMessageLite.class.getName())
+                  "com.google.protobuf.GeneratedMessage",
+                  "com.google.protobuf.GeneratedMessageLite")
               .withNameMatching(Pattern.compile("get.+"))
               .withNoParameters(),
           not(instanceMethod().anyClass().namedAnyOf("getCachedSize", "getSerializedSize")));

@@ -34,7 +34,6 @@ import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
-import com.google.errorprone.suppliers.Suppliers;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
@@ -42,7 +41,6 @@ import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.util.SimpleTreeVisitor;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
-import com.sun.tools.javac.code.Type;
 import java.util.List;
 import org.jspecify.annotations.Nullable;
 
@@ -87,11 +85,11 @@ public final class TruthAssertExpected extends BugChecker implements MethodInvoc
     if (identifier == null) {
       return false;
     }
-    Type throwable = Suppliers.typeFromClass(Throwable.class).get(state);
     String identifierName = Ascii.toLowerCase(identifier.getName().toString());
     return identifierName.contains("expected")
         && !identifierName.contains("actual")
-        && !ASTHelpers.isSubtype(ASTHelpers.getType(identifier), throwable, state);
+        && !ASTHelpers.isSubtype(
+            ASTHelpers.getType(identifier), state.getSymtab().throwableType, state);
   }
 
   private static final Matcher<ExpressionTree> ASSERT_ON_EXPECTED =

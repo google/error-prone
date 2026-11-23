@@ -29,7 +29,6 @@ import static com.sun.tools.javac.code.TypeTag.BOT;
 import static javax.lang.model.element.Modifier.PUBLIC;
 
 import com.google.common.collect.Iterables;
-import com.google.common.util.concurrent.Futures;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
@@ -74,7 +73,7 @@ public final class FuturesGetCheckedIllegalExceptionType extends BugChecker
               .replace(
                   tree,
                   "getUnchecked(" + state.getSourceForNode(tree.getArguments().getFirst()) + ")")
-              .addStaticImport(Futures.class.getName() + ".getUnchecked")
+              .addStaticImport("com.google.common.util.concurrent.Futures.getUnchecked")
               .build());
     }
 
@@ -86,7 +85,8 @@ public final class FuturesGetCheckedIllegalExceptionType extends BugChecker
   }
 
   private static final Matcher<ExpressionTree> FUTURES_GET_CHECKED_MATCHER =
-      anyOf(staticMethod().onClass(Futures.class.getName()).named("getChecked"));
+      anyOf(
+          staticMethod().onClass("com.google.common.util.concurrent.Futures").named("getChecked"));
 
   private static final Matcher<ExpressionTree> CLASS_OBJECT_FOR_CLASS_EXTENDING_RUNTIME_EXCEPTION =
       (ExpressionTree tree, VisitorState state) -> {

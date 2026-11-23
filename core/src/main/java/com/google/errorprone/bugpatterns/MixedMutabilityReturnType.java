@@ -30,9 +30,6 @@ import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.hasImplicitType;
 import static com.google.errorprone.util.ASTHelpers.methodCanBeOverridden;
 
-import com.google.common.collect.BiMap;
-import com.google.common.collect.HashBiMap;
-import com.google.common.collect.ImmutableCollection;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.errorprone.BugPattern;
@@ -59,17 +56,10 @@ import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.SortedMap;
-import java.util.TreeMap;
 import javax.lang.model.type.TypeKind;
 
 /**
@@ -105,45 +95,45 @@ public final class MixedMutabilityReturnType extends BugChecker
   private static final Matcher<ExpressionTree> IMMUTABLE =
       anyOf(
           IMMUTABLE_FACTORY,
-          isSubtypeOf(ImmutableCollection.class),
-          isSubtypeOf(ImmutableMap.class));
+          isSubtypeOf("com.google.common.collect.ImmutableCollection"),
+          isSubtypeOf("com.google.common.collect.ImmutableMap"));
 
   private static final Matcher<ExpressionTree> MUTABLE =
       anyOf(
-          isSubtypeOf(ArrayList.class),
-          isSubtypeOf(LinkedHashSet.class),
-          isSubtypeOf(LinkedHashMap.class),
-          isSubtypeOf(LinkedList.class),
-          isSubtypeOf(HashMap.class),
-          isSubtypeOf(HashBiMap.class),
-          isSubtypeOf(TreeMap.class));
+          isSubtypeOf("java.util.ArrayList"),
+          isSubtypeOf("java.util.LinkedHashSet"),
+          isSubtypeOf("java.util.LinkedHashMap"),
+          isSubtypeOf("java.util.LinkedList"),
+          isSubtypeOf("java.util.HashMap"),
+          isSubtypeOf("com.google.common.collect.HashBiMap"),
+          isSubtypeOf("java.util.TreeMap"));
 
   private static final Matcher<Tree> RETURNS_COLLECTION =
-      anyOf(isSubtypeOf(Collection.class), isSubtypeOf(Map.class));
+      anyOf(isSubtypeOf("java.util.Collection"), isSubtypeOf("java.util.Map"));
 
   private static final ImmutableMap<Matcher<Tree>, TypeDetails> REFACTORING_DETAILS =
       ImmutableMap.of(
-          isSubtypeOf(BiMap.class),
+          isSubtypeOf("com.google.common.collect.BiMap"),
               TypeDetails.of(
                   "com.google.common.collect.ImmutableBiMap",
                   instanceMethod()
-                      .onDescendantOf(BiMap.class.getName())
+                      .onDescendantOf("com.google.common.collect.BiMap")
                       .namedAnyOf("put", "putAll"),
                   nothing()),
-          allOf(isSubtypeOf(Map.class), not(isSubtypeOf(BiMap.class))),
+          allOf(isSubtypeOf("java.util.Map"), not(isSubtypeOf("com.google.common.collect.BiMap"))),
               TypeDetails.of(
                   "com.google.common.collect.ImmutableMap",
-                  instanceMethod().onDescendantOf(Map.class.getName()).namedAnyOf("put", "putAll"),
-                  isSubtypeOf(SortedMap.class)),
-          isSubtypeOf(List.class),
+                  instanceMethod().onDescendantOf("java.util.Map").namedAnyOf("put", "putAll"),
+                  isSubtypeOf("java.util.SortedMap")),
+          isSubtypeOf("java.util.List"),
               TypeDetails.of(
                   "com.google.common.collect.ImmutableList",
-                  instanceMethod().onDescendantOf(List.class.getName()).namedAnyOf("add", "addAll"),
+                  instanceMethod().onDescendantOf("java.util.List").namedAnyOf("add", "addAll"),
                   nothing()),
-          isSubtypeOf(Set.class),
+          isSubtypeOf("java.util.Set"),
               TypeDetails.of(
                   "com.google.common.collect.ImmutableSet",
-                  instanceMethod().onDescendantOf(Set.class.getName()).namedAnyOf("add", "addAll"),
+                  instanceMethod().onDescendantOf("java.util.Set").namedAnyOf("add", "addAll"),
                   nothing()));
 
   @Override

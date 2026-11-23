@@ -63,13 +63,13 @@ import javax.inject.Inject;
     severity = ERROR)
 public class MustBeClosedChecker extends AbstractMustBeClosedChecker
     implements MethodTreeMatcher, ClassTreeMatcher {
-  private static final Matcher<Tree> IS_AUTOCLOSEABLE = isSubtypeOf(AutoCloseable.class);
+  private static final Matcher<Tree> IS_AUTOCLOSEABLE = isSubtypeOf("java.lang.AutoCloseable");
 
   private static final Matcher<MethodTree> METHOD_RETURNS_AUTO_CLOSEABLE_MATCHER =
       allOf(not(methodIsConstructor()), methodReturns(IS_AUTOCLOSEABLE));
 
   private static final Matcher<MethodTree> AUTO_CLOSEABLE_CONSTRUCTOR_MATCHER =
-      allOf(methodIsConstructor(), enclosingClass(isSubtypeOf(AutoCloseable.class)));
+      allOf(methodIsConstructor(), enclosingClass(isSubtypeOf("java.lang.AutoCloseable")));
 
   private static final Matcher<ExpressionTree> HARDCODED_MUST_BE_CLOSED_METHODS =
       staticMethod().onClass("java.lang.foreign.Arena").namedAnyOf("ofConfined", "ofShared");

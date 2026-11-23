@@ -37,10 +37,8 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.Instant;
 import java.time.ZoneId;
-import java.time.temporal.TemporalAccessor;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Deque;
@@ -300,13 +298,14 @@ public final class FormatStringValidation {
 
   private FormatStringValidation() {}
 
-  private static final ClassName BIG_DECIMAL = ClassName.of(BigDecimal.class.getName());
-  private static final ClassName BIG_INTEGER = ClassName.of(BigInteger.class.getName());
-  private static final ClassName NUMBER = ClassName.of(Number.class.getName());
-  private static final ClassName DATE = ClassName.of(Date.class.getName());
-  private static final ClassName CALENDAR = ClassName.of(Calendar.class.getName());
-  private static final ClassName INSTANT = ClassName.of(Instant.class.getName());
-  private static final ClassName TEMPORAL_ACCESSOR = ClassName.of(TemporalAccessor.class.getName());
+  private static final ClassName BIG_DECIMAL = ClassName.of("java.math.BigDecimal");
+  private static final ClassName BIG_INTEGER = ClassName.of("java.math.BigInteger");
+  private static final ClassName NUMBER = ClassName.of("java.lang.Number");
+  private static final ClassName DATE = ClassName.of("java.util.Date");
+  private static final ClassName CALENDAR = ClassName.of("java.util.Calendar");
+  private static final ClassName INSTANT = ClassName.of("java.time.Instant");
+  private static final ClassName TEMPORAL_ACCESSOR =
+      ClassName.of("java.time.temporal.TemporalAccessor");
   private static final ClassName COM_GOOGLE_COMMON_FLOGGER_LAZYARG =
       ClassName.of("com.google.common.flogger.LazyArg");
 }

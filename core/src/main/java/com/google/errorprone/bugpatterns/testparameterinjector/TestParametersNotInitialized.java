@@ -21,6 +21,7 @@ import static com.google.errorprone.bugpatterns.testparameterinjector.TestParame
 import static com.google.errorprone.bugpatterns.testparameterinjector.TestParameterInjectorUtils.TEST_PARAMETER_INJECTOR;
 import static com.google.errorprone.matchers.ChildMultiMatcher.MatchType.AT_LEAST_ONE;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.matchers.JUnitMatchers.isJUnit4TestRunnerOfClasses;
 import static com.google.errorprone.matchers.JUnitMatchers.isJUnit4TestRunnerOfType;
 import static com.google.errorprone.matchers.Matchers.annotations;
 import static com.google.errorprone.matchers.Matchers.hasArgumentWithValue;
@@ -55,7 +56,7 @@ public final class TestParametersNotInitialized extends BugChecker implements Cl
       annotations(
           AT_LEAST_ONE,
           hasArgumentWithValue(
-              "value", isJUnit4TestRunnerOfType(ImmutableSet.of(TEST_PARAMETER_INJECTOR))));
+              "value", isJUnit4TestRunnerOfClasses(ImmutableSet.of(TEST_PARAMETER_INJECTOR))));
 
   private static final MultiMatcher<ClassTree, AnnotationTree> NON_PARAMETERIZED_RUNNER =
       annotations(

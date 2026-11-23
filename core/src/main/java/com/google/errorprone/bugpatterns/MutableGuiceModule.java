@@ -19,12 +19,12 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.fixes.SuggestedFixes.prettyType;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.matchers.InjectMatchers.GUICE_ABSTRACT_MODULE;
 import static com.google.errorprone.util.ASTHelpers.enclosingClass;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
 
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.ClassName;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
 import com.google.errorprone.bugpatterns.threadsafety.WellKnownMutability;
@@ -58,7 +58,7 @@ public class MutableGuiceModule extends BugChecker implements VariableTreeMatche
     if (!sym.getKind().equals(ElementKind.FIELD)) {
       return NO_MATCH;
     }
-    Symbol abstractModule = ABSTRACT_MODULE.symbol(state);
+    Symbol abstractModule = GUICE_ABSTRACT_MODULE.symbol(state);
     if (abstractModule == null) {
       return NO_MATCH;
     }
@@ -88,6 +88,4 @@ public class MutableGuiceModule extends BugChecker implements VariableTreeMatche
     }
     return NO_MATCH;
   }
-
-  private static final ClassName ABSTRACT_MODULE = ClassName.of("com.google.inject.AbstractModule");
 }
