@@ -110,21 +110,10 @@ implements <a href="Matcher.html" title="interface in com.google.errorprone.matc
       <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link"><code>String</code></a>s.
   <li>A switch expression where all case bodies are compile-time constants.
   <li>A conditional expression (a ? b : c) where both branches are compile-time constants.
-  <li>A call to a well-known constructor, e.g. from a Java standard library class, where all
-      arguments are compile-time constants and the resulting object is immutable. (See <code>COMPATIBLE_CONSTRUCTORS</code> below for the complete list.)
-  <li>The result of an invocation of one of the following immutable collection factory methods,
-      where all arguments are compile-time constants:
-      <ul>
-        <li><code>ImmutableList.of(...)</code>
-        <li><code>ImmutableSet.of(...)</code>
-        <li><code>ImmutableMap.of(...)</code>
-        <li><code>ImmutableMultiset.of(...)</code>
-        <li><code>ImmutableSortedSet.of(...)</code>
-        <li><code>ImmutableSortedMap.of(...)</code>
-        <li><code>List.of(...)</code>
-        <li><code>Set.of(...)</code>
-        <li><code>Map.of(...)</code>
-      </ul>
+  <li>A call to a well-known (e.g. from a Java standard library class) constructor or static
+      method, where all arguments are compile-time constants and the resulting object is
+      immutable. (See <code>COMPATIBLE_METHODS</code> and <code>COMPATIBLE_CONSTRUCTORS</code> below for
+      the complete list.)
 </ol></div>
 <dl class="notes">
 <dt>See Also:</dt>
