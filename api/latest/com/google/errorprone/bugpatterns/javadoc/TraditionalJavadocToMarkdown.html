@@ -95,8 +95,17 @@ loadScripts(document, 'script');</script>
 <span class="extends-implements">extends <a href="../BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a>
 implements <a href="../BugChecker.ClassTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.ClassTreeMatcher</a>, <a href="../BugChecker.MethodTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MethodTreeMatcher</a>, <a href="../BugChecker.VariableTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.VariableTreeMatcher</a>, <a href="../BugChecker.PackageTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.PackageTreeMatcher</a>, <a href="../BugChecker.ModuleTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.ModuleTreeMatcher</a></span></div>
 <div class="block"><p>An experimental tool that converts traditional Javadoc comments to Markdown Javadoc comments.</p>
-<p>Note that malformed traditional Javadocs will likely result in malformed Markdown Javadocs
-(&quot;garbage in, garbage out&quot;).</p>
+<p>The conversion happens in three steps:</p>
+<ol>
+<li><code>MarkdownCommentBuilder</code> converts the comment's doc tree into a <code>MarkdownComment</code>, keeping
+any constructs that have no faithful Markdown equivalent as HTML or as traditional inline
+tags (both of which Markdown documentation comments support).</li>
+<li><code>MarkdownCommentPrinter</code> prints the <code>MarkdownComment</code>, escaping any text that would otherwise
+be interpreted as Markdown.</li>
+<li><code>MarkdownCommentValidator</code> parses the printed Markdown and checks that it has the intended
+structure.</li>
+</ol>
+<p>A comment is left unchanged if any of these steps fails.</p>
 <p><strong>WARNING:</strong> this tool is currently a prototype and may have bugs.</p>
 </div>
 <dl class="notes">
