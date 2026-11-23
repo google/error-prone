@@ -617,31 +617,67 @@ public class UnnamedVariableTest {
   @Test
   public void localVariable_annotated() {
     refactoringHelper
-        .allowBreakingChanges()
-        .allowFormattingErrors()
         .addInputLines(
             "Test.java",
             """
+            import java.lang.annotation.ElementType;
+            import java.lang.annotation.Target;
+            import java.util.List;
             import org.jspecify.annotations.Nullable;
 
             class Test {
-              void f() {
-                // TODO(b/583896675): Do not emit @Nullable var _ when @Nullable is a TYPE_USE
-                // annotation.
+              @Target({ElementType.LOCAL_VARIABLE, ElementType.TYPE_USE})
+              @interface LocalAndTypeUse {}
+
+              @Target({ElementType.FIELD, ElementType.TYPE_USE})
+              @interface FieldAndTypeUse {}
+
+              @interface NoTarget {}
+
+              void f(List<String> list, AutoCloseable a) throws Exception {
                 @Nullable String unused = "hello";
+                final @Nullable String unused2 = "hello";
+                @SuppressWarnings("foo") @Nullable String unused3 = "hello";
+                @Nullable String unused4 = null;
+                for (@Nullable String unused5 : list) {}
+                try (@Nullable AutoCloseable unused6 = a) {}
+                @Nullable String[] unused7 = new String[0];
+                java.lang.@Nullable String unused8 = "hello";
+                @LocalAndTypeUse String unused9 = "hello";
+                @NoTarget String unused10 = "hello";
+                @FieldAndTypeUse String unused11 = "hello";
               }
             }
             """)
         .addOutputLines(
             "Test.java",
             """
+            import java.lang.annotation.ElementType;
+            import java.lang.annotation.Target;
+            import java.util.List;
             import org.jspecify.annotations.Nullable;
 
             class Test {
-              void f() {
-                // TODO(b/583896675): Do not emit @Nullable var _ when @Nullable is a TYPE_USE
-                // annotation.
-                @Nullable var _ = "hello";
+              @Target({ElementType.LOCAL_VARIABLE, ElementType.TYPE_USE})
+              @interface LocalAndTypeUse {}
+
+              @Target({ElementType.FIELD, ElementType.TYPE_USE})
+              @interface FieldAndTypeUse {}
+
+              @interface NoTarget {}
+
+              void f(List<String> list, AutoCloseable a) throws Exception {
+                var _ = "hello";
+                final var _ = "hello";
+                @SuppressWarnings("foo") var _ = "hello";
+                @Nullable String _ = null;
+                for (var _ : list) {}
+                try (var _ = a) {}
+                var _ = new String[0];
+                var _ = "hello";
+                @LocalAndTypeUse var _ = "hello";
+                @NoTarget var _ = "hello";
+                var _ = "hello";
               }
             }
             """)

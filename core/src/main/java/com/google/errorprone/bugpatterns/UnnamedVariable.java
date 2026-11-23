@@ -21,6 +21,7 @@ import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
+import static com.google.errorprone.util.MoreAnnotations.targetsElement;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.ErrorProneFlags;
@@ -30,6 +31,7 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.SourceVersion;
+import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.CompilationUnitTree;
@@ -51,6 +53,7 @@ import com.sun.source.util.TreePathScanner;
 import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.TypeTag;
+import java.lang.annotation.ElementType;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -110,7 +113,15 @@ public final class UnnamedVariable extends BugChecker implements CompilationUnit
     SuggestedFix fix = SuggestedFixes.renameVariable(tree, "_", state);
     if (canUseVar(tree, symbol, path)) {
       SuggestedFix.Builder builder = fix.toBuilder();
-      SuggestedFixes.replaceVariableType(tree, "var", state).ifPresent(builder::merge);
+      SuggestedFixes.replaceVariableType(tree, "var", state)
+          .ifPresent(typeFix -> {
+            builder.merge(typeFix);
+            for (AnnotationTree annotation : tree.getModifiers().getAnnotations()) {
+              if (!targetsElement(getSymbol(annotation), ElementType.LOCAL_VARIABLE)) {
+                builder.delete(annotation);
+              }
+            }
+          });
       return builder.build();
     }
     return fix;
