@@ -69,6 +69,18 @@
       <version>${google-java-format.version}</version>
     </dependency>
     <dependency>
+      <!-- BSD 2-clause -->
+      <groupId>org.commonmark</groupId>
+      <artifactId>commonmark</artifactId>
+      <version>${commonmark.version}</version>
+    </dependency>
+    <dependency>
+      <!-- BSD 2-clause -->
+      <groupId>org.commonmark</groupId>
+      <artifactId>commonmark-ext-gfm-tables</artifactId>
+      <version>${commonmark.version}</version>
+    </dependency>
+    <dependency>
       <!-- MIT -->
       <groupId>org.pcollections</groupId>
       <artifactId>pcollections</artifactId>
@@ -437,6 +449,8 @@
                   <include>com.google.protobuf:protobuf-java</include>
                   <include>javax.inject:javax.inject</include>
                   <include>com.google.googlejavaformat:google-java-format</include>
+                  <include>org.commonmark:commonmark</include>
+                  <include>org.commonmark:commonmark-ext-gfm-tables</include>
                   <include>org.jspecify:jspecify</include>
                   <include>org.safere:safere</include>
                   <include>org.yaml:snakeyaml</include>
