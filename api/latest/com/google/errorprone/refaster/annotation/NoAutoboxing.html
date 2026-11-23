@@ -68,8 +68,15 @@ loadScripts(document, 'script');</script>
 <div class="type-signature"><span class="annotations"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/annotation/Target.html" title="class or interface in java.lang.annotation" class="external-link">@Target</a>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/annotation/ElementType.html#METHOD" title="class or interface in java.lang.annotation" class="external-link">METHOD</a>)
 <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/annotation/Retention.html" title="class or interface in java.lang.annotation" class="external-link">@Retention</a>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/annotation/RetentionPolicy.html#SOURCE" title="class or interface in java.lang.annotation" class="external-link">SOURCE</a>)
 </span><span class="modifiers">public @interface </span><span class="element-name type-name-label">NoAutoboxing</span></div>
-<div class="block">Indicates that a Refaster rule should not allow autoboxing or autounboxing when it is
-typechecking a match.</div>
+<div class="block">Indicates that a Refaster rule should not allow autoboxing or autounboxing when typechecking a
+<code>@BeforeTemplate</code> match (its parameters, placeholder expressions, and return type against
+the matched expression).
+
+<p>This does not prevent an <code>@AfterTemplate</code> from changing the expression's type between
+boxed and primitive. For example, a rule whose <code>@BeforeTemplate</code> returns <code>Boolean</code>
+(matching a <code>Boolean</code> expression without boxing or unboxing) and whose
+<code>@AfterTemplate</code> returns <code>boolean</code> will still replace a boxed expression with a
+primitive one.</div>
 <dl class="notes">
 <dt>Author:</dt>
 <dd>lowasser@google.com (Louis Wasserman)</dd>
