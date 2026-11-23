@@ -22,6 +22,7 @@ import static org.junit.Assert.assertThrows;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.testing.EqualsTester;
+import com.google.common.testing.GcFinalization;
 import com.sun.source.util.JavacTask;
 import com.sun.tools.javac.api.BasicJavacTask;
 import com.sun.tools.javac.api.JavacTaskImpl;
@@ -30,6 +31,8 @@ import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symtab;
 import com.sun.tools.javac.file.JavacFileManager;
 import com.sun.tools.javac.util.Context;
+import java.lang.ref.Reference;
+import java.lang.ref.WeakReference;
 import org.junit.Test;
 
 /** Tests for {@link ClassName}. */
@@ -65,6 +68,25 @@ public final class ClassNameTest {
         .testEquals();
     assertThat(ClassName.of("java.util.Map.Entry").toString()).isEqualTo("java.util.Map$Entry");
     assertThat(ClassName.of("java.util.List").toString()).isEqualTo("java.util.List");
+  }
+
+  @Test
+  public void doesNotRetainSymbolAfterCompilation() {
+    ClassName name = ClassName.of("java.util.List");
+    WeakReference<ClassSymbol> symbol = resolveInNewCompilation(name);
+    try {
+      GcFinalization.awaitClear(symbol);
+    } finally {
+      // keep the ClassName (and so any cache it holds) reachable while waiting for the symbol
+      Reference.reachabilityFence(name);
+    }
+  }
+
+  private static WeakReference<ClassSymbol> resolveInNewCompilation(ClassName name) {
+    VisitorState state = VisitorState.createForUtilityPurposes(newContext());
+    ClassSymbol symbol = name.symbol(state);
+    assertThat(symbol).isNotNull();
+    return new WeakReference<>(symbol);
   }
 
   @Test
