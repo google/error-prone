@@ -1221,6 +1221,32 @@ public final class Client {
   }
 
   @Test
+  public void deprecatedMethodWithMemoized() {
+    refactoringTestHelper
+        .addInputLines(
+            "Client.java",
+            """
+            package com.google.frobber;
+
+            import com.google.auto.value.AutoValue;
+            import com.google.auto.value.extension.memoized.Memoized;
+
+            @AutoValue
+            public abstract class Client {
+              @Deprecated
+              @Memoized
+              public String before() {
+                return after();
+              }
+
+              public abstract String after();
+            }
+            """)
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
   public void implementationUsingPublicStaticField() {
     refactoringTestHelper
         .addInputLines(

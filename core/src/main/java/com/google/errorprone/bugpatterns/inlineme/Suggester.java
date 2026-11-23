@@ -22,6 +22,7 @@ import static com.google.errorprone.util.ASTHelpers.findSuperMethods;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import static com.google.errorprone.util.ASTHelpers.hasDirectAnnotationWithSimpleName;
+import static com.google.errorprone.util.AnnotationNames.AUTO_VALUE_MEMOIZED_ANNOTATION;
 import static com.google.errorprone.util.AnnotationNames.DEPRECATED_ANNOTATION;
 import static com.google.errorprone.util.AnnotationNames.DO_NOT_CALL_ANNOTATION;
 import static com.google.errorprone.util.AnnotationNames.INLINE_ME_ANNOTATION;
@@ -69,6 +70,11 @@ public final class Suggester extends BugChecker implements MethodTreeMatcher {
 
     // if the API is already annotated with @DoNotCall, then return no match
     if (hasAnnotation(tree, DO_NOT_CALL_ANNOTATION, state)) {
+      return Description.NO_MATCH;
+    }
+
+    // @Memoized methods can't be final, and inlining them would drop the memoization
+    if (hasAnnotation(tree, AUTO_VALUE_MEMOIZED_ANNOTATION, state)) {
       return Description.NO_MATCH;
     }
 

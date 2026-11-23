@@ -35,6 +35,8 @@ public final class AnnotationNames {
       ClassName.of("com.google.auto.value.AutoValue");
   public static final ClassName AUTO_VALUE_BUILDER_ANNOTATION =
       ClassName.of("com.google.auto.value.AutoValue.Builder");
+  public static final ClassName AUTO_VALUE_MEMOIZED_ANNOTATION =
+      ClassName.of("com.google.auto.value.extension.memoized.Memoized");
   public static final ClassName BEFORE_TEMPLATE_ANNOTATION =
       ClassName.of("com.google.errorprone.refaster.annotation.BeforeTemplate");
   public static final ClassName BUG_PATTERN_ANNOTATION =
