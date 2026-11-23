@@ -1163,6 +1163,61 @@ public class Test {
   }
 
   @Test
+  public void compatibleMethods() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            package test;
+
+            import com.google.errorprone.annotations.CompileTimeConstant;
+            import java.math.BigInteger;
+            import java.nio.charset.Charset;
+            import java.nio.charset.StandardCharsets;
+            import java.time.Duration;
+            import java.time.LocalDate;
+            import java.time.ZoneId;
+            import java.time.format.DateTimeFormatter;
+            import java.util.Locale;
+            import java.util.Objects;
+            import java.util.Optional;
+
+            public class Test {
+              @CompileTimeConstant final Duration duration = Duration.ofSeconds(10);
+              @CompileTimeConstant final LocalDate date = LocalDate.of(2025, 1, 1);
+
+              public static void acceptObject(@CompileTimeConstant Object obj) {}
+
+              public static void testSuccess(@CompileTimeConstant final String constStr) {
+                acceptObject(Integer.valueOf(42));
+                acceptObject(String.valueOf(42));
+                acceptObject(Math.max(1, 2));
+                acceptObject(Optional.of(constStr));
+                acceptObject(Objects.requireNonNull(constStr));
+              }
+
+              public static void testFailure(
+                  @CompileTimeConstant final char[] constCharArray,
+                  @CompileTimeConstant final BigInteger constBigInt) {
+                // BUG: Diagnostic contains: Non-compile-time constant expression passed
+                acceptObject(String.valueOf(constCharArray));
+                // BUG: Diagnostic contains: Non-compile-time constant expression passed
+                acceptObject(Character.codePointAt(constCharArray, 0));
+                // BUG: Diagnostic contains: Non-compile-time constant expression passed
+                acceptObject(ZoneId.of("UTC"));
+                // BUG: Diagnostic contains: Non-compile-time constant expression passed
+                acceptObject(Charset.forName("UTF-8"));
+                // BUG: Diagnostic contains: Non-compile-time constant expression passed
+                acceptObject(constBigInt.add(BigInteger.ONE));
+                // BUG: Diagnostic contains: Non-compile-time constant expression passed
+                acceptObject(Objects.toString(constBigInt));
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
   public void compatibleConstructors() {
     compilationHelper
         .addSourceLines(

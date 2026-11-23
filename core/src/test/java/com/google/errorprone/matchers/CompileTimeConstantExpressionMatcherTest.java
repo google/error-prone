@@ -318,13 +318,21 @@ public class CompileTimeConstantExpressionMatcherTest {
             package test;
 
             import com.google.common.collect.ImmutableList;
+            import java.lang.Enum;
             import java.math.RoundingMode;
             import java.time.DayOfWeek;
 
             public class Test {
               enum CustomEnum {
                 FIRST,
-                SECOND
+                SECOND,
+                THIRD;
+
+                // Not allowed to over_ride_ valueOf, but try to be sneaky by providing an
+                // non-constexpr overload for it.
+                public static CustomEnum valueOf(int index) {
+                  return FIRST;
+                }
               }
 
               public void m() {
@@ -344,8 +352,99 @@ public class CompileTimeConstantExpressionMatcherTest {
                 RoundingMode r = RoundingMode.HALF_UP;
                 // BUG: Diagnostic contains: true
                 CustomEnum e = CustomEnum.FIRST;
+                // BUG: Diagnostic contains: true
+                CustomEnum e2 = Enum.valueOf(CustomEnum.class, "SECOND");
+                // BUG: Diagnostic contains: true
+                CustomEnum e3 = CustomEnum.valueOf("THIRD");
+                // BUG: Diagnostic contains: false
+                CustomEnum e4 = CustomEnum.valueOf(4);
                 // BUG: Diagnostic contains: false
                 String enumToString = CustomEnum.FIRST.toString();
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void compatibleMethods() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            package test;
+
+            import com.google.errorprone.annotations.CompileTimeConstant;
+            import java.math.BigDecimal;
+            import java.math.BigInteger;
+            import java.nio.charset.Charset;
+            import java.nio.charset.StandardCharsets;
+            import java.time.Clock;
+            import java.time.Duration;
+            import java.time.Instant;
+            import java.time.LocalDate;
+            import java.time.ZoneId;
+            import java.time.ZoneOffset;
+            import java.time.ZonedDateTime;
+            import java.time.format.DateTimeFormatter;
+            import java.util.Locale;
+            import java.util.Objects;
+            import java.util.Optional;
+            import java.util.UUID;
+            import java.util.regex.Pattern;
+
+            public class Test {
+              public void m(
+                  @CompileTimeConstant String ctcString,
+                  String nonCtcString,
+                  @CompileTimeConstant char[] ctcCharArray,
+                  @CompileTimeConstant BigInteger ctcBigInt) {
+                // BUG: Diagnostic contains: true
+                Integer i1 = Integer.valueOf(42);
+                // BUG: Diagnostic contains: true
+                int cp1 = Character.codePointAt("abc", 0);
+                // BUG: Diagnostic contains: false
+                int cp2 = Character.codePointAt(ctcCharArray, 0);
+                // BUG: Diagnostic contains: true
+                String s1 = String.valueOf(123);
+                // BUG: Diagnostic contains: false
+                String s2 = String.valueOf((Object) "abc");
+                // BUG: Diagnostic contains: false
+                String s3 = String.valueOf(ctcCharArray);
+                // BUG: Diagnostic contains: false
+                String s4 = String.copyValueOf(ctcCharArray);
+                // BUG: Diagnostic contains: true
+                int max = Math.max(1, 2);
+                // BUG: Diagnostic contains: true
+                Duration d1 = Duration.ofSeconds(5);
+                // BUG: Diagnostic contains: true
+                LocalDate date = LocalDate.of(2025, 1, 1);
+                // BUG: Diagnostic contains: false
+                ZoneId z1 = ZoneId.of("UTC");
+                // BUG: Diagnostic contains: false
+                ZonedDateTime zdt1 = ZonedDateTime.parse("2025-01-01T00:00:00Z");
+                // BUG: Diagnostic contains: true
+                Clock clock = Clock.fixed(Instant.EPOCH, ZoneOffset.UTC);
+                // BUG: Diagnostic contains: false
+                Instant clockInstant = Clock.fixed(Instant.EPOCH, ZoneOffset.UTC).instant();
+                // BUG: Diagnostic contains: true
+                BigInteger bi1 = BigInteger.valueOf(10);
+                // BUG: Diagnostic contains: true
+                Optional<String> opt = Optional.of(ctcString);
+                // BUG: Diagnostic contains: true
+                String req = Objects.requireNonNull(ctcString);
+                // BUG: Diagnostic contains: false
+                boolean eq = Objects.equals(ctcString, "a");
+                // BUG: Diagnostic contains: false
+                int hc = Objects.hashCode(ctcString);
+                // BUG: Diagnostic contains: false
+                String ts = Objects.toString(ctcString);
+                // BUG: Diagnostic contains: true
+                Pattern p = Pattern.compile("[a-z]+");
+                // BUG: Diagnostic contains: true
+                UUID u = UUID.fromString("00000000-0000-0000-0000-000000000000");
+                // BUG: Diagnostic contains: false
+                Charset csForName = Charset.forName("UTF-8");
               }
             }
             """)
