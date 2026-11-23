@@ -22,8 +22,15 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Indicates that a Refaster rule should not allow autoboxing or autounboxing when it is
- * typechecking a match.
+ * Indicates that a Refaster rule should not allow autoboxing or autounboxing when typechecking a
+ * {@code @BeforeTemplate} match (its parameters, placeholder expressions, and return type against
+ * the matched expression).
+ *
+ * <p>This does not prevent an {@code @AfterTemplate} from changing the expression's type between
+ * boxed and primitive. For example, a rule whose {@code @BeforeTemplate} returns {@code Boolean}
+ * (matching a {@code Boolean} expression without boxing or unboxing) and whose
+ * {@code @AfterTemplate} returns {@code boolean} will still replace a boxed expression with a
+ * primitive one.
  *
  * @author lowasser@google.com (Louis Wasserman)
  */
