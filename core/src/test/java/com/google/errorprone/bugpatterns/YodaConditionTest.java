@@ -16,6 +16,7 @@
 
 package com.google.errorprone.bugpatterns;
 
+import com.google.common.collect.Iterables;
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.BugCheckerRefactoringTestHelper.FixChoosers;
 import com.google.errorprone.CompilationTestHelper;
@@ -104,20 +105,125 @@ public final class YodaConditionTest {
         .addInputLines(
             "Test.java",
             """
+            import static java.lang.Boolean.FALSE;
+            import static java.lang.Boolean.TRUE;
+
+            import java.util.Objects;
+
             class Test {
-              boolean yoda(Boolean a) {
+              boolean yodaTrue(Boolean a) {
                 return Boolean.TRUE.equals(a);
+              }
+
+              boolean yodaFalse(Boolean a) {
+                return Boolean.FALSE.equals(a);
+              }
+
+              boolean staticImport(Boolean a) {
+                return TRUE.equals(a) || FALSE.equals(a);
+              }
+
+              boolean staticEquals(Boolean a) {
+                return Objects.equals(Boolean.TRUE, a) || Objects.equals(Boolean.FALSE, a);
               }
             }
             """)
         .addOutputLines(
             "Test.java",
             """
+            import static java.lang.Boolean.FALSE;
+            import static java.lang.Boolean.TRUE;
+
             import java.util.Objects;
 
             class Test {
-              boolean yoda(Boolean a) {
+              boolean yodaTrue(Boolean a) {
                 return Objects.equals(a, Boolean.TRUE);
+              }
+
+              boolean yodaFalse(Boolean a) {
+                return Objects.equals(a, Boolean.FALSE);
+              }
+
+              boolean staticImport(Boolean a) {
+                return Objects.equals(a, TRUE) || Objects.equals(a, FALSE);
+              }
+
+              boolean staticEquals(Boolean a) {
+                return Objects.equals(a, Boolean.TRUE) || Objects.equals(a, Boolean.FALSE);
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void boxedBoolean_nullIntolerantFix() {
+    refactoring
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              boolean yodaTrue(Boolean a) {
+                return Boolean.TRUE.equals(a);
+              }
+
+              boolean yodaFalse(Boolean a) {
+                return Boolean.FALSE.equals(a);
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              boolean yodaTrue(Boolean a) {
+                return a.equals(Boolean.TRUE);
+              }
+
+              boolean yodaFalse(Boolean a) {
+                return a.equals(Boolean.FALSE);
+              }
+            }
+            """)
+        .setFixChooser(FixChoosers.SECOND)
+        .doTest();
+  }
+
+  @Test
+  public void boxedBoolean_doubleEquals() {
+    refactoring
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              boolean primitive(boolean a) {
+                return Boolean.TRUE == a || Boolean.FALSE != a;
+              }
+
+              boolean boxed(Boolean a) {
+                return Boolean.TRUE == a || Boolean.FALSE != a;
+              }
+
+              boolean object(Object a) {
+                return Boolean.TRUE == a || Boolean.FALSE != a;
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              boolean primitive(boolean a) {
+                return a == Boolean.TRUE || a != Boolean.FALSE;
+              }
+
+              boolean boxed(Boolean a) {
+                return a == Boolean.TRUE || a != Boolean.FALSE;
+              }
+
+              boolean object(Object a) {
+                return a == Boolean.TRUE || a != Boolean.FALSE;
               }
             }
             """)
@@ -130,21 +236,190 @@ public final class YodaConditionTest {
         .addInputLines(
             "Test.java",
             """
+            import java.util.Objects;
+            import java.util.function.BooleanSupplier;
+
             class Test {
-              boolean yoda(boolean a) {
+              boolean yodaTrue(boolean a) {
+                return Boolean.TRUE.equals(a);
+              }
+
+              boolean yodaFalse(boolean a) {
+                return Boolean.FALSE.equals(a);
+              }
+
+              boolean negatedTrue(boolean a) {
+                return !Boolean.TRUE.equals(a);
+              }
+
+              boolean compoundInReturn(boolean a, boolean b) {
+                return Boolean.TRUE.equals(a || b);
+              }
+
+              boolean compoundInIf(boolean a, boolean b) {
+                if (Boolean.TRUE.equals(a || b)) {
+                  return true;
+                }
+                return false;
+              }
+
+              boolean compoundNegated(boolean a, boolean b) {
+                return Boolean.FALSE.equals(a || b);
+              }
+
+              boolean negatedTrueCompound(boolean a, boolean b) {
+                return !Boolean.TRUE.equals(a || b);
+              }
+
+              boolean compoundInBinary(boolean a, boolean b, boolean c) {
+                return c && Boolean.TRUE.equals(a || b);
+              }
+
+              int compoundInConditional(boolean a, boolean b) {
+                return Boolean.TRUE.equals(a || b) ? 1 : 2;
+              }
+
+              Object compoundInCast(boolean a, boolean b) {
+                return (Object) Boolean.TRUE.equals(a || b);
+              }
+
+              boolean staticEquals(boolean a) {
+                return Objects.equals(Boolean.TRUE, a) || Objects.equals(Boolean.FALSE, a);
+              }
+
+              void unusedReturnValue(boolean a) {
+                Boolean.TRUE.equals(a);
+                Runnable r = () -> Boolean.TRUE.equals(a);
+              }
+
+              BooleanSupplier valueLambda(boolean a, boolean b) {
+                return () -> Boolean.TRUE.equals(a || b);
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            import java.util.Objects;
+            import java.util.function.BooleanSupplier;
+
+            class Test {
+              boolean yodaTrue(boolean a) {
+                return a.equals(Boolean.TRUE);
+              }
+
+              boolean yodaFalse(boolean a) {
+                return a.equals(Boolean.FALSE);
+              }
+
+              boolean negatedTrue(boolean a) {
+                return !a.equals(Boolean.TRUE);
+              }
+
+              boolean compoundInReturn(boolean a, boolean b) {
+                return a || b.equals(Boolean.TRUE);
+              }
+
+              boolean compoundInIf(boolean a, boolean b) {
+                if (a || b.equals(Boolean.TRUE)) {
+                  return true;
+                }
+                return false;
+              }
+
+              boolean compoundNegated(boolean a, boolean b) {
+                return a || b.equals(Boolean.FALSE);
+              }
+
+              boolean negatedTrueCompound(boolean a, boolean b) {
+                return !a || b.equals(Boolean.TRUE);
+              }
+
+              boolean compoundInBinary(boolean a, boolean b, boolean c) {
+                return c && a || b.equals(Boolean.TRUE);
+              }
+
+              int compoundInConditional(boolean a, boolean b) {
+                return a || b.equals(Boolean.TRUE) ? 1 : 2;
+              }
+
+              Object compoundInCast(boolean a, boolean b) {
+                return (Object) a || b.equals(Boolean.TRUE);
+              }
+
+              boolean staticEquals(boolean a) {
+                return Objects.equals(a, Boolean.TRUE) || Objects.equals(a, Boolean.FALSE);
+              }
+
+              void unusedReturnValue(boolean a) {
+                a.equals(Boolean.TRUE);
+                Runnable r = () -> a.equals(Boolean.TRUE);
+              }
+
+              BooleanSupplier valueLambda(boolean a, boolean b) {
+                return () -> a || b.equals(Boolean.TRUE);
+              }
+            }
+            """)
+        .setFixChooser(Iterables::getOnlyElement)
+        .allowBreakingChanges()
+        .doTest();
+  }
+
+  @Test
+  public void boxedVsUnboxedPrimitive() {
+    refactoring
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              private static final Integer INT_CONST = 42;
+              private static final Boolean BOOL_CONST = true;
+              private static final Object OBJECT_CONST = new Object();
+
+              boolean intConst(int a) {
+                return INT_CONST.equals(a);
+              }
+
+              boolean boolConst(boolean a) {
+                return BOOL_CONST.equals(a);
+              }
+
+              boolean objectConst(long a) {
+                return OBJECT_CONST.equals(a);
+              }
+
+              boolean booleanTrueWithInt(int a) {
                 return Boolean.TRUE.equals(a);
               }
             }
             """)
         .addOutputLines(
             "Test.java",
-            "class Test {",
-            "  boolean yoda(boolean a) {",
-            // NOTE: this is a broken fix! We could detect this if it turns out to be an issue in
-            // practice.
-            "    return a.equals(Boolean.TRUE);",
-            "  }",
-            "}")
+            """
+            class Test {
+              private static final Integer INT_CONST = 42;
+              private static final Boolean BOOL_CONST = true;
+              private static final Object OBJECT_CONST = new Object();
+
+              boolean intConst(int a) {
+                return a.equals(INT_CONST);
+              }
+
+              boolean boolConst(boolean a) {
+                return a.equals(BOOL_CONST);
+              }
+
+              boolean objectConst(long a) {
+                return a.equals(OBJECT_CONST);
+              }
+
+              boolean booleanTrueWithInt(int a) {
+                return a.equals(Boolean.TRUE);
+              }
+            }
+            """)
+        .setFixChooser(Iterables::getOnlyElement)
         .allowBreakingChanges()
         .doTest();
   }
