@@ -16,6 +16,8 @@
 
 package com.google.errorprone;
 
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.collect.ImmutableList.toImmutableList;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.stream.Collectors.toCollection;
 
@@ -23,6 +25,7 @@ import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
 import com.google.common.base.Joiner;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.io.LineProcessor;
 import com.google.errorprone.BugPattern.SeverityLevel;
@@ -43,6 +46,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.jspecify.annotations.Nullable;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.LoaderOptions;
@@ -80,7 +84,9 @@ class BugPatternFileGenerator implements LineProcessor<List<BugPatternInstance>>
       boolean generateFrontMatter,
       String baseUrl,
       Set<String> ignore,
-      Function<BugPatternInstance, SeverityLevel> severityRemapper) {
+      Function<BugPatternInstance, SeverityLevel> severityRemapper)
+      throws IOException {
+    checkNoSubdirectories(explanationDir);
     this.outputDir = bugpatternDir;
     this.explanationDir = explanationDir;
     this.severityRemapper = severityRemapper;
@@ -88,6 +94,28 @@ class BugPatternFileGenerator implements LineProcessor<List<BugPatternInstance>>
     this.baseUrl = baseUrl;
     this.ignore = ignore;
     result = new HashMap<>();
+  }
+
+  /**
+   * Throws if {@code explanationDir} has subdirectories. Side-car explanations are looked up by
+   * name directly in {@code explanationDir}, so a file in a subdirectory would be silently ignored.
+   */
+  private static void checkNoSubdirectories(Path explanationDir) throws IOException {
+    try (Stream<Path> children = Files.list(explanationDir)) {
+      ImmutableList<String> subdirectories =
+          children
+              .filter(Files::isDirectory)
+              .map(p -> p.getFileName().toString())
+              .sorted()
+              .collect(toImmutableList());
+      checkArgument(
+          subdirectories.isEmpty(),
+          "Side-car explanations must be directly in %s, but found subdirectories %s; move their"
+              + " files up into %s",
+          explanationDir,
+          subdirectories,
+          explanationDir);
+    }
   }
 
   @CanIgnoreReturnValue
