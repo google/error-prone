@@ -23,6 +23,7 @@ import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import static com.google.errorprone.util.ASTHelpers.isSuper;
 import static com.google.errorprone.util.ASTHelpers.methodCanBeOverridden;
 import static com.google.errorprone.util.AnnotationNames.DEPRECATED_ANNOTATION;
+import static com.google.errorprone.util.AnnotationNames.DO_NOT_CALL_ANNOTATION;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.VisitorState;
@@ -105,6 +106,7 @@ record InlinabilityResult(
         "InlineMe cannot be applied when the implementation references deprecated or less visible"
             + " API elements:"),
     API_IS_PRIVATE("InlineMe cannot be applied to private APIs."),
+    DO_NOT_CALL("InlineMe cannot be applied to @DoNotCall APIs."),
     BODY_WOULD_EVALUATE_DIFFERENTLY(
         "Inlining this method will result in a change in evaluation timing for one or more"
             + " arguments to this method."),
@@ -150,6 +152,9 @@ record InlinabilityResult(
     }
 
     MethodSymbol methodSym = getSymbol(methodTree);
+    if (hasAnnotation(methodSym, DO_NOT_CALL_ANNOTATION, state)) {
+      return fromError(InlineValidationErrorReason.DO_NOT_CALL);
+    }
     if (methodSym.getModifiers().contains(Modifier.PRIVATE)) {
       return fromError(InlineValidationErrorReason.API_IS_PRIVATE);
     }

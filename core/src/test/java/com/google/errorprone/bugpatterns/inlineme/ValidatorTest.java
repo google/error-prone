@@ -571,6 +571,30 @@ public class ValidatorTest {
   }
 
   @Test
+  public void doNotCallMethod() {
+    helper
+        .addSourceLines(
+            "Client.java",
+            """
+            import com.google.errorprone.annotations.DoNotCall;
+            import com.google.errorprone.annotations.InlineMe;
+
+            public final class Client {
+              @Deprecated
+              @DoNotCall
+              @InlineMe(replacement = "this.after()")
+              // BUG: Diagnostic contains: InlineMe cannot be applied to @DoNotCall APIs
+              public void before() {
+                after();
+              }
+
+              public void after() {}
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
   public void noOpMethod() {
     helper
         .addSourceLines(
