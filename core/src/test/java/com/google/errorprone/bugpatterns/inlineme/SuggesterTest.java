@@ -338,6 +338,33 @@ public class SuggesterTest {
   }
 
   @Test
+  public void anonymousClassOverride() {
+    refactoringTestHelper
+        .addInputLines(
+            "Client.java",
+            """
+            package com.google.frobber;
+
+            public final class Client {
+              interface Handler {
+                int handle();
+              }
+
+              void invokeHandler() {
+                new Handler() {
+                  @Deprecated
+                  public int handle() {
+                    return 42;
+                  }
+                }.handle();
+              }
+            }
+            """)
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
   public void methodReference() {
     refactoringTestHelper
         .addInputLines(
@@ -1070,6 +1097,36 @@ public final class Client {
               }
             }
 
+            """)
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void dontSuggestOnOverridingMethods() {
+    refactoringTestHelper
+        .addInputLines(
+            "Foo.java",
+            """
+            package com.google.frobber;
+
+            public interface Foo {
+              boolean isValid();
+            }
+            """)
+        .expectUnchanged()
+        .addInputLines(
+            "FooImpl.java",
+            """
+            package com.google.frobber;
+
+            public final class FooImpl implements Foo {
+              @Deprecated
+              @Override
+              public boolean isValid() {
+                return false;
+              }
+            }
             """)
         .expectUnchanged()
         .doTest();

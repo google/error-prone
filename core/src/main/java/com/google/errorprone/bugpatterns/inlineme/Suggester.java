@@ -18,6 +18,8 @@ package com.google.errorprone.bugpatterns.inlineme;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.InjectMatchers.hasProvidesAnnotation;
+import static com.google.errorprone.util.ASTHelpers.findSuperMethods;
+import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import static com.google.errorprone.util.ASTHelpers.hasDirectAnnotationWithSimpleName;
 import static com.google.errorprone.util.AnnotationNames.DEPRECATED_ANNOTATION;
@@ -72,6 +74,12 @@ public final class Suggester extends BugChecker implements MethodTreeMatcher {
 
     // don't suggest on APIs that get called reflectively
     if (wellKnownKeep.shouldKeep(tree) || hasProvidesAnnotation().matches(tree, state)) {
+      return Description.NO_MATCH;
+    }
+
+    // don't suggest on APIs that override or implement a supertype method: callers usually hold
+    // the supertype, and the API can't be deleted since it's part of the supertype's contract
+    if (!findSuperMethods(getSymbol(tree), state.getTypes()).isEmpty()) {
       return Description.NO_MATCH;
     }
 
