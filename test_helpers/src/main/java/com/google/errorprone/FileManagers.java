@@ -28,6 +28,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.jimfs.Jimfs;
 import com.sun.tools.javac.file.CacheFSInfo;
 import com.sun.tools.javac.file.JavacFileManager;
+import com.sun.tools.javac.main.Option;
 import com.sun.tools.javac.util.Context;
 import java.io.File;
 import java.io.IOException;
@@ -84,6 +85,17 @@ public final class FileManagers {
         .filter(StandardLocation::isOutputLocation)
         .forEach(outputLocation ->
             setLocation(fileManager, ImmutableList.of(tempDirectory), outputLocation));
+
+    // Clear annotation processor locations that a prior test on this thread may have configured.
+    // Use the internal handleOption(Option, null) because setLocation(..., null) delegates to
+    // SimpleLocationHandler.setPaths(null) (which leaves a non-null empty SearchPath, so
+    // hasLocation still returns true), and setLocationFromPaths(..., null) throws NPE.
+    if (fileManager.hasLocation(StandardLocation.ANNOTATION_PROCESSOR_PATH)) {
+      fileManager.handleOption(Option.PROCESSOR_PATH, null);
+    }
+    if (fileManager.hasLocation(StandardLocation.ANNOTATION_PROCESSOR_MODULE_PATH)) {
+      fileManager.handleOption(Option.PROCESSOR_MODULE_PATH, null);
+    }
 
     return fileManager;
   }

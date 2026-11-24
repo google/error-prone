@@ -60,21 +60,6 @@ import org.jspecify.annotations.Nullable;
 /** Helps test Error Prone bug checkers and compilations. */
 @CheckReturnValue
 public final class CompilationTestHelper {
-  private static final ImmutableList<String> DEFAULT_ARGS =
-      ImmutableList.of(
-          "-encoding",
-          "UTF-8",
-          // print stack traces for completion failures
-          "-XDdev",
-          "-parameters",
-          "-XDcompilePolicy=simple",
-          "-XDaddTypeAnnotationsToSymbol=true",
-          // Don't limit errors/warnings for tests to the default of 100
-          "-Xmaxerrs",
-          "500",
-          "-Xmaxwarns",
-          "500");
-
   private final DiagnosticTestHelper diagnosticHelper;
   private final BaseErrorProneJavaCompiler compiler;
   private final ByteArrayOutputStream outputStream;
@@ -122,31 +107,17 @@ public final class CompilationTestHelper {
   }
 
   /**
-   * Pass -proc:none unless annotation processing is explicitly enabled, to avoid picking up
-   * annotation processors via service loading.
-   */
-  // TODO(cushon): test compilations should be isolated so they can't pick things up from the
-  // ambient classpath.
-  static List<String> disableImplicitProcessing(List<String> args) {
-    if (args.contains("-processor") || args.contains("-processorpath")) {
-      return args;
-    }
-    return ImmutableList.<String>builder().addAll(args).add("-proc:none").build();
-  }
-
-  /**
-   * Creates a list of arguments to pass to the compiler. Uses DEFAULT_ARGS as the base and appends
-   * the overridden classpath, if provided, and any extraArgs that were provided.
+   * Creates a list of arguments to pass to the compiler, layering test defaults before the
+   * overridden classpath (if provided), {@code -XepCompilingTestOnlyCode} (when {@code testOnly} is
+   * {@code true}), any {@code extraArgs}, and {@code deps_for_test_inputs} (when set).
    */
   private static ImmutableList<String> buildArguments(
       @Nullable List<Class<?>> overrideClasspath, List<String> extraArgs, boolean testOnly) {
-    ImmutableList.Builder<String> result = ImmutableList.<String>builder().addAll(DEFAULT_ARGS);
+    ImmutableList.Builder<String> args = ImmutableList.builder();
     getOverrideClasspath(overrideClasspath)
-        .ifPresent((Path jar) -> result.add("-cp").add(jar.toString()));
-    if (testOnly && !extraArgs.contains("-XepCompilingTestOnlyCode")) {
-      result.add("-XepCompilingTestOnlyCode");
-    }
-    return result.addAll(disableImplicitProcessing(extraArgs)).build();
+        .ifPresent((Path jar) -> args.add("-cp").add(jar.toString()));
+    args.addAll(TestCompilations.withTestOnlyAndDeps(extraArgs, testOnly));
+    return TestCompilations.defaultTestArgs(args.build());
   }
 
   private static Optional<Path> getOverrideClasspath(@Nullable List<Class<?>> overrideClasspath) {
@@ -320,16 +291,6 @@ public final class CompilationTestHelper {
   public void doTest() {
     checkState(!sources.isEmpty(), "No source files to compile");
     checkState(!run, "doTest should only be called once");
-
-    String depsForTestInputs = System.getProperty("com.google.errorprone.deps_for_test_inputs");
-    if (depsForTestInputs != null) {
-      extraArgs =
-          ImmutableList.<String>builder()
-              .addAll(extraArgs)
-              .add("-cp")
-              .add(depsForTestInputs)
-              .build();
-    }
 
     this.run = true;
     Result result = compile();

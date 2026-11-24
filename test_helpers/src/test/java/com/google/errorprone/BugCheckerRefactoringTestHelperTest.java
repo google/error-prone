@@ -22,24 +22,36 @@ import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.fail;
 
+import com.google.common.collect.ImmutableList;
+import com.google.errorprone.TestProcessors.FailingProcessor;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.AnnotationTreeMatcher;
+import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.ReturnTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.AnnotationTree;
+import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ReturnTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
+import com.sun.tools.javac.main.Option;
+import com.sun.tools.javac.util.Options;
+import java.io.IOException;
+import java.nio.file.Path;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 /** Tests for {@link BugCheckerRefactoringTestHelper}. */
 @RunWith(JUnit4.class)
 public class BugCheckerRefactoringTestHelperTest {
+
+  @Rule public final TemporaryFolder tempFolder = new TemporaryFolder();
 
   private final BugCheckerRefactoringTestHelper helper =
       BugCheckerRefactoringTestHelper.newInstance(ReturnNullRefactoring.class, getClass());
@@ -512,5 +524,223 @@ public class BugCheckerRefactoringTestHelperTest {
             }
             """)
         .doTest();
+  }
+
+  // Also check Option.PROC directly so JDK 23+ test runs (where javac already disables implicit
+  // annotation processing by default) still catch regressions affecting JDK 21.
+  @BugPattern(summary = "Replaces return values when -proc:none is set", severity = SUGGESTION)
+  public static class ProcNoneRefactoring extends BugChecker implements ReturnTreeMatcher {
+    @Override
+    public Description matchReturn(ReturnTree tree, VisitorState state) {
+      if (Options.instance(state.context).isSet(Option.PROC, "none")) {
+        return describeMatch(tree, SuggestedFix.replace(tree.getExpression(), "null"));
+      }
+      return Description.NO_MATCH;
+    }
+  }
+
+  @Test
+  public void implicitAnnotationProcessing_disabledByDefault() {
+    BugCheckerRefactoringTestHelper.newInstance(ProcNoneRefactoring.class, getClass())
+        .addInputLines(
+            "Test.java",
+            """
+            public class Test {
+              public Object foo() {
+                return "hello";
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            public class Test {
+              public Object foo() {
+                return null;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void implicitAnnotationProcessing_setArgsOverrideRestoresProcNone() {
+    BugCheckerRefactoringTestHelper.newInstance(ProcNoneRefactoring.class, getClass())
+        .setArgs("-proc:full")
+        .setArgs("-Xlint:all")
+        .addInputLines(
+            "Test.java",
+            """
+            public class Test {
+              public Object foo() {
+                return "hello";
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            public class Test {
+              public Object foo() {
+                return null;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @BugPattern(summary = "Adds @Trigger to Target", severity = SUGGESTION)
+  public static class AddTriggerRefactoring extends BugChecker implements ClassTreeMatcher {
+    @Override
+    public Description matchClass(ClassTree tree, VisitorState state) {
+      if (tree.getSimpleName().contentEquals("Target")) {
+        return describeMatch(tree, SuggestedFix.prefixWith(tree, "@Trigger\n"));
+      }
+      return Description.NO_MATCH;
+    }
+  }
+
+  @Test
+  public void explicitProcessor_runsOnInput() {
+    BugCheckerRefactoringTestHelper testHelper =
+        BugCheckerRefactoringTestHelper.newInstance(ReturnNullRefactoring.class, getClass())
+            .setArgs(ImmutableList.of("-processor", FailingProcessor.class.getName()))
+            .addInputLines("Trigger.java", "public @interface Trigger {}")
+            .expectUnchanged()
+            .addInputLines(
+                "Test.java",
+                """
+                @Trigger
+                public class Test {}
+                """)
+            .expectUnchanged();
+    AssertionError thrown = assertThrows(AssertionError.class, testHelper::doTest);
+    assertThat(thrown).hasMessageThat().contains("FailingProcessor ran");
+  }
+
+  @Test
+  public void explicitProcessor_runsOnRefactoredOutput() {
+    BugCheckerRefactoringTestHelper testHelper =
+        BugCheckerRefactoringTestHelper.newInstance(AddTriggerRefactoring.class, getClass())
+            .setArgs("-processor", FailingProcessor.class.getName())
+            .addInputLines("Trigger.java", "public @interface Trigger {}")
+            .expectUnchanged()
+            .addInputLines("Target.java", "public class Target {}")
+            .addOutputLines(
+                "Target.java",
+                """
+                @Trigger
+                public class Target {}
+                """);
+    AssertionError thrown = assertThrows(AssertionError.class, testHelper::doTest);
+    assertThat(thrown).hasMessageThat().contains("FailingProcessor ran");
+  }
+
+  @Test
+  public void serviceLoadedProcessorJar_disabledByDefaultOnBothPasses() throws IOException {
+    Path processorJar =
+        TestProcessors.createProcessorJar(tempFolder.newFolder().toPath(), FailingProcessor.class);
+    BugCheckerRefactoringTestHelper.newInstance(AddTriggerRefactoring.class, getClass())
+        .setArgs("-cp", processorJar.toString())
+        .addInputLines("Trigger.java", "public @interface Trigger {}")
+        .expectUnchanged()
+        .addInputLines(
+            "AlreadyAnnotated.java",
+            """
+            @Trigger
+            public class AlreadyAnnotated {}
+            """)
+        .expectUnchanged()
+        .addInputLines("Target.java", "public class Target {}")
+        .addOutputLines(
+            "Target.java",
+            """
+            @Trigger
+            public class Target {}
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void serviceLoadedProcessorJar_enabledWithProcFull() throws IOException {
+    Path processorJar =
+        TestProcessors.createProcessorJar(tempFolder.newFolder().toPath(), FailingProcessor.class);
+    BugCheckerRefactoringTestHelper testHelper =
+        BugCheckerRefactoringTestHelper.newInstance(ReturnNullRefactoring.class, getClass())
+            .setArgs("-cp", processorJar.toString(), "-proc:full")
+            .addInputLines("Trigger.java", "public @interface Trigger {}")
+            .expectUnchanged()
+            .addInputLines(
+                "Test.java",
+                """
+                @Trigger
+                public class Test {}
+                """)
+            .expectUnchanged();
+    AssertionError thrown = assertThrows(AssertionError.class, testHelper::doTest);
+    assertThat(thrown).hasMessageThat().contains("FailingProcessor ran");
+  }
+
+  @Test
+  public void processorPath_doesNotLeakAcrossTests() throws IOException {
+    Path processorJar =
+        TestProcessors.createProcessorJar(tempFolder.newFolder().toPath(), FailingProcessor.class);
+    Path emptyDir = tempFolder.newFolder("empty").toPath();
+    Path moduleDir = tempFolder.newFolder("proc-module-path").toPath();
+
+    // First compilation configures ANNOTATION_PROCESSOR_PATH with FailingProcessor.
+    BugCheckerRefactoringTestHelper withProcessorPath =
+        BugCheckerRefactoringTestHelper.newInstance(ReturnNullRefactoring.class, getClass())
+            .setArgs("--processor-path", processorJar.toString())
+            .addInputLines("Trigger.java", "public @interface Trigger {}")
+            .expectUnchanged()
+            .addInputLines(
+                "Test.java",
+                """
+                @Trigger
+                public class Test {}
+                """)
+            .expectUnchanged();
+    AssertionError thrown = assertThrows(AssertionError.class, withProcessorPath::doTest);
+    assertThat(thrown).hasMessageThat().contains("FailingProcessor ran");
+
+    // Subsequent -proc:full compilation without --processor-path must not see the leaked JAR.
+    BugCheckerRefactoringTestHelper.newInstance(ReturnNullRefactoring.class, getClass())
+        .setArgs("-cp", emptyDir.toString(), "-proc:full")
+        .addInputLines("Trigger.java", "public @interface Trigger {}")
+        .expectUnchanged()
+        .addInputLines(
+            "Test.java",
+            """
+            @Trigger
+            public class Test {}
+            """)
+        .expectUnchanged()
+        .doTest();
+
+    // Verify ANNOTATION_PROCESSOR_MODULE_PATH also resets and does not conflict with a subsequent
+    // --processor-path compilation.
+    BugCheckerRefactoringTestHelper.newInstance(ReturnNullRefactoring.class, getClass())
+        .setArgs("--processor-module-path", moduleDir.toString())
+        .addInputLines("Test.java", "public class Test {}")
+        .expectUnchanged()
+        .doTest();
+    BugCheckerRefactoringTestHelper.newInstance(ReturnNullRefactoring.class, getClass())
+        .setArgs("--processor-path", emptyDir.toString())
+        .addInputLines("Test.java", "public class Test {}")
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void danglingSingleArgOption_doesNotConsumeProcNone() {
+    BugCheckerRefactoringTestHelper testHelper =
+        BugCheckerRefactoringTestHelper.newInstance(ReturnNullRefactoring.class, getClass())
+            .setArgs("-cp")
+            .addInputLines("Test.java", "public class Test {}")
+            .expectUnchanged();
+    IllegalArgumentException thrown =
+        assertThrows(IllegalArgumentException.class, testHelper::doTest);
+    assertThat(thrown).hasMessageThat().contains("requires an argument");
   }
 }

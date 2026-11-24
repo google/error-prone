@@ -1910,6 +1910,43 @@ public final class Caller {
   }
 
   // b/365094947
+  @Test
+  public void inlinerSubstitutionsNotHappening() {
+    // Use Inliner without Validator to simulate a compiled dependency whose parameter names were
+    // stripped to arg0, arg1, ... (Validator itself rejects arg[0-9]+ parameter names on source).
+    BugCheckerRefactoringTestHelper.newInstance(Inliner.class, getClass())
+        .addInputLines(
+            "Client.java",
+            """
+            package com.google.foo;
+
+            import com.google.errorprone.annotations.InlineMe;
+
+            public final class Client {
+              @Deprecated
+              @InlineMe(replacement = "Client.bar(x)", imports = "com.google.foo.Client")
+              public static void foo(String arg0) {
+                bar(arg0);
+              }
+
+              public static void bar(String x) {}
+            }
+            """)
+        .expectUnchanged()
+        .addInputLines(
+            "Caller.java",
+            """
+            import com.google.foo.Client;
+
+            public final class Caller {
+              public void doTest(String text) {
+                Client.foo(text);
+              }
+            }
+            """)
+        .expectUnchanged()
+        .doTest();
+  }
 
   // b/375421323
   @Test

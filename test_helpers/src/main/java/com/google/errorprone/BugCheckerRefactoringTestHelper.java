@@ -54,7 +54,6 @@ import com.google.testing.compile.JavaFileObjects;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.util.TreePath;
 import com.sun.tools.javac.api.JavacTaskImpl;
-import com.sun.tools.javac.api.JavacTool;
 import com.sun.tools.javac.main.JavaCompiler;
 import com.sun.tools.javac.tree.JCTree.JCClassDecl;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
@@ -173,8 +172,6 @@ public final class BugCheckerRefactoringTestHelper {
       }
     }
   }
-
-  private static final String COMPILING_TEST_ONLY_CODE_ARG = "-XepCompilingTestOnlyCode";
 
   private final Map<JavaFileObject, JavaFileObject> sources = new HashMap<>();
   private final Class<?> clazz;
@@ -314,15 +311,6 @@ public final class BugCheckerRefactoringTestHelper {
   public void doTest(TestMode testMode) {
     checkState(!run, "doTest should only be called once");
 
-    String depsForTestInputs = System.getProperty("com.google.errorprone.deps_for_test_inputs");
-    if (depsForTestInputs != null) {
-      options.add("-cp");
-      options.add(depsForTestInputs);
-    }
-    if (testOnly && !options.contains(COMPILING_TEST_ONLY_CODE_ARG)) {
-      options.add(COMPILING_TEST_ONLY_CODE_ARG);
-    }
-
     this.run = true;
     for (Map.Entry<JavaFileObject, JavaFileObject> entry : sources.entrySet()) {
       try {
@@ -374,25 +362,22 @@ public final class BugCheckerRefactoringTestHelper {
       Context context,
       DiagnosticCollector<JavaFileObject> diagnosticsCollector)
       throws IOException {
-    JavacTool tool = JavacTool.create();
     ErrorProneOptions errorProneOptions;
     try {
-      errorProneOptions = ErrorProneOptions.processArgs(options);
+      errorProneOptions =
+          ErrorProneOptions.processArgs(TestCompilations.withTestOnlyAndDeps(options, testOnly));
     } catch (InvalidCommandLineOptionException e) {
       throw new IllegalArgumentException("Exception during argument processing: " + e);
     }
     context.put(ErrorProneOptions.class, errorProneOptions);
     StringWriter out = new StringWriter();
     JavacTaskImpl task =
-        (JavacTaskImpl)
-            tool.getTask(
-                new PrintWriter(out, true),
-                FileManagers.testFileManager(),
-                diagnosticsCollector,
-                errorProneOptions.getRemainingArgs(),
-                /* classes= */ null,
-                files,
-                context);
+        TestCompilations.getTask(
+            new PrintWriter(out, true),
+            diagnosticsCollector,
+            errorProneOptions.getRemainingArgs(),
+            files,
+            context);
     Iterable<? extends CompilationUnitTree> trees = task.parse();
     task.analyze();
     ImmutableMap<URI, ? extends CompilationUnitTree> byUri =

@@ -21,21 +21,18 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.common.io.CharStreams;
 import com.google.errorprone.CodeTransformer;
-import com.google.errorprone.FileManagers;
+import com.google.errorprone.TestCompilations;
 import com.google.errorprone.apply.DescriptionBasedDiff;
 import com.google.errorprone.apply.ImportOrganizer;
 import com.google.errorprone.apply.SourceFile;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.util.TreePath;
 import com.sun.tools.javac.api.JavacTaskImpl;
-import com.sun.tools.javac.api.JavacTool;
 import com.sun.tools.javac.tree.JCTree.JCClassDecl;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import java.io.IOException;
 import javax.tools.DiagnosticCollector;
-import javax.tools.JavaCompiler;
 import javax.tools.JavaFileObject;
-import javax.tools.StandardJavaFileManager;
 
 /**
  * Test helper for {@link CodeTransformer} implementations.
@@ -51,18 +48,13 @@ public abstract class CodeTransformerTestHelper {
   abstract CodeTransformer transformer();
 
   public JavaFileObject transform(JavaFileObject original) {
-    JavaCompiler compiler = JavacTool.create();
     DiagnosticCollector<JavaFileObject> diagnosticsCollector = new DiagnosticCollector<>();
-    StandardJavaFileManager fileManager = FileManagers.testFileManager();
     JavacTaskImpl task =
-        (JavacTaskImpl)
-            compiler.getTask(
-                CharStreams.nullWriter(),
-                fileManager,
-                diagnosticsCollector,
-                ImmutableList.<String>of(),
-                null,
-                ImmutableList.of(original));
+        TestCompilations.getTask(
+            CharStreams.nullWriter(),
+            diagnosticsCollector,
+            ImmutableList.of(),
+            ImmutableList.of(original));
 
     try {
       SourceFile sourceFile = SourceFile.create(original);
