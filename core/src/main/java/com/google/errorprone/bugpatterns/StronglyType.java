@@ -17,6 +17,7 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.matchers.InjectMatchers.GUICE_BIND_ANNOTATION;
 import static com.google.errorprone.util.ASTHelpers.canBeRemoved;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
@@ -152,7 +153,7 @@ public abstract class StronglyType {
       return NO_MATCH;
     }
     VariableTree variableTree = (VariableTree) variableTreePath.getLeaf();
-    if (hasAnnotation(variableTree, "com.google.inject.testing.fieldbinder.Bind", state)) {
+    if (hasAnnotation(variableTree, GUICE_BIND_ANNOTATION, state)) {
       return NO_MATCH;
     }
     ExpressionTree factory = invocationTrees.iterator().next();

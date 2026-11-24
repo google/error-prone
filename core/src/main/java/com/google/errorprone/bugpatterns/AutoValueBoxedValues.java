@@ -27,6 +27,8 @@ import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import static com.google.errorprone.util.ASTHelpers.isBoxedPrimitiveType;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
 import static com.google.errorprone.util.ASTHelpers.unboxedTypeOrType;
+import static com.google.errorprone.util.AnnotationNames.AUTO_VALUE_ANNOTATION;
+import static com.google.errorprone.util.AnnotationNames.AUTO_VALUE_BUILDER_ANNOTATION;
 import static java.beans.Introspector.decapitalize;
 
 import com.google.auto.value.AutoValue;
@@ -64,7 +66,7 @@ public class AutoValueBoxedValues extends BugChecker implements ClassTreeMatcher
 
   @Override
   public Description matchClass(ClassTree tree, VisitorState state) {
-    if (!hasAnnotation(tree, AutoValue.class.getName(), state)) {
+    if (!hasAnnotation(tree, AUTO_VALUE_ANNOTATION, state)) {
       return NO_MATCH;
     }
 
@@ -249,7 +251,7 @@ public class AutoValueBoxedValues extends BugChecker implements ClassTreeMatcher
     return tree.getMembers().stream()
         .filter(memberTree ->
             memberTree instanceof ClassTree
-                && hasAnnotation(memberTree, AutoValue.Builder.class.getName(), state))
+                && hasAnnotation(memberTree, AUTO_VALUE_BUILDER_ANNOTATION, state))
         .map(memberTree -> (ClassTree) memberTree)
         .findAny();
   }

@@ -44,9 +44,7 @@ public final class NullableOptional extends BugChecker
     implements MethodTreeMatcher, VariableTreeMatcher {
   private static final TypePredicate IS_OPTIONAL_TYPE =
       TypePredicates.isExactTypeAny(
-          ImmutableSet.of(
-              java.util.Optional.class.getCanonicalName(),
-              com.google.common.base.Optional.class.getCanonicalName()));
+          ImmutableSet.of("java.util.Optional", "com.google.common.base.Optional"));
 
   @Override
   public Description matchMethod(MethodTree tree, VisitorState state) {

@@ -58,7 +58,7 @@ import javax.lang.model.element.Modifier;
 public class FunctionalInterfaceMethodChanged extends BugChecker implements MethodTreeMatcher {
 
   private static final Matcher<Tree> IS_FUNCTIONAL_INTERFACE =
-      Matchers.symbolHasAnnotation(FunctionalInterface.class);
+      Matchers.symbolHasAnnotation("java.lang.FunctionalInterface");
 
   @Override
   public Description matchMethod(MethodTree tree, VisitorState state) {

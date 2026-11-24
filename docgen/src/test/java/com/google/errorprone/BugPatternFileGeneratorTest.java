@@ -18,6 +18,7 @@ package com.google.errorprone;
 
 import static com.google.common.truth.Truth.assertThat;
 import static java.nio.charset.StandardCharsets.UTF_8;
+import static org.junit.Assert.assertThrows;
 
 import com.google.common.io.CharStreams;
 import com.google.errorprone.BugPattern.SeverityLevel;
@@ -176,5 +177,22 @@ public class BugPatternFileGeneratorTest {
                 getClass().getResourceAsStream("testdata/DontDoThis_nofrontmatter_gfm.md"), UTF_8));
     String actual = new String(Files.readAllBytes(wikiDir.resolve("DontDoThis.md")), UTF_8);
     assertThat(actual.trim()).isEqualTo(expected.trim());
+  }
+
+  @Test
+  public void explanationSubdirectory_rejected() throws Exception {
+    Files.createDirectory(explanationDirBase.resolve("javadoc"));
+    IllegalArgumentException e =
+        assertThrows(
+            IllegalArgumentException.class,
+            () ->
+                new BugPatternFileGenerator(
+                    wikiDir,
+                    explanationDirBase,
+                    false,
+                    null,
+                    Collections.emptySet(),
+                    input -> input.severity));
+    assertThat(e).hasMessageThat().contains("found subdirectories [javadoc]");
   }
 }

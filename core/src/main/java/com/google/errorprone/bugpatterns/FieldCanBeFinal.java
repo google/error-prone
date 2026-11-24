@@ -17,6 +17,7 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
+import static com.google.errorprone.matchers.InjectMatchers.GUICE_BIND_ANNOTATION;
 import static com.google.errorprone.util.ASTHelpers.canBeRemoved;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
@@ -91,7 +92,6 @@ public class FieldCanBeFinal extends BugChecker implements CompilationUnitTreeMa
               ClassName.of("com.beust.jcommander.Parameter"),
               ClassName.of("com.google.common.annotations.NonFinalForGwt"),
               ClassName.of("com.google.gwt.uibinder.client.UiField"),
-              ClassName.of("com.google.inject.testing.fieldbinder.Bind"),
               ClassName.of("com.google.testing.junit.testparameterinjector.TestParameter"),
               ClassName.of("jakarta.jdo.annotations.Persistent"),
               ClassName.of("jakarta.persistence.Id"),
@@ -103,6 +103,7 @@ public class FieldCanBeFinal extends BugChecker implements CompilationUnitTreeMa
               ClassName.of("org.kohsuke.args4j.Option"),
               ClassName.of("org.mockito.Spy"),
               ClassName.of("picocli.CommandLine.Option"),
+              GUICE_BIND_ANNOTATION,
               VAR_ANNOTATION
               // keep-sorted end
               )

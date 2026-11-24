@@ -36,6 +36,7 @@ import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import static com.google.errorprone.util.ASTHelpers.isAbstract;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
+import static com.google.errorprone.util.AnnotationNames.AUTO_VALUE_BUILDER_ANNOTATION;
 import static java.util.stream.Collectors.joining;
 
 import com.google.common.collect.ArrayListMultimap;
@@ -275,7 +276,7 @@ public final class RedundantSetterCall extends BugChecker implements MethodInvoc
   }
 
   private static boolean isWithinAutoValueBuilder(MethodSymbol symbol, VisitorState state) {
-    return hasAnnotation(symbol.owner, "com.google.auto.value.AutoValue.Builder", state);
+    return hasAnnotation(symbol.owner, AUTO_VALUE_BUILDER_ANNOTATION, state);
   }
 
   interface Field {

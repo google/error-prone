@@ -26,10 +26,10 @@ import static com.google.errorprone.matchers.Matchers.isSameType;
 import static com.google.errorprone.matchers.Matchers.isSubtypeOf;
 import static com.google.errorprone.matchers.Matchers.typeCast;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
-import static com.google.errorprone.suppliers.Suppliers.typeFromString;
 import static com.google.errorprone.util.ASTHelpers.getType;
 
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.ClassName;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.TypeCastTreeMatcher;
@@ -115,8 +115,8 @@ public class BundleDeserializationCast extends BugChecker implements TypeCastTre
     if (isArrayType().matches(targetType, state)) {
       Type componentType = ((ArrayType) getType(targetType)).getComponentType();
       Types types = state.getTypes();
-      Type charSequenceType = typeFromString("java.lang.CharSequence").get(state);
-      Type stringType = typeFromString("java.lang.String").get(state);
+      Type charSequenceType = CHAR_SEQUENCE.type(state);
+      Type stringType = state.getSymtab().stringType;
       // Okay to cast to String[] because String[] is written before CharSequence[]
       // in the serialization code.
       if (types.isSubtype(componentType, charSequenceType)
@@ -138,4 +138,6 @@ public class BundleDeserializationCast extends BugChecker implements TypeCastTre
                 targetType, baseType, baseType))
         .build();
   }
+
+  private static final ClassName CHAR_SEQUENCE = ClassName.of("java.lang.CharSequence");
 }

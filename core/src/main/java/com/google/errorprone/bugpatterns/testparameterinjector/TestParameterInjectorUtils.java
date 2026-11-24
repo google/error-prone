@@ -18,7 +18,6 @@ package com.google.errorprone.bugpatterns.testparameterinjector;
 
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.common.collect.Iterables.getOnlyElement;
-import static com.google.errorprone.suppliers.Suppliers.typeFromString;
 import static com.google.errorprone.util.ASTHelpers.enumValues;
 import static com.google.errorprone.util.ASTHelpers.getAnnotationMirror;
 import static com.google.errorprone.util.ASTHelpers.getType;
@@ -29,8 +28,8 @@ import static com.google.errorprone.util.MoreAnnotations.getStrings;
 import com.google.common.base.Ascii;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
+import com.google.errorprone.ClassName;
 import com.google.errorprone.VisitorState;
-import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.util.MoreAnnotations;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.MethodTree;
@@ -44,30 +43,22 @@ import org.jspecify.annotations.Nullable;
 /** Shared constants and utility methods for {@code TestParameterInjector} checks. */
 final class TestParameterInjectorUtils {
 
-  /** Fully qualified name of {@code TestParameterInjector}. */
-  static final String TEST_PARAMETER_INJECTOR =
-      "com.google.testing.junit.testparameterinjector.TestParameterInjector";
+  /** {@code TestParameterInjector} class name. */
+  static final ClassName TEST_PARAMETER_INJECTOR =
+      ClassName.of("com.google.testing.junit.testparameterinjector.TestParameterInjector");
 
-  /** Fully qualified name of {@code @TestParameter}. */
-  static final String TEST_PARAMETER =
-      "com.google.testing.junit.testparameterinjector.TestParameter";
+  /** {@code @TestParameter} annotation class name. */
+  static final ClassName TEST_PARAMETER =
+      ClassName.of("com.google.testing.junit.testparameterinjector.TestParameter");
 
-  /** Fully qualified name of {@code @TestParameters}. */
-  static final String TEST_PARAMETERS =
-      "com.google.testing.junit.testparameterinjector.TestParameters";
+  /** {@code @TestParameters} annotation class name. */
+  static final ClassName TEST_PARAMETERS =
+      ClassName.of("com.google.testing.junit.testparameterinjector.TestParameters");
 
-  /** Binary name of {@code @TestParameters.RepeatedTestParameters}. */
-  static final String REPEATED_TEST_PARAMETERS = TEST_PARAMETERS + "$RepeatedTestParameters";
-
-  /** Supplies the {@code @TestParameter} annotation {@link Type}. */
-  static final Supplier<Type> TEST_PARAMETER_TYPE = typeFromString(TEST_PARAMETER);
-
-  /** Supplies the {@code @TestParameters} annotation {@link Type}. */
-  static final Supplier<Type> TEST_PARAMETERS_TYPE = typeFromString(TEST_PARAMETERS);
-
-  /** Supplies the {@code @TestParameters.RepeatedTestParameters} annotation {@link Type}. */
-  static final Supplier<Type> REPEATED_TEST_PARAMETERS_TYPE =
-      typeFromString(TEST_PARAMETERS + ".RepeatedTestParameters");
+  /** {@code @TestParameters.RepeatedTestParameters} annotation class name. */
+  static final ClassName REPEATED_TEST_PARAMETERS =
+      ClassName.of(
+          "com.google.testing.junit.testparameterinjector.TestParameters.RepeatedTestParameters");
 
   /** Lowercase string representations of both boolean values. */
   static final ImmutableSet<String> BOOLEAN_VALUES = ImmutableSet.of("true", "false");
@@ -125,18 +116,16 @@ final class TestParameterInjectorUtils {
       MethodTree methodTree, VisitorState state) {
     ImmutableList.Builder<String> values = ImmutableList.builder();
     ImmutableList.Builder<AnnotationTree> annotationsToRemove = ImmutableList.builder();
-    Type repeatedType = REPEATED_TEST_PARAMETERS_TYPE.get(state);
-    Type testParametersType = TEST_PARAMETERS_TYPE.get(state);
     for (AnnotationTree annotationTree : methodTree.getModifiers().getAnnotations()) {
       AnnotationMirror attribute = getAnnotationMirror(annotationTree);
       if (attribute == null) {
         continue;
       }
       Type annotationType = (Type) attribute.getAnnotationType();
-      if (isSameType(annotationType, repeatedType, state)) {
+      if (isSameType(annotationType, REPEATED_TEST_PARAMETERS, state)) {
         return Optional.empty();
       }
-      if (isSameType(annotationType, testParametersType, state)) {
+      if (isSameType(annotationType, TEST_PARAMETERS, state)) {
         if (attribute.getElementValues().size() != 1
             || !getOnlyElement(attribute.getElementValues().keySet())
                 .getSimpleName()
@@ -163,7 +152,7 @@ final class TestParameterInjectorUtils {
     if (tree.getArguments().isEmpty()) {
       return ImmutableList.of();
     }
-    if (!isSameType(getType(tree), TEST_PARAMETER_TYPE.get(state), state)) {
+    if (!isSameType(getType(tree), TEST_PARAMETER, state)) {
       return ImmutableList.of();
     }
     AnnotationMirror attribute = getAnnotationMirror(tree);

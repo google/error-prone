@@ -20,6 +20,7 @@ import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.getAnnotationWithSimpleName;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
+import static com.google.errorprone.util.AnnotationNames.DEPRECATED_ANNOTATION;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -40,7 +41,7 @@ public class DeprecatedVariable extends BugChecker implements VariableTreeMatche
   @Override
   public Description matchVariable(VariableTree tree, VisitorState state) {
     Symbol.VarSymbol sym = ASTHelpers.getSymbol(tree);
-    if (!hasAnnotation(sym, Deprecated.class.getName(), state)) {
+    if (!hasAnnotation(sym, DEPRECATED_ANNOTATION, state)) {
       return NO_MATCH;
     }
     switch (sym.getKind()) {

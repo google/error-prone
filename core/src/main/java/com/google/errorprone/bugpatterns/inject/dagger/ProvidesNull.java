@@ -18,6 +18,7 @@ package com.google.errorprone.bugpatterns.inject.dagger;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.hasDefinitelyNullBranch;
+import static com.google.errorprone.matchers.InjectMatchers.DAGGER_PROVIDES_ANNOTATION;
 import static com.google.errorprone.util.ASTHelpers.findEnclosingMethod;
 
 import com.google.common.collect.ImmutableSet;
@@ -88,7 +89,7 @@ public class ProvidesNull extends BugChecker implements ReturnTreeMatcher {
     MethodSymbol enclosingMethodSym = ASTHelpers.getSymbol(enclosingMethod);
 
     // Method is not annotated as Provides -> No match
-    if (!ASTHelpers.hasAnnotation(enclosingMethodSym, "dagger.Provides", state)) {
+    if (!ASTHelpers.hasAnnotation(enclosingMethodSym, DAGGER_PROVIDES_ANNOTATION, state)) {
       return Description.NO_MATCH;
     }
     // Method is annotated as Nullable -> No match

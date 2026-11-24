@@ -58,9 +58,9 @@ import java.util.stream.Stream;
 public final class PreferInstanceofOverGetKind extends BugChecker
     implements BinaryTreeMatcher, MethodInvocationTreeMatcher {
   private static final Matcher<ExpressionTree> GET_KIND =
-      Matchers.instanceMethod().onDescendantOf(Tree.class.getName()).named("getKind");
+      Matchers.instanceMethod().onDescendantOf("com.sun.source.tree.Tree").named("getKind");
 
-  private static final ClassName TREE_KIND = ClassName.of(Kind.class.getName());
+  private static final ClassName TREE_KIND = ClassName.of("com.sun.source.tree.Tree.Kind");
 
   /**
    * A map from {@link Kind} to the {@link Class} of tree it denotes, iff that class unambiguously

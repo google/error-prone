@@ -338,6 +338,33 @@ public class SuggesterTest {
   }
 
   @Test
+  public void anonymousClassOverride() {
+    refactoringTestHelper
+        .addInputLines(
+            "Client.java",
+            """
+            package com.google.frobber;
+
+            public final class Client {
+              interface Handler {
+                int handle();
+              }
+
+              void invokeHandler() {
+                new Handler() {
+                  @Deprecated
+                  public int handle() {
+                    return 42;
+                  }
+                }.handle();
+              }
+            }
+            """)
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
   public void methodReference() {
     refactoringTestHelper
         .addInputLines(
@@ -1075,6 +1102,36 @@ public final class Client {
         .doTest();
   }
 
+  @Test
+  public void dontSuggestOnOverridingMethods() {
+    refactoringTestHelper
+        .addInputLines(
+            "Foo.java",
+            """
+            package com.google.frobber;
+
+            public interface Foo {
+              boolean isValid();
+            }
+            """)
+        .expectUnchanged()
+        .addInputLines(
+            "FooImpl.java",
+            """
+            package com.google.frobber;
+
+            public final class FooImpl implements Foo {
+              @Deprecated
+              @Override
+              public boolean isValid() {
+                return false;
+              }
+            }
+            """)
+        .expectUnchanged()
+        .doTest();
+  }
+
   // Since constructors can't be "overridden" in the same way as other non-final methods, it's
   // OK to inline them even if there could be a subclass of the surrounding class.
   @Test
@@ -1158,6 +1215,32 @@ public final class Client {
               public void after() {}
             }
 
+            """)
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void deprecatedMethodWithMemoized() {
+    refactoringTestHelper
+        .addInputLines(
+            "Client.java",
+            """
+            package com.google.frobber;
+
+            import com.google.auto.value.AutoValue;
+            import com.google.auto.value.extension.memoized.Memoized;
+
+            @AutoValue
+            public abstract class Client {
+              @Deprecated
+              @Memoized
+              public String before() {
+                return after();
+              }
+
+              public abstract String after();
+            }
             """)
         .expectUnchanged()
         .doTest();

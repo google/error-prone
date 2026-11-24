@@ -18,6 +18,7 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.matchers.JUnitMatchers.JUNIT4_DATA_POINTS_ANNOTATION;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.hasModifier;
 import static com.google.errorprone.matchers.Matchers.isArrayType;
@@ -56,7 +57,7 @@ public class MutablePublicArray extends BugChecker implements VariableTreeMatche
     if (!MATCHER.matches(tree, state)) {
       return NO_MATCH;
     }
-    if (hasAnnotation(tree, "org.junit.experimental.theories.DataPoints", state)) {
+    if (hasAnnotation(tree, JUNIT4_DATA_POINTS_ANNOTATION, state)) {
       return NO_MATCH;
     }
     return describeMatch(tree);

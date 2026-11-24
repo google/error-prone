@@ -45,7 +45,6 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.TypeSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.util.Name;
-import java.io.InputStream;
 import javax.lang.model.element.ElementKind;
 
 /** Checks that InputStreams should override int read(byte[], int, int); */
@@ -57,7 +56,7 @@ import javax.lang.model.element.ElementKind;
     tags = StandardTags.PERFORMANCE)
 public class InputStreamSlowMultibyteRead extends BugChecker implements ClassTreeMatcher {
 
-  private static final Matcher<ClassTree> IS_INPUT_STREAM = isSubtypeOf(InputStream.class);
+  private static final Matcher<ClassTree> IS_INPUT_STREAM = isSubtypeOf("java.io.InputStream");
 
   private static final Matcher<MethodTree> READ_INT_METHOD =
       allOf(methodIsNamed("read"), methodReturns(INT_TYPE), methodHasArity(0));

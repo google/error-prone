@@ -40,7 +40,6 @@ import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
-import java.nio.ByteBuffer;
 import java.util.Optional;
 
 /**
@@ -55,15 +54,16 @@ import java.util.Optional;
 public class ByteBufferBackingArray extends BugChecker implements MethodInvocationTreeMatcher {
 
   private static final Matcher<ExpressionTree> BYTE_BUFFER_ARRAY_MATCHER =
-      anyOf(instanceMethod().onDescendantOf(ByteBuffer.class.getName()).named("array"));
+      anyOf(instanceMethod().onDescendantOf("java.nio.ByteBuffer").named("array"));
 
   private static final Matcher<ExpressionTree> BYTE_BUFFER_ARRAY_OFFSET_MATCHER =
-      anyOf(instanceMethod().onDescendantOf(ByteBuffer.class.getName()).named("arrayOffset"));
+      anyOf(instanceMethod().onDescendantOf("java.nio.ByteBuffer").named("arrayOffset"));
 
   private static final Matcher<ExpressionTree> BYTE_BUFFER_ALLOWED_INITIALIZERS_MATCHER =
-      staticMethod().onClass(ByteBuffer.class.getName()).namedAnyOf("allocate", "wrap");
+      staticMethod().onClass("java.nio.ByteBuffer").namedAnyOf("allocate", "wrap");
 
-  private static final Matcher<ExpressionTree> BYTE_BUFFER_MATCHER = isSameType(ByteBuffer.class);
+  private static final Matcher<ExpressionTree> BYTE_BUFFER_MATCHER =
+      isSameType("java.nio.ByteBuffer");
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {

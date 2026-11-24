@@ -40,7 +40,6 @@ import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.fixes.SuggestedFixes.AdditionPosition;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
-import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
@@ -66,13 +65,13 @@ public class MemoizeConstantVisitorStateLookups extends BugChecker
 
   private static final Matcher<ExpressionTree> CONSTANT_LOOKUP =
       instanceMethod()
-          .onExactClass(VisitorState.class.getName())
+          .onExactClass("com.google.errorprone.VisitorState")
           .namedAnyOf(
               "getName", "getTypeFromString", "getSymbolFromString", "binaryNameFromClassname")
-          .withParameters(String.class.getName());
+          .withParameters("java.lang.String");
 
   private static final Matcher<ExpressionTree> MEMOIZE_CALL =
-      staticMethod().onClass(VisitorState.class.getName()).named("memoize");
+      staticMethod().onClass("com.google.errorprone.VisitorState").named("memoize");
 
   @Override
   public Description matchCompilationUnit(CompilationUnitTree tree, VisitorState state) {
@@ -242,12 +241,12 @@ public class MemoizeConstantVisitorStateLookups extends BugChecker
         String rhs =
             "%s.memoize(state -> state.getName(%s))"
                 .formatted(
-                    qualifyType(state, fix, VisitorState.class.getCanonicalName()),
+                    qualifyType(state, fix, "com.google.errorprone.VisitorState"),
                     state.getSourceForNode(prototype.argumentExpression));
         yield "private static final %s<%s> %s = %s;"
             .formatted(
-                qualifyType(state, fix, Supplier.class.getCanonicalName()),
-                qualifyType(state, fix, Name.class.getCanonicalName()),
+                qualifyType(state, fix, "com.google.errorprone.suppliers.Supplier"),
+                qualifyType(state, fix, "com.sun.tools.javac.util.Name"),
                 newConstantName,
                 rhs);
       }
@@ -266,7 +265,7 @@ public class MemoizeConstantVisitorStateLookups extends BugChecker
               "%s.%s(%s)"
                   .formatted(newConstantName, accessor, state.getSourceForNode(visitorStateExpr)));
         }
-        String classNameType = qualifyType(state, fix, ClassName.class.getCanonicalName());
+        String classNameType = qualifyType(state, fix, "com.google.errorprone.ClassName");
         yield "private static final %s %s = %s.of(%s);"
             .formatted(
                 classNameType,

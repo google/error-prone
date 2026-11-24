@@ -49,7 +49,7 @@ import com.sun.tools.javac.util.Position;
 public final class StringCaseLocaleUsage extends BugChecker implements MethodInvocationTreeMatcher {
   private static final Matcher<ExpressionTree> DEFAULT_LOCALE_CASE_CONVERSION =
       instanceMethod()
-          .onExactClass(String.class.getName())
+          .onExactClass("java.lang.String")
           .namedAnyOf("toLowerCase", "toUpperCase")
           .withNoParameters();
 

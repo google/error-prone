@@ -314,6 +314,58 @@ public class InconsistentOverloadsPositiveCasesOverrides {
   }
 
   @Test
+  public void inlineMeOverloadsAreIgnored() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import com.google.errorprone.annotations.InlineMe;
+
+            class Test {
+              @Deprecated
+              @InlineMe(replacement = "this(0, object)")
+              Test(Object object) {
+                this(0, object);
+              }
+
+              Test(int i, Object object) {}
+
+              @Deprecated
+              @InlineMe(replacement = "this.foo(0, object)")
+              public void foo(Object object) {
+                foo(0, object);
+              }
+
+              public void foo(int i, Object object) {}
+
+              public void bar(Object object) {}
+
+              @Deprecated
+              @InlineMe(replacement = "this.bar(object, i)")
+              public void bar(int i, Object object) {
+                bar(object, i);
+              }
+
+              public void bar(Object object, int i) {}
+
+              public void baz(Object object) {}
+
+              @Deprecated
+              @InlineMe(replacement = "this.baz(object, i)")
+              public void baz(int i, Object object) {
+                baz(object, i);
+              }
+
+              public void baz(Object object, int i) {}
+
+              // BUG: Diagnostic contains: baz(Object object, String s)
+              public void baz(String s, Object object) {}
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
   public void suppressOnMethod() {
     compilationHelper
         .addSourceLines(

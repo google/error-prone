@@ -188,6 +188,108 @@ public class PreferCharsetOverloadTest {
   }
 
   @Test
+  public void positiveCharsetAlias() {
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            import java.nio.charset.Charset;
+
+            class Test {
+              void log(String msg, String encoding) {}
+
+              void log(String msg, Charset encoding) {}
+
+              void test() {
+                log("hello", "latin1");
+                log("hello", "utf8");
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            import static java.nio.charset.StandardCharsets.ISO_8859_1;
+            import static java.nio.charset.StandardCharsets.UTF_8;
+
+            import java.nio.charset.Charset;
+
+            class Test {
+              void log(String msg, String encoding) {}
+
+              void log(String msg, Charset encoding) {}
+
+              void test() {
+                log("hello", ISO_8859_1);
+                log("hello", UTF_8);
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void positiveNonStandardCharsetName() {
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            import java.nio.charset.Charset;
+
+            class Test {
+              void log(String msg, String encoding) {}
+
+              void log(String msg, Charset encoding) {}
+
+              void test() {
+                log("hello", "windows-1252");
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            import java.nio.charset.Charset;
+
+            class Test {
+              void log(String msg, String encoding) {}
+
+              void log(String msg, Charset encoding) {}
+
+              void test() {
+                log("hello", Charset.forName("windows-1252"));
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void negativeUnsupportedCharsetName() {
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            import java.nio.charset.Charset;
+
+            class Test {
+              void log(String msg, String encoding) {}
+
+              void log(String msg, Charset encoding) {}
+
+              void test() {
+                // Not aliases of UTF-8 or UTF-16BE.
+                log("hello", "UTF_8");
+                log("hello", "UTF16BE");
+                log("hello", "nosuch");
+              }
+            }
+            """)
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
   public void positiveDecomposition() {
     helper
         .addInputLines(

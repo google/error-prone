@@ -35,8 +35,6 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
 import java.util.Optional;
-import java.util.concurrent.CompletionService;
-import java.util.concurrent.ForkJoinTask;
 import javax.inject.Inject;
 
 /** See BugPattern annotation. */
@@ -60,12 +58,12 @@ public final class FutureReturnValueIgnored extends AbstractReturnValueIgnored
           // ForkJoinTask#fork has side-effects and returns 'this', so it's reasonable to ignore
           // the return value.
           instanceMethod()
-              .onDescendantOf(ForkJoinTask.class.getName())
+              .onDescendantOf("java.util.concurrent.ForkJoinTask")
               .named("fork")
               .withNoParameters(),
           // CompletionService is intended to be used in a way where the Future returned
           // from submit is discarded, because the Futures are available later via e.g. take()
-          instanceMethod().onDescendantOf(CompletionService.class.getName()).named("submit"),
+          instanceMethod().onDescendantOf("java.util.concurrent.CompletionService").named("submit"),
           // IntelliJ's executeOnPooledThread wraps the Callable/Runnable in one that catches
           // Throwable, so it can't fail (unless logging the Throwable also throws, but there's
           // nothing much to be done at that point).

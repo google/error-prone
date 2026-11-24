@@ -31,6 +31,7 @@ import com.google.errorprone.bugpatterns.BugChecker.TypeCastTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
+import com.google.errorprone.suppliers.Suppliers;
 import com.sun.source.tree.LiteralTree;
 import com.sun.source.tree.TypeCastTree;
 
@@ -41,7 +42,7 @@ import com.sun.source.tree.TypeCastTree;
 public class NegativeCharLiteral extends BugChecker implements TypeCastTreeMatcher {
 
   private static final Matcher<TypeCastTree> isIntegralLiteralCastToChar =
-      typeCast(isSameType("char"), anyOf(kindIs(LONG_LITERAL), kindIs(INT_LITERAL)));
+      typeCast(isSameType(Suppliers.CHAR_TYPE), anyOf(kindIs(LONG_LITERAL), kindIs(INT_LITERAL)));
 
   @Override
   public Description matchTypeCast(TypeCastTree tree, VisitorState state) {

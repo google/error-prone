@@ -24,10 +24,8 @@ import static com.google.errorprone.matchers.Matchers.hasArgumentWithValue;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.ImmutableSortedSet;
-import com.google.common.collect.Sets;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.ClassName;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
@@ -47,8 +45,6 @@ import com.sun.tools.javac.tree.JCTree.JCClassDecl;
 import com.sun.tools.javac.tree.JCTree.JCMethodDecl;
 import com.sun.tools.javac.tree.JCTree.JCModifiers;
 import com.sun.tools.javac.util.Name;
-import java.util.Collections;
-import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -76,12 +72,13 @@ public final class EmptySetMultibindingContributions extends BugChecker
 
   /** We're just not going to worry about Collections.EMPTY_SET. */
   private static final Matcher<ExpressionTree> COLLECTIONS_EMPTY_SET =
-      MethodMatchers.staticMethod().onClass(Collections.class.getCanonicalName()).named("emptySet");
+      MethodMatchers.staticMethod().onClass("java.util.Collections").named("emptySet");
 
   private static final Matcher<ExpressionTree> IMMUTABLE_SETS_OF =
       MethodMatchers.staticMethod()
           .onClassAny(
-              ImmutableSet.class.getCanonicalName(), ImmutableSortedSet.class.getCanonicalName())
+              "com.google.common.collect.ImmutableSet",
+              "com.google.common.collect.ImmutableSortedSet")
           .named("of")
           .withNoParameters();
 
@@ -104,13 +101,13 @@ public final class EmptySetMultibindingContributions extends BugChecker
 
   private static Matcher<ExpressionTree> setFactory(String factoryName) {
     return MethodMatchers.staticMethod()
-        .onClass(Sets.class.getCanonicalName())
+        .onClass("com.google.common.collect.Sets")
         .named(factoryName)
         .withNoParameters();
   }
 
   private static final Matcher<ExpressionTree> ENUM_SET_NONE_OF =
-      MethodMatchers.staticMethod().onClass(EnumSet.class.getCanonicalName()).named("noneOf");
+      MethodMatchers.staticMethod().onClass("java.util.EnumSet").named("noneOf");
 
   private static final Matcher<ExpressionTree> EMPTY_SET =
       anyOf(
@@ -152,8 +149,8 @@ public final class EmptySetMultibindingContributions extends BugChecker
     // Check to see if this is in a Dagger 1 module b/c it doesn't support @Multibinds
     for (JCAnnotation annotation : enclosingClass.getModifiers().getAnnotations()) {
       if (ASTHelpers.getSymbol(annotation.getAnnotationType())
-              .getQualifiedName()
-              .contentEquals("dagger.Module")
+              .flatName()
+              .equals(MODULE.binaryName(state))
           && HAS_DAGGER_ONE_MODULE_ARGUMENT.matches(annotation, state)) {
         return NO_MATCH;
       }
@@ -223,4 +220,6 @@ public final class EmptySetMultibindingContributions extends BugChecker
 
     return Joiner.on(' ').join(classModifierStringsBuilder.build());
   }
+
+  private static final ClassName MODULE = ClassName.of("dagger.Module");
 }

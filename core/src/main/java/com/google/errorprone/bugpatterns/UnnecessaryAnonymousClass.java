@@ -34,6 +34,7 @@ import static com.google.errorprone.util.ASTHelpers.isStatic;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Range;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.ClassName;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
 import com.google.errorprone.fixes.ErrorProneEndPosTable;
@@ -112,7 +113,7 @@ public class UnnecessaryAnonymousClass extends BugChecker implements VariableTre
       return NO_MATCH;
     }
     if (tree.getModifiers().getAnnotations().stream()
-        .anyMatch(at -> getSymbol(at).getQualifiedName().contentEquals("org.mockito.Spy"))) {
+        .anyMatch(at -> getSymbol(at).flatName().equals(SPY.binaryName(state)))) {
       return NO_MATCH;
     }
     SuggestedFix.Builder fixBuilder = SuggestedFix.builder();
@@ -261,4 +262,6 @@ public class UnnecessaryAnonymousClass extends BugChecker implements VariableTre
       return failed ? Optional.empty() : Optional.of(fix.build());
     }
   }
+
+  private static final ClassName SPY = ClassName.of("org.mockito.Spy");
 }

@@ -19,6 +19,9 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.ChildMultiMatcher.MatchType.AT_LEAST_ONE;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.matchers.JUnitMatchers.JUNIT4_PARAMETERIZED_CLASS;
+import static com.google.errorprone.matchers.JUnitMatchers.JUNIT4_PARAMETERIZED_PARAMETERS_ANNOTATION;
+import static com.google.errorprone.matchers.JUnitMatchers.JUNIT4_PARAMETERIZED_PARAMETER_ANNOTATION;
 import static com.google.errorprone.matchers.JUnitMatchers.hasJUnit4TestRunner;
 import static com.google.errorprone.matchers.JUnitMatchers.isJUnit4TestRunnerOfType;
 import static com.google.errorprone.util.ASTHelpers.getAnnotationWithSimpleName;
@@ -43,10 +46,6 @@ import com.sun.source.tree.ClassTree;
             + " have no effect.",
     severity = ERROR)
 public final class ParametersButNotParameterized extends BugChecker implements ClassTreeMatcher {
-  private static final String PARAMETERIZED = "org.junit.runners.Parameterized";
-  private static final String PARAMETER = "org.junit.runners.Parameterized.Parameter";
-  private static final String PARAMETERS = "org.junit.runners.Parameterized.Parameters";
-
   private static final MultiMatcher<com.sun.source.tree.Tree, com.sun.source.tree.AnnotationTree>
       TEST_PARAMETER_INJECTOR =
           Matchers.annotations(
@@ -67,8 +66,9 @@ public final class ParametersButNotParameterized extends BugChecker implements C
       return NO_MATCH;
     }
     if (tree.getMembers().stream()
-        .noneMatch(
-            m -> hasAnnotation(m, PARAMETER, state) || hasAnnotation(m, PARAMETERS, state))) {
+        .noneMatch(m ->
+            hasAnnotation(m, JUNIT4_PARAMETERIZED_PARAMETER_ANNOTATION, state)
+                || hasAnnotation(m, JUNIT4_PARAMETERIZED_PARAMETERS_ANNOTATION, state))) {
       return NO_MATCH;
     }
     AnnotationTree annotation =
@@ -76,7 +76,9 @@ public final class ParametersButNotParameterized extends BugChecker implements C
     SuggestedFix.Builder fix = SuggestedFix.builder();
     fix.replace(
         annotation,
-        String.format("@RunWith(%s.class)", SuggestedFixes.qualifyType(state, fix, PARAMETERIZED)));
+        String.format(
+            "@RunWith(%s.class)",
+            SuggestedFixes.qualifyType(state, fix, JUNIT4_PARAMETERIZED_CLASS)));
     return describeMatch(tree, fix.build());
   }
 }

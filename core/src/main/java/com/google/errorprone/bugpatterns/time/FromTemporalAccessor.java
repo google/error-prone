@@ -92,7 +92,7 @@ public final class FromTemporalAccessor extends BugChecker implements MethodInvo
   private static final ImmutableMap<Matcher<Tree>, Matcher<ExpressionTree>> BAD_VALUE_FROM_KEY =
       new ImmutableMap.Builder<Matcher<Tree>, Matcher<ExpressionTree>>()
           .put(
-              isSameType(DayOfWeek.class),
+              isSameType("java.time.DayOfWeek"),
               makeValue(
                   Instant.class.getName(),
                   LocalDate.class.getName(),
@@ -113,7 +113,7 @@ public final class FromTemporalAccessor extends BugChecker implements MethodInvo
                   "org.threeten.extra.YearQuarter",
                   "org.threeten.extra.YearWeek"))
           .put(
-              isSameType(Instant.class),
+              isSameType("java.time.Instant"),
               makeValue(
                   DayOfWeek.class.getName(),
                   LocalDate.class.getName(),
@@ -134,7 +134,7 @@ public final class FromTemporalAccessor extends BugChecker implements MethodInvo
                   "org.threeten.extra.YearQuarter",
                   "org.threeten.extra.YearWeek"))
           .put(
-              isSameType(LocalDate.class),
+              isSameType("java.time.LocalDate"),
               makeValue(
                   Instant.class.getName(),
                   LocalDateTime.class.getName(),
@@ -145,7 +145,7 @@ public final class FromTemporalAccessor extends BugChecker implements MethodInvo
                   ZoneOffset.class.getName(),
                   "org.threeten.extra.AmPm"))
           .put(
-              isSameType(LocalDateTime.class),
+              isSameType("java.time.LocalDateTime"),
               makeValue(
                   Instant.class.getName(),
                   OffsetDateTime.class.getName(),
@@ -153,7 +153,7 @@ public final class FromTemporalAccessor extends BugChecker implements MethodInvo
                   ZonedDateTime.class.getName(),
                   ZoneOffset.class.getName()))
           .put(
-              isSameType(LocalTime.class),
+              isSameType("java.time.LocalTime"),
               makeValue(
                   DayOfWeek.class.getName(),
                   Instant.class.getName(),
@@ -173,7 +173,7 @@ public final class FromTemporalAccessor extends BugChecker implements MethodInvo
                   "org.threeten.extra.YearQuarter",
                   "org.threeten.extra.YearWeek"))
           .put(
-              isSameType(Month.class),
+              isSameType("java.time.Month"),
               makeValue(
                   DayOfWeek.class.getName(),
                   Instant.class.getName(),
@@ -193,7 +193,7 @@ public final class FromTemporalAccessor extends BugChecker implements MethodInvo
                   "org.threeten.extra.YearQuarter",
                   "org.threeten.extra.YearWeek"))
           .put(
-              isSameType(MonthDay.class),
+              isSameType("java.time.MonthDay"),
               makeValue(
                   DayOfWeek.class.getName(),
                   Instant.class.getName(),
@@ -210,9 +210,9 @@ public final class FromTemporalAccessor extends BugChecker implements MethodInvo
                   "org.threeten.extra.DayOfYear",
                   "org.threeten.extra.YearQuarter",
                   "org.threeten.extra.YearWeek"))
-          .put(isSameType(OffsetDateTime.class), makeValue())
+          .put(isSameType("java.time.OffsetDateTime"), makeValue())
           .put(
-              isSameType(OffsetTime.class),
+              isSameType("java.time.OffsetTime"),
               makeValue(
                   DayOfWeek.class.getName(),
                   Instant.class.getName(),
@@ -230,7 +230,7 @@ public final class FromTemporalAccessor extends BugChecker implements MethodInvo
                   "org.threeten.extra.YearQuarter",
                   "org.threeten.extra.YearWeek"))
           .put(
-              isSameType(Year.class),
+              isSameType("java.time.Year"),
               makeValue(
                   DayOfWeek.class.getName(),
                   Instant.class.getName(),
@@ -251,7 +251,7 @@ public final class FromTemporalAccessor extends BugChecker implements MethodInvo
                   "org.threeten.extra.YearQuarter",
                   "org.threeten.extra.YearWeek"))
           .put(
-              isSameType(YearMonth.class),
+              isSameType("java.time.YearMonth"),
               makeValue(
                   DayOfWeek.class.getName(),
                   Instant.class.getName(),
@@ -267,9 +267,9 @@ public final class FromTemporalAccessor extends BugChecker implements MethodInvo
                   "org.threeten.extra.DayOfMonth",
                   "org.threeten.extra.DayOfYear",
                   "org.threeten.extra.YearWeek"))
-          .put(isSameType(ZonedDateTime.class), makeValue())
+          .put(isSameType("java.time.ZonedDateTime"), makeValue())
           .put(
-              isSameType(ZoneOffset.class),
+              isSameType("java.time.ZoneOffset"),
               makeValue(
                   DayOfWeek.class.getName(),
                   Instant.class.getName(),

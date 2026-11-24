@@ -79,7 +79,7 @@ final class Matchers {
    * as the name of the exception they are expecting.
    */
   private static final Matcher<MethodInvocationTree> ARGUMENT_EXTENDS_THROWABLE =
-      hasArguments(MatchType.AT_LEAST_ONE, isSubtypeOf(Throwable.class));
+      hasArguments(MatchType.AT_LEAST_ONE, isSubtypeOf("java.lang.Throwable"));
 
   /**
    * If the method is a refaster-before template then it might be explicitly matching bad behaviour.

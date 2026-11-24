@@ -20,6 +20,8 @@ import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
+import static com.google.errorprone.util.ASTHelpers.getType;
+import static com.google.errorprone.util.MoreAnnotations.targetsElement;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.ErrorProneFlags;
@@ -29,19 +31,29 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.SourceVersion;
+import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.EnhancedForLoopTree;
+import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.ForLoopTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.LambdaExpressionTree;
+import com.sun.source.tree.MemberReferenceTree;
+import com.sun.source.tree.MethodInvocationTree;
+import com.sun.source.tree.NewArrayTree;
+import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.TryTree;
+import com.sun.source.tree.TypeCastTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
 import com.sun.source.util.TreePathScanner;
+import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Symbol;
+import com.sun.tools.javac.code.TypeTag;
+import java.lang.annotation.ElementType;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -101,7 +113,15 @@ public final class UnnamedVariable extends BugChecker implements CompilationUnit
     SuggestedFix fix = SuggestedFixes.renameVariable(tree, "_", state);
     if (canUseVar(tree, symbol, path)) {
       SuggestedFix.Builder builder = fix.toBuilder();
-      SuggestedFixes.replaceVariableType(tree, "var", state).ifPresent(builder::merge);
+      SuggestedFixes.replaceVariableType(tree, "var", state)
+          .ifPresent(typeFix -> {
+            builder.merge(typeFix);
+            for (AnnotationTree annotation : tree.getModifiers().getAnnotations()) {
+              if (!targetsElement(getSymbol(annotation), ElementType.LOCAL_VARIABLE)) {
+                builder.delete(annotation);
+              }
+            }
+          });
       return builder.build();
     }
     return fix;
@@ -141,7 +161,8 @@ public final class UnnamedVariable extends BugChecker implements CompilationUnit
    *
    * <ul>
    *   <li>A local or resource variable.
-   *   <li>Part of an enhanced for loop or has a non-null initializer.
+   *   <li>Part of an enhanced for loop or has an initializer whose type can be inferred for {@code
+   *       var} (JLS 14.4.1).
    *   <li>Not part of a compound declaration (e.g., {@code int a, b;}).
    * </ul>
    */
@@ -153,11 +174,73 @@ public final class UnnamedVariable extends BugChecker implements CompilationUnit
         };
     boolean isForEachOrHasInitializer =
         path.getParentPath().getLeaf() instanceof EnhancedForLoopTree
-            || (tree.getInitializer() != null
-                && tree.getInitializer().getKind() != Tree.Kind.NULL_LITERAL);
+            || (tree.getInitializer() != null && hasValidVarInitializer(tree.getInitializer()));
     boolean isNotCompound = !isPartOfCompoundDeclaration(tree, path);
 
     return isLocalOrResource && isForEachOrHasInitializer && isNotCompound;
+  }
+
+  /**
+   * Returns true if javac can infer a type for {@code var} from the given initializer (JLS 14.4.1).
+   *
+   * <p>The initializer must not have the null type, and must not contain a lambda expression,
+   * method reference, or array initializer that isn't nested inside a method invocation, class
+   * instance creation, or cast. This mirrors javac's {@code Attr.LocalInitScanner}, which is
+   * syntactic, e.g. it also rejects a lambda in a variable declaration inside a switch expression
+   * block.
+   *
+   * <p>TODO(b/585664542): Passing javac's syntactic check isn't sufficient: e.g. {@code var x =
+   * List.of(() -> {})} still fails type inference without a target type.
+   */
+  private static boolean hasValidVarInitializer(ExpressionTree initializer) {
+    if (getType(initializer).hasTag(TypeTag.BOT)) {
+      return false;
+    }
+    var scanner =
+        new TreeScanner<Void, Void>() {
+          boolean needsExplicitType = false;
+
+          @Override
+          public Void visitLambdaExpression(LambdaExpressionTree tree, Void unused) {
+            needsExplicitType = true;
+            return null;
+          }
+
+          @Override
+          public Void visitMemberReference(MemberReferenceTree tree, Void unused) {
+            needsExplicitType = true;
+            return null;
+          }
+
+          @Override
+          public Void visitNewArray(NewArrayTree tree, Void unused) {
+            if (tree.getType() == null) {
+              needsExplicitType = true;
+            }
+            return null;
+          }
+
+          // Like javac's syntactic check, don't look inside method invocations, class instance
+          // creations, or casts. TODO(b/585664542): Unlike casts, method arguments and class
+          // instance creations don't always provide a usable target type, e.g. for a lambda passed
+          // to a type-variable parameter like `List.of(() -> {})`.
+          @Override
+          public Void visitMethodInvocation(MethodInvocationTree tree, Void unused) {
+            return null;
+          }
+
+          @Override
+          public Void visitNewClass(NewClassTree tree, Void unused) {
+            return null;
+          }
+
+          @Override
+          public Void visitTypeCast(TypeCastTree tree, Void unused) {
+            return null;
+          }
+        };
+    scanner.scan(initializer, null);
+    return !scanner.needsExplicitType;
   }
 
   /**

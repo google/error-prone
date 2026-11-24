@@ -33,9 +33,7 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Types;
-import java.util.Hashtable;
 import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
@@ -45,8 +43,10 @@ public class HashtableContains extends BugChecker implements MethodInvocationTre
 
   static final Matcher<ExpressionTree> CONTAINS_MATCHER =
       anyOf(
-          instanceMethod().onDescendantOf(Hashtable.class.getName()).named("contains"),
-          instanceMethod().onDescendantOf(ConcurrentHashMap.class.getName()).named("contains"));
+          instanceMethod().onDescendantOf("java.util.Hashtable").named("contains"),
+          instanceMethod()
+              .onDescendantOf("java.util.concurrent.ConcurrentHashMap")
+              .named("contains"));
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {

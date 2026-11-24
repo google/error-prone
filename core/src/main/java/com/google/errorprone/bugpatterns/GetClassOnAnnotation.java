@@ -26,7 +26,6 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
-import java.lang.annotation.Annotation;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
@@ -37,7 +36,7 @@ public class GetClassOnAnnotation extends BugChecker
 
   private static final Matcher<ExpressionTree> ANNOTATION_CLASS =
       instanceMethod()
-          .onDescendantOf(Annotation.class.getName())
+          .onDescendantOf("java.lang.annotation.Annotation")
           .named("getClass")
           .withNoParameters();
 

@@ -45,7 +45,6 @@ import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.TreeScanner;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -65,17 +64,17 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class ClassNewInstance extends BugChecker implements MethodInvocationTreeMatcher {
 
   private static final Matcher<ExpressionTree> NEW_INSTANCE =
-      instanceMethod().onExactClass(Class.class.getName()).named("newInstance");
+      instanceMethod().onExactClass("java.lang.Class").named("newInstance");
 
   private static final ClassName REFLECTIVE_OPERATION_EXCEPTION =
-      ClassName.of(ReflectiveOperationException.class.getName());
+      ClassName.of("java.lang.ReflectiveOperationException");
 
   private static final ImmutableList<ClassName> CONSTRUCTOR_EXCEPTIONS =
       ImmutableList.of(
-          ClassName.of(InstantiationException.class.getName()),
-          ClassName.of(IllegalAccessException.class.getName()),
-          ClassName.of(InvocationTargetException.class.getName()),
-          ClassName.of(NoSuchMethodException.class.getName()));
+          ClassName.of("java.lang.InstantiationException"),
+          ClassName.of("java.lang.IllegalAccessException"),
+          ClassName.of("java.lang.reflect.InvocationTargetException"),
+          ClassName.of("java.lang.NoSuchMethodException"));
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {

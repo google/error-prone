@@ -44,7 +44,6 @@ import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.util.TreePath;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
-import java.util.Objects;
 import org.jspecify.annotations.Nullable;
 import org.safere.Pattern;
 
@@ -115,7 +114,7 @@ public final class YodaCondition extends BugChecker
                   tree,
                   format(
                       "%s.equals(%s, %s)",
-                      qualifyType(state, fix, Objects.class.getName()),
+                      qualifyType(state, fix, "java.util.Objects"),
                       state.getSourceForNode(rhs),
                       state.getSourceForNode(lhs)))
               .build());

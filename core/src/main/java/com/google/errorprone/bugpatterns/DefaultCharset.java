@@ -29,9 +29,9 @@ import static com.google.errorprone.suppliers.Suppliers.typeFromString;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 
 import com.google.common.collect.Iterables;
-import com.google.common.io.Files;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.StandardTags;
+import com.google.errorprone.ClassName;
 import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
@@ -53,24 +53,12 @@ import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Type;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.Writer;
-import java.nio.channels.ReadableByteChannel;
-import java.nio.file.Path;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Scanner;
 import javax.inject.Inject;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
@@ -116,86 +104,78 @@ public class DefaultCharset extends BugChecker
   // ignore the constructor that takes FileDescriptor; it's rare and there's no automated fix
   private static final Matcher<ExpressionTree> FILE_WRITER =
       anyOf(
-          constructor().forClass(FileWriter.class.getName()).withParameters("java.io.File"),
+          constructor().forClass("java.io.FileWriter").withParameters("java.io.File"),
+          constructor().forClass("java.io.FileWriter").withParameters("java.io.File", "boolean"),
+          constructor().forClass("java.io.FileWriter").withParameters("java.lang.String"),
           constructor()
-              .forClass(FileWriter.class.getName())
-              .withParameters("java.io.File", "boolean"),
-          constructor().forClass(FileWriter.class.getName()).withParameters("java.lang.String"),
-          constructor()
-              .forClass(FileWriter.class.getName())
+              .forClass("java.io.FileWriter")
               .withParameters("java.lang.String", "boolean"));
 
   private static final Matcher<Tree> BUFFERED_WRITER =
-      toType(ExpressionTree.class, constructor().forClass(BufferedWriter.class.getName()));
+      toType(ExpressionTree.class, constructor().forClass("java.io.BufferedWriter"));
 
   private static final Matcher<ExpressionTree> FILE_READER =
       anyOf(
-          constructor().forClass(FileReader.class.getName()).withParameters("java.io.File"),
-          constructor().forClass(FileReader.class.getName()).withParameters("java.lang.String"));
+          constructor().forClass("java.io.FileReader").withParameters("java.io.File"),
+          constructor().forClass("java.io.FileReader").withParameters("java.lang.String"));
 
   private static final Matcher<Tree> BUFFERED_READER =
-      toType(ExpressionTree.class, constructor().forClass(BufferedReader.class.getName()));
+      toType(ExpressionTree.class, constructor().forClass("java.io.BufferedReader"));
 
   private static final Matcher<ExpressionTree> CTOR =
       anyOf(
           constructor()
-              .forClass(String.class.getName())
+              .forClass("java.lang.String")
               .withParametersOfType(Suppliers.arrayOf(Suppliers.BYTE_TYPE)),
           constructor()
-              .forClass(String.class.getName())
+              .forClass("java.lang.String")
               .withParametersOfType(
                   Suppliers.arrayOf(Suppliers.BYTE_TYPE), Suppliers.INT_TYPE, Suppliers.INT_TYPE),
           constructor()
-              .forClass(OutputStreamWriter.class.getName())
-              .withParametersOfType(Suppliers.typeFromClass(OutputStream.class)),
+              .forClass("java.io.OutputStreamWriter")
+              .withParametersOfType(ClassName.of("java.io.OutputStream")),
           constructor()
-              .forClass(InputStreamReader.class.getName())
-              .withParametersOfType(Suppliers.typeFromClass(InputStream.class)));
+              .forClass("java.io.InputStreamReader")
+              .withParametersOfType(ClassName.of("java.io.InputStream")));
 
   private static final Matcher<ExpressionTree> BYTESTRING_COPY_FROM =
       staticMethod().onClass(BYTE_STRING).named("copyFrom");
 
   private static final Matcher<ExpressionTree> STRING_GET_BYTES =
-      instanceMethod().onExactClass(String.class.getName()).named("getBytes").withNoParameters();
+      instanceMethod().onExactClass("java.lang.String").named("getBytes").withNoParameters();
 
   private static final Matcher<ExpressionTree> BYTE_ARRAY_OUTPUT_STREAM_TO_STRING =
       instanceMethod()
-          .onDescendantOf(ByteArrayOutputStream.class.getName())
+          .onDescendantOf("java.io.ByteArrayOutputStream")
           .named("toString")
           .withNoParameters();
 
   private static final Matcher<ExpressionTree> FILE_NEW_WRITER =
       staticMethod()
-          .onClass(Files.class.getName())
+          .onClass("com.google.common.io.Files")
           .named("newWriter")
           .withParameters("java.lang.String");
 
   private static final Matcher<ExpressionTree> PRINT_WRITER =
       anyOf(
-          constructor().forClass(PrintWriter.class.getName()).withParameters(File.class.getName()),
-          constructor()
-              .forClass(PrintWriter.class.getName())
-              .withParameters(String.class.getName()));
+          constructor().forClass("java.io.PrintWriter").withParameters("java.io.File"),
+          constructor().forClass("java.io.PrintWriter").withParameters("java.lang.String"));
 
   private static final Matcher<ExpressionTree> PRINT_WRITER_OUTPUTSTREAM =
       anyOf(
+          constructor().forClass("java.io.PrintWriter").withParameters("java.io.OutputStream"),
           constructor()
-              .forClass(PrintWriter.class.getName())
-              .withParameters(OutputStream.class.getName()),
-          constructor()
-              .forClass(PrintWriter.class.getName())
-              .withParameters(OutputStream.class.getName(), "boolean"));
+              .forClass("java.io.PrintWriter")
+              .withParameters("java.io.OutputStream", "boolean"));
 
   private static final Matcher<ExpressionTree> SCANNER_MATCHER =
       anyOf(
+          constructor().forClass("java.util.Scanner").withParameters("java.io.InputStream"),
+          constructor().forClass("java.util.Scanner").withParameters("java.io.File"),
+          constructor().forClass("java.util.Scanner").withParameters("java.nio.file.Path"),
           constructor()
-              .forClass(Scanner.class.getName())
-              .withParameters(InputStream.class.getName()),
-          constructor().forClass(Scanner.class.getName()).withParameters(File.class.getName()),
-          constructor().forClass(Scanner.class.getName()).withParameters(Path.class.getName()),
-          constructor()
-              .forClass(Scanner.class.getName())
-              .withParameters(ReadableByteChannel.class.getName()));
+              .forClass("java.util.Scanner")
+              .withParameters("java.nio.channels.ReadableByteChannel"));
 
   private final boolean byteArrayOutputStreamToString;
 
@@ -311,7 +291,7 @@ public class DefaultCharset extends BugChecker
       if (sym == null) {
         continue;
       }
-      if (sym.getQualifiedName().contentEquals("com.google.common.io.Files")) {
+      if (sym.flatName().equals(GUAVA_FILES.binaryName(state))) {
         return true;
       }
     }
@@ -564,4 +544,6 @@ public class DefaultCharset extends BugChecker
   }
 
   private static final Supplier<Type> JAVA_IO_FILE = typeFromString("java.io.File");
+
+  private static final ClassName GUAVA_FILES = ClassName.of("com.google.common.io.Files");
 }

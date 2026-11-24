@@ -30,6 +30,7 @@ import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
+import com.google.errorprone.suppliers.Suppliers;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
@@ -52,10 +53,13 @@ public final class MathRoundIntLong extends BugChecker implements MethodInvocati
 
   private static final Matcher<MethodInvocationTree> ROUND_CALLS_WITH_INT_ARG =
       allOf(
-          MATH_ROUND_CALLS, argument(0, anyOf(isSameType("int"), isSameType("java.lang.Integer"))));
+          MATH_ROUND_CALLS,
+          argument(0, anyOf(isSameType(Suppliers.INT_TYPE), isSameType("java.lang.Integer"))));
 
   private static final Matcher<MethodInvocationTree> ROUND_CALLS_WITH_LONG_ARG =
-      allOf(MATH_ROUND_CALLS, argument(0, anyOf(isSameType("long"), isSameType("java.lang.Long"))));
+      allOf(
+          MATH_ROUND_CALLS,
+          argument(0, anyOf(isSameType(Suppliers.LONG_TYPE), isSameType("java.lang.Long"))));
 
   private static final Matcher<MethodInvocationTree> ROUND_CALLS_WITH_INT_OR_LONG_ARG =
       anyOf(ROUND_CALLS_WITH_INT_ARG, ROUND_CALLS_WITH_LONG_ARG);

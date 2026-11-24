@@ -21,6 +21,7 @@ import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.InjectMatchers.DAGGER_PRODUCES_ANNOTATION;
 import static com.google.errorprone.matchers.InjectMatchers.DAGGER_PROVIDES_ANNOTATION;
+import static com.google.errorprone.matchers.InjectMatchers.GUICE_ABSTRACT_MODULE;
 import static com.google.errorprone.util.ASTHelpers.enclosingClass;
 import static com.google.errorprone.util.ASTHelpers.findClass;
 import static com.google.errorprone.util.ASTHelpers.findSuperMethods;
@@ -85,7 +86,7 @@ public class DoNotCallSuggester extends BugChecker implements MethodTreeMatcher 
   private static final ImmutableSet<ClassName> PARENT_CLASS_TO_IGNORE =
       ImmutableSet.of(
           // a Guice module w/ bindings
-          ClassName.of("com.google.inject.AbstractModule"));
+          GUICE_ABSTRACT_MODULE);
 
   private static final ImmutableSet<ClassName> RETURNED_SUPER_TYPES_TO_IGNORE =
       ImmutableSet.of(

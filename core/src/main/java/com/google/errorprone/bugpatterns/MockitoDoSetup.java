@@ -30,6 +30,7 @@ import static java.lang.String.format;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.ClassName;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -101,7 +102,7 @@ public final class MockitoDoSetup extends BugChecker implements CompilationUnitT
       private boolean isSpy(ExpressionTree tree) {
         var symbol = getSymbol(tree);
         return symbol != null
-            && (spies.contains(symbol) || hasAnnotation(symbol, "org.mockito.Spy", state));
+            && (spies.contains(symbol) || hasAnnotation(symbol, ORG_MOCKITO_SPY, state));
       }
     }.scan(state.getPath(), null);
     return NO_MATCH;
@@ -192,4 +193,6 @@ public final class MockitoDoSetup extends BugChecker implements CompilationUnitT
 
   private static final Matcher<ExpressionTree> THEN_THROW =
       instanceMethod().onDescendantOf("org.mockito.stubbing.OngoingStubbing").named("thenThrow");
+
+  private static final ClassName ORG_MOCKITO_SPY = ClassName.of("org.mockito.Spy");
 }

@@ -16,9 +16,17 @@
 
 package com.google.errorprone.bugpatterns.javadoc;
 
+import static com.google.common.truth.Truth.assertThat;
 import static com.google.common.truth.TruthJUnit.assume;
 
+import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
+import com.google.errorprone.bugpatterns.javadoc.MarkdownComment.CodeBlock;
+import com.google.errorprone.bugpatterns.javadoc.MarkdownComment.HtmlBlock;
+import com.google.errorprone.bugpatterns.javadoc.MarkdownComment.Paragraph;
+import com.google.errorprone.bugpatterns.javadoc.MarkdownComment.Text;
+import com.google.errorprone.bugpatterns.javadoc.MarkdownCommentPrinter.PrintedComment;
+import com.google.errorprone.bugpatterns.javadoc.MarkdownCommentPrinter.Region;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -506,12 +514,10 @@ public final class TraditionalJavadocToMarkdownTest {
              */
             public class Test {}
             """)
-        // NOTE: technically this is a bug because we (incorrectly) identify the <h1> inside the
-        // @see as a heading, but that's unlikely to occur in practice.
         .addOutputLines(
             "Test.java",
             """
-            /// ### Real Section
+            /// # Real Section
             ///
             /// @see <h1>Not A Real Heading</h1>
             public class Test {}
@@ -534,14 +540,14 @@ public final class TraditionalJavadocToMarkdownTest {
              */
             public class Test {}
             """)
-        // NOTE: technically this is a bug because we (incorrectly) identify the <h1> inside the
-        // {@link} as a heading, but that's unlikely to occur in practice.
+        // The label of a {@link} is rendered in code font, which Markdown can only express if the
+        // label is plain text, so this {@link} is kept as-is.
         .addOutputLines(
             "Test.java",
             """
-            /// ### Real Section
+            /// # Real Section
             ///
-            /// [`# Not A Real Heading`][Foo]
+            /// {@link Foo <h1>Not A Real Heading</h1>}
             ///
             /// @see {@link Foo <h1>Not A Real Heading</h1>}
             public class Test {}
@@ -621,7 +627,6 @@ public final class TraditionalJavadocToMarkdownTest {
 
   @Test
   public void headingsNormalized_withAttributes() {
-    // TODO(kak): Add support for attributes.
     helper
         .addInputLines(
             "Test.java",
@@ -632,12 +637,14 @@ public final class TraditionalJavadocToMarkdownTest {
              */
             public class Test {}
             """)
+        // Markdown headings can't have attributes, so the headings are kept as HTML. (All of them,
+        // to preserve their relative levels.)
         .addOutputLines(
             "Test.java",
             """
-            /// # Section Title
+            /// <h3 id="section" class="title">Section Title</h3>
             ///
-            /// ## Subsection
+            /// <h4>Subsection</h4>
             public class Test {}
             """)
         .doTest();
@@ -928,9 +935,7 @@ public final class TraditionalJavadocToMarkdownTest {
   @Test
   public void preWithHtmlAndEscapedGenerics() {
     assume().that(EXTRA_MARKDOWN_SPACE_GONE).isTrue();
-    // Note: Within a <pre> block, newlines are significant and text is rendered with a code font.
-    // Within a ``` block, both of those things are true, but also Markdown and HTML constructs
-    // are not recognized. This is difficult to fix though, but hopefully fairly uncommon.
+    // HTML isn't recognized in a ``` block, so a <pre> block that contains HTML is kept as-is.
     helper
         .addInputLines(
             "Test.java",
@@ -946,10 +951,10 @@ public final class TraditionalJavadocToMarkdownTest {
         .addOutputLines(
             "Test.java",
             """
-            /// ```
-            /// This really is *italic* and **bold**.
+            /// <pre>
+            /// This really is <i>italic</i> and <b>bold</b>.
             /// Optional&lt;T&gt;
-            /// ```
+            /// </pre>
             public class Test {}
             """)
         .doTest();
@@ -958,10 +963,7 @@ public final class TraditionalJavadocToMarkdownTest {
   @Test
   public void preWithLink() {
     assume().that(EXTRA_MARKDOWN_SPACE_GONE).isTrue();
-    // Note: In traditional Javadoc <pre>, <a> tags render as clickable links.
-    // In Markdown Javadoc ``` blocks, HTML tags and Markdown links are rendered as literal text.
-    // Ideally, links inside <pre> should either be preserved as clickable (if it's not actually
-    // code) or converted to plain text if it is code.
+    // HTML isn't recognized in a ``` block, so a <pre> block that contains a link is kept as-is.
     helper
         .addInputLines(
             "Test.java",
@@ -976,9 +978,9 @@ public final class TraditionalJavadocToMarkdownTest {
         .addOutputLines(
             "Test.java",
             """
-            /// ```
-            /// See [this link](http://example.com)
-            /// ```
+            /// <pre>
+            /// See <a href="http://example.com">this link</a>
+            /// </pre>
             public class Test {}
             """)
         .doTest();
@@ -987,8 +989,7 @@ public final class TraditionalJavadocToMarkdownTest {
   @Test
   public void preWithLineBreak() {
     assume().that(EXTRA_MARKDOWN_SPACE_GONE).isTrue();
-    // Note: In traditional Javadoc <pre>, <br> tags render as newlines.
-    // Ideally, these should be converted to actual newlines in the Markdown output.
+    // In a <pre> block, <br> tags render as line breaks.
     helper
         .addInputLines(
             "Test.java",
@@ -1004,7 +1005,8 @@ public final class TraditionalJavadocToMarkdownTest {
             "Test.java",
             """
             /// ```
-            /// Line 1<br>Line 2
+            /// Line 1
+            /// Line 2
             /// ```
             public class Test {}
             """)
@@ -1014,10 +1016,6 @@ public final class TraditionalJavadocToMarkdownTest {
   @Test
   public void preWithBareEntities() {
     assume().that(EXTRA_MARKDOWN_SPACE_GONE).isTrue();
-    // Note: In traditional Javadoc <pre>, &lt; renders as <.
-    // In Markdown Javadoc ``` blocks, HTML entities are rendered literally (as &lt;).
-    // Ideally, HTML entities should be decoded (e.g., to <) when placed inside a Markdown code
-    // block.
     helper
         .addInputLines(
             "Test.java",
@@ -1033,7 +1031,7 @@ public final class TraditionalJavadocToMarkdownTest {
             "Test.java",
             """
             /// ```
-            /// A &lt; B
+            /// A < B
             /// ```
             public class Test {}
             """)
@@ -1055,6 +1053,7 @@ public final class TraditionalJavadocToMarkdownTest {
              * @see java.util.List
              * @custom Custom tag content.
              */
+            @Deprecated
             public class Test {}
             """)
         .addOutputLines(
@@ -1067,6 +1066,7 @@ public final class TraditionalJavadocToMarkdownTest {
             /// @deprecated Use something else.
             /// @see java.util.List
             /// @custom Custom tag content.
+            @Deprecated
             public class Test {}
             """)
         .doTest();
@@ -1301,12 +1301,12 @@ public final class TraditionalJavadocToMarkdownTest {
               ///
               /// - This is a link to [#bar()] with trailing parens.
               /// - This is a link to [#bar] without trailing parens.
-              /// - This is a linkplain to [#bar()] with trailing parens.
-              /// - This is a linkplain to [#bar] without trailing parens.
+              /// - This is a linkplain to {@linkplain #bar()} with trailing parens.
+              /// - This is a linkplain to {@linkplain #bar} without trailing parens.
               /// - This is a link to [Object#toString()] with trailing parens.
               /// - This is a link to [Object#toString] without trailing parens.
-              /// - This is a linkplain to [Object#toString()] with trailing parens.
-              /// - This is a linkplain to [Object#toString] without trailing parens.
+              /// - This is a linkplain to {@linkplain Object#toString()} with trailing parens.
+              /// - This is a linkplain to {@linkplain Object#toString} without trailing parens.
               public void foo() {}
 
               public void bar() {}
@@ -1522,7 +1522,7 @@ public final class TraditionalJavadocToMarkdownTest {
         .addOutputLines(
             "Test.java",
             """
-            /// @see SeeTag the class representing the \\@see tag
+            /// @see SeeTag the class representing the \\\\@see tag
             public class Test {}
             """)
         .doTest();
@@ -1912,12 +1912,10 @@ public final class TraditionalJavadocToMarkdownTest {
              */
             public class Test {}
             """)
-        // TODO(b/532216390): should be "/// Foo\n/// `bar baz`."
         .addOutputLines(
             "Test.java",
             """
-            /// Foo `
-            /// bar baz`.
+            /// Foo `bar baz`.
             public class Test {}
             """)
         .doTest();
@@ -2200,10 +2198,11 @@ public final class TraditionalJavadocToMarkdownTest {
              */
             public class Test {}
             """)
+        // An unclosed <b> can't be written as Markdown emphasis.
         .addOutputLines(
             "Test.java",
             """
-            /// **outer start
+            /// <b>outer start
             ///
             /// @see Foo <b>inner tag</b>
             public class Test {}
@@ -2225,7 +2224,7 @@ public final class TraditionalJavadocToMarkdownTest {
         .addOutputLines(
             "Test.java",
             """
-            /// **bold text</div>
+            /// <b>bold text</div>
             public class Test {}
             """)
         .doTest();
@@ -2339,11 +2338,10 @@ public final class TraditionalJavadocToMarkdownTest {
              */
             public class Test {}
             """)
-        // TODO(b/532216390): skip empty {@code} and escape backticks inside {@code}
         .addOutputLines(
             "Test.java",
             """
-            /// Empty `` and backticks ``ClassName.methodName()`` and `foo`bar`.
+            /// Empty  and backticks `` `ClassName.methodName()` `` and ``foo`bar``.
             public class Test {}
             """)
         .doTest();
@@ -2360,13 +2358,7 @@ public final class TraditionalJavadocToMarkdownTest {
              ************************************************************************/
             public class Test {}
             """)
-        // TODO(b/532216390): ignore /*** banner comments
-        .addOutputLines(
-            "Test.java",
-            """
-            /// Section banner
-            public class Test {}
-            """)
+        .expectUnchanged()
         .doTest();
   }
 
@@ -2383,11 +2375,10 @@ public final class TraditionalJavadocToMarkdownTest {
               public void foo() {}
             }
             """)
-        // TODO(b/532216390): trim link label
         .addOutputLines(
             "Test.java",
             """
-            /// See [`foo = "bar" `][#foo].
+            /// See [`foo = "bar"`][#foo].
             public class Test {
               public void foo() {}
             }
@@ -2413,15 +2404,35 @@ public final class TraditionalJavadocToMarkdownTest {
              */
             public class Test {}
             """)
-        // TODO(b/532216390): handle space before newline and list-item prefix in {@code}
         .addOutputLines(
             "Test.java",
             """
-            /// Foo `
-            /// bar`.
+            /// Foo `bar`.
             ///
-            /// - `
-            ///     baz`
+            /// - `baz`
+            public class Test {}
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void lineBreakInCodeTagInsideLinkAndBold() {
+    assume().that(EXTRA_MARKDOWN_SPACE_GONE).isTrue();
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            /**
+             * See <a href="https://example.com">{@code
+             * Foo}</a> and <b>{@code
+             * Bar}</b>.
+             */
+            public class Test {}
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            /// See [`Foo`](https://example.com) and **`Bar`**.
             public class Test {}
             """)
         .doTest();
@@ -2440,11 +2451,10 @@ public final class TraditionalJavadocToMarkdownTest {
               public void foo() {}
             }
             """)
-        // TODO(b/532216390): escape backticks in {@link} label
         .addOutputLines(
             "Test.java",
             """
-            /// See [``bar``][#foo].
+            /// See [`` `bar` ``][#foo].
             public class Test {
               public void foo() {}
             }
@@ -2467,16 +2477,1554 @@ public final class TraditionalJavadocToMarkdownTest {
              */
             public class Test {}
             """)
-        // TODO(b/532216390): strip trailing blank line before closing fence
         .addOutputLines(
             "Test.java",
             """
             /// ```
             /// int x = 1;
-            ///
             /// ```
             public class Test {}
             """)
         .doTest();
+  }
+
+  @Test
+  public void nestedListsOlUlOl() {
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            /**
+             * <ol>
+             *   <li>Outer 1
+             *     <ul>
+             *       <li>Middle bullet
+             *         <ol>
+             *           <li>Inner numbered</li>
+             *         </ol>
+             *       </li>
+             *     </ul>
+             *   </li>
+             *   <li>Outer 2</li>
+             * </ol>
+             */
+            public class Test {}
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            /// 1. Outer 1
+            ///
+            ///    - Middle bullet
+            ///
+            ///      1. Inner numbered
+            ///
+            /// 1. Outer 2
+            public class Test {}
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void nestedListsOlOlUl() {
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            /**
+             * <ol>
+             *   <li>Outer
+             *     <ol>
+             *       <li>Middle numbered
+             *         <ul>
+             *           <li>Inner bullet</li>
+             *         </ul>
+             *       </li>
+             *     </ol>
+             *   </li>
+             * </ol>
+             */
+            public class Test {}
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            /// 1. Outer
+            ///
+            ///    1. Middle numbered
+            ///
+            ///       - Inner bullet
+            public class Test {}
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void preWithEntities() {
+    assume().that(EXTRA_MARKDOWN_SPACE_GONE).isTrue();
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            /**
+             * <pre>
+             * &#64;Override
+             * &#064;Nullable
+             * &#x40;Deprecated
+             * List&lt;String&gt; xs = a &amp;&amp; b ? &quot;x&quot; : &apos;y&apos;;
+             * /* comment *&#47;
+             * &bogus;
+             * </pre>
+             *
+             * <pre><code>
+             * Map&lt;String, Integer&gt; m;
+             * </code></pre>
+             */
+            public class Test {}
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            /// ```
+            /// @Override
+            /// @Nullable
+            /// @Deprecated
+            /// List<String> xs = a && b ? "x" : 'y';
+            /// /* comment */
+            /// &bogus;
+            /// ```
+            ///
+            /// ```
+            /// Map<String, Integer> m;
+            /// ```
+            public class Test {}
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void codeTagWithEntities() {
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            /**
+             * See <code>List&lt;String&gt;</code>, <code>a &amp;&amp; b</code>,
+             * <code>&#64;Nullable</code>, <code>/* c *&#47;</code>, and <code>&bogus;</code>.
+             */
+            public class Test {}
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            /// See `List<String>`, `a && b`, `@Nullable`, `/* c */`, and `&bogus;`.
+            public class Test {}
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void linkLabelWithEntities() {
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            /**
+             * See {@link Test Test&lt;String&gt;} and {@linkplain Test Test&lt;String&gt;}.
+             *
+             * @see <code>A &lt; B</code>
+             */
+            public class Test<T> {}
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            /// See [`Test<String>`][Test] and [Test&lt;String&gt;][Test].
+            ///
+            /// @see <code>A &lt; B</code>
+            public class Test<T> {}
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void escapesMarkdownSyntax() {
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            /**
+             * Computes a*b*c and __init__ for args[i] in [0, 1].
+             * 1. This is not a list item.
+             * # This is not a heading.
+             */
+            public class Test {}
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            /// Computes a\\*b\\*c and \\_\\_init\\_\\_ for args\\[i] in [0, 1].
+            /// 1\\. This is not a list item.
+            /// \\# This is not a heading.
+            public class Test {}
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void emphasisThatCannotUseDelimiters() {
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            /**
+             * Some foo<b>(bar)</b>baz, and <b>bold</b><i>italic</i>.
+             */
+            public class Test {}
+            """)
+        // `foo**(bar)**baz` would not be parsed as emphasis, so the HTML is kept.
+        .addOutputLines(
+            "Test.java",
+            """
+            /// Some foo<b>(bar)</b>baz, and __bold__*italic*.
+            public class Test {}
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void seeTagWithCodeLabel() {
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            public class Test {
+              /**
+               * Does something.
+               *
+               * @see #bar() Test.bar()
+               */
+              public void foo() {}
+
+              public void bar() {}
+            }
+            """)
+        // javadoc renders this label in code font in a traditional comment, but not in a Markdown
+        // comment.
+        .addOutputLines(
+            "Test.java",
+            """
+            public class Test {
+              /// Does something.
+              ///
+              /// @see #bar() `Test.bar()`
+              public void foo() {}
+
+              public void bar() {}
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void backslashBeforeU() {
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            /**
+             * Escapes like \\\\uXXXX are written as-is.
+             */
+            public class Test {}
+            """)
+        // Each backslash is escaped, since an odd number of backslashes before `u` would be a
+        // Unicode escape.
+        .addOutputLines(
+            "Test.java",
+            """
+            /// Escapes like \\\\\\\\uXXXX are written as-is.
+            public class Test {}
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void codeOnSameLineAsComment() {
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            public class Test {
+              int x; /** The y. */ int y;
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            public class Test {
+              int x;
+              /// The y.
+              int y;
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void codeBlockInListItem() {
+    assume().that(EXTRA_MARKDOWN_SPACE_GONE).isTrue();
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            /**
+             * <ul>
+             *   <li>An item with code:
+             *       <pre>{@code
+             *       int x = 1;
+             *       }</pre>
+             * </ul>
+             */
+            public class Test {}
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            /// - An item with code:
+            ///
+            ///   ```
+            ///         int x = 1;
+            ///   ```
+            public class Test {}
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void linkAtStartOfParagraphFollowedByColon() {
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            /**
+             * {@link Test}: a class.
+             */
+            public class Test {}
+            """)
+        // `[Test]: a class.` would be a link reference definition.
+        .addOutputLines(
+            "Test.java",
+            """
+            /// [Test][]: a class.
+            public class Test {}
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void unicodeEscapeInComment() {
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            /**
+             * A range of ['\\u0000', '\\u007F'].
+             */
+            public class Test {}
+            """)
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void unconvertibleComment() {
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            /**
+             * <b>Bold <p>paragraph</b>
+             */
+            public class Test {}
+            """)
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void lineDocCommentOnPreviousLine() {
+    // javac merges a `///` comment with a `///` comment on the next line.
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            public class Test {
+              /// A Markdown note.
+              /** Not converted. */
+              int a;
+
+              ////////////////////////////////////////
+              /** Not converted. */
+              int b;
+
+              int c; /// A trailing note.
+              /** Not converted. */
+              int d;
+
+              // A line comment.
+              /** Converted. */
+              int e;
+
+              /// A separate note.
+
+              /** Converted. */
+              int f;
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            public class Test {
+              /// A Markdown note.
+              /** Not converted. */
+              int a;
+
+              ////////////////////////////////////////
+              /** Not converted. */
+              int b;
+
+              int c; /// A trailing note.
+              /** Not converted. */
+              int d;
+
+              // A line comment.
+              /// Converted.
+              int e;
+
+              /// A separate note.
+
+              /// Converted.
+              int f;
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void deprecatedTagWithoutAnnotation() {
+    // javac only treats `@deprecated` in a `/** ... */` comment as deprecating the declaration.
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            public class Test {
+              /**
+               * Not converted.
+               *
+               * @deprecated Use something else.
+               */
+              public void notAnnotated() {}
+
+              /**
+               * Converted.
+               *
+               * @deprecated Use something else.
+               */
+              @Deprecated
+              public void annotated() {}
+
+              /**
+               * Converted.
+               *
+               * @deprecated Use something else.
+               */
+              @java.lang.Deprecated
+              public void qualifiedAnnotation() {}
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            public class Test {
+              /**
+               * Not converted.
+               *
+               * @deprecated Use something else.
+               */
+              public void notAnnotated() {}
+
+              /// Converted.
+              ///
+              /// @deprecated Use something else.
+              @Deprecated
+              public void annotated() {}
+
+              /// Converted.
+              ///
+              /// @deprecated Use something else.
+              @java.lang.Deprecated
+              public void qualifiedAnnotation() {}
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void deprecatedTagWithCustomDeprecatedAnnotation() {
+    helper
+        .addInputLines(
+            "Deprecated.java",
+            """
+            package custom;
+
+            public @interface Deprecated {}
+            """)
+        .expectUnchanged()
+        .addInputLines(
+            "Test.java",
+            """
+            import custom.Deprecated;
+
+            public class Test {
+              /**
+               * Not converted because the annotation is not java.lang.Deprecated.
+               *
+               * @deprecated Use something else.
+               */
+              @Deprecated
+              public void customDeprecated() {}
+            }
+            """)
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void deprecatedInCodeOrCommentWithoutAnnotation() {
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            public class Test {
+              /**
+               * Example:
+               * {@code
+               * @deprecated
+               * }
+               */
+              public void inCode() {}
+
+              /**
+               * <!--
+               * @deprecated
+               * -->
+               * Still deprecated by JavaTokenizer.
+               */
+              public void inComment() {}
+            }
+            """)
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void deprecatedTagWithoutAnnotation_nonMethods() {
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            /**
+             * Class doc.
+             *
+             * @deprecated Use another class.
+             */
+            public enum Test {
+              /**
+               * Constant doc.
+               *
+               * @deprecated Use another constant.
+               */
+              A;
+
+              /**
+               * Field doc.
+               *
+               * @deprecated Use another field.
+               */
+              int field;
+            }
+            """)
+        .expectUnchanged()
+        .addInputLines(
+            "package-info.java",
+            """
+            /**
+             * Package doc.
+             *
+             * @deprecated Use another package.
+             */
+            package test;
+            """)
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void packageAndModuleJavadoc() {
+    helper
+        .addInputLines(
+            "package-info.java",
+            """
+            /**
+             * Package doc with {@code code}.
+             *
+             * @deprecated Use another package.
+             */
+            @Deprecated
+            package test;
+            """)
+        .addOutputLines(
+            "package-info.java",
+            """
+            /// Package doc with `code`.
+            ///
+            /// @deprecated Use another package.
+            @Deprecated
+            package test;
+            """)
+        .doTest();
+
+    BugCheckerRefactoringTestHelper.newInstance(TraditionalJavadocToMarkdown.class, getClass())
+        .addInputLines(
+            "module-info.java",
+            """
+            /**
+             * Module doc.
+             *
+             * @deprecated Use another module.
+             */
+            module my.module {}
+            """)
+        .expectUnchanged()
+        .doTest();
+
+    BugCheckerRefactoringTestHelper.newInstance(TraditionalJavadocToMarkdown.class, getClass())
+        .addInputLines(
+            "module-info.java",
+            """
+            /**
+             * Module doc with {@code code}.
+             *
+             * @deprecated Use another module.
+             */
+            @Deprecated
+            module my.module {}
+            """)
+        .addOutputLines(
+            "module-info.java",
+            """
+            /// Module doc with `code`.
+            ///
+            /// @deprecated Use another module.
+            @Deprecated
+            module my.module {}
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void commentBodyStartsWithJavadocOpener() {
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            public class Test {
+              /** /** example */
+              int a;
+
+              /**
+               * /** example
+               */
+              int b;
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            public class Test {
+              /// /\\*\\* example
+              int a;
+
+              /// /\\*\\* example
+              int b;
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void embeddedNewlinesDoNotEmitUncommentedJava() {
+    assume().that(EXTRA_MARKDOWN_SPACE_GONE).isTrue();
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            import java.io.Serializable;
+            import java.util.Map;
+
+            public class Test implements Serializable {
+              /**
+               * <h2>Title {@literal
+               * bar
+               * }</h2>
+               */
+              int a;
+
+              /**
+               * {@snippet lang="a
+               * b" :
+               * int x;
+               * }
+               */
+              int b;
+
+              /**
+               * @serialField m java.util.Map<
+               * String, Integer> desc
+               */
+              private static final long serialVersionUID = 1L;
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            import java.io.Serializable;
+            import java.util.Map;
+
+            public class Test implements Serializable {
+              /// <h2>Title {@literal
+              /// bar
+              /// }</h2>
+              int a;
+
+              /// {@snippet lang="a
+              /// b" :
+              /// int x;
+              /// }
+              int b;
+
+              /// @serialField m java.util.Map< String, Integer> desc
+              private static final long serialVersionUID = 1L;
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void valuelessHtmlAndSnippetAttributes() {
+    assume().that(EXTRA_MARKDOWN_SPACE_GONE).isTrue();
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            public class Test {
+              /** <p id>text</p> */
+              int a;
+
+              /** <a href>text</a> */
+              int b;
+
+              /** <ol start><li>a</li></ol> */
+              int c;
+
+              /**
+               * {@snippet lang :
+               * int x;
+               * }
+               */
+              int d;
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            public class Test {
+              /// <p id>text</p>
+              int a;
+
+              /// <a href>text</a>
+              int b;
+
+              /// <ol start><li>a</li></ol>
+              int c;
+
+              /// {@snippet lang :
+              /// int x;
+              /// }
+              int d;
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void nullableDocTreeFields() {
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            import java.io.Serializable;
+
+            public class Test implements Serializable {
+              /** {@link} and {@linkplain} */
+              int a;
+
+              /** @throws } */
+              void b() {}
+
+              /** @exception } */
+              void c() {}
+
+              /** @serialField count } */
+              int d;
+
+              /** @provides } */
+              int e;
+
+              /** @uses } */
+              int f;
+
+              /** @serialField count int*/
+              int g;
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            import java.io.Serializable;
+
+            public class Test implements Serializable {
+              /// {@link} and {@linkplain}
+              int a;
+
+              /** @throws } */
+              void b() {}
+
+              /** @exception } */
+              void c() {}
+
+              /** @serialField count } */
+              int d;
+
+              /** @provides } */
+              int e;
+
+              /** @uses } */
+              int f;
+
+              /// @serialField count int
+              int g;
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void nonBreakingSpacePreservedAndDoesNotCrash() {
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            public class Test {
+              /** <b>\u00A0</b> */
+              int a;
+
+              /** <code>&nbsp;</code> */
+              int b;
+
+              /** {@link String foo&nbsp;bar} */
+              int c;
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            public class Test {
+              /// <b>\u00A0</b>
+              int a;
+
+              /// `\u00A0`
+              int b;
+
+              /// [`foo\u00A0bar`][String]
+              int c;
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void html5TableWithoutOptionalClosingTags() {
+    // This test fails on JDK23 for some reason.
+    // https://github.com/google/error-prone/actions/runs/45210389889/job/137817313495
+    assume().that(EXTRA_MARKDOWN_SPACE_GONE).isTrue();
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            /**
+             * <table>
+             *   <caption>Title
+             *   <tr><th>A<th>B
+             *   <tr><td>1<td>2
+             * </table>
+             *
+             * <p>After {@link String}.
+             */
+            public class Test {}
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            /// <table>
+            ///   <caption>Title
+            ///   <tr><th>A<th>B
+            ///   <tr><td>1<td>2
+            /// </table>
+            ///
+            /// After [String].
+            public class Test {}
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void seeTagEscapesMarkdownAndHandlesAdjacentCode() {
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            /**
+             * @see Test *important* note
+             * @see Test args[i]
+             * @see Test see {@link String}(x)
+             * @see Test {@code a}{@code b}
+             * @see "Quoted *not* markdown"
+             */
+            public class Test {}
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            /// @see Test \\*important\\* note
+            /// @see Test args\\[i]
+            /// @see Test see [String][](x)
+            /// @see Test `a`<code>b</code>
+            /// @see "Quoted *not* markdown"
+            public class Test {}
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void inlineTagBodiesEscapedAtLineStart() {
+    assume().that(EXTRA_MARKDOWN_SPACE_GONE).isTrue();
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            public class Test {
+              /** {@summary # foo} */
+              int a;
+
+              /** {@summary - item} */
+              int b;
+
+              /** {@summary 1. first} */
+              int c;
+
+              /** {@summary {@link String}: https://example.com} */
+              int d;
+
+              /** {@return # value} */
+              int e() { return 0; }
+
+              /** {@index term - desc} */
+              int f;
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            public class Test {
+              /// {@summary \\# foo}
+              int a;
+
+              /// {@summary \\- item}
+              int b;
+
+              /// {@summary 1\\. first}
+              int c;
+
+              /// {@summary [String][]: https://example.com}
+              int d;
+
+              /// {@return \\# value}
+              int e() { return 0; }
+
+              /// {@index term \\- desc}
+              int f;
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void unknownInlineTagAndInheritDocSupertype() {
+    helper
+        .addInputLines(
+            "Super.java",
+            """
+            interface Super {
+              void m();
+            }
+            """)
+        .expectUnchanged()
+        .addInputLines(
+            "Test.java",
+            """
+            public class Test implements Super {
+              /** Uses {@math a * b} and {@custom}. */
+              int a;
+
+              /** {@inheritDoc Super} */
+              @Override
+              public void m() {}
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            public class Test implements Super {
+              /// Uses {@math a * b} and {@custom}.
+              int a;
+
+              /// {@inheritDoc Super}
+              @Override
+              public void m() {}
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void inlineEdgeWhitespaceAndLiteralLeadingSpace() {
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            public class Test {
+              /**
+               * Foo<b>
+               * bar</b>
+               */
+              int a;
+
+              /** See<a href="https://example.com"> here </a>now. */
+              int b;
+
+              /** Call<code> foo </code>bar. */
+              int c;
+
+              /** A<code> </code>B */
+              int d;
+
+              /** {@literal  foo} */
+              int e;
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            public class Test {
+              /// Foo **bar**
+              int a;
+
+              /// See [here](https://example.com) now.
+              int b;
+
+              /// Call `foo` bar.
+              int c;
+
+              /// A` `B
+              int d;
+
+              /// {@literal  foo}
+              int e;
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void snippetDirectivesAndStripIndent() {
+    assume().that(EXTRA_MARKDOWN_SPACE_GONE).isTrue();
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            public class Test {
+              /**
+               * {@snippet :
+               * // @highlight substring="x"
+               * int x = 1;
+               * }
+               */
+              int a;
+
+              /**
+               * {@snippet :
+               *     int x = 1;
+               *     int y = 2;
+               *     }
+               */
+              int b;
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            public class Test {
+              /// {@snippet :
+              /// // @highlight substring="x"
+              /// int x = 1;
+              /// }
+              int a;
+
+              /// ```
+              /// int x = 1;
+              /// int y = 2;
+              /// ```
+              int b;
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void midParagraphHtmlCommentDoesNotSplitParagraph() {
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            /**
+             * Returns the
+             * <!-- internal note -->
+             * value.
+             */
+            public class Test {}
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            /// Returns the <!-- internal note -->
+            /// value.
+            public class Test {}
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void htmlAttributesAndBlankLinesPreserved() {
+    assume().that(EXTRA_MARKDOWN_SPACE_GONE).isTrue();
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            public class Test {
+              /** <pre id="example">code</pre> */
+              int a;
+
+              /** <code id="x">foo</code> */
+              int b;
+
+              /** <p class="note">Note</p> */
+              int c;
+
+              /** <p id='a"b'>Text</p> */
+              int d;
+
+              /**
+               * <textarea>
+               * a
+               *
+               * b
+               * </textarea>
+               */
+              int e;
+
+              /**
+               * <div>
+               * {@snippet :
+               * a
+               *
+               * b
+               * }
+               * </div>
+               */
+              int f;
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            public class Test {
+              /// <pre id="example">code</pre>
+              int a;
+
+              /// <code id="x">foo</code>
+              int b;
+
+              /// <p class="note">Note</p>
+              int c;
+
+              /// <a id="a&quot;b"></a>Text
+              int d;
+
+              /// <textarea>
+              /// a
+              ///
+              /// b
+              /// </textarea>
+              int e;
+
+              /**
+               * <div>
+               * {@snippet :
+               * a
+               *
+               * b
+               * }
+               * </div>
+               */
+              int f;
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void nestedListDirectlyInListItem() {
+    assume().that(EXTRA_MARKDOWN_SPACE_GONE).isTrue();
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            public class Test {
+              /**
+               * <ul><li><ul><li>foo</li></ul></li></ul>
+               */
+              int a;
+
+              /**
+               * <ol><li><ul><li>foo</li></ul></li></ol>
+               */
+              int b;
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            public class Test {
+              /// -
+              ///   - foo
+              int a;
+
+              /// 1.
+              ///    - foo
+              int b;
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void starAtSlashEscapeAndBackslashTripleAdvanceHazards() {
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            public class Test {
+              /** <b>foo</b>@/bar */
+              int a;
+
+              /**
+               * Method.
+               *
+               * @param x foo*
+               * @return bar
+               */
+              int b(int x) { return x; }
+
+              /** {@summary Matches foo*} rest */
+              int c;
+
+              /** a*{@docRoot} */
+              int d;
+
+              /** a* */
+              int e;
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            public class Test {
+              /// **foo**\\@/bar
+              int a;
+
+              /**
+               * Method.
+               *
+               * @param x foo*
+               * @return bar
+               */
+              int b(int x) { return x; }
+
+              /** {@summary Matches foo*} rest */
+              int c;
+
+              /** a*{@docRoot} */
+              int d;
+
+              /** a* */
+              int e;
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void linkplainMatchingLabelAndShortcutLinkWithMarkdownChars() {
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            import java.util.List;
+
+            public class Test {
+              /** See {@linkplain java.lang.String java.lang.String}. */
+              int a;
+
+              /** See {@link #_a_()} and {@link List<String>}. */
+              int b;
+
+              void _a_() {}
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            import java.util.List;
+
+            public class Test {
+              /// See {@linkplain java.lang.String java.lang.String}.
+              int a;
+
+              /// See {@link #_a_()} and {@link List<String>}.
+              int b;
+
+              void _a_() {}
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void escapesAdditionalCommonMarkConstructs() {
+    assume().that(EXTRA_MARKDOWN_SPACE_GONE).isTrue();
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            public class Test {
+              /**
+               * Refs [##foo bar], [Foo##bar baz], and [@Nullable Foo].
+               * Nested [a [1 2] b](url) and email <123@example.com> and emoji 🚀_foo_🚀.
+               *
+               * <p>a | b
+               * --- | ---
+               *
+               * <h2>Title\t##</h2>
+               *
+               * <p><span title="a>b">
+               * foo</span>
+               *
+               * {@snippet lang="~`foo" :
+               * x
+               * }
+               */
+              int a;
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            public class Test {
+              /// Refs \\[##foo bar], \\[Foo##bar baz], and \\[@Nullable Foo].
+              /// Nested \\[a [1 2] b](url) and email \\<123@example.com> and emoji 🚀\\_foo\\_🚀.
+              ///
+              /// a | b
+              /// \\--- | ---
+              ///
+              /// # Title\t\\##
+              ///
+              /// <span title="a>b"> foo</span>
+              ///
+              /// ~~~ ~`foo
+              /// x
+              /// ~~~
+              int a;
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void htmlBlockDocCommentParserHazardsLeftUnchanged() {
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            public class Test {
+              /**
+               * <!--
+               * @foo
+               * -->
+               */
+              int a;
+
+              /**
+               * <pre>
+               * foo
+               *
+               *     {@link String}
+               * </pre>
+               */
+              int b;
+
+              /**
+               * <!-- {@link String} -->
+               */
+              int c;
+            }
+            """)
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void postConversionUnicodeEscapeAndBacktickPairs() {
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            public class Test {
+              /** <code>&#92;u0041</code> */
+              int a;
+
+              /** Inline `foo` and ``a ` b`` and lone ` here. */
+              int b;
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            public class Test {
+              /** <code>&#92;u0041</code> */
+              int a;
+
+              /// Inline `foo` and ``a ` b`` and lone \\` here.
+              int b;
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void validatorRejectsStructuralMismatchesAndHazards() {
+    Paragraph plainStar = new Paragraph(ImmutableList.of(new Text("*foo*")));
+    assertThat(
+            MarkdownCommentValidator.isValid(
+                new PrintedComment(
+                    ImmutableList.of("\\*foo\\*"),
+                    ImmutableList.of(new Region(ImmutableList.of(plainStar), "\\*foo\\*")))))
+        .isFalse(); // trailing \* hits EOF triple-advance hazard
+    assertThat(
+            MarkdownCommentValidator.isValid(
+                new PrintedComment(
+                    ImmutableList.of("\\*foo\\*."),
+                    ImmutableList.of(
+                        new Region(
+                            ImmutableList.of(new Paragraph(ImmutableList.of(new Text("*foo*.")))),
+                            "\\*foo\\*.")))))
+        .isTrue();
+    // Unescaped emphasis fails structural comparison.
+    assertThat(
+            MarkdownCommentValidator.isValid(
+                new PrintedComment(
+                    ImmutableList.of("*foo*."),
+                    ImmutableList.of(
+                        new Region(
+                            ImmutableList.of(new Paragraph(ImmutableList.of(new Text("*foo*.")))),
+                            "*foo*.")))))
+        .isFalse();
+    // Unescaped javadoc reference fails structural comparison.
+    assertThat(
+            MarkdownCommentValidator.isValid(
+                new PrintedComment(
+                    ImmutableList.of("args[i]."),
+                    ImmutableList.of(
+                        new Region(
+                            ImmutableList.of(new Paragraph(ImmutableList.of(new Text("args[i].")))),
+                            "args[i].")))))
+        .isFalse();
+    // Embedded newline in printed lines is rejected.
+    assertThat(
+            MarkdownCommentValidator.isValid(
+                new PrintedComment(
+                    ImmutableList.of("line1\nline2"),
+                    ImmutableList.of(
+                        new Region(
+                            ImmutableList.of(
+                                new Paragraph(ImmutableList.of(new Text("line1 line2")))),
+                            "line1\nline2")))))
+        .isFalse();
+    // CodeBlock info/literal newline collision is rejected.
+    CodeBlock multilineInfo = new CodeBlock("a\nb", "c");
+    assertThat(
+            MarkdownCommentValidator.isValid(
+                new PrintedComment(
+                    ImmutableList.of("```a", "b", "c", "```"),
+                    ImmutableList.of(
+                        new Region(ImmutableList.of(multilineInfo), "```a\nb\nc\n```")))))
+        .isFalse();
+    // Indented code block does not match fenced CodeBlock.
+    assertThat(
+            MarkdownCommentValidator.isValid(
+                new PrintedComment(
+                    ImmutableList.of("    x"),
+                    ImmutableList.of(
+                        new Region(ImmutableList.of(new CodeBlock("", "x")), "    x")))))
+        .isFalse();
+    // HtmlBlock with line-start @foo is rejected.
+    HtmlBlock commentWithAt = new HtmlBlock("<!--\n@foo\n-->");
+    assertThat(
+            MarkdownCommentValidator.isValid(
+                new PrintedComment(
+                    ImmutableList.of("<!--", "@foo", "-->"),
+                    ImmutableList.of(
+                        new Region(ImmutableList.of(commentWithAt), "<!--\n@foo\n-->")))))
+        .isFalse();
   }
 }

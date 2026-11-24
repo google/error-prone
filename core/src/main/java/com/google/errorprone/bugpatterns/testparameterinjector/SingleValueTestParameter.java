@@ -20,8 +20,8 @@ import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 import static com.google.errorprone.bugpatterns.testparameterinjector.TestParameterInjectorUtils.BOOLEAN_VALUES;
 import static com.google.errorprone.bugpatterns.testparameterinjector.TestParameterInjectorUtils.REPEATED_TEST_PARAMETERS;
+import static com.google.errorprone.bugpatterns.testparameterinjector.TestParameterInjectorUtils.TEST_PARAMETER;
 import static com.google.errorprone.bugpatterns.testparameterinjector.TestParameterInjectorUtils.TEST_PARAMETERS;
-import static com.google.errorprone.bugpatterns.testparameterinjector.TestParameterInjectorUtils.TEST_PARAMETER_TYPE;
 import static com.google.errorprone.bugpatterns.testparameterinjector.TestParameterInjectorUtils.getExplicitTestParameterValues;
 import static com.google.errorprone.bugpatterns.testparameterinjector.TestParameterInjectorUtils.isEnumType;
 import static com.google.errorprone.fixes.SuggestedFixes.qualifyType;
@@ -90,7 +90,7 @@ public final class SingleValueTestParameter extends BugChecker implements Method
     if (params.isEmpty()
         || body == null
         || body.getStatements().isEmpty()
-        || TEST_PARAMETER_TYPE.get(state) == null
+        || TEST_PARAMETER.type(state) == null
         || !hasAnnotation(methodSymbol, JUNIT4_TEST_ANNOTATION, state)
         || hasAnnotation(methodSymbol, TEST_PARAMETERS, state)
         || hasAnnotation(methodSymbol, REPEATED_TEST_PARAMETERS, state)

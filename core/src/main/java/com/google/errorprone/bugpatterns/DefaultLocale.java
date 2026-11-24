@@ -31,6 +31,7 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.ClassName;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.NewClassTreeMatcher;
@@ -48,9 +49,6 @@ import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Type;
-import java.io.PrintStream;
-import java.io.PrintWriter;
-import java.util.Formattable;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -115,11 +113,14 @@ public class DefaultLocale extends BugChecker
   private static final Pattern SPECIFIER_ALLOW_LIST_REGEX =
       Pattern.compile("%([%n]|(\\d+\\$|<)?-?\\d*(\\.\\d+)?[bhsc])");
 
-  private static final Supplier<Type> FORMATTABLE = Suppliers.typeFromClass(Formattable.class);
+  private static final Supplier<Type> FORMATTABLE =
+      ClassName.of("java.util.Formattable").asTypeSupplier();
 
-  private static final Supplier<Type> APPENDABLE = Suppliers.typeFromClass(Appendable.class);
+  private static final Supplier<Type> APPENDABLE =
+      ClassName.of("java.lang.Appendable").asTypeSupplier();
 
-  private static final Supplier<Type> PRINTSTREAM = Suppliers.typeFromClass(PrintStream.class);
+  private static final Supplier<Type> PRINTSTREAM =
+      ClassName.of("java.io.PrintStream").asTypeSupplier();
 
   private static final ImmutableList<Supplier<Type>> PATTERN_AND_ARGS =
       ImmutableList.of(Suppliers.STRING_TYPE, Suppliers.arrayOf(Suppliers.OBJECT_TYPE));
@@ -127,7 +128,7 @@ public class DefaultLocale extends BugChecker
   private static final Matcher<ExpressionTree> FORMAT_METHODS =
       anyOf(
           instanceMethod()
-              .onDescendantOfAny(PrintStream.class.getName(), PrintWriter.class.getName())
+              .onDescendantOfAny("java.io.PrintStream", "java.io.PrintWriter")
               .namedAnyOf("format", "printf")
               .withParametersOfType(PATTERN_AND_ARGS),
           staticMethod()
@@ -136,7 +137,7 @@ public class DefaultLocale extends BugChecker
               .withParametersOfType(PATTERN_AND_ARGS));
 
   private static final Matcher<MethodInvocationTree> SYSTEM_OUT_RECEIVER =
-      receiverOfInvocation(staticField().onClass(System.class.getName()).namedAnyOf("out", "err"));
+      receiverOfInvocation(staticField().onClass("java.lang.System").namedAnyOf("out", "err"));
 
   private static final Matcher<ExpressionTree> DISPLAY_METHODS =
       instanceMethod().onExactClass("java.util.Currency").named("getSymbol").withNoParameters();
