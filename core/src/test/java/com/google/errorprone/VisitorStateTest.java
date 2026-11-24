@@ -20,9 +20,11 @@ import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.MoreCollectors.onlyElement;
 import static com.google.common.collect.Streams.concat;
 import static com.google.common.truth.Truth.assertThat;
+import static com.google.common.truth.Truth.assertWithMessage;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Locale.ENGLISH;
+import static java.util.concurrent.TimeUnit.SECONDS;
 import static javax.tools.StandardLocation.ANNOTATION_PROCESSOR_PATH;
 
 import com.google.common.base.Splitter;
@@ -30,6 +32,8 @@ import com.google.common.base.StandardSystemProperty;
 import com.google.common.collect.ImmutableList;
 import com.google.common.jimfs.Configuration;
 import com.google.common.jimfs.Jimfs;
+import com.google.common.testing.GcFinalization;
+import com.google.common.util.concurrent.Uninterruptibles;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
 import com.google.errorprone.matchers.Description;
@@ -43,10 +47,17 @@ import com.sun.tools.javac.util.Context;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.lang.management.ManagementFactory;
+import java.lang.management.ThreadInfo;
+import java.lang.ref.Reference;
+import java.lang.ref.WeakReference;
 import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Optional;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.FutureTask;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
 import java.util.stream.Stream;
@@ -190,5 +201,169 @@ public class VisitorStateTest {
             .filter(d -> d.getKind() == Diagnostic.Kind.ERROR)
             .collect(onlyElement());
     assertThat(diagnostic.getMessage(ENGLISH)).contains("UnsupportedOperationException");
+  }
+
+  /** A bugpattern that memoizes a value, like checks that keep matchers in static fields. */
+  @BugPattern(summary = "", severity = ERROR)
+  public static class CheckThatMemoizes extends BugChecker implements ClassTreeMatcher {
+    static final AtomicInteger computations = new AtomicInteger();
+    static volatile WeakReference<Object> lastValue;
+
+    private static final Supplier<Object> VALUE =
+        VisitorState.memoize(
+            s -> {
+              computations.incrementAndGet();
+              Object value = new Object();
+              lastValue = new WeakReference<>(value);
+              return value;
+            });
+
+    @Override
+    public Description matchClass(ClassTree tree, VisitorState state) {
+      Object unused = VALUE.get(state);
+      return Description.NO_MATCH;
+    }
+  }
+
+  private static void compileWithCheckThatMemoizes() {
+    CompilationTestHelper.newInstance(CheckThatMemoizes.class, VisitorStateTest.class)
+        .addSourceLines("A.java", "class A {}")
+        .addSourceLines("B.java", "class B {}")
+        .expectNoDiagnostics()
+        .doTest();
+  }
+
+  @Test
+  public void memoize_reusesValueAcrossCompilationUnits() {
+    CheckThatMemoizes.computations.set(0);
+    compileWithCheckThatMemoizes();
+    assertThat(CheckThatMemoizes.computations.get()).isEqualTo(1);
+  }
+
+  @Test
+  public void memoize_computesValueForEachCompilation() {
+    CheckThatMemoizes.computations.set(0);
+    compileWithCheckThatMemoizes();
+    compileWithCheckThatMemoizes();
+    assertThat(CheckThatMemoizes.computations.get()).isEqualTo(2);
+  }
+
+  @Test
+  public void memoize_doesNotRetainValueAfterCompilation() {
+    compileWithCheckThatMemoizes();
+    GcFinalization.awaitClear(CheckThatMemoizes.lastValue);
+  }
+
+  private static VisitorState newState() {
+    Context context = new Context();
+    JavacFileManager.preRegister(context);
+    return VisitorState.createForUtilityPurposes(context);
+  }
+
+  @Test
+  public void memoize_keepsValueWhileCompilationIsAlive() {
+    AtomicInteger computations = new AtomicInteger();
+    Supplier<Object> supplier =
+        VisitorState.memoize(
+            s -> {
+              computations.incrementAndGet();
+              return new Object(); // owned by nothing but the cache
+            });
+    VisitorState state = newState();
+    try {
+      WeakReference<Object> value = new WeakReference<>(supplier.get(state));
+      GcFinalization.awaitFullGc();
+      assertThat(value.get()).isNotNull();
+      assertThat(supplier.get(state)).isSameInstanceAs(value.get());
+      assertThat(computations.get()).isEqualTo(1);
+    } finally {
+      Reference.reachabilityFence(state);
+    }
+  }
+
+  @Test
+  public void memoize_keepsValuesOfInterleavedCompilations() {
+    AtomicInteger computations = new AtomicInteger();
+    Supplier<Object> supplier =
+        VisitorState.memoize(
+            s -> {
+              computations.incrementAndGet();
+              return new Object();
+            });
+    VisitorState a = newState();
+    VisitorState b = newState();
+    Object fromA = supplier.get(a);
+    Object fromB = supplier.get(b);
+    assertThat(fromB).isNotSameInstanceAs(fromA);
+    assertThat(supplier.get(a)).isSameInstanceAs(fromA);
+    assertThat(supplier.get(b)).isSameInstanceAs(fromB);
+    assertThat(computations.get()).isEqualTo(2);
+  }
+
+  @Test
+  public void memoize_retriesNullResults() {
+    AtomicInteger computations = new AtomicInteger();
+    Object later = new Object();
+    Supplier<Object> supplier =
+        VisitorState.memoize(s -> computations.incrementAndGet() < 3 ? null : later);
+    VisitorState state = newState();
+    assertThat(supplier.get(state)).isNull();
+    assertThat(supplier.get(state)).isNull();
+    assertThat(supplier.get(state)).isSameInstanceAs(later);
+    assertThat(supplier.get(state)).isSameInstanceAs(later);
+    assertThat(computations.get()).isEqualTo(3);
+  }
+
+  @Test
+  public void memoize_computesOneValueAtATime() throws Exception {
+    CountDownLatch firstEntered = new CountDownLatch(1);
+    CountDownLatch secondEntered = new CountDownLatch(1);
+    CountDownLatch releaseFirst = new CountDownLatch(1);
+    AtomicInteger calls = new AtomicInteger();
+    Supplier<Object> supplier =
+        VisitorState.memoize(
+            s -> {
+              if (calls.incrementAndGet() == 1) {
+                firstEntered.countDown();
+                Uninterruptibles.awaitUninterruptibly(releaseFirst, 10, SECONDS);
+              } else {
+                secondEntered.countDown();
+              }
+              return new Object();
+            });
+    VisitorState a = newState();
+    VisitorState b = newState();
+    FutureTask<Object> first = new FutureTask<>(() -> supplier.get(a));
+    FutureTask<Object> second = new FutureTask<>(() -> supplier.get(b));
+    Thread secondThread = new Thread(second);
+    try {
+      new Thread(first).start();
+      assertThat(firstEntered.await(10, SECONDS)).isTrue();
+      secondThread.start();
+      // While the first computation is still running, wait until the second one either starts
+      // (computations are not serialized) or blocks on the memoized supplier's monitor.
+      long deadline = System.nanoTime() + SECONDS.toNanos(10);
+      while (secondEntered.getCount() > 0 && !blockedOnMemoizedSupplier(secondThread)) {
+        assertWithMessage("second computation neither started nor blocked")
+            .that(System.nanoTime() < deadline)
+            .isTrue();
+        Thread.sleep(1);
+      }
+      assertWithMessage("second computation started while the first was running")
+          .that(secondEntered.getCount())
+          .isEqualTo(1);
+    } finally {
+      releaseFirst.countDown();
+    }
+    assertThat(first.get(10, SECONDS)).isNotSameInstanceAs(second.get(10, SECONDS));
+    assertThat(calls.get()).isEqualTo(2);
+  }
+
+  private static boolean blockedOnMemoizedSupplier(Thread thread) {
+    ThreadInfo info = ManagementFactory.getThreadMXBean().getThreadInfo(thread.threadId());
+    return info != null
+        && info.getThreadState() == Thread.State.BLOCKED
+        && info.getLockInfo() != null
+        && info.getLockInfo().getClassName().equals(VisitorState.class.getName() + "$Cache");
   }
 }

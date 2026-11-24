@@ -26,7 +26,6 @@ import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.util.Convert;
 import com.sun.tools.javac.util.Name;
-import java.lang.ref.SoftReference;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -54,8 +53,6 @@ public final class ClassName {
   /**
    * Per-compilation cached javac state for this class name.
    *
-   * @param invocation the javac compilation instance that owns the interned {@link Name}s and
-   *     {@link ClassSymbol}
    * @param binaryName the binary name of the class in this compilation's {@link Name} table
    * @param enclosingCandidates candidate enclosing class names from {@link
    *     Convert#enclosingCandidates(Name)} (for example, {@code ["pkg.Outer", "pkg.Outer$Middle"]}
@@ -66,33 +63,28 @@ public final class ClassName {
    *     (or was not found in the compilation)
    */
   private record CacheEntry(
-      JavacInvocationInstance invocation,
       Name binaryName,
       @Nullable ImmutableList<Name> enclosingCandidates,
       @Nullable ClassSymbol symbol) {
-    static CacheEntry create(JavacInvocationInstance invocation, Name binaryName) {
-      return new CacheEntry(
-          invocation, binaryName, /* enclosingCandidates= */ null, /* symbol= */ null);
+    static CacheEntry create(Name binaryName) {
+      return new CacheEntry(binaryName, /* enclosingCandidates= */ null, /* symbol= */ null);
     }
 
     CacheEntry withEnclosingCandidates() {
       return new CacheEntry(
-          invocation,
-          binaryName,
-          ImmutableList.copyOf(Convert.enclosingCandidates(binaryName)),
-          symbol);
+          binaryName, ImmutableList.copyOf(Convert.enclosingCandidates(binaryName)), symbol);
     }
 
     CacheEntry withSymbol(ClassSymbol symbol) {
-      return new CacheEntry(invocation, binaryName, enclosingCandidates, symbol);
+      return new CacheEntry(binaryName, enclosingCandidates, symbol);
     }
   }
 
   private final String binaryNameString;
 
-  // Memoized per-Context javac state via SoftReference
+  // The resolved javac state, per compilation
   @SuppressWarnings("Immutable")
-  private volatile SoftReference<CacheEntry> cache = new SoftReference<>(null);
+  private final PerCompilationValue<CacheEntry> cache = new PerCompilationValue<>();
 
   // Stateless method reference delegating to type(VisitorState)
   @SuppressWarnings("Immutable")
@@ -121,7 +113,7 @@ public final class ClassName {
     // compilation so repeated negative lookups don't recompute Convert.enclosingCandidates.
     if (entry.enclosingCandidates() == null) {
       entry = entry.withEnclosingCandidates();
-      cache = new SoftReference<>(entry);
+      cache.set(state, entry);
     }
     // Look up binaryName in Symtab; if it is a nested class whose outer class has been entered but
     // not yet completed, getSymbolFromName completes enclosingCandidates first so the nested class
@@ -130,17 +122,16 @@ public final class ClassName {
     // compilation unit.
     ClassSymbol sym = state.getSymbolFromName(entry.binaryName(), entry.enclosingCandidates());
     if (sym != null) {
-      cache = new SoftReference<>(entry.withSymbol(sym));
+      cache.set(state, entry.withSymbol(sym));
     }
     return sym;
   }
 
   private CacheEntry getOrCreateCacheEntry(VisitorState state) {
-    JavacInvocationInstance invocation = state.javacInvocationInstance();
-    CacheEntry entry = cache.get();
-    if (entry == null || entry.invocation() != invocation) {
-      entry = CacheEntry.create(invocation, state.getName(binaryNameString));
-      cache = new SoftReference<>(entry);
+    CacheEntry entry = cache.get(state);
+    if (entry == null) {
+      entry = CacheEntry.create(state.getName(binaryNameString));
+      cache.set(state, entry);
     }
     return entry;
   }

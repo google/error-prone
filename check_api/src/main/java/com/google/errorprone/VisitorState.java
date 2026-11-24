@@ -59,7 +59,6 @@ import com.sun.tools.javac.util.Names;
 import com.sun.tools.javac.util.Options;
 import java.io.IOException;
 import java.io.UncheckedIOException;
-import java.lang.ref.SoftReference;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -227,8 +226,14 @@ public final class VisitorState {
     return sharedState.severityMap;
   }
 
-  JavacInvocationInstance javacInvocationInstance() {
-    return sharedState.javacInvocationInstance;
+  /** Values of {@link PerCompilationValue}s for the current compilation. */
+  PerCompilationValue.Values compilationValues() {
+    return sharedState.compilationValues;
+  }
+
+  /** The id of {@link #compilationValues}, kept here so that lookups need one load less. */
+  long compilationId() {
+    return sharedState.compilationId;
   }
 
   public void reportMatch(Description description) {
@@ -687,32 +692,31 @@ public final class VisitorState {
     we don't have a result. If you want to cache a computation which can return null, wrap it in an
     Optional at the call site. */
 
-    private SoftReference<T> cache = new SoftReference<>(null);
-    private JavacInvocationInstance provenance;
+    /* The values are stored in the javac Context of the compilation, not here. A Cache is
+    usually held in a static field, so a value stored here would keep the last compilation
+    alive (its Types and Symbols reference the whole Context) after it has completed, and
+    concurrent compilations in the same JVM would keep replacing each other's value. */
+
+    private final PerCompilationValue<T> values = new PerCompilationValue<>();
 
     private Cache(Supplier<T> impl) {
       this.impl = impl;
-      // provenance intentionally left null-initialized
     }
 
     @Override
-    public synchronized T get(VisitorState state) {
-      /* javac is single-threaded, so in principle we don't really need to lock.
-      But in practice it's cheap enough to be worth getting peace of mind that this is
-      always correct. */
-      T value = cache.get();
+    public T get(VisitorState state) {
+      T value = values.get(state);
+      return value != null ? value : computeAndSet(state);
+    }
+
+    // Computes one value at a time, even across concurrent compilations, as suppliers may not be
+    // thread-safe.
+    private synchronized T computeAndSet(VisitorState state) {
+      T value = values.get(state);
       if (value == null) {
         value = compute(state);
         if (value != null) {
-          cache = new SoftReference<>(value);
-          provenance = state.sharedState.javacInvocationInstance;
-        }
-      } else {
-        JavacInvocationInstance current = state.sharedState.javacInvocationInstance;
-        if (provenance != current) {
-          value = compute(state);
-          cache = new SoftReference<>(value);
-          provenance = current;
+          values.set(state, value);
         }
       }
       return value;
@@ -739,6 +743,18 @@ public final class VisitorState {
     return new Cache<>(f);
   }
 
+  private static final Context.Key<PerCompilationValue.Values> COMPILATION_VALUES_KEY =
+      new Context.Key<>();
+
+  private static PerCompilationValue.Values compilationValues(Context context) {
+    PerCompilationValue.Values values = context.get(COMPILATION_VALUES_KEY);
+    if (values == null) {
+      values = new PerCompilationValue.Values();
+      context.put(COMPILATION_VALUES_KEY, values);
+    }
+    return values;
+  }
+
   /**
    * Instances that every {@link VisitorState} instance can share.
    *
@@ -752,7 +768,6 @@ public final class VisitorState {
     private final boolean recordTimings;
     private final Types types;
     private final TreeMaker treeMaker;
-    private final JavacInvocationInstance javacInvocationInstance;
 
     private final DescriptionListener descriptionListener;
     private final StatisticsCollector statisticsCollector;
@@ -768,6 +783,11 @@ public final class VisitorState {
     private final Map<String, ParsedName> parsedNameCache = new HashMap<>();
     private final Map<Name, ClassSymbol> symbolCache = new HashMap<>();
 
+    /** Values of {@link PerCompilationValue}s, shared by the whole compilation. */
+    private final PerCompilationValue.Values compilationValues;
+
+    private final long compilationId;
+
     SharedState(
         Context context,
         DescriptionListener descriptionListener,
@@ -780,7 +800,8 @@ public final class VisitorState {
       this.recordTimings = errorProneOptions.recordTimings();
       this.types = Types.instance(context);
       this.treeMaker = TreeMaker.instance(context);
-      this.javacInvocationInstance = JavacInvocationInstance.instance(context);
+      this.compilationValues = compilationValues(context);
+      this.compilationId = compilationValues.id;
 
       this.descriptionListener = descriptionListener;
       this.statisticsCollector = statisticsCollector;
