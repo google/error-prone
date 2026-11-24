@@ -21,12 +21,17 @@ import static com.google.errorprone.fixes.SuggestedFixes.qualifyType;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.instanceEqualsInvocation;
 import static com.google.errorprone.matchers.Matchers.staticEqualsInvocation;
+import static com.google.errorprone.matchers.UnusedReturnValueMatcher.isReturnValueUnused;
 import static com.google.errorprone.matchers.field.FieldMatchers.staticField;
 import static com.google.errorprone.util.ASTHelpers.constValue;
 import static com.google.errorprone.util.ASTHelpers.getNullnessValue;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
+import static com.google.errorprone.util.ASTHelpers.getType;
+import static com.google.errorprone.util.ASTHelpers.isSameType;
 import static com.google.errorprone.util.ASTHelpers.isStatic;
+import static com.google.errorprone.util.ASTHelpers.requiresParentheses;
+import static com.google.errorprone.util.ASTHelpers.stripParentheses;
 import static java.lang.String.format;
 
 import com.google.errorprone.BugPattern;
@@ -39,11 +44,15 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.sun.source.tree.BinaryTree;
+import com.sun.source.tree.ConditionalExpressionTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.Tree;
+import com.sun.source.tree.TypeCastTree;
+import com.sun.source.tree.UnaryTree;
 import com.sun.source.util.TreePath;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
+import com.sun.tools.javac.code.Type;
 import org.jspecify.annotations.Nullable;
 import org.safere.Pattern;
 
@@ -104,31 +113,112 @@ public final class YodaCondition extends BugChecker
       return NO_MATCH;
     }
 
+    Type rhsType = getType(rhs);
+    if (isSameType(rhsType, state.getSymtab().booleanType, state)) {
+      Boolean lhsBool = booleanConstant(lhs, state);
+      if (lhsBool != null
+          && (isBinaryEquality(tree)
+              || (tree instanceof MethodInvocationTree methodInvocation
+                  && !isReturnValueUnused(methodInvocation, state)))) {
+        boolean negate = lhsBool == tree.getKind().equals(Tree.Kind.NOT_EQUAL_TO);
+        return simplifyBoolean(tree, lhs, rhs, negate, state);
+      }
+    }
+
+    String lhsSource = lhsSource(tree, lhs, state);
+    if (provideNullSafeFix && rhsType != null && rhsType.isPrimitive()) {
+      // `x.equals(CONST)` doesn't compile for primitive `x`.
+      return describeMatch(lhs, objectsEqualsFix(tree, rhs, lhsSource, state).build());
+    }
+
     var description = buildDescription(lhs);
     if (provideNullSafeFix
         && !getNullnessValue(rhs, state, NullnessAnalysis.instance(state.context))
             .equals(Nullness.NONNULL)) {
-      var fix = SuggestedFix.builder().setShortDescription("null-safe fix");
       description.addFix(
-          fix.replace(
-                  tree,
-                  format(
-                      "%s.equals(%s, %s)",
-                      qualifyType(state, fix, "java.util.Objects"),
-                      state.getSourceForNode(rhs),
-                      state.getSourceForNode(lhs)))
+          objectsEqualsFix(tree, rhs, lhsSource, state)
+              .setShortDescription("null-safe fix")
               .build());
     }
     return description
         .addFix(
             isInequality(tree)
                 ? SuggestedFix.replace(
-                    tree,
-                    format(
-                        "%s %s %s",
-                        state.getSourceForNode(rhs), inverse(tree), state.getSourceForNode(lhs)))
-                : SuggestedFix.swap(lhs, rhs, state))
+                    tree, format("%s %s %s", state.getSourceForNode(rhs), inverse(tree), lhsSource))
+                : SuggestedFix.builder()
+                    .replace(lhs, state.getSourceForNode(rhs))
+                    .replace(rhs, lhsSource)
+                    .build())
         .build();
+  }
+
+  private Description simplifyBoolean(
+      Tree tree, ExpressionTree lhs, ExpressionTree rhs, boolean negate, VisitorState state) {
+    ExpressionTree expr = stripParentheses(rhs);
+    if (negate
+        && expr instanceof UnaryTree unary
+        && unary.getKind().equals(Tree.Kind.LOGICAL_COMPLEMENT)) {
+      expr = stripParentheses(unary.getExpression());
+      negate = false;
+    }
+    String exprSource = state.getSourceForNode(expr);
+    if (negate) {
+      boolean parens = requiresParentheses(expr, state);
+      return describeMatch(
+          lhs, SuggestedFix.replace(tree, parens ? "!(" + exprSource + ")" : "!" + exprSource));
+    }
+    boolean parens =
+        requiresParentheses(expr, state)
+            && needsParentheses(state.getPath().getParentPath().getLeaf());
+    return describeMatch(
+        lhs, SuggestedFix.replace(tree, parens ? "(" + exprSource + ")" : exprSource));
+  }
+
+  private static SuggestedFix.Builder objectsEqualsFix(
+      Tree tree, ExpressionTree rhs, String lhsSource, VisitorState state) {
+    var fix = SuggestedFix.builder();
+    return fix.replace(
+        tree,
+        format(
+            "%s.equals(%s, %s)",
+            qualifyType(state, fix, "java.util.Objects"), state.getSourceForNode(rhs), lhsSource));
+  }
+
+  private static boolean needsParentheses(Tree parent) {
+    return switch (parent) {
+      case UnaryTree unused -> true;
+      case BinaryTree unused -> true;
+      case ConditionalExpressionTree unused -> true;
+      case TypeCastTree unused -> true;
+      default -> false;
+    };
+  }
+
+  private static String lhsSource(Tree tree, ExpressionTree lhs, VisitorState state) {
+    if (!(tree instanceof BinaryTree)) {
+      Boolean lhsBool = booleanConstant(lhs, state);
+      if (lhsBool != null) {
+        return lhsBool.toString();
+      }
+    }
+    return state.getSourceForNode(lhs);
+  }
+
+  private static @Nullable Boolean booleanConstant(ExpressionTree tree, VisitorState state) {
+    if (BOOLEAN_TRUE.matches(tree, state)) {
+      return true;
+    }
+    if (BOOLEAN_FALSE.matches(tree, state)) {
+      return false;
+    }
+    return null;
+  }
+
+  private static boolean isBinaryEquality(Tree tree) {
+    return switch (tree.getKind()) {
+      case EQUAL_TO, NOT_EQUAL_TO -> true;
+      default -> false;
+    };
   }
 
   @SuppressWarnings("TreeToString") // Can't think of a better approach.
@@ -202,6 +292,12 @@ public final class YodaCondition extends BugChecker
 
   private static final Matcher<ExpressionTree> IGNORELIST =
       staticField().onClass("android.os.Build.VERSION").named("SDK_INT");
+
+  private static final Matcher<ExpressionTree> BOOLEAN_TRUE =
+      staticField().onClass("java.lang.Boolean").named("TRUE");
+
+  private static final Matcher<ExpressionTree> BOOLEAN_FALSE =
+      staticField().onClass("java.lang.Boolean").named("FALSE");
 
   private static ConstantKind seemsConstant(ExpressionTree tree, VisitorState state) {
     if (IGNORELIST.matches(tree, state)) {

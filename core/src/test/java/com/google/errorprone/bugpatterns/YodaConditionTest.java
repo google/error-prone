@@ -131,26 +131,23 @@ public final class YodaConditionTest {
         .addOutputLines(
             "Test.java",
             """
-            import static java.lang.Boolean.FALSE;
-            import static java.lang.Boolean.TRUE;
-
             import java.util.Objects;
 
             class Test {
               boolean yodaTrue(Boolean a) {
-                return Objects.equals(a, Boolean.TRUE);
+                return Objects.equals(a, true);
               }
 
               boolean yodaFalse(Boolean a) {
-                return Objects.equals(a, Boolean.FALSE);
+                return Objects.equals(a, false);
               }
 
               boolean staticImport(Boolean a) {
-                return Objects.equals(a, TRUE) || Objects.equals(a, FALSE);
+                return Objects.equals(a, true) || Objects.equals(a, false);
               }
 
               boolean staticEquals(Boolean a) {
-                return Objects.equals(a, Boolean.TRUE) || Objects.equals(a, Boolean.FALSE);
+                return Objects.equals(a, true) || Objects.equals(a, false);
               }
             }
             """)
@@ -178,11 +175,11 @@ public final class YodaConditionTest {
             """
             class Test {
               boolean yodaTrue(Boolean a) {
-                return a.equals(Boolean.TRUE);
+                return a.equals(true);
               }
 
               boolean yodaFalse(Boolean a) {
-                return a.equals(Boolean.FALSE);
+                return a.equals(false);
               }
             }
             """)
@@ -201,6 +198,18 @@ public final class YodaConditionTest {
                 return Boolean.TRUE == a || Boolean.FALSE != a;
               }
 
+              boolean primitiveNegated(boolean a) {
+                return Boolean.FALSE == a || Boolean.TRUE != a;
+              }
+
+              boolean primitiveDoubleNegated(boolean a, boolean b) {
+                return Boolean.FALSE == !a || Boolean.TRUE != !(a || b);
+              }
+
+              boolean primitiveCompound(boolean a, boolean b, boolean c) {
+                return (c && Boolean.TRUE == (a || b)) || Boolean.FALSE == (a || b);
+              }
+
               boolean boxed(Boolean a) {
                 return Boolean.TRUE == a || Boolean.FALSE != a;
               }
@@ -215,7 +224,19 @@ public final class YodaConditionTest {
             """
             class Test {
               boolean primitive(boolean a) {
-                return a == Boolean.TRUE || a != Boolean.FALSE;
+                return a || a;
+              }
+
+              boolean primitiveNegated(boolean a) {
+                return !a || !a;
+              }
+
+              boolean primitiveDoubleNegated(boolean a, boolean b) {
+                return a || (a || b);
+              }
+
+              boolean primitiveCompound(boolean a, boolean b, boolean c) {
+                return (c && (a || b)) || !(a || b);
               }
 
               boolean boxed(Boolean a) {
@@ -250,6 +271,18 @@ public final class YodaConditionTest {
 
               boolean negatedTrue(boolean a) {
                 return !Boolean.TRUE.equals(a);
+              }
+
+              boolean doubleNegated(boolean a) {
+                return Boolean.FALSE.equals(!a);
+              }
+
+              boolean doubleNegatedCompound(boolean a, boolean b) {
+                return Boolean.FALSE.equals(!(a || b));
+              }
+
+              boolean doubleNegatedCompoundInBinary(boolean a, boolean b, boolean c) {
+                return c && Boolean.FALSE.equals(!(a || b));
               }
 
               boolean compoundInReturn(boolean a, boolean b) {
@@ -305,64 +338,75 @@ public final class YodaConditionTest {
 
             class Test {
               boolean yodaTrue(boolean a) {
-                return a.equals(Boolean.TRUE);
+                return a;
               }
 
               boolean yodaFalse(boolean a) {
-                return a.equals(Boolean.FALSE);
+                return !a;
               }
 
               boolean negatedTrue(boolean a) {
-                return !a.equals(Boolean.TRUE);
+                return !a;
+              }
+
+              boolean doubleNegated(boolean a) {
+                return a;
+              }
+
+              boolean doubleNegatedCompound(boolean a, boolean b) {
+                return a || b;
+              }
+
+              boolean doubleNegatedCompoundInBinary(boolean a, boolean b, boolean c) {
+                return c && (a || b);
               }
 
               boolean compoundInReturn(boolean a, boolean b) {
-                return a || b.equals(Boolean.TRUE);
+                return a || b;
               }
 
               boolean compoundInIf(boolean a, boolean b) {
-                if (a || b.equals(Boolean.TRUE)) {
+                if (a || b) {
                   return true;
                 }
                 return false;
               }
 
               boolean compoundNegated(boolean a, boolean b) {
-                return a || b.equals(Boolean.FALSE);
+                return !(a || b);
               }
 
               boolean negatedTrueCompound(boolean a, boolean b) {
-                return !a || b.equals(Boolean.TRUE);
+                return !(a || b);
               }
 
               boolean compoundInBinary(boolean a, boolean b, boolean c) {
-                return c && a || b.equals(Boolean.TRUE);
+                return c && (a || b);
               }
 
               int compoundInConditional(boolean a, boolean b) {
-                return a || b.equals(Boolean.TRUE) ? 1 : 2;
+                return (a || b) ? 1 : 2;
               }
 
               Object compoundInCast(boolean a, boolean b) {
-                return (Object) a || b.equals(Boolean.TRUE);
+                return (Object) (a || b);
               }
 
               boolean staticEquals(boolean a) {
-                return Objects.equals(a, Boolean.TRUE) || Objects.equals(a, Boolean.FALSE);
+                return a || !a;
               }
 
               void unusedReturnValue(boolean a) {
-                a.equals(Boolean.TRUE);
-                Runnable r = () -> a.equals(Boolean.TRUE);
+                Objects.equals(a, true);
+                Runnable r = () -> Objects.equals(a, true);
               }
 
               BooleanSupplier valueLambda(boolean a, boolean b) {
-                return () -> a || b.equals(Boolean.TRUE);
+                return () -> a || b;
               }
             }
             """)
         .setFixChooser(Iterables::getOnlyElement)
-        .allowBreakingChanges()
         .doTest();
   }
 
@@ -397,30 +441,31 @@ public final class YodaConditionTest {
         .addOutputLines(
             "Test.java",
             """
+            import java.util.Objects;
+
             class Test {
               private static final Integer INT_CONST = 42;
               private static final Boolean BOOL_CONST = true;
               private static final Object OBJECT_CONST = new Object();
 
               boolean intConst(int a) {
-                return a.equals(INT_CONST);
+                return Objects.equals(a, INT_CONST);
               }
 
               boolean boolConst(boolean a) {
-                return a.equals(BOOL_CONST);
+                return Objects.equals(a, BOOL_CONST);
               }
 
               boolean objectConst(long a) {
-                return a.equals(OBJECT_CONST);
+                return Objects.equals(a, OBJECT_CONST);
               }
 
               boolean booleanTrueWithInt(int a) {
-                return a.equals(Boolean.TRUE);
+                return Objects.equals(a, true);
               }
             }
             """)
         .setFixChooser(Iterables::getOnlyElement)
-        .allowBreakingChanges()
         .doTest();
   }
 
