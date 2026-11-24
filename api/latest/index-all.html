@@ -958,6 +958,12 @@ specified template expressions, in order, and succeed at the first match.</div>
 </dd>
 <dt><a href="com/google/errorprone/fixes/AppliedFix.html#applyReplacements(java.lang.CharSequence,com.google.errorprone.fixes.ErrorProneEndPosTable,com.google.errorprone.fixes.Fix)" class="member-name-link">applyReplacements(CharSequence, ErrorProneEndPosTable, Fix)</a> - Static method in record class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/AppliedFix.html" title="class in com.google.errorprone.fixes">AppliedFix</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/BaseErrorProneJavaCompiler.html#applyRequiredJavacOptions(com.google.common.collect.ImmutableList)" class="member-name-link">applyRequiredJavacOptions(ImmutableList)</a> - Static method in class com.google.errorprone.<a href="com/google/errorprone/BaseErrorProneJavaCompiler.html" title="class in com.google.errorprone">BaseErrorProneJavaCompiler</a></dt>
+<dd>
+<div class="block">Returns <code>args</code> with Error Prone's required javac defaults (<code>
+-XDcompilePolicy=simple</code>, <code>--should-stop=ifError=FLOW</code>, and <code>
+-XDaddTypeAnnotationsToSymbol=true</code>) prepended.</div>
+</dd>
 <dt><a href="com/google/errorprone/matchers/Description.html#applySeverityOverride(com.google.errorprone.BugPattern.SeverityLevel)" class="member-name-link">applySeverityOverride(BugPattern.SeverityLevel)</a> - Method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></dt>
 <dd>
 <div class="block">Internal-only.</div>
@@ -2128,6 +2134,11 @@ the caller passes <code>foo</code> as a parameter.</div>
 </dd>
 <dt><a href="com/google/errorprone/bugpatterns/CheckNotNullMultipleTimes.html#%3Cinit%3E()" class="member-name-link">CheckNotNullMultipleTimes()</a> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/CheckNotNullMultipleTimes.html" title="class in com.google.errorprone.bugpatterns">CheckNotNullMultipleTimes</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/BaseErrorProneJavaCompiler.html#checkRequiredJavacOptions(com.sun.tools.javac.util.Options)" class="member-name-link">checkRequiredJavacOptions(Options)</a> - Static method in class com.google.errorprone.<a href="com/google/errorprone/BaseErrorProneJavaCompiler.html" title="class in com.google.errorprone">BaseErrorProneJavaCompiler</a></dt>
+<dd>
+<div class="block">Validates that <code>options</code> satisfy Error Prone's required javac options (<code>
+-XDcompilePolicy</code>, <code>--should-stop=ifError</code>, and <code>-XDaddTypeAnnotationsToSymbol</code>).</div>
+</dd>
 <dt><a href="com/google/errorprone/bugpatterns/CheckReturnValue.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">CheckReturnValue</a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/annotations/CheckReturnValue.html" class="type-name-link" title="annotation interface in com.google.errorprone.annotations">CheckReturnValue</a> - Annotation Interface in <a href="com/google/errorprone/annotations/package-summary.html">com.google.errorprone.annotations</a></dt>
@@ -3157,6 +3168,17 @@ expression is not equal to another expression with this <code>Nullness</code>.</
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/BugChecker.html#defaultSeverity()" class="member-name-link">defaultSeverity()</a> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/TestCompilations.html#defaultTestArgs(java.util.List)" class="member-name-link">defaultTestArgs(List)</a> - Static method in class com.google.errorprone.<a href="com/google/errorprone/TestCompilations.html" title="class in com.google.errorprone">TestCompilations</a></dt>
+<dd>
+<div class="block">Returns <code>extraArgs</code> prefixed with Error Prone's preferred test defaults and <code>
+-proc:none</code> (unless annotation processing is explicitly configured in <code>extraArgs</code>).</div>
+</dd>
+<dt><a href="com/google/errorprone/TestCompilations.html#defaultTestArgs(java.util.List,boolean)" class="member-name-link">defaultTestArgs(List, boolean)</a> - Static method in class com.google.errorprone.<a href="com/google/errorprone/TestCompilations.html" title="class in com.google.errorprone">TestCompilations</a></dt>
+<dd>
+<div class="block">Returns <code>extraArgs</code> prefixed with Error Prone's preferred test defaults and, when <code>
+disableImplicitProcessing</code> is <code>true</code> and annotation processing is not explicitly
+configured in <code>extraArgs</code>, <code>-proc:none</code>.</div>
+</dd>
 <dt><a href="com/google/errorprone/util/ErrorProneLog.html#deferredDiagnosticHandler(com.sun.tools.javac.util.Log)" class="member-name-link">deferredDiagnosticHandler(Log)</a> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/ErrorProneLog.html" title="class in com.google.errorprone.util">ErrorProneLog</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/matchers/method/MethodInvocationMatcher.TokenType.html#DEFINED_IN" class="member-name-link">DEFINED_IN</a> - Enum constant in enum class com.google.errorprone.matchers.method.<a href="com/google/errorprone/matchers/method/MethodInvocationMatcher.TokenType.html" title="enum class in com.google.errorprone.matchers.method">MethodInvocationMatcher.TokenType</a></dt>
@@ -6270,6 +6292,18 @@ element.</div>
 <dd>
 <div class="block">Returns the set of <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/annotation/ElementType.html" title="class or interface in java.lang.annotation" class="external-link"><code>ElementType</code></a> targets specified in the annotation's <code>@Target</code>
 meta-annotation, or <code>null</code> if no <code>@Target</code> meta-annotation is present.</div>
+</dd>
+<dt><a href="com/google/errorprone/TestCompilations.html#getTask(java.io.Writer,javax.tools.DiagnosticListener,java.util.List,java.lang.Iterable)" class="member-name-link">getTask(Writer, DiagnosticListener, List, Iterable)</a> - Static method in class com.google.errorprone.<a href="com/google/errorprone/TestCompilations.html" title="class in com.google.errorprone">TestCompilations</a></dt>
+<dd>
+<div class="block">Creates a <code>JavacTaskImpl</code> using <a href="com/google/errorprone/FileManagers.html#testFileManager()"><code>FileManagers.testFileManager()</code></a> with Error Prone's
+required production javac options and preferred test defaults layered before <code>
+extraJavacArgs</code>.</div>
+</dd>
+<dt><a href="com/google/errorprone/TestCompilations.html#getTask(java.io.Writer,javax.tools.DiagnosticListener,java.util.List,java.lang.Iterable,com.sun.tools.javac.util.Context)" class="member-name-link">getTask(Writer, DiagnosticListener, List, Iterable, Context)</a> - Static method in class com.google.errorprone.<a href="com/google/errorprone/TestCompilations.html" title="class in com.google.errorprone">TestCompilations</a></dt>
+<dd>
+<div class="block">Creates a <code>JavacTaskImpl</code> using <a href="com/google/errorprone/FileManagers.html#testFileManager()"><code>FileManagers.testFileManager()</code></a> and the given
+<code>context</code>, with Error Prone's required production javac options and preferred test
+defaults layered before <code>extraJavacArgs</code>.</div>
 </dd>
 <dt><a href="com/google/errorprone/BaseErrorProneJavaCompiler.html#getTask(java.io.Writer,javax.tools.JavaFileManager,javax.tools.DiagnosticListener,java.lang.Iterable,java.lang.Iterable,java.lang.Iterable)" class="member-name-link">getTask(Writer, JavaFileManager, DiagnosticListener, Iterable, Iterable, Iterable)</a> - Method in class com.google.errorprone.<a href="com/google/errorprone/BaseErrorProneJavaCompiler.html" title="class in com.google.errorprone">BaseErrorProneJavaCompiler</a></dt>
 <dd>&nbsp;</dd>
@@ -15249,6 +15283,11 @@ throw an <code>UnsupportedTemporalTypeException</code>.</div>
 <dd>
 <div class="block">Matches a JUnit 3 or 4 test case.</div>
 </dd>
+<dt><a href="com/google/errorprone/TestCompilations.html" class="type-name-link" title="class in com.google.errorprone">TestCompilations</a> - Class in <a href="com/google/errorprone/package-summary.html">com.google.errorprone</a></dt>
+<dd>
+<div class="block">Shared helpers for configuring compiler options and creating <code>JavacTaskImpl</code> instances in
+Error Prone tests.</div>
+</dd>
 <dt><a href="com/google/errorprone/bugpatterns/TestExceptionChecker.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">TestExceptionChecker</a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>
 <div class="block">A <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>; see the associated <a href="com/google/errorprone/BugPattern.html" title="annotation interface in com.google.errorprone"><code>BugPattern</code></a> annotation for details.</div>
@@ -17780,6 +17819,11 @@ present on <code>sym</code> as well as those already stored in <code>this</code>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/VisitorState.html#withSuppression(com.google.errorprone.SuppressionInfo.SuppressedState)" class="member-name-link">withSuppression(SuppressionInfo.SuppressedState)</a> - Method in class com.google.errorprone.<a href="com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/TestCompilations.html#withTestOnlyAndDeps(java.util.List,boolean)" class="member-name-link">withTestOnlyAndDeps(List, boolean)</a> - Static method in class com.google.errorprone.<a href="com/google/errorprone/TestCompilations.html" title="class in com.google.errorprone">TestCompilations</a></dt>
+<dd>
+<div class="block">Augments <code>args</code> with <code>-XepCompilingTestOnlyCode</code> (when <code>testOnly</code> is <code>
+true</code>) and the <code>com.google.errorprone.deps_for_test_inputs</code> classpath (when set).</div>
+</dd>
 <dt><a href="com/google/errorprone/matchers/JUnitMatchers.html#wouldRunInJUnit4" class="member-name-link">wouldRunInJUnit4</a> - Static variable in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/JUnitMatchers.html" title="class in com.google.errorprone.matchers">JUnitMatchers</a></dt>
 <dd>
 <div class="block">Matches a method annotated with @Test but not @Ignore.</div>

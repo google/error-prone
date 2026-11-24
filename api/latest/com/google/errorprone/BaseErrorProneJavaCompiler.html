@@ -70,6 +70,8 @@ loadScripts(document, 'script');</script>
 <li><a href="#isSupportedOption(java.lang.String)" tabindex="0">isSupportedOption(String)</a></li>
 <li><a href="#run(java.io.InputStream,java.io.OutputStream,java.io.OutputStream,java.lang.String...)" tabindex="0">run(InputStream, OutputStream, OutputStream, String...)</a></li>
 <li><a href="#getSourceVersions()" tabindex="0">getSourceVersions()</a></li>
+<li><a href="#applyRequiredJavacOptions(com.google.common.collect.ImmutableList)" tabindex="0">applyRequiredJavacOptions(ImmutableList)</a></li>
+<li><a href="#checkRequiredJavacOptions(com.sun.tools.javac.util.Options)" tabindex="0">checkRequiredJavacOptions(Options)</a></li>
 <li><a href="#setupMessageBundle(com.sun.tools.javac.util.Context)" tabindex="0">setupMessageBundle(Context)</a></li>
 </ol>
 </li>
@@ -135,6 +137,19 @@ implements <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.comp
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static com.google.common.collect.ImmutableList<wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#applyRequiredJavacOptions(com.google.common.collect.ImmutableList)" class="member-name-link">applyRequiredJavacOptions</a><wbr>(com.google.common.collect.ImmutableList&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;args)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Returns <code>args</code> with Error Prone's required javac defaults (<code>
+-XDcompilePolicy=simple</code>, <code>--should-stop=ifError=FLOW</code>, and <code>
+-XDaddTypeAnnotationsToSymbol=true</code>) prepended.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#checkRequiredJavacOptions(com.sun.tools.javac.util.Options)" class="member-name-link">checkRequiredJavacOptions</a><wbr>(com.sun.tools.javac.util.Options&nbsp;options)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Validates that <code>options</code> satisfy Error Prone's required javac options (<code>
+-XDcompilePolicy</code>, <code>--should-stop=ifError</code>, and <code>-XDaddTypeAnnotationsToSymbol</code>).</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.compiler/javax/lang/model/SourceVersion.html" title="class or interface in javax.lang.model" class="external-link">SourceVersion</a>&gt;</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getSourceVersions()" class="member-name-link">getSourceVersions</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
@@ -268,6 +283,27 @@ implements <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.comp
 <dt>Specified by:</dt>
 <dd><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.compiler/javax/tools/Tool.html#getSourceVersions()" title="class or interface in javax.tools" class="external-link">getSourceVersions</a></code>&nbsp;in interface&nbsp;<code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.compiler/javax/tools/Tool.html" title="class or interface in javax.tools" class="external-link">Tool</a></code></dd>
 </dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="applyRequiredJavacOptions(com.google.common.collect.ImmutableList)">
+<h3>applyRequiredJavacOptions</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">com.google.common.collect.ImmutableList&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</span>&nbsp;<span class="element-name">applyRequiredJavacOptions</span><wbr><span class="parameters">(com.google.common.collect.ImmutableList&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;args)</span></div>
+<div class="block">Returns <code>args</code> with Error Prone's required javac defaults (<code>
+-XDcompilePolicy=simple</code>, <code>--should-stop=ifError=FLOW</code>, and <code>
+-XDaddTypeAnnotationsToSymbol=true</code>) prepended.</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="checkRequiredJavacOptions(com.sun.tools.javac.util.Options)">
+<h3>checkRequiredJavacOptions</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">checkRequiredJavacOptions</span><wbr><span class="parameters">(com.sun.tools.javac.util.Options&nbsp;options)</span></div>
+<div class="block">Validates that <code>options</code> satisfy Error Prone's required javac options (<code>
+-XDcompilePolicy</code>, <code>--should-stop=ifError</code>, and <code>-XDaddTypeAnnotationsToSymbol</code>).</div>
 </div>
 </section>
 </li>
