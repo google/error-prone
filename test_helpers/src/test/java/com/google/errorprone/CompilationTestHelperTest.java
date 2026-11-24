@@ -17,6 +17,7 @@
 package com.google.errorprone;
 
 import static com.google.common.truth.Truth.assertThat;
+import static com.google.common.truth.Truth.assertWithMessage;
 import static com.google.common.truth.TruthJUnit.assume;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
@@ -38,6 +39,8 @@ import com.sun.source.tree.ReturnTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 import com.sun.tools.javac.main.Main.Result;
+import com.sun.tools.javac.util.FatalError;
+import java.util.Locale;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -428,6 +431,15 @@ public class CompilationTestHelperTest {
   }
 
   @Test
+  public void fatalCompilerErrorIsReportedAsError() {
+    CompilationTestHelper.newInstance(FatalErrorChecker.class, getClass())
+        .expectResult(Result.ERROR)
+        .expectNoDiagnostics()
+        .addSourceLines("Test.java", "class Test {}")
+        .doTest();
+  }
+
+  @Test
   public void expectNoDiagnoticsAndNoDiagnosticsProducedSucceeds() {
     compilationHelper
         .expectNoDiagnostics()
@@ -639,6 +651,67 @@ public class CompilationTestHelperTest {
     assertThat(expected)
         .hasMessageThat()
         .contains("An unhandled exception was thrown by the Error Prone static analysis plugin");
+  }
+
+  // https://github.com/google/error-prone/issues/6178
+  @Test
+  public void crashIsDetectedRegardlessOfLocale() {
+    Locale previousLocale = Locale.getDefault();
+    Locale previousDisplayLocale = Locale.getDefault(Locale.Category.DISPLAY);
+    Locale previousFormatLocale = Locale.getDefault(Locale.Category.FORMAT);
+    try {
+      for (Locale locale :
+          ImmutableList.of(
+              Locale.US, Locale.GERMANY, Locale.JAPAN, Locale.SIMPLIFIED_CHINESE, Locale.FRANCE)) {
+        Locale.setDefault(locale);
+        var compilationTestHelper =
+            CompilationTestHelper.newInstance(ConstructorFailingChecker.class, getClass())
+                .addSourceLines("Test.java", "class Test {}");
+        AssertionError expected =
+            assertThrows(
+                "Locale: " + locale, AssertionError.class, () -> compilationTestHelper.doTest());
+        assertWithMessage("Locale: %s", locale)
+            .that(expected)
+            .hasMessageThat()
+            .contains("ErrorProne suffered an internal crash");
+        assertWithMessage("Locale: %s", locale)
+            .that(expected)
+            .hasMessageThat()
+            .contains("checker failed to initialize");
+        // Make sure a localized crash banner was exercised. javac translates it into Japanese, but
+        // some JDKs (e.g. JDK 17) don't translate it into German.
+        if (locale.equals(Locale.JAPAN)) {
+          assertWithMessage("Locale: %s", locale)
+              .that(expected)
+              .hasMessageThat()
+              .doesNotContain("An exception has occurred in the compiler");
+        }
+      }
+    } finally {
+      Locale.setDefault(previousLocale);
+      Locale.setDefault(Locale.Category.DISPLAY, previousDisplayLocale);
+      Locale.setDefault(Locale.Category.FORMAT, previousFormatLocale);
+    }
+  }
+
+  /** A BugPattern that throws from its constructor. */
+  @BugPattern(summary = "A checker that fails to initialize.", severity = ERROR)
+  public static class ConstructorFailingChecker extends BugChecker {
+    public ConstructorFailingChecker() {
+      throw new IllegalStateException("checker failed to initialize");
+    }
+  }
+
+  /**
+   * A BugPattern that causes javac to return SYSERR. Error Prone only handles {@link Exception}s
+   * and {@link AssertionError}s thrown by checks, so the {@link FatalError} reaches javac.
+   */
+  @BugPattern(summary = "A checker that triggers a fatal compiler error.", severity = ERROR)
+  public static class FatalErrorChecker extends BugChecker implements CompilationUnitTreeMatcher {
+    @Override
+    public Description matchCompilationUnit(CompilationUnitTree tree, VisitorState state) {
+      throw new FatalError("fatal compiler error");
+    }
   }
 
   /** A BugPattern that always throws. */
