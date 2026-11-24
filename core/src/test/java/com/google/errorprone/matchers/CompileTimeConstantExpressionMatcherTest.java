@@ -328,10 +328,19 @@ public class CompileTimeConstantExpressionMatcherTest {
                 SECOND,
                 THIRD;
 
-                // Not allowed to over_ride_ valueOf, but try to be sneaky by providing an
-                // non-constexpr overload for it.
+                // Not allowed to over_ride_ final Enum methods, but try to be sneaky by providing
+                // non-constexpr overloads for them.
                 public static CustomEnum valueOf(int index) {
                   return FIRST;
+                }
+                public String name(int suffix) {
+                  return name() + suffix;
+                }
+                public boolean equals(CustomEnum other) {
+                  return this == other;
+                }
+                public int compareTo(RoundingMode other) {
+                  return 0;
                 }
               }
 
@@ -358,6 +367,20 @@ public class CompileTimeConstantExpressionMatcherTest {
                 CustomEnum e3 = CustomEnum.valueOf("THIRD");
                 // BUG: Diagnostic contains: false
                 CustomEnum e4 = CustomEnum.valueOf(4);
+                // BUG: Diagnostic contains: true
+                String enumName = CustomEnum.FIRST.name();
+                // BUG: Diagnostic contains: false
+                String enumNameOverload = CustomEnum.FIRST.name(1);
+                // BUG: Diagnostic contains: true
+                int enumOrdinal = CustomEnum.FIRST.ordinal();
+                // BUG: Diagnostic contains: true
+                boolean enumEquals = CustomEnum.FIRST.equals(RoundingMode.HALF_UP);
+                // BUG: Diagnostic contains: false
+                boolean enumEqualsOverload = CustomEnum.FIRST.equals(CustomEnum.SECOND);
+                // BUG: Diagnostic contains: true
+                int enumCompareTo = CustomEnum.FIRST.compareTo(CustomEnum.SECOND);
+                // BUG: Diagnostic contains: false
+                int enumCompareToOverload = CustomEnum.FIRST.compareTo(RoundingMode.HALF_UP);
                 // BUG: Diagnostic contains: false
                 String enumToString = CustomEnum.FIRST.toString();
               }
@@ -394,13 +417,32 @@ public class CompileTimeConstantExpressionMatcherTest {
             import java.util.regex.Pattern;
 
             public class Test {
+              abstract static class CustomCharset extends Charset {
+                protected CustomCharset() {
+                  super("custom", new String[0]);
+                }
+
+                public String name(int suffix) {
+                  return name() + suffix;
+                }
+                public boolean equals(CustomCharset other) {
+                  return this == other;
+                }
+                public int compareTo(String other) {
+                  return 0;
+                }
+              }
+
               public void m(
                   @CompileTimeConstant String ctcString,
                   String nonCtcString,
                   @CompileTimeConstant char[] ctcCharArray,
-                  @CompileTimeConstant BigInteger ctcBigInt) {
+                  @CompileTimeConstant BigInteger ctcBigInt,
+                  @CompileTimeConstant CustomCharset ctcCustomCharset) {
                 // BUG: Diagnostic contains: true
                 Integer i1 = Integer.valueOf(42);
+                // BUG: Diagnostic contains: true
+                long l1 = Integer.valueOf("42").longValue();
                 // BUG: Diagnostic contains: true
                 int cp1 = Character.codePointAt("abc", 0);
                 // BUG: Diagnostic contains: false
@@ -414,11 +456,21 @@ public class CompileTimeConstantExpressionMatcherTest {
                 // BUG: Diagnostic contains: false
                 String s4 = String.copyValueOf(ctcCharArray);
                 // BUG: Diagnostic contains: true
+                String s5 = ctcString.trim().toLowerCase(Locale.ROOT);
+                // BUG: Diagnostic contains: false
+                String s6 = ctcString.toLowerCase();
+                // BUG: Diagnostic contains: false
+                String s7 = ctcString.intern();
+                // BUG: Diagnostic contains: false
+                String s8 = nonCtcString.trim();
+                // BUG: Diagnostic contains: false
+                String s9 = "hello".substring(nonCtcString.length());
+                // BUG: Diagnostic contains: true
                 int max = Math.max(1, 2);
                 // BUG: Diagnostic contains: true
-                Duration d1 = Duration.ofSeconds(5);
+                Duration d1 = Duration.ofSeconds(5).plusMinutes(1);
                 // BUG: Diagnostic contains: true
-                LocalDate date = LocalDate.of(2025, 1, 1);
+                String dateStr = LocalDate.of(2025, 1, 1).format(DateTimeFormatter.ISO_LOCAL_DATE);
                 // BUG: Diagnostic contains: false
                 ZoneId z1 = ZoneId.of("UTC");
                 // BUG: Diagnostic contains: false
@@ -429,8 +481,12 @@ public class CompileTimeConstantExpressionMatcherTest {
                 Instant clockInstant = Clock.fixed(Instant.EPOCH, ZoneOffset.UTC).instant();
                 // BUG: Diagnostic contains: true
                 BigInteger bi1 = BigInteger.valueOf(10);
+                // BUG: Diagnostic contains: false
+                BigInteger bi2 = ctcBigInt.add(BigInteger.ONE);
+                // BUG: Diagnostic contains: false
+                BigDecimal bd1 = BigDecimal.ONE.add(BigDecimal.TEN);
                 // BUG: Diagnostic contains: true
-                Optional<String> opt = Optional.of(ctcString);
+                String opt = Optional.of(ctcString).orElse("default");
                 // BUG: Diagnostic contains: true
                 String req = Objects.requireNonNull(ctcString);
                 // BUG: Diagnostic contains: false
@@ -443,6 +499,26 @@ public class CompileTimeConstantExpressionMatcherTest {
                 Pattern p = Pattern.compile("[a-z]+");
                 // BUG: Diagnostic contains: true
                 UUID u = UUID.fromString("00000000-0000-0000-0000-000000000000");
+                // BUG: Diagnostic contains: true
+                String csName = StandardCharsets.UTF_8.name();
+                // BUG: Diagnostic contains: true
+                int csCompareTo = StandardCharsets.UTF_8.compareTo(StandardCharsets.US_ASCII);
+                // BUG: Diagnostic contains: true
+                boolean csEquals = StandardCharsets.UTF_8.equals(StandardCharsets.US_ASCII);
+                // BUG: Diagnostic contains: true
+                String customCsName = ctcCustomCharset.name();
+                // BUG: Diagnostic contains: false
+                String customCsNameOverload = ctcCustomCharset.name(1);
+                // BUG: Diagnostic contains: true
+                boolean customCsEquals = ctcCustomCharset.equals(StandardCharsets.UTF_8);
+                // BUG: Diagnostic contains: false
+                boolean customCsEqualsOverload = ctcCustomCharset.equals(ctcCustomCharset);
+                // BUG: Diagnostic contains: true
+                int customCsCompareTo = ctcCustomCharset.compareTo(StandardCharsets.UTF_8);
+                // BUG: Diagnostic contains: false
+                int customCsCompareToOverload = ctcCustomCharset.compareTo("UTF-8");
+                // BUG: Diagnostic contains: false
+                boolean csCanEncode = StandardCharsets.UTF_8.canEncode();
                 // BUG: Diagnostic contains: false
                 Charset csForName = Charset.forName("UTF-8");
               }
@@ -492,6 +568,8 @@ public class CompileTimeConstantExpressionMatcherTest {
                 BigInteger biAnon = new BigInteger("12345") {};
                 // BUG: Diagnostic contains: true
                 MathContext mc = new MathContext(10, RoundingMode.HALF_UP);
+                // BUG: Diagnostic contains: true
+                int precision = new MathContext(10, RoundingMode.HALF_UP).getPrecision();
                 // BUG: Diagnostic contains: true
                 BigDecimal bd1 = new BigDecimal("12.34", MathContext.DECIMAL64);
                 // BUG: Diagnostic contains: true

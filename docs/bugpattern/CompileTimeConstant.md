@@ -20,9 +20,9 @@ expressions, specifically:
 *   a concatenation expression of compile-time constant `String`s, or
 *   a switch expressions where all case bodies are compile-time constants, or
 *   a ternary expressions with both branches being compile-time constants, or
-*   a call to a well-known constructor or static method (e.g. from a Java
-    standard library class), where all arguments are compile-time constants and
-    the resulting object is immutable.
+*   a call to a well-known (e.g. from a Java standard library class),
+    constructor, static method, or instance method, where all arguments are
+    compile-time constants and the resulting value is immutable.
 
 For example, the following are valid compile-time constants:
 

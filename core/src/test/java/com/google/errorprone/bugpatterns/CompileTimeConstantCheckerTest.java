@@ -1133,6 +1133,7 @@ public class Test {
               @CompileTimeConstant final Class<?> clazz = String.class;
               @CompileTimeConstant final Class<?> primitiveClazz = int.class;
               @CompileTimeConstant final MyEnum enumConst = MyEnum.A;
+              @CompileTimeConstant final String enumName = MyEnum.A.name();
 
               // BUG: Diagnostic contains: Non-compile-time constant expression
               @CompileTimeConstant final String enumToString = MyEnum.A.toString();
@@ -1147,6 +1148,7 @@ public class Test {
                 acceptObject(ImmutableList.of(String.class, int.class));
                 acceptObject(DayOfWeek.MONDAY);
                 acceptObject(MyEnum.B);
+                acceptObject(MyEnum.B.name());
               }
 
               public static void testFailure(Class<?> runtimeClass, MyEnum runtimeEnum) {
@@ -1183,22 +1185,34 @@ public class Test {
             import java.util.Optional;
 
             public class Test {
-              @CompileTimeConstant final Duration duration = Duration.ofSeconds(10);
-              @CompileTimeConstant final LocalDate date = LocalDate.of(2025, 1, 1);
+              @CompileTimeConstant final Duration duration = Duration.ofSeconds(10).plusMinutes(1);
+              @CompileTimeConstant final String formattedDate =
+                  LocalDate.of(2025, 1, 1).format(DateTimeFormatter.ISO_LOCAL_DATE);
 
               public static void acceptObject(@CompileTimeConstant Object obj) {}
 
               public static void testSuccess(@CompileTimeConstant final String constStr) {
                 acceptObject(Integer.valueOf(42));
                 acceptObject(String.valueOf(42));
+                acceptObject(constStr.trim().toLowerCase(Locale.ROOT));
                 acceptObject(Math.max(1, 2));
-                acceptObject(Optional.of(constStr));
+                acceptObject(Optional.of(constStr).orElse("fallback"));
                 acceptObject(Objects.requireNonNull(constStr));
+                acceptObject(StandardCharsets.UTF_8.name());
               }
 
               public static void testFailure(
+                  String nonConstStr,
                   @CompileTimeConstant final char[] constCharArray,
                   @CompileTimeConstant final BigInteger constBigInt) {
+                // BUG: Diagnostic contains: Non-compile-time constant expression passed
+                acceptObject(nonConstStr.trim());
+                // BUG: Diagnostic contains: Non-compile-time constant expression passed
+                acceptObject("abc".substring(nonConstStr.length()));
+                // BUG: Diagnostic contains: Non-compile-time constant expression passed
+                acceptObject("abc".intern());
+                // BUG: Diagnostic contains: Non-compile-time constant expression passed
+                acceptObject("abc".toLowerCase());
                 // BUG: Diagnostic contains: Non-compile-time constant expression passed
                 acceptObject(String.valueOf(constCharArray));
                 // BUG: Diagnostic contains: Non-compile-time constant expression passed

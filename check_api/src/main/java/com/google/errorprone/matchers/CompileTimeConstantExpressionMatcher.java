@@ -19,6 +19,7 @@ package com.google.errorprone.matchers;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.anything;
 import static com.google.errorprone.matchers.Matchers.constructor;
+import static com.google.errorprone.matchers.Matchers.instanceMethod;
 import static com.google.errorprone.matchers.Matchers.nullLiteral;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
 import static com.google.errorprone.matchers.Matchers.toType;
@@ -26,8 +27,10 @@ import static com.google.errorprone.matchers.Matchers.typeCast;
 import static com.google.errorprone.matchers.field.FieldMatchers.staticField;
 import static com.google.errorprone.predicates.TypePredicates.isPrimitive;
 import static com.google.errorprone.util.ASTHelpers.constValue;
+import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.isConsideredFinal;
+import static com.google.errorprone.util.ASTHelpers.isStatic;
 import static com.google.errorprone.util.AnnotationNames.COMPILE_TIME_CONSTANT_ANNOTATION;
 
 import com.google.errorprone.VisitorState;
@@ -71,10 +74,10 @@ import com.sun.tools.javac.code.Symbol.VarSymbol;
  *       {@link String}s.
  *   <li>A switch expression where all case bodies are compile-time constants.
  *   <li>A conditional expression (a ? b : c) where both branches are compile-time constants.
- *   <li>A call to a well-known (e.g. from a Java standard library class) constructor or static
- *       method, where all arguments are compile-time constants and the resulting object is
- *       immutable. (See {@link #COMPATIBLE_METHODS} and {@link #COMPATIBLE_CONSTRUCTORS} below for
- *       the complete list.)
+ *   <li>A call to a well-known (e.g. from a Java standard library class) constructor, static
+ *       method, or instance method, where all arguments (including the receiver, if applicable) are
+ *       compile-time constants and the resulting value is immutable. (See {@link
+ *       #COMPATIBLE_METHODS} and {@link #COMPATIBLE_CONSTRUCTORS} below for the complete list.)
  * </ol>
  */
 public class CompileTimeConstantExpressionMatcher implements Matcher<ExpressionTree> {
@@ -135,8 +138,18 @@ public class CompileTimeConstantExpressionMatcher implements Matcher<ExpressionT
 
       @Override
       public Boolean visitMethodInvocation(MethodInvocationTree tree, Void unused) {
-        return COMPATIBLE_METHODS.matches(tree, state)
-            && tree.getArguments().stream().allMatch(a -> a.accept(this, null));
+        if (!COMPATIBLE_METHODS.matches(tree, state)) {
+          return false;
+        }
+
+        // If this is an instance method, check the receiver.
+        ExpressionTree receiver = getReceiver(tree);
+        if (!isStatic(getSymbol(tree)) && (receiver == null || !receiver.accept(this, null))) {
+          return false;
+        }
+
+        // Check all arguments.
+        return tree.getArguments().stream().allMatch(a -> a.accept(this, null));
       }
 
       @Override
@@ -209,7 +222,12 @@ public class CompileTimeConstantExpressionMatcher implements Matcher<ExpressionT
    *
    * <p>To be {@link CompileTimeConstant}-compatible, a method must not depend on any runtime state,
    * (global tables, system properties, etc.) and its return value must be a compile-time constant
-   * (including being immutable) whenever all of the arguments are compile-time constants.
+   * (including being immutable) whenever all of the arguments (including the method receiver, if
+   * applicable) are compile-time constants.
+   *
+   * <p>Note that instance methods can only be {@link CompileTimeConstant}-compatible if there's no
+   * way to override them; overriding implementations could depend on runtime state and/or return
+   * non-constant values.
    */
   private static final Matcher<ExpressionTree> COMPATIBLE_METHODS =
       anyOf(
@@ -424,6 +442,32 @@ public class CompileTimeConstantExpressionMatcher implements Matcher<ExpressionT
                   "toHexString",
                   "toString",
                   "valueOf"),
+          instanceMethod()
+              .onExactClassAny(
+                  "java.lang.Integer",
+                  "java.lang.Long",
+                  "java.lang.Short",
+                  "java.lang.Byte",
+                  "java.lang.Character",
+                  "java.lang.Boolean",
+                  "java.lang.Float",
+                  "java.lang.Double")
+              .namedAnyOf(
+                  "booleanValue",
+                  "byteValue",
+                  "charValue",
+                  "compareTo",
+                  "describeConstable",
+                  "doubleValue",
+                  "equals",
+                  "floatValue",
+                  "hashCode",
+                  "intValue",
+                  "isInfinite",
+                  "isNaN",
+                  "longValue",
+                  "shortValue",
+                  "toString"),
 
           // java.lang.String
           staticMethod().onClass("java.lang.String").named("join"),
@@ -436,6 +480,50 @@ public class CompileTimeConstantExpressionMatcher implements Matcher<ExpressionT
               .onClass("java.lang.String")
               .named("valueOf")
               .withParametersMatching(ParameterPredicates.of(isPrimitive())),
+          instanceMethod()
+              .onExactClass("java.lang.String")
+              .namedAnyOf(
+                  "charAt",
+                  "codePointAt",
+                  "codePointBefore",
+                  "codePointCount",
+                  "compareTo",
+                  "compareToIgnoreCase",
+                  "concat",
+                  "contains",
+                  "contentEquals",
+                  "describeConstable",
+                  "endsWith",
+                  "equals",
+                  "equalsIgnoreCase",
+                  "hashCode",
+                  "indent",
+                  "indexOf",
+                  "isBlank",
+                  "isEmpty",
+                  "lastIndexOf",
+                  "length",
+                  "matches",
+                  "offsetByCodePoints",
+                  "regionMatches",
+                  "repeat",
+                  "replace",
+                  "replaceAll",
+                  "replaceFirst",
+                  "startsWith",
+                  "strip",
+                  "stripIndent",
+                  "stripLeading",
+                  "stripTrailing",
+                  "subSequence",
+                  "substring",
+                  "toString",
+                  "translateEscapes",
+                  "trim"),
+          instanceMethod()
+              .onExactClass("java.lang.String")
+              .namedAnyOf("toLowerCase", "toUpperCase")
+              .withParameters("java.util.Locale"),
 
           // java.lang.Math and java.lang.StrictMath
           staticMethod()
@@ -514,6 +602,19 @@ public class CompileTimeConstantExpressionMatcher implements Matcher<ExpressionT
               .onDescendantOf("java.lang.Enum")
               .named("valueOf")
               .withParameters("java.lang.String"),
+          // Omit "toString" because it could be overridden.
+          instanceMethod()
+              .onDescendantOf("java.lang.Enum")
+              .named("compareTo")
+              .withParameters("java.lang.Enum"),
+          instanceMethod()
+              .onDescendantOf("java.lang.Enum")
+              .named("equals")
+              .withParameters("java.lang.Object"),
+          instanceMethod()
+              .onDescendantOf("java.lang.Enum")
+              .namedAnyOf("describeConstable", "getDeclaringClass", "hashCode", "name", "ordinal")
+              .withNoParameters(),
 
           // java.math
           // Omit instance methods on BigInteger and BigDecimal because neither the classes nor
@@ -521,12 +622,30 @@ public class CompileTimeConstantExpressionMatcher implements Matcher<ExpressionT
           staticMethod()
               .onClassAny("java.math.BigInteger", "java.math.BigDecimal")
               .named("valueOf"),
+          instanceMethod()
+              .onExactClass("java.math.MathContext")
+              .namedAnyOf("equals", "getPrecision", "getRoundingMode", "hashCode", "toString"),
 
           // java.time
           staticMethod().onClass("java.time.Clock").namedAnyOf("fixed", "offset", "tick"),
           staticMethod()
               .onClassAny("java.time.DayOfWeek", "java.time.Month")
               .namedAnyOf("from", "of", "valueOf"),
+          instanceMethod()
+              .onExactClassAny("java.time.DayOfWeek", "java.time.Month")
+              .namedAnyOf(
+                  "firstDayOfYear",
+                  "firstMonthOfQuarter",
+                  "get",
+                  "getDisplayName",
+                  "getLong",
+                  "getValue",
+                  "isSupported",
+                  "length",
+                  "maxLength",
+                  "minLength",
+                  "minus",
+                  "plus"),
           staticMethod()
               .onClass("java.time.Duration")
               .namedAnyOf(
@@ -540,31 +659,462 @@ public class CompileTimeConstantExpressionMatcher implements Matcher<ExpressionT
                   "ofNanos",
                   "ofSeconds",
                   "parse"),
+          instanceMethod()
+              .onExactClass("java.time.Duration")
+              .namedAnyOf(
+                  "abs",
+                  "compareTo",
+                  "dividedBy",
+                  "equals",
+                  "get",
+                  "getNano",
+                  "getSeconds",
+                  "getUnits",
+                  "hashCode",
+                  "isNegative",
+                  "isPositive",
+                  "isZero",
+                  "minus",
+                  "minusDays",
+                  "minusHours",
+                  "minusMillis",
+                  "minusMinutes",
+                  "minusNanos",
+                  "minusSeconds",
+                  "multipliedBy",
+                  "negated",
+                  "plus",
+                  "plusDays",
+                  "plusHours",
+                  "plusMillis",
+                  "plusMinutes",
+                  "plusNanos",
+                  "plusSeconds",
+                  "toDays",
+                  "toDaysPart",
+                  "toHours",
+                  "toHoursPart",
+                  "toMillis",
+                  "toMillisPart",
+                  "toMinutes",
+                  "toMinutesPart",
+                  "toNanos",
+                  "toNanosPart",
+                  "toSeconds",
+                  "toSecondsPart",
+                  "toString",
+                  "truncatedTo",
+                  "withNanos",
+                  "withSeconds"),
           staticMethod()
               .onClass("java.time.Instant")
               .namedAnyOf("from", "ofEpochMilli", "ofEpochSecond", "parse"),
+          instanceMethod()
+              .onExactClass("java.time.Instant")
+              .namedAnyOf(
+                  "atOffset",
+                  "atZone",
+                  "compareTo",
+                  "equals",
+                  "get",
+                  "getEpochSecond",
+                  "getLong",
+                  "getNano",
+                  "hashCode",
+                  "isAfter",
+                  "isBefore",
+                  "isSupported",
+                  "minus",
+                  "minusMillis",
+                  "minusNanos",
+                  "minusSeconds",
+                  "plus",
+                  "plusMillis",
+                  "plusNanos",
+                  "plusSaturating",
+                  "plusSeconds",
+                  "toEpochMilli",
+                  "toString",
+                  "truncatedTo",
+                  "until",
+                  "with"),
           staticMethod()
               .onClass("java.time.LocalDate")
               .namedAnyOf("from", "of", "ofEpochDay", "ofInstant", "ofYearDay", "parse"),
+          instanceMethod()
+              .onExactClass("java.time.LocalDate")
+              .namedAnyOf(
+                  "atStartOfDay",
+                  "atTime",
+                  "compareTo",
+                  "equals",
+                  "format",
+                  "get",
+                  "getDayOfMonth",
+                  "getDayOfWeek",
+                  "getDayOfYear",
+                  "getEra",
+                  "getLong",
+                  "getMonth",
+                  "getMonthValue",
+                  "getYear",
+                  "hashCode",
+                  "isAfter",
+                  "isBefore",
+                  "isEqual",
+                  "isLeapYear",
+                  "isSupported",
+                  "lengthOfMonth",
+                  "lengthOfYear",
+                  "minus",
+                  "minusDays",
+                  "minusMonths",
+                  "minusWeeks",
+                  "minusYears",
+                  "plus",
+                  "plusDays",
+                  "plusMonths",
+                  "plusWeeks",
+                  "plusYears",
+                  "toEpochDay",
+                  "toEpochSecond",
+                  "toString",
+                  "until",
+                  "with",
+                  "withDayOfMonth",
+                  "withDayOfYear",
+                  "withMonth",
+                  "withYear"),
           staticMethod()
               .onClass("java.time.LocalDateTime")
               .namedAnyOf("from", "of", "ofEpochSecond", "ofInstant", "parse"),
+          instanceMethod()
+              .onExactClass("java.time.LocalDateTime")
+              .namedAnyOf(
+                  "atOffset",
+                  "atZone",
+                  "compareTo",
+                  "equals",
+                  "format",
+                  "get",
+                  "getDayOfMonth",
+                  "getDayOfWeek",
+                  "getDayOfYear",
+                  "getHour",
+                  "getLong",
+                  "getMinute",
+                  "getMonth",
+                  "getMonthValue",
+                  "getNano",
+                  "getSecond",
+                  "getYear",
+                  "hashCode",
+                  "isAfter",
+                  "isBefore",
+                  "isEqual",
+                  "isSupported",
+                  "minus",
+                  "minusDays",
+                  "minusHours",
+                  "minusMinutes",
+                  "minusMonths",
+                  "minusNanos",
+                  "minusSeconds",
+                  "minusWeeks",
+                  "minusYears",
+                  "plus",
+                  "plusDays",
+                  "plusHours",
+                  "plusMinutes",
+                  "plusMonths",
+                  "plusNanos",
+                  "plusSeconds",
+                  "plusWeeks",
+                  "plusYears",
+                  "toEpochSecond",
+                  "toInstant",
+                  "toLocalDate",
+                  "toLocalTime",
+                  "toString",
+                  "truncatedTo",
+                  "until",
+                  "with",
+                  "withDayOfMonth",
+                  "withDayOfYear",
+                  "withHour",
+                  "withMinute",
+                  "withMonth",
+                  "withNano",
+                  "withSecond",
+                  "withYear"),
           staticMethod()
               .onClass("java.time.LocalTime")
               .namedAnyOf("from", "of", "ofInstant", "ofNanoOfDay", "ofSecondOfDay", "parse"),
+          instanceMethod()
+              .onExactClass("java.time.LocalTime")
+              .namedAnyOf(
+                  "atDate",
+                  "atOffset",
+                  "compareTo",
+                  "equals",
+                  "format",
+                  "get",
+                  "getHour",
+                  "getLong",
+                  "getMinute",
+                  "getNano",
+                  "getSecond",
+                  "hashCode",
+                  "isAfter",
+                  "isBefore",
+                  "isSupported",
+                  "minus",
+                  "minusHours",
+                  "minusMinutes",
+                  "minusNanos",
+                  "minusSeconds",
+                  "plus",
+                  "plusHours",
+                  "plusMinutes",
+                  "plusNanos",
+                  "plusSeconds",
+                  "toEpochSecond",
+                  "toNanoOfDay",
+                  "toSecondOfDay",
+                  "toString",
+                  "truncatedTo",
+                  "until",
+                  "with",
+                  "withHour",
+                  "withMinute",
+                  "withNano",
+                  "withSecond"),
           staticMethod().onClass("java.time.MonthDay").namedAnyOf("from", "of", "parse"),
+          instanceMethod()
+              .onExactClass("java.time.MonthDay")
+              .namedAnyOf(
+                  "atYear",
+                  "compareTo",
+                  "equals",
+                  "format",
+                  "get",
+                  "getDayOfMonth",
+                  "getLong",
+                  "getMonth",
+                  "getMonthValue",
+                  "hashCode",
+                  "isAfter",
+                  "isBefore",
+                  "isSupported",
+                  "isValidYear",
+                  "toString",
+                  "with",
+                  "withDayOfMonth",
+                  "withMonth"),
           staticMethod()
               .onClass("java.time.OffsetDateTime")
               .namedAnyOf("from", "of", "ofInstant", "parse"),
+          instanceMethod()
+              .onExactClass("java.time.OffsetDateTime")
+              .namedAnyOf(
+                  "atZoneSameInstant",
+                  "atZoneSimilarLocal",
+                  "compareTo",
+                  "equals",
+                  "format",
+                  "get",
+                  "getDayOfMonth",
+                  "getDayOfWeek",
+                  "getDayOfYear",
+                  "getHour",
+                  "getLong",
+                  "getMinute",
+                  "getMonth",
+                  "getMonthValue",
+                  "getNano",
+                  "getOffset",
+                  "getSecond",
+                  "getYear",
+                  "hashCode",
+                  "isAfter",
+                  "isBefore",
+                  "isEqual",
+                  "isSupported",
+                  "minus",
+                  "minusDays",
+                  "minusHours",
+                  "minusMinutes",
+                  "minusMonths",
+                  "minusNanos",
+                  "minusSeconds",
+                  "minusWeeks",
+                  "minusYears",
+                  "plus",
+                  "plusDays",
+                  "plusHours",
+                  "plusMinutes",
+                  "plusMonths",
+                  "plusNanos",
+                  "plusSeconds",
+                  "plusWeeks",
+                  "plusYears",
+                  "toEpochSecond",
+                  "toInstant",
+                  "toLocalDate",
+                  "toLocalDateTime",
+                  "toLocalTime",
+                  "toOffsetTime",
+                  "toString",
+                  "toZonedDateTime",
+                  "truncatedTo",
+                  "until",
+                  "with",
+                  "withDayOfMonth",
+                  "withDayOfYear",
+                  "withHour",
+                  "withMinute",
+                  "withMonth",
+                  "withNano",
+                  "withOffsetSameInstant",
+                  "withOffsetSameLocal",
+                  "withSecond",
+                  "withYear"),
           staticMethod()
               .onClass("java.time.OffsetTime")
               .namedAnyOf("from", "of", "ofInstant", "parse"),
+          instanceMethod()
+              .onExactClass("java.time.OffsetTime")
+              .namedAnyOf(
+                  "atDate",
+                  "compareTo",
+                  "equals",
+                  "format",
+                  "get",
+                  "getHour",
+                  "getLong",
+                  "getMinute",
+                  "getNano",
+                  "getOffset",
+                  "getSecond",
+                  "hashCode",
+                  "isAfter",
+                  "isBefore",
+                  "isEqual",
+                  "isSupported",
+                  "minus",
+                  "minusHours",
+                  "minusMinutes",
+                  "minusNanos",
+                  "minusSeconds",
+                  "plus",
+                  "plusHours",
+                  "plusMinutes",
+                  "plusNanos",
+                  "plusSeconds",
+                  "toEpochSecond",
+                  "toLocalTime",
+                  "toString",
+                  "truncatedTo",
+                  "until",
+                  "with",
+                  "withHour",
+                  "withMinute",
+                  "withNano",
+                  "withOffsetSameInstant",
+                  "withOffsetSameLocal",
+                  "withSecond"),
           staticMethod()
               .onClass("java.time.Period")
               .namedAnyOf(
                   "between", "from", "of", "ofDays", "ofMonths", "ofWeeks", "ofYears", "parse"),
+          instanceMethod()
+              .onExactClass("java.time.Period")
+              .namedAnyOf(
+                  "equals",
+                  "get",
+                  "getDays",
+                  "getMonths",
+                  "getUnits",
+                  "getYears",
+                  "hashCode",
+                  "isNegative",
+                  "isZero",
+                  "minus",
+                  "minusDays",
+                  "minusMonths",
+                  "minusYears",
+                  "multipliedBy",
+                  "negated",
+                  "normalized",
+                  "plus",
+                  "plusDays",
+                  "plusMonths",
+                  "plusYears",
+                  "toString",
+                  "toTotalMonths",
+                  "withDays",
+                  "withMonths",
+                  "withYears"),
           staticMethod().onClass("java.time.Year").namedAnyOf("from", "isLeap", "of", "parse"),
+          instanceMethod()
+              .onExactClass("java.time.Year")
+              .namedAnyOf(
+                  "atDay",
+                  "atMonth",
+                  "atMonthDay",
+                  "compareTo",
+                  "equals",
+                  "format",
+                  "get",
+                  "getLong",
+                  "getValue",
+                  "hashCode",
+                  "isAfter",
+                  "isBefore",
+                  "isLeap",
+                  "isSupported",
+                  "isValidMonthDay",
+                  "length",
+                  "minus",
+                  "minusYears",
+                  "plus",
+                  "plusYears",
+                  "toString",
+                  "until",
+                  "with"),
           staticMethod().onClass("java.time.YearMonth").namedAnyOf("from", "of", "parse"),
+          instanceMethod()
+              .onExactClass("java.time.YearMonth")
+              .namedAnyOf(
+                  "atDay",
+                  "atEndOfMonth",
+                  "compareTo",
+                  "equals",
+                  "format",
+                  "get",
+                  "getLong",
+                  "getMonth",
+                  "getMonthValue",
+                  "getYear",
+                  "hashCode",
+                  "isAfter",
+                  "isBefore",
+                  "isLeapYear",
+                  "isSupported",
+                  "isValidDay",
+                  "lengthOfMonth",
+                  "lengthOfYear",
+                  "minus",
+                  "minusMonths",
+                  "minusYears",
+                  "plus",
+                  "plusMonths",
+                  "plusYears",
+                  "toString",
+                  "until",
+                  "with",
+                  "withMonth",
+                  "withYear"),
           staticMethod()
               .onClass("java.time.ZoneOffset")
               .namedAnyOf(
@@ -574,9 +1124,88 @@ public class CompileTimeConstantExpressionMatcher implements Matcher<ExpressionT
                   "ofHoursMinutes",
                   "ofHoursMinutesSeconds",
                   "ofTotalSeconds"),
+          instanceMethod()
+              .onExactClass("java.time.ZoneOffset")
+              .namedAnyOf(
+                  "compareTo",
+                  "equals",
+                  "get",
+                  "getId",
+                  "getLong",
+                  "getTotalSeconds",
+                  "hashCode",
+                  "isSupported",
+                  "normalized",
+                  "toString"),
           staticMethod()
               .onClass("java.time.ZonedDateTime")
               .namedAnyOf("from", "of", "ofInstant", "ofLocal", "ofStrict"),
+          instanceMethod()
+              .onExactClass("java.time.ZonedDateTime")
+              .namedAnyOf(
+                  "compareTo",
+                  "equals",
+                  "format",
+                  "get",
+                  "getDayOfMonth",
+                  "getDayOfWeek",
+                  "getDayOfYear",
+                  "getHour",
+                  "getLong",
+                  "getMinute",
+                  "getMonth",
+                  "getMonthValue",
+                  "getNano",
+                  "getOffset",
+                  "getSecond",
+                  "getYear",
+                  "getZone",
+                  "hashCode",
+                  "isAfter",
+                  "isBefore",
+                  "isEqual",
+                  "isSupported",
+                  "minus",
+                  "minusDays",
+                  "minusHours",
+                  "minusMinutes",
+                  "minusMonths",
+                  "minusNanos",
+                  "minusSeconds",
+                  "minusWeeks",
+                  "minusYears",
+                  "plus",
+                  "plusDays",
+                  "plusHours",
+                  "plusMinutes",
+                  "plusMonths",
+                  "plusNanos",
+                  "plusSeconds",
+                  "plusWeeks",
+                  "plusYears",
+                  "toEpochSecond",
+                  "toInstant",
+                  "toLocalDate",
+                  "toLocalDateTime",
+                  "toLocalTime",
+                  "toOffsetDateTime",
+                  "toString",
+                  "truncatedTo",
+                  "until",
+                  "with",
+                  "withDayOfMonth",
+                  "withDayOfYear",
+                  "withEarlierOffsetAtOverlap",
+                  "withFixedOffsetZone",
+                  "withHour",
+                  "withLaterOffsetAtOverlap",
+                  "withMinute",
+                  "withMonth",
+                  "withNano",
+                  "withSecond",
+                  "withYear",
+                  "withZoneSameInstant",
+                  "withZoneSameLocal"),
 
           // java.util collections, optionals, and utilities
           staticMethod().onClass("java.util.List").namedAnyOf("copyOf", "of"),
@@ -608,6 +1237,24 @@ public class CompileTimeConstantExpressionMatcher implements Matcher<ExpressionT
                   "java.util.OptionalLong",
                   "java.util.OptionalDouble")
               .namedAnyOf("empty", "of", "ofNullable"),
+          instanceMethod()
+              .onExactClassAny(
+                  "java.util.Optional",
+                  "java.util.OptionalInt",
+                  "java.util.OptionalLong",
+                  "java.util.OptionalDouble")
+              .namedAnyOf(
+                  "equals",
+                  "get",
+                  "getAsDouble",
+                  "getAsInt",
+                  "getAsLong",
+                  "hashCode",
+                  "isEmpty",
+                  "isPresent",
+                  "orElse",
+                  "orElseThrow",
+                  "toString"),
           staticMethod()
               .onClass("java.util.Objects")
               .namedAnyOf(
@@ -624,10 +1271,56 @@ public class CompileTimeConstantExpressionMatcher implements Matcher<ExpressionT
           staticMethod()
               .onClass("java.util.Locale")
               .namedAnyOf("caseFoldLanguageTag", "forLanguageTag", "of"),
+          instanceMethod()
+              .onExactClass("java.util.Locale")
+              .namedAnyOf(
+                  "equals",
+                  "getCountry",
+                  "getExtension",
+                  "getLanguage",
+                  "getScript",
+                  "getUnicodeLocaleType",
+                  "getVariant",
+                  "hasExtensions",
+                  "hashCode",
+                  "stripExtensions",
+                  "toLanguageTag",
+                  "toString"),
           staticMethod().onClass("java.util.UUID").named("fromString"),
+          instanceMethod()
+              .onExactClass("java.util.UUID")
+              .namedAnyOf(
+                  "clockSequence",
+                  "compareTo",
+                  "equals",
+                  "getLeastSignificantBits",
+                  "getMostSignificantBits",
+                  "hashCode",
+                  "node",
+                  "timestamp",
+                  "toString",
+                  "variant",
+                  "version"),
           staticMethod()
               .onClass("java.util.regex.Pattern")
               .namedAnyOf("compile", "matches", "quote"),
+          instanceMethod()
+              .onExactClass("java.util.regex.Pattern")
+              .namedAnyOf("flags", "pattern", "toString"),
+
+          // java.nio.charset.Charset - only include final methods.
+          instanceMethod()
+              .onDescendantOf("java.nio.charset.Charset")
+              .named("compareTo")
+              .withParameters("java.nio.charset.Charset"),
+          instanceMethod()
+              .onDescendantOf("java.nio.charset.Charset")
+              .named("equals")
+              .withParameters("java.lang.Object"),
+          instanceMethod()
+              .onDescendantOf("java.nio.charset.Charset")
+              .namedAnyOf("hashCode", "isRegistered", "name", "toString")
+              .withNoParameters(),
 
           // Guava Immutable collections
           //
