@@ -20,7 +20,6 @@ import static com.google.common.collect.MoreCollectors.onlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.VisitorState.memoize;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
-import static com.google.errorprone.suppliers.Suppliers.typeFromString;
 import static com.google.errorprone.util.ASTHelpers.findClass;
 import static com.google.errorprone.util.ASTHelpers.getEnclosedElements;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
@@ -40,6 +39,7 @@ import com.google.common.collect.ImmutableListMultimap;
 import com.google.common.collect.ImmutableMap;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.StandardTags;
+import com.google.errorprone.ClassName;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
 import com.google.errorprone.matchers.Description;
@@ -185,11 +185,12 @@ public class ReferenceEquality extends AbstractReferenceEquality
       return false;
     }
     // https://github.com/google/error-prone/issues/5900
-    if (isSubtype(type, JAVA_LANG_THREAD.get(state), state)) {
+    if (isSubtype(type, JAVA_LANG_THREAD, state)) {
       return false;
     }
-    // b/528325503
-    if (isSubtype(type, COM_SUN_SOURCE_TREE_TREE.get(state), state)) {
+    // b/528325503: javac's Tree and Element (Symbol) implementations do not override Object.equals
+    if (isSubtype(type, COM_SUN_SOURCE_TREE_TREE, state)
+        || isSubtype(type, JAVAX_LANG_MODEL_ELEMENT_ELEMENT, state)) {
       return false;
     }
     if (definitelyUsesReferenceEquality(type, subclassMap, state)) {
@@ -422,7 +423,9 @@ public class ReferenceEquality extends AbstractReferenceEquality
   }
 
   private static final Supplier<Name> EQUALS = memoize(state -> state.getName("equals"));
-  private static final Supplier<Type> JAVA_LANG_THREAD = typeFromString("java.lang.Thread");
-  private static final Supplier<Type> COM_SUN_SOURCE_TREE_TREE =
-      typeFromString("com.sun.source.tree.Tree");
+  private static final ClassName JAVA_LANG_THREAD = ClassName.of("java.lang.Thread");
+  private static final ClassName COM_SUN_SOURCE_TREE_TREE =
+      ClassName.of("com.sun.source.tree.Tree");
+  private static final ClassName JAVAX_LANG_MODEL_ELEMENT_ELEMENT =
+      ClassName.of("javax.lang.model.element.Element");
 }
