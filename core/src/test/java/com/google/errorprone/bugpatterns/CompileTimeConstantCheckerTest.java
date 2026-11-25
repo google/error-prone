@@ -1340,4 +1340,53 @@ public class Test {
             """)
         .doTest();
   }
+
+  @Test
+  public void enumAndMethodAllowlistGaps() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            package test;
+
+            import com.google.errorprone.annotations.CompileTimeConstant;
+            import java.time.DayOfWeek;
+            import java.time.format.TextStyle;
+            import java.util.Locale;
+            import java.util.Optional;
+
+            public class Test {
+              enum MutableEnum {
+                A;
+                String dynamicValue = "";
+
+                @Override
+                public String toString() {
+                  return dynamicValue;
+                }
+              }
+
+              public static void acceptObject(@CompileTimeConstant Object obj) {}
+
+              public static void acceptString(@CompileTimeConstant String str) {}
+
+              public static void test() {
+                // Unsafe (should be flagged): enum constants are accepted unconditionally, so
+                // string concatenation invokes MutableEnum.toString() and reads mutable state,
+                // bypassing the omission of Enum.toString() from the method allowlist.
+                acceptString("" + MutableEnum.A);
+                // Unsafe (should be flagged): Optional.toString() delegates to value.toString(),
+                // invoking MutableEnum.toString() and reading mutable state.
+                acceptString(Optional.of(MutableEnum.A).toString());
+                // Unsafe (should be flagged): Enum.hashCode() delegates to
+                // System.identityHashCode(this), which varies across JVM runs.
+                acceptObject(MutableEnum.A.hashCode());
+                // Unsafe (should be flagged): getDisplayName depends on CLDR data and
+                // -Djava.locale.providers.
+                acceptString(DayOfWeek.MONDAY.getDisplayName(TextStyle.FULL, Locale.US));
+              }
+            }
+            """)
+        .doTest();
+  }
 }

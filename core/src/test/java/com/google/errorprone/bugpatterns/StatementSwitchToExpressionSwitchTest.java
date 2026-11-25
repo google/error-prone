@@ -5475,6 +5475,94 @@ public final class StatementSwitchToExpressionSwitchTest {
         .doTest();
   }
 
+  @Test
+  public void switchByEnum_assignmentSwitchToThrowingStdlibInitializer() {
+    // SwitchUtils.findCombinableVariableTree relies on CompileTimeConstantExpressionMatcher to
+    // decide whether a preceding variable initializer is side-effect-free and non-throwing so it
+    // can be elided as a dead store. Because the expanded allowlist matches throwing stdlib
+    // methods, both initializers below are currently deleted even though they unconditionally
+    // throw at runtime; the expected output should instead preserve the initializer statements
+    // (leaving `x = switch (...)` / `s = switch (...)` separate).
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import java.util.Optional;
+
+            class Test {
+              public int parseIntInitializer(Suit suit) {
+                // Throws NumberFormatException at runtime; should not be elided.
+                int x = Integer.parseInt("not-a-number");
+                switch (suit) {
+                  case HEART:
+                  case DIAMOND:
+                    x = 1;
+                    break;
+                  case SPADE:
+                    x = 2;
+                    break;
+                  default:
+                    x = 3;
+                    break;
+                }
+                return x;
+              }
+
+              public String orElseThrowInitializer(Suit suit) {
+                // Throws NoSuchElementException at runtime; should not be elided.
+                String s = Optional.<String>empty().orElseThrow();
+                switch (suit) {
+                  case HEART:
+                  case DIAMOND:
+                    s = "a";
+                    break;
+                  case SPADE:
+                    s = "b";
+                    break;
+                  default:
+                    s = "c";
+                    break;
+                }
+                return s;
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              public int parseIntInitializer(Suit suit) {
+                // Throws NumberFormatException at runtime; should not be elided.
+
+                int x =
+                    switch (suit) {
+                      case HEART, DIAMOND -> 1;
+                      case SPADE -> 2;
+                      default -> 3;
+                    };
+                return x;
+              }
+
+              public String orElseThrowInitializer(Suit suit) {
+                // Throws NoSuchElementException at runtime; should not be elided.
+
+                String s =
+                    switch (suit) {
+                      case HEART, DIAMOND -> "a";
+                      case SPADE -> "b";
+                      default -> "c";
+                    };
+                return s;
+              }
+            }
+            """)
+        .setArgs(
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion",
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
+        .setFixChooser(StatementSwitchToExpressionSwitchTest::assertOneFixAndChoose)
+        .doTest();
+  }
+
   /**
    * Asserts that there is exactly one suggested fix and returns it.
    *
