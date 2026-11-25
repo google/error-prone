@@ -965,8 +965,8 @@ public final class Matchers {
   public static Matcher<MethodTree> methodWithClassAndName(ClassName className, String methodName) {
     return (methodTree, state) ->
         methodTree.getName().contentEquals(methodName)
-            && getSymbol(methodTree).getEnclosingElement() instanceof ClassSymbol owner
-            && owner.flatName().equals(className.binaryName(state));
+            && ASTHelpers.hasClassName(
+                getSymbol(methodTree).getEnclosingElement(), className, state);
   }
 
   /**
@@ -1048,8 +1048,7 @@ public final class Matchers {
     return (methodTree, state) -> {
       Symbol symbol = getSymbol(methodTree);
       return symbol.isConstructor()
-          && symbol.getEnclosingElement() instanceof ClassSymbol owner
-          && owner.flatName().equals(className.binaryName(state));
+          && ASTHelpers.hasClassName(symbol.getEnclosingElement(), className, state);
     };
   }
 

@@ -28,6 +28,7 @@ import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
+import static com.google.errorprone.util.ASTHelpers.hasClassName;
 import static com.google.errorprone.util.ASTHelpers.isGeneratedConstructor;
 import static com.google.errorprone.util.ASTHelpers.isStatic;
 
@@ -113,7 +114,7 @@ public class UnnecessaryAnonymousClass extends BugChecker implements VariableTre
       return NO_MATCH;
     }
     if (tree.getModifiers().getAnnotations().stream()
-        .anyMatch(at -> getSymbol(at).flatName().equals(SPY.binaryName(state)))) {
+        .anyMatch(at -> hasClassName(getSymbol(at), SPY, state))) {
       return NO_MATCH;
     }
     SuggestedFix.Builder fixBuilder = SuggestedFix.builder();

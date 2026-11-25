@@ -32,6 +32,7 @@ import static com.google.errorprone.suppliers.Suppliers.arrayOf;
 import static com.google.errorprone.suppliers.Suppliers.typeFromString;
 import static com.google.errorprone.util.ASTHelpers.findEnclosingMethod;
 import static com.google.errorprone.util.ASTHelpers.findEnclosingMethodPath;
+import static com.google.errorprone.util.ASTHelpers.hasClassName;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -506,7 +507,7 @@ public class JdkObsolete extends BugChecker
     if (description == NO_MATCH) {
       return NO_MATCH;
     }
-    if (owner.flatName().equals(STRING_BUFFER.binaryName(state))
+    if (hasClassName(owner, STRING_BUFFER, state)
         && androidMinSdkVersion.isPresent()
         && androidMinSdkVersion.get() < 34) {
       boolean[] found = {false};

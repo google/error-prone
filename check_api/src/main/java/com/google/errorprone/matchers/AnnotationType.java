@@ -16,6 +16,7 @@
 
 package com.google.errorprone.matchers;
 
+import static com.google.errorprone.util.ASTHelpers.hasClassName;
 import static java.util.Objects.requireNonNull;
 
 import com.google.errorprone.ClassName;
@@ -52,9 +53,6 @@ public class AnnotationType implements Matcher<AnnotationTree> {
           case JCTree.JCFieldAccess jcFieldAccess -> jcFieldAccess.sym;
           default -> null;
         };
-    if (sym == null) {
-      return false;
-    }
-    return sym.flatName().equals(annotationClass.binaryName(state));
+    return hasClassName(sym, annotationClass, state);
   }
 }

@@ -2517,4 +2517,52 @@ class Test {
             """)
         .doTest();
   }
+
+  @Test
+  public void hasClassName_topLevelNestedNullAndNonClass() {
+    writeFile(
+        "Outer.java",
+        """
+        package pkg;
+
+        class Outer {
+          static class Inner {}
+
+          void method() {}
+        }
+        """);
+
+    TestScanner scanner =
+        new TestScanner() {
+          @Override
+          public Void visitClass(ClassTree tree, VisitorState state) {
+            ClassSymbol sym = getSymbol(tree);
+            if (sym.getSimpleName().contentEquals("Outer")) {
+              assertThat(ASTHelpers.hasClassName(sym, ClassName.of("pkg.Outer"), state)).isTrue();
+              assertThat(ASTHelpers.hasClassName(sym, ClassName.of("pkg.Other"), state)).isFalse();
+              assertThat(ASTHelpers.hasClassName(sym.owner, ClassName.of("pkg"), state)).isFalse();
+              assertThat(ASTHelpers.hasClassName(null, ClassName.of("pkg.Outer"), state)).isFalse();
+            } else if (sym.getSimpleName().contentEquals("Inner")) {
+              assertThat(ASTHelpers.hasClassName(sym, ClassName.of("pkg.Outer.Inner"), state))
+                  .isTrue();
+              assertThat(ASTHelpers.hasClassName(sym, ClassName.of("pkg.Outer$Inner"), state))
+                  .isTrue();
+              assertThat(ASTHelpers.hasClassName(sym, ClassName.of("pkg.Outer"), state)).isFalse();
+              setAssertionsComplete();
+            }
+            return super.visitClass(tree, state);
+          }
+
+          @Override
+          public Void visitMethod(MethodTree tree, VisitorState state) {
+            MethodSymbol sym = getSymbol(tree);
+            if (sym.getSimpleName().contentEquals("method")) {
+              assertThat(ASTHelpers.hasClassName(sym, ClassName.of("pkg.Outer"), state)).isFalse();
+            }
+            return super.visitMethod(tree, state);
+          }
+        };
+    tests.add(scanner);
+    assertCompiles(scanner);
+  }
 }

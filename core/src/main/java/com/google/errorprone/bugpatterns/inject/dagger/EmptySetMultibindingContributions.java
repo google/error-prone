@@ -148,9 +148,8 @@ public final class EmptySetMultibindingContributions extends BugChecker
 
     // Check to see if this is in a Dagger 1 module b/c it doesn't support @Multibinds
     for (JCAnnotation annotation : enclosingClass.getModifiers().getAnnotations()) {
-      if (ASTHelpers.getSymbol(annotation.getAnnotationType())
-              .flatName()
-              .equals(MODULE.binaryName(state))
+      if (ASTHelpers.hasClassName(
+              ASTHelpers.getSymbol(annotation.getAnnotationType()), MODULE, state)
           && HAS_DAGGER_ONE_MODULE_ARGUMENT.matches(annotation, state)) {
         return NO_MATCH;
       }

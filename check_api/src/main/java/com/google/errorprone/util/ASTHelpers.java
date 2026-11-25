@@ -1481,6 +1481,12 @@ public final class ASTHelpers {
     return isSameType(s, t.type(state), state);
   }
 
+  /** Returns true if {@code sym} is a {@link ClassSymbol} with the given {@link ClassName}. */
+  public static boolean hasClassName(
+      @Nullable Symbol sym, ClassName className, VisitorState state) {
+    return sym instanceof ClassSymbol cs && cs.flatName().equals(className.binaryName(state));
+  }
+
   /**
    * Returns true if {@code type} is one of the 8 boxed primitive wrapper types (Boolean, Byte,
    * Character, Short, Integer, Long, Float, Double).

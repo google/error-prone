@@ -287,11 +287,8 @@ public class DefaultCharset extends BugChecker
 
   boolean shouldUseGuava(VisitorState state) {
     for (ImportTree importTree : state.getPath().getCompilationUnit().getImports()) {
-      Symbol sym = ASTHelpers.getSymbol(importTree.getQualifiedIdentifier());
-      if (sym == null) {
-        continue;
-      }
-      if (sym.flatName().equals(GUAVA_FILES.binaryName(state))) {
+      if (ASTHelpers.hasClassName(
+          ASTHelpers.getSymbol(importTree.getQualifiedIdentifier()), GUAVA_FILES, state)) {
         return true;
       }
     }

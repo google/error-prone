@@ -28,6 +28,7 @@ import static com.google.errorprone.util.ASTHelpers.enclosingClass;
 import static com.google.errorprone.util.ASTHelpers.enclosingPackage;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
+import static com.google.errorprone.util.ASTHelpers.hasClassName;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
 import static com.google.errorprone.util.AnnotationNames.NULL_MARKED_ANNOTATION;
 import static com.google.errorprone.util.AnnotationNames.NULL_UNMARKED_ANNOTATION;
@@ -327,7 +328,7 @@ public final class NullArgumentForNonNullParameter extends BugChecker
    */
   private static boolean hasDirectAnnotation(Symbol sym, ClassName name, VisitorState state) {
     return sym.getAnnotationMirrors().stream()
-        .anyMatch(a -> asElement(a).flatName().equals(name.binaryName(state)));
+        .anyMatch(a -> hasClassName(asElement(a), name, state));
   }
 
   private boolean weTrustNullMarkedOn(Symbol sym, VisitorState state) {

@@ -28,6 +28,7 @@ import static com.google.errorprone.suppliers.Suppliers.typeFromString;
 import static com.google.errorprone.util.ASTHelpers.getDeclaredSymbol;
 import static com.google.errorprone.util.ASTHelpers.getEnclosedElements;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
+import static com.google.errorprone.util.ASTHelpers.hasClassName;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
 import static com.sun.source.tree.Tree.Kind.CLASS;
 import static java.lang.String.format;
@@ -198,7 +199,7 @@ public final class ChainedAssertionLosesContext extends BugChecker
      * sometimes it misses it, I believe because it can't decide between that and
      * IterableOfProtosSubject.iterableOfMessages.
      */
-    if (assertThatSymbol.owner.flatName().equals(PROTO_TRUTH.binaryName(state))) {
+    if (hasClassName(assertThatSymbol.owner, PROTO_TRUTH, state)) {
       return FactoryMethodName.create(PROTO_TRUTH_CLASS, "protos");
     }
     ImmutableSet<MethodSymbol> factories =
