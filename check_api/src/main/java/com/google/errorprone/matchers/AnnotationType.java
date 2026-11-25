@@ -16,15 +16,13 @@
 
 package com.google.errorprone.matchers;
 
+import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.hasClassName;
 import static java.util.Objects.requireNonNull;
 
 import com.google.errorprone.ClassName;
 import com.google.errorprone.VisitorState;
 import com.sun.source.tree.AnnotationTree;
-import com.sun.source.tree.Tree;
-import com.sun.tools.javac.code.Symbol;
-import com.sun.tools.javac.tree.JCTree;
 
 /**
  * @author eaftan@google.com (Eddie Aftandilian)
@@ -46,13 +44,6 @@ public class AnnotationType implements Matcher<AnnotationTree> {
 
   @Override
   public boolean matches(AnnotationTree annotationTree, VisitorState state) {
-    Tree type = annotationTree.getAnnotationType();
-    Symbol sym =
-        switch (type) {
-          case JCTree.JCIdent jcIdent -> jcIdent.sym;
-          case JCTree.JCFieldAccess jcFieldAccess -> jcFieldAccess.sym;
-          default -> null;
-        };
-    return hasClassName(sym, annotationClass, state);
+    return hasClassName(getSymbol(annotationTree), annotationClass, state);
   }
 }

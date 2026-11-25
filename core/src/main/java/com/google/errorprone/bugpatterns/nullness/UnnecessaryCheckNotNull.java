@@ -22,6 +22,7 @@ import static com.google.errorprone.matchers.Matchers.argument;
 import static com.google.errorprone.matchers.Matchers.stringFormatInvocation;
 import static com.google.errorprone.matchers.Matchers.stringFormattedInvocation;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
+import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
 import static com.sun.source.tree.Tree.Kind.STRING_LITERAL;
@@ -51,7 +52,6 @@ import com.sun.source.util.TreePath;
 import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
-import com.sun.tools.javac.tree.JCTree.JCIdent;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -293,7 +293,7 @@ public class UnnecessaryCheckNotNull extends BugChecker implements MethodInvocat
     new TreeScanner<Void, Void>() {
       @Override
       public Void visitIdentifier(IdentifierTree node, Void v) {
-        if (((JCIdent) node).sym instanceof VarSymbol) {
+        if (getSymbol(node) instanceof VarSymbol) {
           freeVars.add(node);
         }
         return super.visitIdentifier(node, null);
