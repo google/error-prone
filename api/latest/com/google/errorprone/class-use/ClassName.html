@@ -952,24 +952,31 @@ element.</div>
 <div class="block">Determines whether a symbol has an annotation of the given type.</div>
 </div>
 <div class="col-first even-row-color"><code>static boolean</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">ASTHelpers.</span><code><a href="../util/ASTHelpers.html#hasDirectAnnotation(com.sun.tools.javac.code.Symbol,com.google.errorprone.ClassName)" class="member-name-link">hasDirectAnnotation</a><wbr>(@Nullable com.sun.tools.javac.code.Symbol&nbsp;sym,
- <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a>&nbsp;annotationClass)</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">ASTHelpers.</span><code><a href="../util/ASTHelpers.html#hasClassName(com.sun.tools.javac.code.Symbol,com.google.errorprone.ClassName,com.google.errorprone.VisitorState)" class="member-name-link">hasClassName</a><wbr>(@Nullable com.sun.tools.javac.code.Symbol&nbsp;sym,
+ <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a>&nbsp;className,
+ <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last even-row-color">
+<div class="block">Returns true if <code>sym</code> is a <code>Symbol.ClassSymbol</code> with the given <a href="../ClassName.html" title="class in com.google.errorprone"><code>ClassName</code></a>.</div>
+</div>
+<div class="col-first odd-row-color"><code>static boolean</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">ASTHelpers.</span><code><a href="../util/ASTHelpers.html#hasDirectAnnotation(com.sun.tools.javac.code.Symbol,com.google.errorprone.ClassName)" class="member-name-link">hasDirectAnnotation</a><wbr>(@Nullable com.sun.tools.javac.code.Symbol&nbsp;sym,
+ <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a>&nbsp;annotationClass)</code></div>
+<div class="col-last odd-row-color">
 <div class="block">Check for the presence of an annotation with the given class name directly on this symbol or
 its type.</div>
 </div>
-<div class="col-first odd-row-color"><code>static boolean</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">ASTHelpers.</span><code><a href="../util/ASTHelpers.html#isSameType(com.sun.tools.javac.code.Type,com.google.errorprone.ClassName,com.google.errorprone.VisitorState)" class="member-name-link">isSameType</a><wbr>(com.sun.tools.javac.code.Type&nbsp;s,
- <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a>&nbsp;t,
- <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
-<div class="col-last odd-row-color">
-<div class="block">Returns true if <code>erasure(s) == erasure(t)</code>.</div>
-</div>
 <div class="col-first even-row-color"><code>static boolean</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">ASTHelpers.</span><code><a href="../util/ASTHelpers.html#isSubtype(com.sun.tools.javac.code.Type,com.google.errorprone.ClassName,com.google.errorprone.VisitorState)" class="member-name-link">isSubtype</a><wbr>(com.sun.tools.javac.code.Type&nbsp;s,
+<div class="col-second even-row-color"><span class="type-name-label">ASTHelpers.</span><code><a href="../util/ASTHelpers.html#isSameType(com.sun.tools.javac.code.Type,com.google.errorprone.ClassName,com.google.errorprone.VisitorState)" class="member-name-link">isSameType</a><wbr>(com.sun.tools.javac.code.Type&nbsp;s,
  <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a>&nbsp;t,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last even-row-color">
+<div class="block">Returns true if <code>erasure(s) == erasure(t)</code>.</div>
+</div>
+<div class="col-first odd-row-color"><code>static boolean</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">ASTHelpers.</span><code><a href="../util/ASTHelpers.html#isSubtype(com.sun.tools.javac.code.Type,com.google.errorprone.ClassName,com.google.errorprone.VisitorState)" class="member-name-link">isSubtype</a><wbr>(com.sun.tools.javac.code.Type&nbsp;s,
+ <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a>&nbsp;t,
+ <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
+<div class="col-last odd-row-color">
 <div class="block">Returns true if <code>erasure(s) &lt;: erasure(t)</code>.</div>
 </div>
 </div>
