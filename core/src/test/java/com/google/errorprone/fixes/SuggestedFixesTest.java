@@ -18,6 +18,7 @@ package com.google.errorprone.fixes;
 
 import static com.google.common.collect.Streams.stream;
 import static com.google.common.truth.Truth.assertThat;
+import static com.google.common.truth.TruthJUnit.assume;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.fixes.SuggestedFix.emptyFix;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
@@ -2580,6 +2581,38 @@ public class Test {
                 } catch (Throwable renamed) {
                   renamed.toString();
                 }
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void renameVariable_toUnderscore_onlyRenamesDeclaration() {
+    assume().that(Runtime.version().feature()).isAtLeast(22);
+    BugCheckerRefactoringTestHelper.newInstance(
+            new RenamesVariableChecker("replace", "_", Integer.class), getClass())
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              Object replace = null;
+
+              void m() {
+                Integer replace = 0;
+                Object b = replace;
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              Object replace = null;
+
+              void m() {
+                Integer _ = 0;
+                Object b = replace;
               }
             }
             """)

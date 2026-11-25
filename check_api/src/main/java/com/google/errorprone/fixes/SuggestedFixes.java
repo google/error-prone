@@ -826,7 +826,9 @@ public final class SuggestedFixes {
             })
         .findFirst()
         .ifPresent(token -> fix.replace(token.pos(), token.endPos(), replacement));
-    fix.merge(renameVariableUsages(tree, replacement, state));
+    if (!name.isEmpty() && !replacement.equals("_")) {
+      fix.merge(renameVariableUsages(tree, replacement, state));
+    }
     return fix.build();
   }
 
