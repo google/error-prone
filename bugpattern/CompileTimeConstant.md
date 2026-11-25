@@ -17,28 +17,23 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 A method or constructor with one or more parameters whose declaration is
 annotated with the `@CompileTimeConstant` type annotation must only be invoked
 with corresponding actual parameters that are computed as compile-time constant
-expressions, specifically:
+expressions, specifically expressions that:
 
-*   an expression that the Java compiler can determine a constant value for at
-    compile time (see
+*   the Java compiler can determine a constant value for at compile time (see
     [JLS §15.28](https://docs.oracle.com/javase/specs/jls/se11/html/jls-15.html#jls-15.28)),
     or
-*   a literal `null`, or
-*   an enum constant, or
-*   a class literal (e.g. `String.class`), or
-*   a field of a class or record, which is declared `final` and is either:
-    *   explicitly annotated with `@CompileTimeConstant`, or
-    *   a well-known compatible constant field, e.g. from the Java standard
-        library, or
-*   a formal parameter of a method or constructor, which is effectively `final`
-    (whether inferred or explicitly declared) and is annotated with
-    `@CompileTimeConstant`, or
-*   a concatenation expression of compile-time constant `String`s, or
-*   a switch expressions where all case bodies are compile-time constants, or
-*   a ternary expressions with both branches being compile-time constants, or
-*   a call to a well-known (e.g. from a Java standard library class),
-    constructor, static method, or instance method, where all arguments are
-    compile-time constants and the resulting value is immutable.
+*   consist of the literal {@code null}, or
+*   consist of a single identifier, where the identifier has the
+    `@CompileTimeConstant` annotation and is one of the following:
+    *   a class field that is declared {@code final}, or
+    *   a formal parameter of a method or constructor, which is declared {@code
+        final} or is effectively final, or
+*   are formed from the concatenation of other compile-time constant `String`s,
+    or
+*   are switch expressions where all case bodies are compile-time constants, or
+*   are ternary expressions with both branches being compile-time constants, or
+*   are calls to one of the known immutable collection factory methods, where
+    the provided elements are all compile-time constants.
 
 For example, the following are valid compile-time constants:
 

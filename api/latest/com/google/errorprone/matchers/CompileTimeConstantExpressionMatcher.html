@@ -67,7 +67,6 @@ loadScripts(document, 'script');</script>
 <li><a href="#instance()" tabindex="0">instance()</a></li>
 <li><a href="#matches(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)" tabindex="0">matches(ExpressionTree, VisitorState)</a></li>
 <li><a href="#hasCompileTimeConstantAnnotation(com.google.errorprone.VisitorState,com.sun.tools.javac.code.Symbol)" tabindex="0">hasCompileTimeConstantAnnotation(VisitorState, Symbol)</a></li>
-<li><a href="#isWellKnownCompatibleField(com.google.errorprone.VisitorState,com.sun.source.tree.Tree)" tabindex="0">isWellKnownCompatibleField(VisitorState, Tree)</a></li>
 </ol>
 </li>
 </ol>
@@ -97,22 +96,29 @@ implements <a href="Matcher.html" title="interface in com.google.errorprone.matc
 <ol>
   <li>Any expression for which the Java compiler can determine a constant value at compile time.
   <li>The expression consisting of the literal <code>null</code>.
-  <li>An enum constant.
-  <li>A class literal (e.g. <code>String.class</code>).
-  <li>A field of a class or record, which is declared <code>final</code> and is either:
+  <li>An expression consisting of a single identifier, where the identifier has the <a href="../annotations/CompileTimeConstant.html" title="annotation interface in com.google.errorprone.annotations"><code>CompileTimeConstant</code></a> annotation and is either:
       <ul>
-        <li>Explicitly annotated with <a href="../annotations/CompileTimeConstant.html" title="annotation interface in com.google.errorprone.annotations"><code>CompileTimeConstant</code></a>.
-        <li>A well-known compatible field, e.g. from the Java standard library. (See <code>COMPATIBLE_FIELDS</code> below for the complete list.)
+        <li>A class field that is declared <code>final</code>.
+        <li>A formal parameter of a method or constructor, which is declared <code>final</code> or is
+            effectively final.
       </ul>
-  <li>A formal parameter of a method or constructor, which is effectively <code>final</code> (either
-      inferred or explicitly declared) and is annotated with <a href="../annotations/CompileTimeConstant.html" title="annotation interface in com.google.errorprone.annotations"><code>CompileTimeConstant</code></a>.
   <li>A <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link"><code>String</code></a> which is formed from the concatenation of other compile-time-constant
       <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link"><code>String</code></a>s.
   <li>A switch expression where all case bodies are compile-time constants.
   <li>A conditional expression (a ? b : c) where both branches are compile-time constants.
-  <li>A call to a well-known (e.g. from a Java standard library class) constructor, static
-      method, or instance method, where all arguments (including the receiver, if applicable) are
-      compile-time constants and the resulting value is immutable. (See <code>COMPATIBLE_METHODS</code> and <code>COMPATIBLE_CONSTRUCTORS</code> below for the complete list.)
+  <li>The result of an invocation of one of the following immutable collection factory methods,
+      where all arguments are compile-time constants:
+      <ul>
+        <li><code>ImmutableList.of(...)</code>
+        <li><code>ImmutableSet.of(...)</code>
+        <li><code>ImmutableMap.of(...)</code>
+        <li><code>ImmutableMultiset.of(...)</code>
+        <li><code>ImmutableSortedSet.of(...)</code>
+        <li><code>ImmutableSortedMap.of(...)</code>
+        <li><code>List.of(...)</code>
+        <li><code>Set.of(...)</code>
+        <li><code>Map.of(...)</code>
+      </ul>
 </ol></div>
 <dl class="notes">
 <dt>See Also:</dt>
@@ -157,14 +163,10 @@ implements <a href="Matcher.html" title="interface in com.google.errorprone.matc
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#instance()" class="member-name-link">instance</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#isWellKnownCompatibleField(com.google.errorprone.VisitorState,com.sun.source.tree.Tree)" class="member-name-link">isWellKnownCompatibleField</a><wbr>(<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
- <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;node)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#matches(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)" class="member-name-link">matches</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&nbsp;t,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#matches(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)" class="member-name-link">matches</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&nbsp;t,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
 </div>
@@ -225,15 +227,6 @@ implements <a href="Matcher.html" title="interface in com.google.errorprone.matc
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">hasCompileTimeConstantAnnotation</span><wbr><span class="parameters">(<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
  com.sun.tools.javac.code.Symbol&nbsp;symbol)</span></div>
-</div>
-</section>
-</li>
-<li>
-<section class="detail" id="isWellKnownCompatibleField(com.google.errorprone.VisitorState,com.sun.source.tree.Tree)">
-<h3>isWellKnownCompatibleField</h3>
-<div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isWellKnownCompatibleField</span><wbr><span class="parameters">(<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
- <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;node)</span></div>
 </div>
 </section>
 </li>
