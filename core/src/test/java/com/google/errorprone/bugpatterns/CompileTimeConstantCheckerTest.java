@@ -26,10 +26,7 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class CompileTimeConstantCheckerTest {
   private final CompilationTestHelper compilationHelper =
-      CompilationTestHelper.newInstance(CompileTimeConstantChecker.class, getClass())
-          // Disable any javac warnings (ex. [removal]) so that only the CompileTimeConstant
-          // warnings are reported.
-          .setArgs("-Xlint:none");
+      CompilationTestHelper.newInstance(CompileTimeConstantChecker.class, getClass());
 
   @Test
   public void matches_fieldAccessFailsWithNonConstant() {
@@ -1113,235 +1110,6 @@ public class Test {
   }
 
   @Test
-  public void classLiteralsAndEnumConstants() {
-    compilationHelper
-        .addSourceLines(
-            "Test.java",
-            """
-            package test;
-
-            import com.google.common.collect.ImmutableList;
-            import com.google.errorprone.annotations.CompileTimeConstant;
-            import java.time.DayOfWeek;
-
-            public class Test {
-              enum MyEnum {
-                A,
-                B
-              }
-
-              @CompileTimeConstant final Class<?> clazz = String.class;
-              @CompileTimeConstant final Class<?> primitiveClazz = int.class;
-              @CompileTimeConstant final MyEnum enumConst = MyEnum.A;
-              @CompileTimeConstant final String enumName = MyEnum.A.name();
-
-              // BUG: Diagnostic contains: Non-compile-time constant expression
-              @CompileTimeConstant final String enumToString = MyEnum.A.toString();
-
-              public static void acceptObject(@CompileTimeConstant Object obj) {}
-
-              public static void testSuccess() {
-                acceptObject(String.class);
-                acceptObject(int.class);
-                acceptObject(void.class);
-                acceptObject(String[].class);
-                acceptObject(ImmutableList.of(String.class, int.class));
-                acceptObject(DayOfWeek.MONDAY);
-                acceptObject(MyEnum.B);
-                acceptObject(MyEnum.B.name());
-              }
-
-              public static void testFailure(Class<?> runtimeClass, MyEnum runtimeEnum) {
-                // BUG: Diagnostic contains: Non-compile-time constant expression passed
-                acceptObject(runtimeClass);
-                // BUG: Diagnostic contains: Non-compile-time constant expression passed
-                acceptObject(runtimeEnum);
-                // BUG: Diagnostic contains: Non-compile-time constant expression passed
-                acceptObject(MyEnum.B.toString());
-              }
-            }
-            """)
-        .doTest();
-  }
-
-  @Test
-  public void compatibleMethods() {
-    compilationHelper
-        .addSourceLines(
-            "Test.java",
-            """
-            package test;
-
-            import com.google.errorprone.annotations.CompileTimeConstant;
-            import java.math.BigInteger;
-            import java.nio.charset.Charset;
-            import java.nio.charset.StandardCharsets;
-            import java.time.Duration;
-            import java.time.LocalDate;
-            import java.time.ZoneId;
-            import java.time.format.DateTimeFormatter;
-            import java.util.Locale;
-            import java.util.Objects;
-            import java.util.Optional;
-
-            public class Test {
-              @CompileTimeConstant final Duration duration = Duration.ofSeconds(10).plusMinutes(1);
-              @CompileTimeConstant final String formattedDate =
-                  LocalDate.of(2025, 1, 1).format(DateTimeFormatter.ISO_LOCAL_DATE);
-
-              public static void acceptObject(@CompileTimeConstant Object obj) {}
-
-              public static void testSuccess(@CompileTimeConstant final String constStr) {
-                acceptObject(Integer.valueOf(42));
-                acceptObject(String.valueOf(42));
-                acceptObject(constStr.trim().toLowerCase(Locale.ROOT));
-                acceptObject(Math.max(1, 2));
-                acceptObject(Optional.of(constStr).orElse("fallback"));
-                acceptObject(Objects.requireNonNull(constStr));
-                acceptObject(StandardCharsets.UTF_8.name());
-              }
-
-              public static void testFailure(
-                  String nonConstStr,
-                  @CompileTimeConstant final char[] constCharArray,
-                  @CompileTimeConstant final BigInteger constBigInt) {
-                // BUG: Diagnostic contains: Non-compile-time constant expression passed
-                acceptObject(nonConstStr.trim());
-                // BUG: Diagnostic contains: Non-compile-time constant expression passed
-                acceptObject("abc".substring(nonConstStr.length()));
-                // BUG: Diagnostic contains: Non-compile-time constant expression passed
-                acceptObject("abc".intern());
-                // BUG: Diagnostic contains: Non-compile-time constant expression passed
-                acceptObject("abc".toLowerCase());
-                // BUG: Diagnostic contains: Non-compile-time constant expression passed
-                acceptObject(String.valueOf(constCharArray));
-                // BUG: Diagnostic contains: Non-compile-time constant expression passed
-                acceptObject(Character.codePointAt(constCharArray, 0));
-                // BUG: Diagnostic contains: Non-compile-time constant expression passed
-                acceptObject(ZoneId.of("UTC"));
-                // BUG: Diagnostic contains: Non-compile-time constant expression passed
-                acceptObject(Charset.forName("UTF-8"));
-                // BUG: Diagnostic contains: Non-compile-time constant expression passed
-                acceptObject(constBigInt.add(BigInteger.ONE));
-                // BUG: Diagnostic contains: Non-compile-time constant expression passed
-                acceptObject(Objects.toString(constBigInt));
-              }
-            }
-            """)
-        .doTest();
-  }
-
-  @Test
-  public void compatibleConstructors() {
-    compilationHelper
-        .addSourceLines(
-            "Test.java",
-            """
-            package test;
-
-            import com.google.errorprone.annotations.CompileTimeConstant;
-            import java.math.BigDecimal;
-            import java.math.BigInteger;
-            import java.math.MathContext;
-            import java.math.RoundingMode;
-            import java.util.Locale;
-            import java.util.UUID;
-
-            public class Test {
-              @CompileTimeConstant final BigInteger bigInt = new BigInteger("12345");
-              @CompileTimeConstant final BigDecimal bigDec =
-                  new BigDecimal("12.34", new MathContext(10, RoundingMode.HALF_UP));
-
-              public static void acceptObject(@CompileTimeConstant Object obj) {}
-
-              public static void testSuccess(@CompileTimeConstant final String constStr) {
-                acceptObject(new String());
-                acceptObject(new String(constStr));
-                acceptObject(new Integer(42));
-                acceptObject(new BigInteger("ff", 16));
-                acceptObject(new BigDecimal(100L));
-                acceptObject(new Locale("en", "US"));
-                acceptObject(new UUID(0L, 1L));
-              }
-
-              public static void testFailure(
-                  String nonConstStr, @CompileTimeConstant final char[] constCharArray) {
-                // BUG: Diagnostic contains: Non-compile-time constant expression passed
-                acceptObject(new String(nonConstStr));
-                // BUG: Diagnostic contains: Non-compile-time constant expression passed
-                acceptObject(new String(constCharArray));
-                // BUG: Diagnostic contains: Non-compile-time constant expression passed
-                acceptObject(new BigInteger(nonConstStr));
-                // BUG: Diagnostic contains: Non-compile-time constant expression passed
-                acceptObject(new BigInteger("123") {});
-                // BUG: Diagnostic contains: Non-compile-time constant expression passed
-                acceptObject(new BigDecimal(BigInteger.ONE));
-                // BUG: Diagnostic contains: Non-compile-time constant expression passed
-                acceptObject(new Object());
-              }
-            }
-            """)
-        .doTest();
-  }
-
-  @Test
-  public void compatibleFields() {
-    compilationHelper
-        .addSourceLines(
-            "Test.java",
-            """
-            package test;
-
-            import com.google.errorprone.annotations.CompileTimeConstant;
-            import java.math.BigDecimal;
-            import java.math.BigInteger;
-            import java.math.MathContext;
-            import java.nio.charset.Charset;
-            import java.nio.charset.StandardCharsets;
-            import java.time.Duration;
-            import java.time.Instant;
-            import java.time.LocalDate;
-            import java.time.ZoneOffset;
-            import java.time.format.DateTimeFormatter;
-            import java.util.Collections;
-            import java.util.Locale;
-
-            public class Test {
-              private static final Object UNANNOTATED_STATIC_FINAL = new Object();
-
-              @CompileTimeConstant final Charset utf8 = StandardCharsets.UTF_8;
-              @CompileTimeConstant final Instant epoch = Instant.EPOCH;
-              @CompileTimeConstant final Locale rootLocale = Locale.ROOT;
-
-              public static void acceptObject(@CompileTimeConstant Object obj) {}
-
-              public static void testSuccess() {
-                acceptObject(Boolean.TRUE);
-                acceptObject(Integer.TYPE);
-                acceptObject(String.CASE_INSENSITIVE_ORDER);
-                acceptObject(BigInteger.ZERO);
-                acceptObject(BigDecimal.TEN);
-                acceptObject(MathContext.DECIMAL64);
-                acceptObject(Duration.ZERO);
-                acceptObject(LocalDate.EPOCH);
-                acceptObject(ZoneOffset.UTC);
-                acceptObject(DateTimeFormatter.ISO_INSTANT);
-                acceptObject(Collections.EMPTY_LIST);
-                acceptObject(StandardCharsets.UTF_8);
-              }
-
-              public static void testFailure() {
-                // BUG: Diagnostic contains: Non-compile-time constant expression passed
-                acceptObject(System.out);
-                // BUG: Diagnostic contains: Non-compile-time constant expression passed
-                acceptObject(UNANNOTATED_STATIC_FINAL);
-              }
-            }
-            """)
-        .doTest();
-  }
-
-  @Test
   public void enumAndMethodAllowlistGaps() {
     compilationHelper
         .addSourceLines(
@@ -1371,18 +1139,20 @@ public class Test {
               public static void acceptString(@CompileTimeConstant String str) {}
 
               public static void test() {
-                // Unsafe (should be flagged): enum constants are accepted unconditionally, so
-                // string concatenation invokes MutableEnum.toString() and reads mutable state,
-                // bypassing the omission of Enum.toString() from the method allowlist.
+                // Rejected: enum constants are not treated as compile-time constants, so string
+                // concatenation cannot invoke an overridden Enum.toString() reading mutable state.
+                // BUG: Diagnostic contains: Non-compile-time constant expression passed
                 acceptString("" + MutableEnum.A);
-                // Unsafe (should be flagged): Optional.toString() delegates to value.toString(),
-                // invoking MutableEnum.toString() and reading mutable state.
+                // Rejected: Optional.toString() delegates to value.toString(), which would invoke
+                // MutableEnum.toString() and read mutable state.
+                // BUG: Diagnostic contains: Non-compile-time constant expression passed
                 acceptString(Optional.of(MutableEnum.A).toString());
-                // Unsafe (should be flagged): Enum.hashCode() delegates to
-                // System.identityHashCode(this), which varies across JVM runs.
+                // Rejected: Enum.hashCode() delegates to System.identityHashCode(this), which
+                // varies across JVM runs.
+                // BUG: Diagnostic contains: Non-compile-time constant expression passed
                 acceptObject(MutableEnum.A.hashCode());
-                // Unsafe (should be flagged): getDisplayName depends on CLDR data and
-                // -Djava.locale.providers.
+                // Rejected: getDisplayName depends on CLDR data and -Djava.locale.providers.
+                // BUG: Diagnostic contains: Non-compile-time constant expression passed
                 acceptString(DayOfWeek.MONDAY.getDisplayName(TextStyle.FULL, Locale.US));
               }
             }
