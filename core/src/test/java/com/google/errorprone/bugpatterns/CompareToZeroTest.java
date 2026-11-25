@@ -402,4 +402,141 @@ public final class CompareToZeroTest {
             """)
         .doTest();
   }
+
+  @Test
+  public void truthAssertions_positive() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import static com.google.common.truth.Truth.assertThat;
+
+            class Test {
+              void test(Integer i) {
+                // BUG: Diagnostic contains: compared
+                assertThat(i.compareTo(2)).isEqualTo(-1);
+                // BUG: Diagnostic contains: consistency
+                assertThat(i.compareTo(2)).isAtLeast(1);
+                // BUG: Diagnostic contains: compared
+                assertThat(i.compareTo(2)).isGreaterThan(1);
+                // BUG: Diagnostic contains: compared
+                assertThat(i.compareTo(2)).isNotEqualTo(2);
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void truthAssertions_refactoring() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import static com.google.common.truth.Truth.assertThat;
+            import static com.google.common.truth.Truth.assertWithMessage;
+
+            import java.util.Comparator;
+
+            class Test {
+              private static final int LESS = -1;
+
+              void test(Integer i, Comparator<String> comparator) {
+                assertThat(i.compareTo(2)).isEqualTo(-1);
+                assertThat(i.compareTo(2)).isEqualTo(1);
+                assertThat(i.compareTo(2)).isGreaterThan(-1);
+                assertThat(i.compareTo(2)).isLessThan(1);
+                assertThat(i.compareTo(2)).isNotEqualTo(-1);
+                assertThat(i.compareTo(2)).isNotEqualTo(1);
+                assertThat(i.compareTo(2)).isAtMost(-1);
+                assertThat((i.compareTo(2))).isAtLeast(1);
+                (assertThat(i.compareTo(2))).isEqualTo(1);
+                assertThat(i.compareTo(2)).isEqualTo(LESS);
+                assertWithMessage("b sorts last").that(comparator.compare("a", "b")).isEqualTo(-1);
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            import static com.google.common.truth.Truth.assertThat;
+            import static com.google.common.truth.Truth.assertWithMessage;
+
+            import java.util.Comparator;
+
+            class Test {
+              private static final int LESS = -1;
+
+              void test(Integer i, Comparator<String> comparator) {
+                assertThat(i.compareTo(2)).isLessThan(0);
+                assertThat(i.compareTo(2)).isGreaterThan(0);
+                assertThat(i.compareTo(2)).isAtLeast(0);
+                assertThat(i.compareTo(2)).isAtMost(0);
+                assertThat(i.compareTo(2)).isAtLeast(0);
+                assertThat(i.compareTo(2)).isAtMost(0);
+                assertThat(i.compareTo(2)).isLessThan(0);
+                assertThat((i.compareTo(2))).isGreaterThan(0);
+                (assertThat(i.compareTo(2))).isGreaterThan(0);
+                assertThat(i.compareTo(2)).isLessThan(0);
+                assertWithMessage("b sorts last").that(comparator.compare("a", "b")).isLessThan(0);
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void truthAssertions_negative() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import static com.google.common.truth.Truth.assertThat;
+
+            class Test {
+              abstract static class CustomComparable implements Comparable<CustomComparable> {
+                abstract boolean compareTo(CustomComparable other, boolean strict);
+
+                abstract String compareTo(CustomComparable other, String label);
+
+                abstract Integer compareTo(CustomComparable other, int mode);
+              }
+
+              void test(Integer i, int expected, CustomComparable custom) {
+                assertThat(i.compareTo(2)).isEqualTo(0);
+                assertThat(i.compareTo(2)).isNotEqualTo(0);
+                assertThat(i.compareTo(2)).isLessThan(0);
+                assertThat(i.compareTo(2)).isAtMost(0);
+                assertThat(i.compareTo(2)).isGreaterThan(0);
+                assertThat(i.compareTo(2)).isAtLeast(0);
+                assertThat(i.compareTo(2)).isEqualTo(expected);
+                assertThat(i.compareTo(2)).isNotNull();
+                assertThat(Integer.signum(i.compareTo(2))).isEqualTo(1);
+                assertThat(i).isEqualTo(1);
+                assertThat(custom.compareTo(custom, true)).isEqualTo(1);
+                assertThat(custom.compareTo(custom, "x")).isNotEqualTo(-1);
+                assertThat(custom.compareTo(custom, 0)).isEqualTo(1);
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void truthAssertions_flagDisabled() {
+    compilationHelper
+        .setArgs("-XepOpt:CompareToZero:MatchTruthAssertions=false")
+        .addSourceLines(
+            "Test.java",
+            """
+            import static com.google.common.truth.Truth.assertThat;
+
+            class Test {
+              void test(Integer i) {
+                assertThat(i.compareTo(2)).isEqualTo(-1);
+              }
+            }
+            """)
+        .doTest();
+  }
 }

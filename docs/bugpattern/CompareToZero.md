@@ -67,3 +67,14 @@ Similarly, when switching on the result of `compare` or `compareTo` in a
     default -> ...
   }
 ```
+
+The check also reports [Truth](https://truth.dev) assertions that compare the
+result to a constant other than `0`:
+
+```java
+  assertThat(comparator.compare(a, b)).isEqualTo(-1);
+```
+
+```java
+  assertThat(comparator.compare(a, b)).isLessThan(0);
+```
