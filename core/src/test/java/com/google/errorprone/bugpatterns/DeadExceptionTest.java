@@ -21,9 +21,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * @author alexeagle@google.com (Alex Eagle)
- */
+/// @author alexeagle@google.com (Alex Eagle)
 @RunWith(JUnit4.class)
 public class DeadExceptionTest {
 
@@ -126,10 +124,8 @@ public class DeadExceptionTest {
         .doTest();
   }
 
-  /**
-   * It's somewhat common to test the side-effects of Exception constructors by creating one, and
-   * asserting that an exception is thrown in the constructor.
-   */
+  /// It's somewhat common to test the side-effects of Exception constructors by creating one, and
+  /// asserting that an exception is thrown in the constructor.
   @Test
   public void negativeCaseWhenExceptionsUnthrownInTests() {
     compilationHelper

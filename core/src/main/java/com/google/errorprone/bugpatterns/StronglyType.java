@@ -57,12 +57,10 @@ import java.util.Set;
 import java.util.function.Function;
 import javax.lang.model.element.ElementKind;
 
-/**
- * Helper for strongly typing fields. Fields that are declared as a weaker type but only used when
- * wrapped in a stronger type will be refactored to the stronger type.
- *
- * @see com.google.errorprone.bugpatterns.time.StronglyTypeTime
- */
+/// Helper for strongly typing fields. Fields that are declared as a weaker type but only used when
+/// wrapped in a stronger type will be refactored to the stronger type.
+///
+/// @see com.google.errorprone.bugpatterns.time.StronglyTypeTime
 @AutoValue
 public abstract class StronglyType {
   abstract Function<String, String> renameFunction();
@@ -79,23 +77,21 @@ public abstract class StronglyType {
         .setRenameFunction(name -> name);
   }
 
-  /** Builder for {@link StronglyType} */
+  /// Builder for [StronglyType]
   @AutoValue.Builder
   public abstract static class Builder {
-    /**
-     * Set a mapping function that maps from the original name to a new name more befitting the
-     * strong type.
-     */
+    /// Set a mapping function that maps from the original name to a new name more befitting the
+    /// strong type.
     public abstract Builder setRenameFunction(Function<String, String> renameFn);
 
-    /** Set the matcher used to check if an expression is a factory creating a stronger type. */
+    /// Set the matcher used to check if an expression is a factory creating a stronger type.
     public abstract Builder setFactoryMatcher(Matcher<ExpressionTree> matcher);
 
     abstract Builder setBugChecker(BugChecker bugChecker);
 
     abstract ImmutableSet.Builder<Type> primitiveTypesToReplaceBuilder();
 
-    /** Add a type that can be replaced with a stronger type. */
+    /// Add a type that can be replaced with a stronger type.
     @CanIgnoreReturnValue
     public final Builder addType(Type type) {
       primitiveTypesToReplaceBuilder().add(type);
@@ -192,10 +188,8 @@ public abstract class StronglyType {
     return SuggestedFixes.prettyType(type, state);
   }
 
-  /**
-   * Get the source code for the initializer. If the initializer is an array literal without a type,
-   * prefix with new <type>.
-   */
+  /// Get the source code for the initializer. If the initializer is an array literal without a
+  /// type, prefix with `new <type>`.
   private static String getWeakTypeIntitializerCode(VariableTree weakType, VisitorState state) {
     // If the new array type is missing, we need to add it.
     String prefix =
@@ -217,7 +211,7 @@ public abstract class StronglyType {
     };
   }
 
-  /** Finds the path to potential fields that we might want to strongly type. */
+  /// Finds the path to potential fields that we might want to strongly type.
   // TODO(b/147006492): Consider extracting a helper to find all fields that match a Matcher.
   private ImmutableMap<VarSymbol, TreePath> findPathToPotentialFields(
       VisitorState state, Set<Type> potentialTypes) {

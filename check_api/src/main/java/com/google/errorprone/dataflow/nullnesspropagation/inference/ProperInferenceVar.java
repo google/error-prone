@@ -18,10 +18,8 @@ package com.google.errorprone.dataflow.nullnesspropagation.inference;
 
 import com.google.errorprone.dataflow.nullnesspropagation.Nullness;
 
-/**
- * Proper inference variables are thin wrappers around Nullness lattice elements, lifted so that
- * they can be compared other inference variables.
- */
+/// Proper inference variables are thin wrappers around Nullness lattice elements, lifted so that
+/// they can be compared other inference variables.
 enum ProperInferenceVar implements InferenceVariable {
   BOTTOM {
     @Override

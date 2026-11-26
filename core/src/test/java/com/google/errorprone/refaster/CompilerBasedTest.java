@@ -33,11 +33,9 @@ import java.io.IOException;
 import javax.tools.DiagnosticCollector;
 import javax.tools.JavaFileObject;
 
-/**
- * Abstract skeleton for tests that run the compiler on the fly.
- *
- * @author lowasser@google.com (Louis Wasserman)
- */
+/// Abstract skeleton for tests that run the compiler on the fly.
+///
+/// @author lowasser@google.com (Louis Wasserman)
 public class CompilerBasedTest {
   protected Context context;
   protected SourceFile sourceFile;

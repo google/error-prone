@@ -36,14 +36,12 @@ import java.util.List;
 import java.util.Optional;
 import org.jspecify.annotations.Nullable;
 
-/**
- * Simple data object containing the information captured about an AST match. Can be printed in a
- * UI, or output in structured format for use by tools.
- *
- * @author alexeagle@google.com (Alex Eagle)
- */
+/// Simple data object containing the information captured about an AST match. Can be printed in a
+/// UI, or output in structured format for use by tools.
+///
+/// @author alexeagle@google.com (Alex Eagle)
 public final class Description {
-  /** Describes the sentinel value of the case where the match failed. */
+  /// Describes the sentinel value of the case where the match failed.
   public static final Description NO_MATCH =
       new Description(
           null,
@@ -53,50 +51,46 @@ public final class Description {
           ImmutableList.<Fix>of(),
           Optional.of(SUGGESTION));
 
-  /** The position of the match. */
+  /// The position of the match.
   public final ErrorPronePosition position;
 
-  /** The name of the check that produced the match. */
+  /// The name of the check that produced the match.
   public final String checkName;
 
-  /** The raw message, not including the check name or the link. */
+  /// The raw message, not including the check name or the link.
   private final String rawMessage;
 
-  /** The raw link URL for the check. May be null if there is no link. */
+  /// The raw link URL for the check. May be null if there is no link.
   private final @Nullable String linkUrl;
 
-  /**
-   * A list of fixes to suggest in an error message or use in automated refactoring. Fixes are in
-   * order of decreasing preference, from most preferred to least preferred.
-   */
+  /// A list of fixes to suggest in an error message or use in automated refactoring. Fixes are in
+  /// order of decreasing preference, from most preferred to least preferred.
   public final ImmutableList<Fix> fixes;
 
-  /** Is this a warning, error, etc.? */
+  /// Is this a warning, error, etc.?
   private final Optional<BugPattern.SeverityLevel> severity;
 
   public BugPattern.SeverityLevel severity() {
     return severity.get();
   }
 
-  /**
-   * Returns the message to be printed by the compiler when a match is found in interactive use.
-   * Includes the name of the check and a link for more information.
-   */
+  /// Returns the message to be printed by the compiler when a match is found in interactive use.
+  /// Includes the name of the check and a link for more information.
   public String getMessage() {
     return String.format("[%s] %s", checkName, getMessageWithoutCheckName());
   }
 
-  /** Returns a link associated with this finding or null if there is no link. */
+  /// Returns a link associated with this finding or null if there is no link.
   public @Nullable String getLink() {
     return linkUrl;
   }
 
-  /** Returns the raw message, not including a link or check name. */
+  /// Returns the raw message, not including a link or check name.
   public String getRawMessage() {
     return rawMessage;
   }
 
-  /** Returns the message, not including the check name but including the link. */
+  /// Returns the message, not including the check name but including the link.
   public String getMessageWithoutCheckName() {
     return linkUrl != null
         ? String.format("%s\n%s", rawMessage, linkTextForDiagnostic(linkUrl))
@@ -118,7 +112,7 @@ public final class Description {
     this.severity = severity;
   }
 
-  /** Internal-only. */
+  /// Internal-only.
   @CheckReturnValue
   public Description applySeverityOverride(SeverityLevel severity) {
     return new Description(
@@ -130,15 +124,13 @@ public final class Description {
         Optional.of(this.severity.orElse(severity)));
   }
 
-  /**
-   * Construct the link text to include in the compiler error message. Returns null if there is no
-   * link.
-   */
+  /// Construct the link text to include in the compiler error message. Returns null if there is no
+  /// link.
   private static @Nullable String linkTextForDiagnostic(String linkUrl) {
     return isNullOrEmpty(linkUrl) ? null : "  (see " + linkUrl + ")";
   }
 
-  /** Returns a new builder for {@link Description}s. */
+  /// Returns a new builder for [Description]s.
   @RestrictedApi(
       explanation = "Use describeMatch or buildDescription on BugChecker instead.",
       link = "",
@@ -151,7 +143,7 @@ public final class Description {
     return new Builder(position, name, link, message);
   }
 
-  /** Builder for {@code Description}s. */
+  /// Builder for `Description`s.
   public static final class Builder {
     private final ErrorPronePosition position;
     private final String name;
@@ -168,13 +160,11 @@ public final class Description {
       this.rawMessage = Preconditions.checkNotNull(rawMessage);
     }
 
-    /**
-     * Adds a suggested fix for this {@code Description}. Fixes should be added in order of
-     * decreasing preference. Adding an empty fix is a no-op.
-     *
-     * @param fix a suggested fix for this problem
-     * @throws NullPointerException if {@code fix} is {@code null}
-     */
+    /// Adds a suggested fix for this `Description`. Fixes should be added in order of decreasing
+    /// preference. Adding an empty fix is a no-op.
+    ///
+    /// @param fix a suggested fix for this problem
+    /// @throws NullPointerException if `fix` is `null`
     @CanIgnoreReturnValue
     public Builder addFix(Fix fix) {
       checkNotNull(fix, "fix must not be null");
@@ -184,14 +174,12 @@ public final class Description {
       return this;
     }
 
-    /**
-     * Adds a suggested fix for this {@code Description} if {@code fix} is present. Fixes should be
-     * added in order of decreasing preference. Adding an empty fix is a no-op.
-     *
-     * @param fix a suggested fix for this problem
-     * @throws NullPointerException if {@code fix} is {@code null}
-     * @deprecated prefer referring to empty fixes using {@link SuggestedFix#emptyFix()}.
-     */
+    /// Adds a suggested fix for this `Description` if `fix` is present. Fixes should be added in
+    /// order of decreasing preference. Adding an empty fix is a no-op.
+    ///
+    /// @param fix a suggested fix for this problem
+    /// @throws NullPointerException if `fix` is `null`
+    /// @deprecated prefer referring to empty fixes using [SuggestedFix#emptyFix()].
     @CanIgnoreReturnValue
     @Deprecated
     public Builder addFix(Optional<? extends Fix> fix) {
@@ -200,12 +188,10 @@ public final class Description {
       return this;
     }
 
-    /**
-     * Add each fix in order.
-     *
-     * @param fixes a list of suggested fixes for this problem
-     * @throws NullPointerException if {@code fixes} or any of its elements are {@code null}
-     */
+    /// Add each fix in order.
+    ///
+    /// @param fixes a list of suggested fixes for this problem
+    /// @throws NullPointerException if `fixes` or any of its elements are `null`
     @CanIgnoreReturnValue
     public Builder addAllFixes(List<? extends Fix> fixes) {
       checkNotNull(fixes, "fixes must not be null");
@@ -215,12 +201,10 @@ public final class Description {
       return this;
     }
 
-    /**
-     * Set a custom error message for this {@code Description}. The custom message will be used
-     * instead of the summary field as the text for the diagnostic message.
-     *
-     * @param message A custom error message without the check name ("[checkname]") or link
-     */
+    /// Set a custom error message for this `Description`. The custom message will be used instead
+    /// of the summary field as the text for the diagnostic message.
+    ///
+    /// @param message A custom error message without the check name (`"[checkname]"`) or link
     @CanIgnoreReturnValue
     public Builder setMessage(String message) {
       checkNotNull(message, "message must not be null");
@@ -228,24 +212,20 @@ public final class Description {
       return this;
     }
 
-    /**
-     * Set a custom error message for this {@code Description}. The custom message will be used
-     * instead of the summary field as the text for the diagnostic message.
-     *
-     * @param format A custom error message format string without the check name ("[checkname]") or
-     *     link
-     * @param args arguments for the format string
-     */
+    /// Set a custom error message for this `Description`. The custom message will be used instead
+    /// of the summary field as the text for the diagnostic message.
+    ///
+    /// @param format A custom error message format string without the check name (`"[checkname]"`)
+    ///   or link
+    /// @param args arguments for the format string
     @CanIgnoreReturnValue
     @FormatMethod
     public Builder setMessage(@FormatString String format, Object... args) {
       return setMessage(String.format(format, args));
     }
 
-    /**
-     * Set a custom link URL. The custom URL will be used instead of the default one which forms
-     * part of the {@code @}BugPattern.
-     */
+    /// Set a custom link URL. The custom URL will be used instead of the default one which forms
+    /// part of the `@BugPattern`.
     @CanIgnoreReturnValue
     public Builder setLinkUrl(String linkUrl) {
       checkNotNull(linkUrl, "linkUrl must not be null");

@@ -34,7 +34,7 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.tools.javac.code.Type;
 import org.safere.Pattern;
 
-/** Matchers and utility constants for Protocol Buffers (v2, v3, and Lite). */
+/// Matchers and utility constants for Protocol Buffers (v2, v3, and Lite).
 public final class ProtobufMatchers {
 
   public static final String MESSAGE_LITE_CLASS = "com.google.protobuf.MessageLite";
@@ -154,14 +154,14 @@ public final class ProtobufMatchers {
       PROTOCOL_MESSAGE_ENUM.asTypeSupplier();
   public static final Supplier<Type> EXTENSION_LITE_TYPE = EXTENSION_LITE.asTypeSupplier();
 
-  /** Matches specifically lite proto messages (excluding full Message and UnknownFieldSet). */
+  /// Matches specifically lite proto messages (excluding full Message and UnknownFieldSet).
   public static final TypePredicate IS_LITE_PROTO =
       allOf(
           isDescendantOf(MESSAGE_LITE),
           TypePredicates.not(isDescendantOf(MESSAGE)),
           TypePredicates.not(isExactType(UNKNOWN_FIELD_SET)));
 
-  /** Matches specifically lite proto enums (excluding full enum descriptors and oneof enums). */
+  /// Matches specifically lite proto enums (excluding full enum descriptors and oneof enums).
   public static final TypePredicate IS_LITE_PROTO_ENUM =
       allOf(
           isDescendantOf(ENUM_LITE),
@@ -169,21 +169,21 @@ public final class ProtobufMatchers {
           TypePredicates.not(isDescendantOf(ENUM_VALUE_DESCRIPTOR)),
           TypePredicates.not(isDescendantOf(INTERNAL_ONE_OF_ENUM)));
 
-  /** Matches a oneof enum (AbstractMessageLite.InternalOneOfEnum). */
+  /// Matches a oneof enum (AbstractMessageLite.InternalOneOfEnum).
   public static final TypePredicate IS_ONEOF_ENUM =
       allOf(
           isDescendantOf(INTERNAL_ONE_OF_ENUM),
           (type, state) -> type != null && type.tsym != null && type.tsym.getKind() == ENUM);
 
-  /** Matches builder {@code build()} or {@code buildPartial()} invocations. */
+  /// Matches builder `build()` or `buildPartial()` invocations.
   public static final Matcher<ExpressionTree> PROTO_BUILD_METHOD =
       instanceMethod().onDescendantOf(MESSAGE_LITE_BUILDER).namedAnyOf("build", "buildPartial");
 
-  /** Matches static {@code newBuilder()} calls on proto messages. */
+  /// Matches static `newBuilder()` calls on proto messages.
   public static final Matcher<ExpressionTree> PROTO_NEW_BUILDER_METHOD =
       staticMethod().onDescendantOf(MESSAGE_LITE).named("newBuilder");
 
-  /** Matches {@code toBuilder()} or {@code newBuilderForType()} calls on proto messages. */
+  /// Matches `toBuilder()` or `newBuilderForType()` calls on proto messages.
   public static final Matcher<ExpressionTree> PROTO_TO_BUILDER_METHOD =
       instanceMethod().onDescendantOf(MESSAGE_LITE).namedAnyOf("toBuilder", "newBuilderForType");
 
@@ -191,7 +191,7 @@ public final class ProtobufMatchers {
   private static final Pattern MUTATOR_PATTERN =
       Pattern.compile("^(set|add|clear|put|merge|remove).*");
 
-  /** Matches immutable proto getters, excluding size/serialization and framework methods. */
+  /// Matches immutable proto getters, excluding size/serialization and framework methods.
   public static final Matcher<ExpressionTree> PROTO_GETTER =
       allOf(
           instanceMethod().onDescendantOf(MESSAGE_LITE_OR_BUILDER).withNameMatching(GETTER_PATTERN),
@@ -206,18 +206,13 @@ public final class ProtobufMatchers {
                       "getDescriptorForType",
                       "getParserForType")));
 
-  /**
-   * Matches proto builder mutators (e.g. {@code setFoo()}, {@code addFoo()}, {@code clearFoo()},
-   * {@code putFoo()}).
-   */
+  /// Matches proto builder mutators (e.g. `setFoo()`, `addFoo()`, `clearFoo()`, `putFoo()`).
   public static final Matcher<ExpressionTree> PROTO_BUILDER_MUTATOR =
       instanceMethod().onDescendantOf(MESSAGE_LITE_BUILDER).withNameMatching(MUTATOR_PATTERN);
 
-  /**
-   * Matches static factory methods on {@code com.google.protobuf.util.Timestamps} and {@code
-   * com.google.protobuf.util.Durations} that construct time protos from numeric quantities (e.g.
-   * {@code fromSeconds()}, {@code fromMillis()}, {@code fromNanos()}).
-   */
+  /// Matches static factory methods on `com.google.protobuf.util.Timestamps` and
+  /// `com.google.protobuf.util.Durations` that construct time protos from numeric quantities (e.g.
+  /// `fromSeconds()`, `fromMillis()`, `fromNanos()`).
   public static final Matcher<ExpressionTree> PROTO_TIME_STATIC_FACTORIES =
       anyOf(
           staticMethod()

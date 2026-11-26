@@ -34,11 +34,9 @@ import java.io.IOException;
 import javax.tools.DiagnosticCollector;
 import javax.tools.JavaFileObject;
 
-/**
- * Test helper for {@link CodeTransformer} implementations.
- *
- * @author lowasser@google.com (Louis Wasserman)
- */
+/// Test helper for [CodeTransformer] implementations.
+///
+/// @author lowasser@google.com (Louis Wasserman)
 @AutoValue
 public abstract class CodeTransformerTestHelper {
   public static CodeTransformerTestHelper create(CodeTransformer transformer) {

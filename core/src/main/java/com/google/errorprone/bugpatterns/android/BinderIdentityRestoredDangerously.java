@@ -32,9 +32,7 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.TryTree;
 
-/**
- * @author pvisontay@google.com
- */
+/// @author pvisontay@google.com
 @BugPattern(
     tags = StandardTags.FRAGILE_CODE,
     summary =

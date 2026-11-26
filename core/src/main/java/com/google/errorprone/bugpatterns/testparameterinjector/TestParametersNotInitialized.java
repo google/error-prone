@@ -41,7 +41,7 @@ import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.Tree;
 
-/** Flags uses of parameters in non-parameterized tests. */
+/// Flags uses of parameters in non-parameterized tests.
 @BugPattern(
     summary =
         "This test has @TestParameter fields but is using the default JUnit4 runner. The"

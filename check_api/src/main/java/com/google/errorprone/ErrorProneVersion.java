@@ -21,18 +21,16 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-/** The Error Prone version. */
+/// The Error Prone version.
 public final class ErrorProneVersion {
 
   private static final String PROPERTIES_RESOURCE =
       "/META-INF/maven/com.google.errorprone/error_prone_core/pom.properties";
 
-  /**
-   * Loads the Error Prone version.
-   *
-   * <p>This depends on the Maven build, and will always return {@code Optional.absent()} with other
-   * build systems.
-   */
+  /// Loads the Error Prone version.
+  ///
+  /// This depends on the Maven build, and will always return `Optional.absent()` with other build
+  /// systems.
   public static Optional<String> loadVersionFromPom() {
     try (InputStream stream = ErrorProneVersion.class.getResourceAsStream(PROPERTIES_RESOURCE)) {
       if (stream == null) {

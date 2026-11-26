@@ -26,12 +26,10 @@ import java.util.List;
 import javax.tools.DiagnosticListener;
 import javax.tools.JavaFileObject;
 
-/**
- * Shared helpers for configuring compiler options and creating {@link JavacTaskImpl} instances in
- * Error Prone tests.
- *
- * <p>Intended for internal use by Error Prone test helpers only.
- */
+/// Shared helpers for configuring compiler options and creating [JavacTaskImpl] instances in Error
+/// Prone tests.
+///
+/// Intended for internal use by Error Prone test helpers only.
 public final class TestCompilations {
 
   private static final String COMPILING_TEST_ONLY_CODE_ARG = "-XepCompilingTestOnlyCode";
@@ -53,19 +51,15 @@ public final class TestCompilations {
           "-Xmaxwarns",
           "500");
 
-  /**
-   * Returns {@code extraArgs} prefixed with Error Prone's preferred test defaults and {@code
-   * -proc:none} (unless annotation processing is explicitly configured in {@code extraArgs}).
-   */
+  /// Returns `extraArgs` prefixed with Error Prone's preferred test defaults and `-proc:none`
+  /// (unless annotation processing is explicitly configured in `extraArgs`).
   public static ImmutableList<String> defaultTestArgs(List<String> extraArgs) {
     return defaultTestArgs(extraArgs, /* disableImplicitProcessing= */ true);
   }
 
-  /**
-   * Returns {@code extraArgs} prefixed with Error Prone's preferred test defaults and, when {@code
-   * disableImplicitProcessing} is {@code true} and annotation processing is not explicitly
-   * configured in {@code extraArgs}, {@code -proc:none}.
-   */
+  /// Returns `extraArgs` prefixed with Error Prone's preferred test defaults and, when
+  /// `disableImplicitProcessing` is `true` and annotation processing is not explicitly configured
+  /// in `extraArgs`, `-proc:none`.
   // TODO(cushon): test compilations should be isolated so they can't pick things up from the
   // ambient classpath.
   public static ImmutableList<String> defaultTestArgs(
@@ -80,10 +74,8 @@ public final class TestCompilations {
     return result.addAll(DEFAULT_TEST_ARGS).addAll(extraArgs).build();
   }
 
-  /**
-   * Augments {@code args} with {@code -XepCompilingTestOnlyCode} (when {@code testOnly} is {@code
-   * true}) and the {@code com.google.errorprone.deps_for_test_inputs} classpath (when set).
-   */
+  /// Augments `args` with `-XepCompilingTestOnlyCode` (when `testOnly` is `true`) and the
+  /// `com.google.errorprone.deps_for_test_inputs` classpath (when set).
   public static ImmutableList<String> withTestOnlyAndDeps(List<String> args, boolean testOnly) {
     ImmutableList.Builder<String> result = ImmutableList.builder();
     if (testOnly && !args.contains(COMPILING_TEST_ONLY_CODE_ARG)) {
@@ -99,11 +91,8 @@ public final class TestCompilations {
     return result.build();
   }
 
-  /**
-   * Creates a {@link JavacTaskImpl} using {@link FileManagers#testFileManager()} with Error Prone's
-   * required production javac options and preferred test defaults layered before {@code
-   * extraJavacArgs}.
-   */
+  /// Creates a [JavacTaskImpl] using [FileManagers#testFileManager()] with Error Prone's required
+  /// production javac options and preferred test defaults layered before `extraJavacArgs`.
   public static JavacTaskImpl getTask(
       Writer out,
       DiagnosticListener<? super JavaFileObject> diagnosticListener,
@@ -112,11 +101,9 @@ public final class TestCompilations {
     return getTask(out, diagnosticListener, extraJavacArgs, compilationUnits, new Context());
   }
 
-  /**
-   * Creates a {@link JavacTaskImpl} using {@link FileManagers#testFileManager()} and the given
-   * {@code context}, with Error Prone's required production javac options and preferred test
-   * defaults layered before {@code extraJavacArgs}.
-   */
+  /// Creates a [JavacTaskImpl] using [FileManagers#testFileManager()] and the given `context`, with
+  /// Error Prone's required production javac options and preferred test defaults layered before
+  /// `extraJavacArgs`.
   public static JavacTaskImpl getTask(
       Writer out,
       DiagnosticListener<? super JavaFileObject> diagnosticListener,

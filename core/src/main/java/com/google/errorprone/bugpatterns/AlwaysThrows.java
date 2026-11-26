@@ -51,7 +51,7 @@ import java.util.function.Consumer;
 import javax.inject.Inject;
 import org.jspecify.annotations.Nullable;
 
-/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
+/// A [BugChecker]; see the associated [BugPattern] annotation for details.
 @BugPattern(
     summary = "Statically detects calls that will always fail at runtime.",
     severity = ERROR)

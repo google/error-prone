@@ -33,18 +33,15 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
-/**
- * Represents an immutable map of Error Prone flags to their set values.
- *
- * <p>All get* methods return an {@code Optional<*>} containing the value for the given key, or
- * empty if the flag is unset.
- *
- * <p>To access ErrorProneFlags from a BugChecker class, add a constructor to the class that takes
- * one parameter of type ErrorProneFlags.
- *
- * <p>See <a href="https://errorprone.info/docs/flags">documentation</a> for full syntax
- * description.
- */
+/// Represents an immutable map of Error Prone flags to their set values.
+///
+/// All get\* methods return an `Optional<*>` containing the value for the given key, or empty if
+/// the flag is unset.
+///
+/// To access ErrorProneFlags from a BugChecker class, add a constructor to the class that takes one
+/// parameter of type ErrorProneFlags.
+///
+/// See [documentation](https://errorprone.info/docs/flags) for full syntax description.
 public final class ErrorProneFlags implements Serializable {
   public static final String PREFIX = "-XepOpt:";
 
@@ -66,41 +63,33 @@ public final class ErrorProneFlags implements Serializable {
     return flagsMap;
   }
 
-  /**
-   * Gets flag value for the given key as a String, wrapped in an {@link Optional}, which is empty
-   * if the flag is unset.
-   */
+  /// Gets flag value for the given key as a String, wrapped in an [Optional], which is empty if the
+  /// flag is unset.
   public Optional<String> get(String key) {
     return Optional.ofNullable(flagsMap.get(key));
   }
 
-  /**
-   * Gets the flag value for the given key as a Boolean, wrapped in an {@link Optional}, which is
-   * empty if the flag is unset.
-   *
-   * <p>The value within the {@link Optional} will be {@code true} if the flag's value is "true",
-   * {@code false} for "false", both case insensitive. If the value is neither "true" nor "false",
-   * throws an {@link IllegalArgumentException}.
-   *
-   * <p>Note that any flag set without a value, e.g. {@code -XepOpt:FlagValue}, will be "true".
-   */
+  /// Gets the flag value for the given key as a Boolean, wrapped in an [Optional], which is empty
+  /// if the flag is unset.
+  ///
+  /// The value within the [Optional] will be `true` if the flag's value is "true", `false` for
+  /// "false", both case insensitive. If the value is neither "true" nor "false", throws an
+  /// [IllegalArgumentException].
+  ///
+  /// Note that any flag set without a value, e.g. `-XepOpt:FlagValue`, will be "true".
   public Optional<Boolean> getBoolean(String key) {
     return this.get(key).map(ErrorProneFlags::parseBoolean);
   }
 
-  /**
-   * Gets the flag value for an enum of the given type, wrapped in an {@link Optional}, which is
-   * empty if the flag is unset.
-   */
+  /// Gets the flag value for an enum of the given type, wrapped in an [Optional], which is empty if
+  /// the flag is unset.
   public <T extends Enum<T>> Optional<T> getEnum(String key, Class<T> clazz) {
     return this.get(key).map(value -> asEnumValue(key, value, clazz));
   }
 
-  /**
-   * Gets the flag value for a comma-separated set of enums of the given type, wrapped in an {@link
-   * Optional}, which is empty if the flag is unset. If the flag is explicitly set to empty, an
-   * empty set will be returned.
-   */
+  /// Gets the flag value for a comma-separated set of enums of the given type, wrapped in an
+  /// [Optional], which is empty if the flag is unset. If the flag is explicitly set to empty, an
+  /// empty set will be returned.
   public <T extends Enum<T>> Optional<ImmutableSet<T>> getEnumSet(String key, Class<T> clazz) {
     return this.get(key)
         .map(value ->
@@ -133,36 +122,29 @@ public final class ErrorProneFlags implements Serializable {
         String.format("Error Prone flag value %s could not be parsed as a boolean.", value));
   }
 
-  /**
-   * Gets the flag value for the given key as an Integer, wrapped in an {@link Optional}, which is
-   * empty if the flag is unset.
-   *
-   * <p>If the flag's value cannot be interpreted as an Integer, throws a {@link
-   * NumberFormatException} (note: float values will *not* be interpreted as integers and will throw
-   * an exception!)
-   */
+  /// Gets the flag value for the given key as an Integer, wrapped in an [Optional], which is empty
+  /// if the flag is unset.
+  ///
+  /// If the flag's value cannot be interpreted as an Integer, throws a [NumberFormatException]
+  /// (note: float values will \*not\* be interpreted as integers and will throw an exception!)
   public Optional<Integer> getInteger(String key) {
     return this.get(key).map(Integer::valueOf);
   }
 
-  /**
-   * Gets the flag value for the given key as a comma-separated {@link ImmutableList} of Strings, or
-   * an empty list if the flag is unset.
-   *
-   * <p>(note: empty strings included, e.g. {@code "-XepOpt:List=,1,,2," => ["","1","","2",""]})
-   */
+  /// Gets the flag value for the given key as a comma-separated [ImmutableList] of Strings, or an
+  /// empty list if the flag is unset.
+  ///
+  /// (note: empty strings included, e.g. `"-XepOpt:List=,1,,2," => ["","1","","2",""]`)
   public ImmutableList<String> getListOrEmpty(String key) {
     return get(key)
         .map(v -> ImmutableList.copyOf(COMMA_SPLITTER.split(v)))
         .orElse(ImmutableList.of());
   }
 
-  /**
-   * Gets the flag value for the given key as a comma-separated {@link Set} of Strings, or an empty
-   * set if unset.
-   *
-   * <p>(note: empty strings included, e.g. {@code "-XepOpt:Set=,1,,1,2," => ["","1","2"]})
-   */
+  /// Gets the flag value for the given key as a comma-separated [Set] of Strings, or an empty set
+  /// if unset.
+  ///
+  /// (note: empty strings included, e.g. `"-XepOpt:Set=,1,,1,2," => ["","1","2"]`)
   public ImmutableSet<String> getSetOrEmpty(String key) {
     return get(key)
         .map(v -> ImmutableSet.copyOf(COMMA_SPLITTER.split(v)))
@@ -171,16 +153,13 @@ public final class ErrorProneFlags implements Serializable {
 
   private static final Splitter COMMA_SPLITTER = Splitter.on(',');
 
-  /** Whether this Flags object is empty, i.e. no flags have been set. */
+  /// Whether this Flags object is empty, i.e. no flags have been set.
   public boolean isEmpty() {
     return this.flagsMap.isEmpty();
   }
 
-  /**
-   * Returns a new ErrorProneFlags object with the values of two ErrorProneFlags objects added
-   * together. For flags that appear in both instances, the values in {@code other} override {@code
-   * this}.
-   */
+  /// Returns a new ErrorProneFlags object with the values of two ErrorProneFlags objects added
+  /// together. For flags that appear in both instances, the values in `other` override `this`.
   @CheckReturnValue
   public ErrorProneFlags plus(ErrorProneFlags other) {
     Map<String, String> combinedMaps = new HashMap<>(this.getFlagsMap());
@@ -188,17 +167,15 @@ public final class ErrorProneFlags implements Serializable {
     return ErrorProneFlags.fromMap(combinedMaps);
   }
 
-  /** Builder for Error Prone command-line flags object. Parses flags from strings. */
+  /// Builder for Error Prone command-line flags object. Parses flags from strings.
   public static final class Builder {
 
     private final HashMap<String, String> flagsMap = new HashMap<>();
 
     private Builder() {}
 
-    /**
-     * Given a String custom flag in the format {@code "-XepOpt:FlagName=Value"}, places the flag in
-     * this builder's dictionary, e.g. {@code flagsMap["FlagName"] = "Value"}
-     */
+    /// Given a String custom flag in the format `"-XepOpt:FlagName=Value"`, places the flag in this
+    /// builder's dictionary, e.g. `flagsMap["FlagName"] = "Value"`
     @CanIgnoreReturnValue
     public Builder parseFlag(String flag) {
       checkArgument(flag.startsWith(PREFIX));
@@ -215,7 +192,7 @@ public final class ErrorProneFlags implements Serializable {
       return this;
     }
 
-    /** Puts a key-value pair directly in this builder's dictionary. Mostly exists for testing. */
+    /// Puts a key-value pair directly in this builder's dictionary. Mostly exists for testing.
     @CanIgnoreReturnValue
     public Builder putFlag(String key, String value) {
       flagsMap.put(key, value);

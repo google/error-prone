@@ -77,11 +77,9 @@ import java.util.HashSet;
 import java.util.Set;
 import javax.inject.Inject;
 
-/**
- * Checker that recommends annotating a method with {@code @CanIgnoreReturnValue} if the method
- * returns {@code this}, returns an effectively final input param, or if it looks like a builder
- * method (that is likely to return {@code this}).
- */
+/// Checker that recommends annotating a method with `@CanIgnoreReturnValue` if the method returns
+/// `this`, returns an effectively final input param, or if it looks like a builder method (that is
+/// likely to return `this`).
 @BugPattern(
     summary =
         "Methods that always return 'this' (or return an input parameter) should be annotated with"
@@ -271,7 +269,7 @@ public final class CanIgnoreReturnValueSuggester extends BugChecker implements M
     return false;
   }
 
-  /** Returns whether or not the given {@link ReturnTree} returns exactly {@code this}. */
+  /// Returns whether or not the given [ReturnTree] returns exactly `this`.
   private static boolean returnsThisOrSelf(ReturnTree returnTree) {
     return maybeCastThis(returnTree.getExpression());
   }

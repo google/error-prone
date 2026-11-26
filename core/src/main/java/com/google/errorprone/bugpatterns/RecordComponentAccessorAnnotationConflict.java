@@ -45,7 +45,7 @@ import java.util.EnumSet;
 import java.util.Set;
 import javax.lang.model.element.Name;
 
-/** A BugPattern; see the summary. */
+/// A BugPattern; see the summary.
 @BugPattern(summary = "Annotation on record component is ignored.", severity = WARNING)
 public class RecordComponentAccessorAnnotationConflict extends BugChecker
     implements ClassTreeMatcher {

@@ -49,7 +49,7 @@ import com.sun.tools.javac.code.Symbol.VarSymbol;
 import java.util.Objects;
 import javax.lang.model.element.Modifier;
 
-/** A BugPattern; see the summary. */
+/// A BugPattern; see the summary.
 @BugPattern(summary = "Static fields should almost always be final.", severity = WARNING)
 public final class NonFinalStaticField extends BugChecker implements VariableTreeMatcher {
   private static final ImmutableSet<String> ANNOTATIONS_TO_AVOID =

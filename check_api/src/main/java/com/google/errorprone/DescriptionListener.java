@@ -20,17 +20,15 @@ import com.google.errorprone.matchers.Description;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.util.Log;
 
-/**
- * Strategies for reporting results.
- *
- * @author alexeagle@google.com (Alex Eagle)
- */
+/// Strategies for reporting results.
+///
+/// @author alexeagle@google.com (Alex Eagle)
 public interface DescriptionListener {
 
-  /** Reports a suggested modification to the code. */
+  /// Reports a suggested modification to the code.
   void onDescribed(Description description);
 
-  /** Factory for creating DescriptionListeners while compiling each file. */
+  /// Factory for creating DescriptionListeners while compiling each file.
   interface Factory {
     DescriptionListener getDescriptionListener(Log log, JCCompilationUnit compilation);
   }

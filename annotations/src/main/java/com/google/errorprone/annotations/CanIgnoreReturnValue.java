@@ -25,12 +25,10 @@ import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
-/**
- * Indicates that the return value of the annotated API is ignorable.
- *
- * <p>This is the opposite of {@link CheckReturnValue}. It can be used inside classes or packages
- * annotated with {@code @CheckReturnValue} to exempt specific APIs from the default.
- */
+/// Indicates that the return value of the annotated API is ignorable.
+///
+/// This is the opposite of [CheckReturnValue]. It can be used inside classes or packages annotated
+/// with `@CheckReturnValue` to exempt specific APIs from the default.
 @Documented
 // Note: annotating a type with @CanIgnoreReturnValue is discouraged (and banned inside of Google)
 @Target({METHOD, CONSTRUCTOR, TYPE})

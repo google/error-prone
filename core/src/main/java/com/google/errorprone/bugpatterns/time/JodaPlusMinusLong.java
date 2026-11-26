@@ -34,10 +34,8 @@ import com.sun.source.tree.MethodInvocationTree;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Check for calls to JodaTime's {@code type.plus(long)} and {@code type.minus(long)} where {@code
- * <type> = {Duration,Instant,DateTime,DateMidnight}}.
- */
+/// Check for calls to JodaTime's `type.plus(long)` and `type.minus(long)` where `<type> =
+/// {Duration,Instant,DateTime,DateMidnight}`.
 @BugPattern(
     summary =
         "Use of JodaTime's type.plus(long) or type.minus(long) is not allowed (where <type> = "

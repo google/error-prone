@@ -19,22 +19,20 @@ package com.google.errorprone.dataflow.nullnesspropagation.inference;
 import com.google.common.collect.ImmutableList;
 import com.sun.source.tree.Tree;
 
-/**
- * TypeArg inference variables correspond to types (and parameters thereof) of AST nodes. The {@code
- * typeArgSelector} specifies a type (or parameter thereof) of the {@code astNode} by a series of
- * indices of type parameter lists corresponding to a path into the tree structure of {@code
- * astNode}'s type.
- *
- * <p>For example, if the type of {@code astNode} is {@code A<B, C<D, E<F, G>>>}, then inference
- * variables are specified by typeArgSelectors as follows: {@code A} by the empty list {@code []}
- * since it is the base type; {@code B} by the list {@code [0]} since it is the 0th type parameter
- * of the base type; {@code F} by the list {@code [1,1,0]} since it is the 0th type parameter of the
- * 1st type parameter of the 1st type parameter of the base type; and so on.
- *
- * @param typeArgSelector An empty list selects the type of the {@code astNode} itself, while
- *     non-empty lists select type variables within, according to the format described in the
- *     class-level Javadoc
- */
+/// TypeArg inference variables correspond to types (and parameters thereof) of AST nodes. The
+/// `typeArgSelector` specifies a type (or parameter thereof) of the `astNode` by a series of
+/// indices of type parameter lists corresponding to a path into the tree structure of `astNode`'s
+/// type.
+///
+/// For example, if the type of `astNode` is `A<B, C<D, E<F, G>>>`, then inference variables are
+/// specified by typeArgSelectors as follows: `A` by the empty list `[]` since it is the base type;
+/// `B` by the list `[0]` since it is the 0th type parameter of the base type; `F` by the list
+/// `[1,1,0]` since it is the 0th type parameter of the 1st type parameter of the 1st type parameter
+/// of the base type; and so on.
+///
+/// @param typeArgSelector An empty list selects the type of the `astNode` itself, while non-empty
+///   lists select type variables within, according to the format described in the class-level
+///   Javadoc
 record TypeArgInferenceVar(ImmutableList<Integer> typeArgSelector, Tree astNode)
     implements InferenceVariable {
   static TypeArgInferenceVar create(ImmutableList<Integer> typeArgSelector, Tree astNode) {

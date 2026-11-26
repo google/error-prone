@@ -48,7 +48,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/** Checks for the same variable being checked against null twice in a method. */
+/// Checks for the same variable being checked against null twice in a method.
 @BugPattern(
     severity = ERROR,
     summary = "A variable was checkNotNulled multiple times. Did you mean to check something else?")

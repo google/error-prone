@@ -31,11 +31,9 @@ import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.MethodTree;
 import com.sun.tools.javac.code.Type;
 
-/**
- * Checks if public APIs named "stream" returns a type whose name ends with Stream.
- *
- * @author sauravtiwary@google.com (Saurav Tiwary)
- */
+/// Checks if public APIs named "stream" returns a type whose name ends with Stream.
+///
+/// @author sauravtiwary@google.com (Saurav Tiwary)
 @BugPattern(
     summary =
         "Public methods named stream() are generally expected to return a type whose name ends with"

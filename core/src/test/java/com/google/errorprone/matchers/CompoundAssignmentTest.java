@@ -30,9 +30,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * @author adgar@google.com (Mike Edgar)
- */
+/// @author adgar@google.com (Mike Edgar)
 @RunWith(JUnit4.class)
 public class CompoundAssignmentTest extends CompilerBasedAbstractTest {
 

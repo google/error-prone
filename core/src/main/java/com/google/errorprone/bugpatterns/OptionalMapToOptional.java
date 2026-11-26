@@ -37,7 +37,7 @@ import com.sun.source.util.TreePath;
 import com.sun.tools.javac.code.Type;
 import java.util.List;
 
-/** Matches {@code Optional#map} mapping to another {@code Optional}. */
+/// Matches `Optional#map` mapping to another `Optional`.
 @BugPattern(
     summary = "Mapping to another Optional will yield a nested Optional. Did you mean flatMap?",
     severity = WARNING)

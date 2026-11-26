@@ -42,11 +42,9 @@ import com.sun.source.tree.VariableTree;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 
-/**
- * Flags protected members in final classes.
- *
- * @author bhagwani@google.com (Sumit Bhagwani)
- */
+/// Flags protected members in final classes.
+///
+/// @author bhagwani@google.com (Sumit Bhagwani)
 @BugPattern(
     summary = "Protected members in final classes can be package-private",
     severity = WARNING)

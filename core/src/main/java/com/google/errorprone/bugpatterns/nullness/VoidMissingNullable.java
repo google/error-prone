@@ -63,7 +63,7 @@ import com.sun.tools.javac.code.Type;
 import java.util.List;
 import javax.inject.Inject;
 
-/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
+/// A [BugChecker]; see the associated [BugPattern] annotation for details.
 @BugPattern(summary = "The type Void is not annotated @Nullable", severity = SUGGESTION)
 public class VoidMissingNullable extends BugChecker
     implements ParameterizedTypeTreeMatcher, MethodTreeMatcher, VariableTreeMatcher {
@@ -212,10 +212,8 @@ public class VoidMissingNullable extends BugChecker
         && NullnessAnnotations.fromAnnotationsOn(sym).orElse(null) != Nullness.NULLABLE;
   }
 
-  /**
-   * Like the other overload but without looking for annotations on the Symbol (like declaration
-   * annotations on a method or variable).
-   */
+  /// Like the other overload but without looking for annotations on the Symbol (like declaration
+  /// annotations on a method or variable).
   private boolean typeMatches(Type type, VisitorState state) {
     return isVoid(type, state)
         && NullnessAnnotations.fromAnnotationsOn(type).orElse(null) != Nullness.NULLABLE;

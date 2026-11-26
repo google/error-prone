@@ -20,7 +20,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** Unit test for {@link UnnecessaryMethodReference}. */
+/// Unit test for [UnnecessaryMethodReference].
 @RunWith(JUnit4.class)
 public final class UnnecessaryMethodReferenceTest {
   private final CompilationTestHelper helper =

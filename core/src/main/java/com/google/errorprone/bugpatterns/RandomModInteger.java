@@ -30,9 +30,7 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.Tree.Kind;
 
-/**
- * @author Louis Wasserman
- */
+/// @author Louis Wasserman
 @BugPattern(
     summary = "Use Random.nextInt(int).  Random.nextInt() % n can have negative results",
     severity = SeverityLevel.ERROR)

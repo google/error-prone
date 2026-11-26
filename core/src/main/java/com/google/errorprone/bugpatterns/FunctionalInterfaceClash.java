@@ -51,7 +51,7 @@ import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
 
-/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
+/// A [BugChecker]; see the associated [BugPattern] annotation for details.
 @BugPattern(
     summary = "Overloads will be ambiguous when passing lambda arguments.",
     severity = WARNING)
@@ -153,11 +153,9 @@ public class FunctionalInterfaceClash extends BugChecker implements ClassTreeMat
     return NO_MATCH;
   }
 
-  /**
-   * A string representation of a method descriptor, where all parameters whose type is a functional
-   * interface are "erased" to the interface's function type. For example, `foo(Supplier<String>)`
-   * is represented as `foo(()->Ljava/lang/String;)`.
-   */
+  /// A string representation of a method descriptor, where all parameters whose type is a
+  /// functional interface are "erased" to the interface's function type. For example,
+  /// `foo(Supplier<String>)` is represented as `foo(()->Ljava/lang/String;)`.
   private static String functionalInterfaceSignature(VisitorState state, MethodSymbol msym) {
     return String.format(
         "%s(%s)",

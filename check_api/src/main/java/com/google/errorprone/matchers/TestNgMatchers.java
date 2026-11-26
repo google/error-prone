@@ -24,17 +24,13 @@ import com.sun.source.tree.MethodTree;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 
-/**
- * Matchers for code patterns which appear to be TestNG-based tests.
- *
- * @author bhagwani@google.com (Sumit Bhagwani)
- */
+/// Matchers for code patterns which appear to be TestNG-based tests.
+///
+/// @author bhagwani@google.com (Sumit Bhagwani)
 public final class TestNgMatchers {
 
-  /**
-   * Checks if a method, or any overridden method, is annotated with any annotation from the
-   * org.testng package.
-   */
+  /// Checks if a method, or any overridden method, is annotated with any annotation from the
+  /// org.testng package.
   public static boolean hasTestNgAnnotation(MethodTree tree, VisitorState state) {
     MethodSymbol methodSym = getSymbol(tree);
     if (hasTestNgAttr(methodSym)) {
@@ -43,12 +39,12 @@ public final class TestNgMatchers {
     return streamSuperMethods(methodSym, state.getTypes()).anyMatch(TestNgMatchers::hasTestNgAttr);
   }
 
-  /** Checks if a class is annotated with any annotation from the org.testng package. */
+  /// Checks if a class is annotated with any annotation from the org.testng package.
   public static boolean hasTestNgAnnotation(ClassTree tree) {
     return hasTestNgAttr(getSymbol(tree));
   }
 
-  /** Checks if a symbol has any attribute from the org.testng package. */
+  /// Checks if a symbol has any attribute from the org.testng package.
   private static boolean hasTestNgAttr(Symbol methodSym) {
     return methodSym.getRawAttributes().stream()
         .anyMatch(attr -> attr.type.tsym.getQualifiedName().toString().startsWith("org.testng."));

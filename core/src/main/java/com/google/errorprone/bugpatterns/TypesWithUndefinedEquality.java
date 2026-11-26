@@ -22,7 +22,7 @@ import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.VisitorState;
 import com.sun.tools.javac.code.Type;
 
-/** Enumerates types which have poorly-defined behaviour for equals. */
+/// Enumerates types which have poorly-defined behaviour for equals.
 public enum TypesWithUndefinedEquality {
   // keep-sorted start
   CHAR_SEQUENCE("CharSequence", "java.lang.CharSequence"),

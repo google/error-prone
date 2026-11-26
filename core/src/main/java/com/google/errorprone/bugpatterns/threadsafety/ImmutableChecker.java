@@ -84,7 +84,7 @@ import javax.inject.Inject;
 import javax.lang.model.element.ElementKind;
 import org.jspecify.annotations.Nullable;
 
-/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
+/// A [BugChecker]; see the associated [BugPattern] annotation for details.
 @BugPattern(
     name = "Immutable",
     summary = "Type declaration annotated with @Immutable is not immutable",
@@ -366,7 +366,7 @@ public class ImmutableChecker extends BugChecker
 
   // Anonymous classes
 
-  /** Check anonymous implementations of {@code @Immutable} types. */
+  /// Check anonymous implementations of `@Immutable` types.
   private Description handleAnonymousClass(
       ClassTree tree, VisitorState state, ImmutableAnalysis analysis) {
     ClassSymbol sym = getSymbol(tree);
@@ -489,10 +489,7 @@ public class ImmutableChecker extends BugChecker
     }
   }
 
-  /**
-   * Gets the effective type of `this`, had the bare invocation of {@code symbol} been qualified
-   * with it.
-   */
+  /// Gets the effective type of `this`, had the bare invocation of `symbol` been qualified with it.
   private static Optional<ClassSymbol> effectiveTypeOfThis(
       MethodSymbol symbol, TreePath currentPath, VisitorState state) {
     return stream(currentPath.iterator())
@@ -537,10 +534,8 @@ public class ImmutableChecker extends BugChecker
 
   // Strong behavioural subtyping
 
-  /**
-   * Returns the type of the first superclass or superinterface in the hierarchy annotated with
-   * {@code @Immutable}, or {@code null} if no such super type exists.
-   */
+  /// Returns the type of the first superclass or superinterface in the hierarchy annotated with
+  /// `@Immutable`, or `null` if no such super type exists.
   private @Nullable Type immutableSupertype(Symbol sym, VisitorState state) {
     for (Type superType : state.getTypes().closure(sym.type)) {
       if (superType.tsym.equals(sym.type.tsym)) {
@@ -566,19 +561,17 @@ public class ImmutableChecker extends BugChecker
     return hasImmutableAnnotation(tsym, state) || immutableSupertype(tsym, state) != null;
   }
 
-  /**
-   * Gets the set of in-scope immutable type parameters from the containerOf specs on
-   * {@code @Immutable} annotations.
-   *
-   * <p>Usually only the immediately enclosing declaration is searched, but it's possible to have
-   * cases like:
-   *
-   * <pre>
-   * {@code @}Immutable(containerOf="T") class C<T> {
-   *   class Inner extends ImmutableCollection<T> {}
-   * }
-   * </pre>
-   */
+  /// Gets the set of in-scope immutable type parameters from the containerOf specs on `@Immutable`
+  /// annotations.
+  ///
+  /// Usually only the immediately enclosing declaration is searched, but it's possible to have
+  /// cases like:
+  ///
+  /// ```
+  /// @Immutable(containerOf="T") class C<T> {
+  ///   class Inner extends ImmutableCollection<T> {}
+  /// }
+  /// ```
   private static ImmutableSet<String> immutableTypeParametersInScope(
       Symbol sym, VisitorState state, ImmutableAnalysis analysis) {
     if (sym == null) {

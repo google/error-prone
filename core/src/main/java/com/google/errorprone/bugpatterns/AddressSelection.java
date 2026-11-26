@@ -40,7 +40,7 @@ import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.NewClassTree;
 import java.util.function.Supplier;
 
-/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
+/// A [BugChecker]; see the associated [BugPattern] annotation for details.
 @BugPattern(
     summary =
         "Prefer InetAddress.getAllByName to APIs that convert a hostname to a single IP address",
@@ -110,12 +110,10 @@ public final class AddressSelection extends BugChecker
     return describeMatch(replacement);
   }
 
-  /**
-   * Returns true if this string looks like it might be a numeric IP address. The matching here is
-   * very approximate. We want every numeric IP address to return true, but it's OK if some strings
-   * return true even though they are not actually valid numeric IP addresses. Actually parsing
-   * numeric IPv6 addresses in all their glory is more than we need here.
-   */
+  /// Returns true if this string looks like it might be a numeric IP address. The matching here is
+  /// very approximate. We want every numeric IP address to return true, but it's OK if some strings
+  /// return true even though they are not actually valid numeric IP addresses. Actually parsing
+  /// numeric IPv6 addresses in all their glory is more than we need here.
   private static boolean isNumericIp(String value) {
     if (value.isEmpty()) {
       return false;

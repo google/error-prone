@@ -29,42 +29,34 @@ import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import java.util.Optional;
 
-/** Rules for methods on Dagger {@code Component.Builder} and {@code Subcomponent.Builder} types. */
+/// Rules for methods on Dagger `Component.Builder` and `Subcomponent.Builder` types.
 public final class DaggerRules {
 
-  /**
-   * Returns a rule that handles {@code @dagger.Component.Builder} types, making their fluent setter
-   * methods' results ignorable.
-   */
+  /// Returns a rule that handles `@dagger.Component.Builder` types, making their fluent setter
+  /// methods' results ignorable.
   public static ResultUseRule<VisitorState, Symbol> componentBuilders() {
     return new DaggerRule("dagger.Component.Builder");
   }
 
-  /**
-   * Returns a rule that handles {@code @dagger.Subcomponent.Builder} types, making their fluent
-   * setter methods' results ignorable.
-   */
+  /// Returns a rule that handles `@dagger.Subcomponent.Builder` types, making their fluent setter
+  /// methods' results ignorable.
   public static ResultUseRule<VisitorState, Symbol> subcomponentBuilders() {
     return new DaggerRule("dagger.Subcomponent.Builder");
   }
 
-  /**
-   * Returns a rule that handles {@code @dagger.producers.ProductionComponent.Builder} types, making
-   * their fluent setter methods' results ignorable.
-   */
+  /// Returns a rule that handles `@dagger.producers.ProductionComponent.Builder` types, making
+  /// their fluent setter methods' results ignorable.
   public static ResultUseRule<VisitorState, Symbol> productionComponentBuilders() {
     return new DaggerRule("dagger.producers.ProductionComponent.Builder");
   }
 
-  /**
-   * Returns a rule that handles {@code @dagger.producers.ProductionSubcomponent.Builder} types,
-   * making their fluent setter methods' results ignorable.
-   */
+  /// Returns a rule that handles `@dagger.producers.ProductionSubcomponent.Builder` types, making
+  /// their fluent setter methods' results ignorable.
   public static ResultUseRule<VisitorState, Symbol> productionSubcomponentBuilders() {
     return new DaggerRule("dagger.producers.ProductionSubcomponent.Builder");
   }
 
-  /** Rules for methods on Dagger components and subcomponents. */
+  /// Rules for methods on Dagger components and subcomponents.
   private static final class DaggerRule extends ErrorProneMethodRule {
 
     private final String annotationName;

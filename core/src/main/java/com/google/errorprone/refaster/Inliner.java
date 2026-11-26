@@ -52,12 +52,10 @@ import java.util.Optional;
 import java.util.Set;
 import org.jspecify.annotations.Nullable;
 
-/**
- * A context representing all the dependencies necessary to reconstruct a pretty-printable source
- * tree from a {@code UTree} based on a set of substitutions.
- *
- * @author Louis Wasserman
- */
+/// A context representing all the dependencies necessary to reconstruct a pretty-printable source
+/// tree from a `UTree` based on a set of substitutions.
+///
+/// @author Louis Wasserman
 public final class Inliner {
   private final Context context;
   private final Set<String> importsToAdd;
@@ -120,10 +118,8 @@ public final class Inliner {
     return compilationUnit;
   }
 
-  /**
-   * Returns the path to the location where the inlined code will be placed, if known. This can be
-   * used to check which names are in scope at that location.
-   */
+  /// Returns the path to the location where the inlined code will be placed, if known. This can be
+  /// used to check which names are in scope at that location.
   @Nullable TreePath path() {
     return path;
   }
@@ -204,7 +200,7 @@ public final class Inliner {
         }
       };
 
-  /** Inlines the syntax tree representing the specified type. */
+  /// Inlines the syntax tree representing the specified type.
   public JCExpression inlineAsTree(Type type) {
     return INLINE_AS_TREE.visit(type, this);
   }

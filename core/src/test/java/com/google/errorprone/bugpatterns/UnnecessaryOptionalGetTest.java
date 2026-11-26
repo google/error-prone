@@ -23,7 +23,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** Unit tests for {@link UnnecessaryOptionalGet}. */
+/// Unit tests for [UnnecessaryOptionalGet].
 @RunWith(JUnit4.class)
 public final class UnnecessaryOptionalGetTest {
   private final BugCheckerRefactoringTestHelper refactoringTestHelper =

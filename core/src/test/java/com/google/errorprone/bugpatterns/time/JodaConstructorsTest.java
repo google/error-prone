@@ -20,7 +20,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** Tests for {@link JodaConstructors}. */
+/// Tests for [JodaConstructors].
 @RunWith(JUnit4.class)
 public class JodaConstructorsTest {
   private final CompilationTestHelper helper =

@@ -39,10 +39,10 @@ import com.sun.source.tree.VariableTree;
 import com.sun.tools.javac.code.Type;
 import org.junit.Test;
 
-/** {@link TypePredicates}Test */
+/// [TypePredicates]Test
 public class TypePredicatesTest {
 
-  /** Flags variables whose type is a descendant of any of a few types. */
+  /// Flags variables whose type is a descendant of any of a few types.
   @BugPattern(summary = "Descendant", severity = ERROR)
   public static class DescendantOfAnyChecker extends BugChecker implements VariableTreeMatcher {
     private static final TypePredicate PREDICATE =
@@ -60,7 +60,7 @@ public class TypePredicatesTest {
     }
   }
 
-  /** Flags variables whose type is a descendant of Object. */
+  /// Flags variables whose type is a descendant of Object.
   @BugPattern(summary = "Descendant of Object", severity = ERROR)
   public static class DescendantOfObjectChecker extends BugChecker implements VariableTreeMatcher {
     private static final TypePredicate PREDICATE =
@@ -72,10 +72,8 @@ public class TypePredicatesTest {
     }
   }
 
-  /**
-   * Exercises {@link TypePredicates#isDescendantOfAny(ImmutableList)} on intersection, union, null,
-   * method, generic-method, and package types.
-   */
+  /// Exercises [TypePredicates#isDescendantOfAny(ImmutableList)] on intersection, union, null,
+  /// method, generic-method, and package types.
   @BugPattern(summary = "Compound and non-class types", severity = ERROR)
   public static class CompoundAndNonClassChecker extends BugChecker
       implements MethodTreeMatcher, CatchTreeMatcher {

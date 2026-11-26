@@ -57,12 +57,9 @@ import javax.inject.Inject;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
 
-/**
- * Classes that override {@link Object#equals} should also override {@link Object#hashCode}, and
- * vice versa.
- *
- * @author cushon@google.com (Liam Miller-Cushon)
- */
+/// Classes that override [Object#equals] should also override [Object#hashCode], and vice versa.
+///
+/// @author cushon@google.com (Liam Miller-Cushon)
 @BugPattern(
     summary = "Classes that override equals should also override hashCode.",
     severity = ERROR,

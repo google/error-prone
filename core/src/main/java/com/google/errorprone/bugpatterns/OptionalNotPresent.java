@@ -47,9 +47,7 @@ import java.util.stream.Stream;
 import javax.inject.Inject;
 import org.jspecify.annotations.Nullable;
 
-/**
- * @author mariasam@google.com (Maria Sam)
- */
+/// @author mariasam@google.com (Maria Sam)
 @BugPattern(
     summary =
         "This Optional has been confirmed to be empty at this point, so the call to `get()` or"
@@ -75,7 +73,7 @@ public final class OptionalNotPresent extends BugChecker implements CompilationU
     return NO_MATCH;
   }
 
-  /** Scans a compilation unit, keeping track of which things are known to be true and false. */
+  /// Scans a compilation unit, keeping track of which things are known to be true and false.
   private final class IfScanner extends SuppressibleTreePathScanner<Void, Void> {
     private final Deque<Supplier<Truthiness>> scopes = new ArrayDeque<>();
     private final VisitorState state;

@@ -88,7 +88,7 @@ import java.util.Set;
 import javax.inject.Inject;
 import org.jspecify.annotations.Nullable;
 
-/** Matches comparison of proto fields to {@code null}. */
+/// Matches comparison of proto fields to `null`.
 @BugPattern(
     summary = "This value cannot be null, and comparing it to null may be misleading.",
     name = "ImpossibleNullComparison",
@@ -166,11 +166,11 @@ public final class ImpossibleNullComparison extends BugChecker
     return tree.getKind() == Kind.NULL_LITERAL;
   }
 
-  /** Matcher for generated protobufs (legacy message-only behavior). */
+  /// Matcher for generated protobufs (legacy message-only behavior).
   private static final Matcher<ExpressionTree> PROTO_RECEIVER_LEGACY =
       instanceMethod().onDescendantOfAny(GENERATED_MESSAGE_LITE, GENERATED_MESSAGE);
 
-  /** Matcher for generated protobufs and builders/OrBuilders. */
+  /// Matcher for generated protobufs and builders/OrBuilders.
   private static final Matcher<ExpressionTree> PROTO_RECEIVER_OR_BUILDER =
       instanceMethod()
           .onDescendantOfAny(MESSAGE_LITE_OR_BUILDER, GENERATED_MESSAGE, GENERATED_MESSAGE_LITE);
@@ -374,11 +374,9 @@ public final class ImpossibleNullComparison extends BugChecker
     return builder.replace(lastIndexOf, lastIndexOf + pattern.length(), replacement).toString();
   }
 
-  /** Generates a replacement, if available. */
+  /// Generates a replacement, if available.
   private interface Fixer {
-    /**
-     * @param negated whether the replacement should be negated.
-     */
+    /// @param negated whether the replacement should be negated.
     Optional<String> getReplacement(boolean negated, VisitorState state);
   }
 
@@ -510,7 +508,7 @@ public final class ImpossibleNullComparison extends BugChecker
         return GetterTypes::emptyFix;
       }
     },
-    /** {@code proto.getFoo()} */
+    /// `proto.getFoo()`
     SCALAR {
       @Override
       @Nullable Fixer match(ExpressionTree tree, VisitorState state, boolean checkOrBuilder) {
@@ -557,7 +555,7 @@ public final class ImpossibleNullComparison extends BugChecker
         return builder.replace(lastIndexOf, lastIndexOf + pattern.length(), replacement).toString();
       }
     },
-    /** {@code proto.getRepeatedFoo(index)} */
+    /// `proto.getRepeatedFoo(index)`
     VECTOR_INDEXED {
       @Override
       @Nullable Fixer match(ExpressionTree tree, VisitorState state, boolean checkOrBuilder) {
@@ -589,7 +587,7 @@ public final class ImpossibleNullComparison extends BugChecker
             visitorState.getSourceForNode(getOnlyElement(methodInvocation.getArguments())));
       }
     },
-    /** {@code proto.getRepeatedFooList()} */
+    /// `proto.getRepeatedFooList()`
     VECTOR {
       @Override
       @Nullable Fixer match(ExpressionTree tree, VisitorState state, boolean checkOrBuilder) {
@@ -617,7 +615,7 @@ public final class ImpossibleNullComparison extends BugChecker
         return negated ? replacement : ("!" + replacement);
       }
     },
-    /** {@code proto.getField(f)} or {@code proto.getExtension(outer, extension)}; */
+    /// `proto.getField(f)` or `proto.getExtension(outer, extension)`;
     EXTENSION_METHOD {
       @Override
       @Nullable Fixer match(ExpressionTree tree, VisitorState state, boolean checkOrBuilder) {
@@ -671,10 +669,8 @@ public final class ImpossibleNullComparison extends BugChecker
       return checkOrBuilder ? PROTO_RECEIVER_OR_BUILDER : PROTO_RECEIVER_LEGACY;
     }
 
-    /**
-     * Returns a Fixer representing a situation where we don't have a fix, but want to mark a
-     * callsite as containing a bug.
-     */
+    /// Returns a Fixer representing a situation where we don't have a fix, but want to mark a
+    /// callsite as containing a bug.
     private static Optional<String> emptyFix(boolean n, VisitorState s) {
       return Optional.empty();
     }
@@ -691,7 +687,7 @@ public final class ImpossibleNullComparison extends BugChecker
   }
 
   private enum ProblemUsage {
-    /** Matches direct comparisons to null. */
+    /// Matches direct comparisons to null.
     COMPARISON {
       @Override
       SuggestedFix fix(Fixer fixer, ExpressionTree tree, VisitorState state) {
@@ -699,7 +695,7 @@ public final class ImpossibleNullComparison extends BugChecker
         return replacement.map(r -> SuggestedFix.replace(tree, r)).orElse(SuggestedFix.emptyFix());
       }
     },
-    /** Matches comparisons with Truth, i.e. {@code assertThat(proto.getField()).isNull()}. */
+    /// Matches comparisons with Truth, i.e. `assertThat(proto.getField()).isNull()`.
     TRUTH {
       @Override
       SuggestedFix fix(Fixer fixer, ExpressionTree tree, VisitorState state) {
@@ -714,7 +710,7 @@ public final class ImpossibleNullComparison extends BugChecker
             .orElse(SuggestedFix.emptyFix());
       }
     },
-    /** Matches comparisons with JUnit, i.e. {@code assertNotNull(proto.getField())}. */
+    /// Matches comparisons with JUnit, i.e. `assertNotNull(proto.getField())`.
     JUNIT {
       @Override
       SuggestedFix fix(Fixer fixer, ExpressionTree tree, VisitorState state) {
@@ -731,7 +727,7 @@ public final class ImpossibleNullComparison extends BugChecker
             .orElse(SuggestedFix.emptyFix());
       }
     },
-    /** Matches precondition checks, i.e. {@code checkNotNull(proto.getField())}. */
+    /// Matches precondition checks, i.e. `checkNotNull(proto.getField())`.
     CHECK_NOT_NULL {
       @Override
       SuggestedFix fix(Fixer fixer, ExpressionTree tree, VisitorState state) {
@@ -743,7 +739,7 @@ public final class ImpossibleNullComparison extends BugChecker
                 tree, state.getSourceForNode(methodInvocationTree.getArguments().get(0)));
       }
     },
-    /** Matches comparisons with JUnit, i.e. {@code assertNotNull(proto.getField())}. */
+    /// Matches comparisons with JUnit, i.e. `assertNotNull(proto.getField())`.
     OPTIONAL {
       @Override
       SuggestedFix fix(Fixer fixer, ExpressionTree tree, VisitorState state) {
@@ -751,16 +747,14 @@ public final class ImpossibleNullComparison extends BugChecker
         return SuggestedFixes.renameMethodInvocation(methodInvocationTree, "of", state);
       }
     },
-    /** Matches null checks returning {@code true} when null, like {@code Objects.isNull(x)}. */
+    /// Matches null checks returning `true` when null, like `Objects.isNull(x)`.
     IS_NULL {
       @Override
       SuggestedFix fix(Fixer fixer, ExpressionTree tree, VisitorState state) {
         return fixNullCheckMethod(fixer, tree, /* isNullCheck= */ true, state);
       }
     },
-    /**
-     * Matches null checks returning {@code true} when non-null, like {@code Objects.nonNull(x)}.
-     */
+    /// Matches null checks returning `true` when non-null, like `Objects.nonNull(x)`.
     NON_NULL {
       @Override
       SuggestedFix fix(Fixer fixer, ExpressionTree tree, VisitorState state) {

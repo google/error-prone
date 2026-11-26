@@ -21,15 +21,13 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-/**
- * Desired "after" version of a refactoring. Corresponds to a matching method annotated with {@link
- * BeforeTemplate}.
- *
- * <p>Multiple {@code @AfterTemplate}s can be provided. This is useful in Tricorder findings, where
- * multiple suggestions can be presented to the user.
- *
- * @author lowasser@google.com (Louis Wasserman)
- */
+/// Desired "after" version of a refactoring. Corresponds to a matching method annotated with
+/// [BeforeTemplate].
+///
+/// Multiple `@AfterTemplate`s can be provided. This is useful in Tricorder findings, where multiple
+/// suggestions can be presented to the user.
+///
+/// @author lowasser@google.com (Louis Wasserman)
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.SOURCE)
 public @interface AfterTemplate {}

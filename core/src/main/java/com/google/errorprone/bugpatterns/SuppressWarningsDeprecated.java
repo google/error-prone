@@ -36,11 +36,9 @@ import com.sun.source.tree.AnnotationTree;
 import java.util.List;
 import javax.lang.model.element.AnnotationMirror;
 
-/**
- * Find uses of SuppressWarnings with "deprecated".
- *
- * @author sjnickerson@google.com (Simon Nickerson)
- */
+/// Find uses of SuppressWarnings with "deprecated".
+///
+/// @author sjnickerson@google.com (Simon Nickerson)
 @BugPattern(
     summary = "Suppressing \"deprecated\" is probably a typo for \"deprecation\"",
     severity = ERROR)

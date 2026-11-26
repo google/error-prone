@@ -42,10 +42,8 @@ import javax.lang.model.element.Modifier;
 import javax.lang.model.element.Name;
 import javax.lang.model.type.TypeKind;
 
-/**
- * @author sulku@google.com (Marsela Sulku)
- * @author mariasam@google.com (Maria Sam)
- */
+/// @author sulku@google.com (Marsela Sulku)
+/// @author mariasam@google.com (Maria Sam)
 @BugPattern(
     summary = "Hiding fields of superclasses may cause confusion and errors",
     severity = WARNING,

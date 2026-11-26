@@ -42,10 +42,8 @@ import java.util.Set;
 import java.util.function.BiPredicate;
 import org.jspecify.annotations.Nullable;
 
-/**
- * The machinery and type definitions necessary to model and compile a single efficient matcher out
- * of a list of {@link com.google.errorprone.matchers.method.MethodMatchers.MethodMatcher}s.
- */
+/// The machinery and type definitions necessary to model and compile a single efficient matcher out
+/// of a list of [com.google.errorprone.matchers.method.MethodMatchers.MethodMatcher]s.
 public final class MethodInvocationMatcher {
 
   record Context(MethodSymbol sym, ExpressionTree tree) {
@@ -58,31 +56,25 @@ public final class MethodInvocationMatcher {
     }
   }
 
-  /**
-   * The kinds of things that count as a method invocation.
-   *
-   * <p><strong>This is part of the low-level API for constructing Rule objects dynamically.
-   * Consider using the fluent API from MethodMatcher, and the associated helpers in Matchers, when
-   * possible.</strong>
-   */
+  /// The kinds of things that count as a method invocation.
+  ///
+  /// **This is part of the low-level API for constructing Rule objects dynamically. Consider using
+  /// the fluent API from MethodMatcher, and the associated helpers in Matchers, when possible.**
   public enum MethodKind {
     STATIC,
     INSTANCE,
     CONSTRUCTOR
   }
 
-  /**
-   * The kinds of properties a matcher can match against.
-   *
-   * <p><strong>This is part of the low-level API for constructing Rule objects dynamically.
-   * Consider using the fluent API from MethodMatcher, and the associated helpers in Matchers, when
-   * possible.</strong>
-   *
-   * <p><em>The order of these enum constants is important</em>: it's the order in which we will
-   * search the graph (because we iterate over values() to decide what order to check predicates).
-   * Therefore, prefer putting first those properties which are cheap to check, or which will often
-   * result in a failure to match (so we can prune the search space).
-   */
+  /// The kinds of properties a matcher can match against.
+  ///
+  /// **This is part of the low-level API for constructing Rule objects dynamically. Consider using
+  /// the fluent API from MethodMatcher, and the associated helpers in Matchers, when possible.**
+  ///
+  /// *The order of these enum constants is important*: it's the order in which we will search the
+  /// graph (because we iterate over values() to decide what order to check predicates). Therefore,
+  /// prefer putting first those properties which are cheap to check, or which will often result in
+  /// a failure to match (so we can prune the search space).
   public enum TokenType {
     KIND {
       @Override
@@ -128,25 +120,21 @@ public final class MethodInvocationMatcher {
     abstract Object extract(Context ctx, VisitorState s);
   }
 
-  /**
-   * A specific value for a property that a method invocation can have.
-   *
-   * <p><strong>This is part of the low-level API for constructing Rule objects dynamically.
-   * Consider using the fluent API from MethodMatcher, and the associated helpers in Matchers, when
-   * possible. Do not create your own implementations of this interface.</strong>
-   */
+  /// A specific value for a property that a method invocation can have.
+  ///
+  /// **This is part of the low-level API for constructing Rule objects dynamically. Consider using
+  /// the fluent API from MethodMatcher, and the associated helpers in Matchers, when possible. Do
+  /// not create your own implementations of this interface.**
   public interface Token {
 
-    /** The category of properties that this value falls into. */
+    /// The category of properties that this value falls into.
     TokenType type();
 
-    /**
-     * The value to compare with {@link TokenType#extract(Context, VisitorState)} to determine
-     * whether this property matches.
-     */
+    /// The value to compare with [TokenType#extract(Context, VisitorState)] to determine whether
+    /// this property matches.
     Object comparisonKey();
 
-    /** A token limiting the {@link Kind} of invocation to match. */
+    /// A token limiting the [Kind] of invocation to match.
     public record Kind(MethodKind kind) implements Token {
       public static Kind create(MethodKind kind) {
         return new Kind(kind);
@@ -163,7 +151,7 @@ public final class MethodInvocationMatcher {
       }
     }
 
-    /** A token limiting the name of the method being invoked. */
+    /// A token limiting the name of the method being invoked.
     public record MethodName(String methodName) implements Token {
       @Override
       public Object comparisonKey() {
@@ -180,7 +168,7 @@ public final class MethodInvocationMatcher {
       }
     }
 
-    /** A token limiting the types of the formal parameters of the method being invoked. */
+    /// A token limiting the types of the formal parameters of the method being invoked.
     public record ParameterTypes(ImmutableList<String> parameterTypes) implements Token {
       @Override
       public TokenType type() {
@@ -197,7 +185,7 @@ public final class MethodInvocationMatcher {
       }
     }
 
-    /** A token specifying the class or interface in which the invoked method was defined. */
+    /// A token specifying the class or interface in which the invoked method was defined.
     public record DefinedIn(String owner) implements Token {
       public static DefinedIn create(String owner) {
         return new DefinedIn(owner);
@@ -214,10 +202,8 @@ public final class MethodInvocationMatcher {
       }
     }
 
-    /**
-     * A token specifying the exact type of the object on which the method is being invoked (or the
-     * class in which it is defined, for static methods).
-     */
+    /// A token specifying the exact type of the object on which the method is being invoked (or the
+    /// class in which it is defined, for static methods).
     public record ReceiverType(String receiverType) implements Token {
       public static ReceiverType create(String receiverType) {
         return new ReceiverType(receiverType);
@@ -234,10 +220,8 @@ public final class MethodInvocationMatcher {
       }
     }
 
-    /**
-     * A token specifying that the class of the object on which the method is being invoked must be
-     * a subtype of another type.
-     */
+    /// A token specifying that the class of the object on which the method is being invoked must be
+    /// a subtype of another type.
     public record ReceiverSupertype(String receiverSupertype) implements Token {
       @Override
       public TokenType type() {
@@ -257,16 +241,13 @@ public final class MethodInvocationMatcher {
     }
   }
 
-  /**
-   * A rule describing a set of constraints for a method invocation. For each TokenType, a Rule
-   * specifies 0 or more Tokens describing what values are allowed for that type.
-   *
-   * <p><strong>This is part of the low-level API for constructing Rule objects dynamically.
-   * Consider using the fluent API from MethodMatcher, and the associated helpers in Matchers, when
-   * possible.</strong>
-   */
+  /// A rule describing a set of constraints for a method invocation. For each TokenType, a Rule
+  /// specifies 0 or more Tokens describing what values are allowed for that type.
+  ///
+  /// **This is part of the low-level API for constructing Rule objects dynamically. Consider using
+  /// the fluent API from MethodMatcher, and the associated helpers in Matchers, when possible.**
   public record Rule(ImmutableMap<TokenType, ? extends Set<Token>> required) {
-    /** Builds a Rule object from a map. */
+    /// Builds a Rule object from a map.
     public static Rule create(ImmutableMap<TokenType, ? extends Set<Token>> required) {
       return new Rule(required);
     }
@@ -274,19 +255,17 @@ public final class MethodInvocationMatcher {
     // An absent token means to allow any value for this token type
   }
 
-  /** A Node is just a type synonym for Object - it's just a unique pointer. */
+  /// A Node is just a type synonym for Object - it's just a unique pointer.
   private static class Node {}
 
-  /**
-   * A map describing where to look next based on the current token, and a default if none match.
-   */
+  /// A map describing where to look next based on the current token, and a default if none match.
   private record NodeWithDefault(
       Set<Node> states, @Nullable Set<Node> def, SetMultimap<Token, Node> mapping) {}
 
-  /** Shared by all compiled graphs, because it has no varying properties. */
+  /// Shared by all compiled graphs, because it has no varying properties.
   private static final Node ACCEPT = new Node();
 
-  /** Converts a DFA produced by {@link #compile(Iterable)} into a Matcher based on map lookups. */
+  /// Converts a DFA produced by [#compile(Iterable)] into a Matcher based on map lookups.
   private static final class GraphMatcher {
     static Matcher<ExpressionTree> from(
         Map<Set<Node>, NodeWithDefault> mappings, NodeWithDefault root) {
@@ -366,12 +345,10 @@ public final class MethodInvocationMatcher {
     }
   }
 
-  /**
-   * Constructs a Matcher that matches for method invocations (including constructor invocations)
-   * satisfying at least one of the given Rule specifications. For an easy way to create such Rules,
-   * see the factories in {@link com.google.errorprone.matchers.Matchers} returning subtypes of
-   * {@link com.google.errorprone.matchers.method.MethodMatchers.MethodMatcher}.
-   */
+  /// Constructs a Matcher that matches for method invocations (including constructor invocations)
+  /// satisfying at least one of the given Rule specifications. For an easy way to create such
+  /// Rules, see the factories in [com.google.errorprone.matchers.Matchers] returning subtypes of
+  /// [com.google.errorprone.matchers.method.MethodMatchers.MethodMatcher].
   public static Matcher<ExpressionTree> compile(Iterable<Rule> rules) {
 
     // A set of Rule objects represents a predicate stated in disjunctive normal form, where the

@@ -44,7 +44,7 @@ import javax.tools.JavaFileObject;
 import javax.tools.StandardJavaFileManager;
 import org.jspecify.annotations.Nullable;
 
-/** An Error Prone compiler that implements {@link javax.tools.JavaCompiler}. */
+/// An Error Prone compiler that implements [javax.tools.JavaCompiler].
 public class BaseErrorProneJavaCompiler implements JavaCompiler {
 
   private final JavaCompiler javacTool;
@@ -126,11 +126,8 @@ public class BaseErrorProneJavaCompiler implements JavaCompiler {
     return filtered;
   }
 
-  /**
-   * Returns {@code args} with Error Prone's required javac defaults ({@code
-   * -XDcompilePolicy=simple}, {@code --should-stop=ifError=FLOW}, and {@code
-   * -XDaddTypeAnnotationsToSymbol=true}) prepended.
-   */
+  /// Returns `args` with Error Prone's required javac defaults (`-XDcompilePolicy=simple`,
+  /// `--should-stop=ifError=FLOW`, and `-XDaddTypeAnnotationsToSymbol=true`) prepended.
   public static ImmutableList<String> applyRequiredJavacOptions(ImmutableList<String> args) {
     // Prepend defaults rather than appending so trailing dangling options (e.g., `-cp`) cannot
     // consume them, and so javac's last-wins semantics let valid explicit overrides (e.g.,
@@ -150,21 +147,17 @@ public class BaseErrorProneJavaCompiler implements JavaCompiler {
         .build();
   }
 
-  /**
-   * Validates that {@code options} satisfy Error Prone's required javac options ({@code
-   * -XDcompilePolicy}, {@code --should-stop=ifError}, and {@code -XDaddTypeAnnotationsToSymbol}).
-   */
+  /// Validates that `options` satisfy Error Prone's required javac options (`-XDcompilePolicy`,
+  /// `--should-stop=ifError`, and `-XDaddTypeAnnotationsToSymbol`).
   public static void checkRequiredJavacOptions(Options options) {
     checkCompilePolicy(options.get("compilePolicy"));
     checkShouldStopIfErrorPolicy(options.get("should-stop.ifError"));
     checkAddTypeAnnotationsToSymbol(options.get("addTypeAnnotationsToSymbol"));
   }
 
-  /**
-   * Default to compiling with the same -source and -target as the host's javac.
-   *
-   * <p>This prevents, e.g., targeting Java 8 by default when using error-prone on JDK7.
-   */
+  /// Default to compiling with the same -source and -target as the host's javac.
+  ///
+  /// This prevents, e.g., targeting Java 8 by default when using error-prone on JDK7.
   private static ImmutableList<String> defaultToLatestSupportedLanguageLevel(
       ImmutableList<String> args) {
 
@@ -186,10 +179,8 @@ public class BaseErrorProneJavaCompiler implements JavaCompiler {
         .build();
   }
 
-  /**
-   * Throws InvalidCommandLineOptionException if the {@code -XDcompilePolicy} flag is set to an
-   * unsupported value
-   */
+  /// Throws InvalidCommandLineOptionException if the `-XDcompilePolicy` flag is set to an
+  /// unsupported value
   static void checkCompilePolicy(@Nullable String compilePolicy) {
     if (compilePolicy == null) {
       throw new InvalidCommandLineOptionException(
@@ -237,7 +228,7 @@ public class BaseErrorProneJavaCompiler implements JavaCompiler {
     }
   }
 
-  /** Registers our message bundle. */
+  /// Registers our message bundle.
   public static void setupMessageBundle(Context context) {
     ResourceBundle bundle = ResourceBundle.getBundle("com.google.errorprone.errors");
     JavacMessages.instance(context).add(l -> bundle);

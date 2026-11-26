@@ -34,15 +34,13 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * Tests for EnclosedByReverseHeuristic
- *
- * @author andrewrice@google.com (Andrew Rice)
- */
+/// Tests for EnclosedByReverseHeuristic
+///
+/// @author andrewrice@google.com (Andrew Rice)
 @RunWith(JUnit4.class)
 public class CreatesDuplicateCallHeuristicTest {
 
-  /** A {@link BugChecker} which runs the CreatesDuplicateCallHeuristic and prints the result */
+  /// A [BugChecker] which runs the CreatesDuplicateCallHeuristic and prints the result
   @BugPattern(
       severity = SeverityLevel.ERROR,
       summary = "Runs CreateDuplicateCallHeuristic and prints the result")

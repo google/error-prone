@@ -38,7 +38,7 @@ import com.sun.source.tree.NewClassTree;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
-/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
+/// A [BugChecker]; see the associated [BugPattern] annotation for details.
 @BugPattern(
     summary = "Prefer StandardCharsets over using string names for charsets",
     severity = WARNING)

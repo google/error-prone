@@ -37,7 +37,7 @@ import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.IdentifierTree;
 import java.util.Optional;
 
-/** See the {@code summary}. */
+/// See the `summary`.
 @BugPattern(
     summary = "Giving BugPatterns a name different to the enclosing class can be confusing",
     severity = WARNING)

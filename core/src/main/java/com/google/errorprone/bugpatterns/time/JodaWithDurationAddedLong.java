@@ -35,10 +35,8 @@ import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 
-/**
- * Check for calls to JodaTime's {@code type.withDurationAdded(long, int)} where {@code <type> =
- * {Duration,Instant,DateTime}}.
- */
+/// Check for calls to JodaTime's `type.withDurationAdded(long, int)` where `<type> =
+/// {Duration,Instant,DateTime}`.
 @BugPattern(
     summary =
         "Use of JodaTime's type.withDurationAdded(long, int) (where <type> = "

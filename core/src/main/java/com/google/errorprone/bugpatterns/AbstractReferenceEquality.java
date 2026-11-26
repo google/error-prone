@@ -39,14 +39,12 @@ import com.sun.source.util.TreePath;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * Abstract implementation of a BugPattern that detects the use of reference equality to compare
- * classes with value semantics.
- *
- * <p>See e.g. {@link OptionalEquality}, {@link ProtoStringFieldReferenceEquality}.
- *
- * @author cushon@google.com (Liam Miller-Cushon)
- */
+/// Abstract implementation of a BugPattern that detects the use of reference equality to compare
+/// classes with value semantics.
+///
+/// See e.g. [OptionalEquality], [ProtoStringFieldReferenceEquality].
+///
+/// @author cushon@google.com (Liam Miller-Cushon)
 /*
  * TODO: cl/931296006 - Convert this to a CompilationUnitTreeMatcher so that ReferenceEquality
  * doesn't need to override it into one? It might perform worse, though, for users who run the other

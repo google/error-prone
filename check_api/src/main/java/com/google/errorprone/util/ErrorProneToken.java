@@ -23,7 +23,7 @@ import com.sun.tools.javac.parser.Tokens.Token;
 import com.sun.tools.javac.parser.Tokens.TokenKind;
 import com.sun.tools.javac.util.Name;
 
-/** Wraps a javac {@link Token} to return comments in declaration order. */
+/// Wraps a javac [Token] to return comments in declaration order.
 public class ErrorProneToken {
   private final Token token;
   private final int offset;

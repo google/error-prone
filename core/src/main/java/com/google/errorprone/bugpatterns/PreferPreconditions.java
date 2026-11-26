@@ -60,10 +60,8 @@ import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.TypeElement;
 import org.jspecify.annotations.Nullable;
 
-/**
- * A check that suggests using {@link com.google.common.base.Preconditions} instead of explicit
- * if-throw checks on method parameters.
- */
+/// A check that suggests using [com.google.common.base.Preconditions] instead of explicit if-throw
+/// checks on method parameters.
 @BugPattern(
     summary = "Consider using Preconditions instead of explicit if-throw for parameter validation.",
     severity = WARNING)
@@ -140,10 +138,8 @@ public final class PreferPreconditions extends BugChecker implements IfTreeMatch
     return NO_MATCH;
   }
 
-  /**
-   * Returns the {@link ThrowTree} if {@code then} is a single throw statement, or a block
-   * containing a single throw statement; otherwise returns {@code null}.
-   */
+  /// Returns the [ThrowTree] if `then` is a single throw statement, or a block containing a single
+  /// throw statement; otherwise returns `null`.
   private static @Nullable ThrowTree getSingleThrow(StatementTree then) {
     if (then instanceof ThrowTree throwTree) {
       return throwTree;
@@ -157,15 +153,13 @@ public final class PreferPreconditions extends BugChecker implements IfTreeMatch
     return null;
   }
 
-  /**
-   * Returns {@code expr} as a {@link NewClassTree} if it's a constructor call of the thrown
-   * exception; otherwise returns {@code null}.
-   */
+  /// Returns `expr` as a [NewClassTree] if it's a constructor call of the thrown exception;
+  /// otherwise returns `null`.
   private static @Nullable NewClassTree getThrownNewClass(ExpressionTree expr) {
     return stripParentheses(expr) instanceof NewClassTree newClassTree ? newClassTree : null;
   }
 
-  /** Returns true if {@code tree} contains any references to method parameters. */
+  /// Returns true if `tree` contains any references to method parameters.
   private static boolean usesMethodParameter(Tree tree) {
     var scanner =
         new TreeScanner<Void, Void>() {
@@ -189,10 +183,8 @@ public final class PreferPreconditions extends BugChecker implements IfTreeMatch
     return scanner.foundMethodParameter;
   }
 
-  /**
-   * If {@code condition} is of the form {@code a == null} or {@code null == a}, returns the
-   * expression {@code a}; otherwise returns {@code null}.
-   */
+  /// If `condition` is of the form `a == null` or `null == a`, returns the expression `a`;
+  /// otherwise returns `null`.
   private static @Nullable ExpressionTree getNullCheckedExpression(ExpressionTree condition) {
     if (condition instanceof BinaryTree binary && binary.getKind() == Tree.Kind.EQUAL_TO) {
       if (binary.getLeftOperand().getKind() == Tree.Kind.NULL_LITERAL) {
@@ -205,10 +197,8 @@ public final class PreferPreconditions extends BugChecker implements IfTreeMatch
     return null;
   }
 
-  /**
-   * Returns a {@link Description} with a {@link SuggestedFix} to replace {@code ifTree} with a call
-   * to {@code Preconditions.method}.
-   */
+  /// Returns a [Description] with a [SuggestedFix] to replace `ifTree` with a call to
+  /// `Preconditions.method`.
   private Description suggest(
       IfTree ifTree,
       String method,
@@ -236,13 +226,11 @@ public final class PreferPreconditions extends BugChecker implements IfTreeMatch
     return describeMatch(ifTree, fix.replace(ifTree, replacement.toString()).build());
   }
 
-  /**
-   * Returns true if all arguments to the exception constructor are side-effect-free.
-   *
-   * <p>This is to avoid hoisting side-effects, which could change behavior. For example, changing
-   * {@code if (foo == null) { throw new NPE(bar()); }} to {@code checkNotNull(foo, bar())} would
-   * cause {@code bar()} to be evaluated even if {@code foo} is not null.
-   */
+  /// Returns true if all arguments to the exception constructor are side-effect-free.
+  ///
+  /// This is to avoid hoisting side-effects, which could change behavior. For example, changing `if
+  /// (foo == null) { throw new NPE(bar()); }` to `checkNotNull(foo, bar())` would cause `bar()` to
+  /// be evaluated even if `foo` is not null.
   private boolean areArgumentsSideEffectFree(NewClassTree newClass, VisitorState state) {
     List<? extends ExpressionTree> args = newClass.getArguments();
     if (args.isEmpty()) {
@@ -258,11 +246,8 @@ public final class PreferPreconditions extends BugChecker implements IfTreeMatch
         .allMatch(arg -> constantExpressions.constantExpression(arg, state).isPresent());
   }
 
-  /**
-   * If {@code tree} is a call to {@code String.format} or {@code Strings.lenientFormat} with a
-   * literal format string that's safe for Preconditions, returns its arguments. Otherwise returns
-   * null.
-   */
+  /// If `tree` is a call to `String.format` or `Strings.lenientFormat` with a literal format string
+  /// that's safe for Preconditions, returns its arguments. Otherwise returns null.
   private static @Nullable List<? extends ExpressionTree> getSafeStringFormatArgs(
       ExpressionTree tree, VisitorState state) {
     if (STRING_FORMAT.matches(tree, state)) {
@@ -277,12 +262,10 @@ public final class PreferPreconditions extends BugChecker implements IfTreeMatch
     return null;
   }
 
-  /**
-   * Appends {@code newClass}'s arguments to {@code sb} as arguments to a Preconditions call.
-   *
-   * <p>If the only argument is a safe call to {@code String.format}, its arguments are unpacked to
-   * become arguments to the Preconditions method.
-   */
+  /// Appends `newClass`'s arguments to `sb` as arguments to a Preconditions call.
+  ///
+  /// If the only argument is a safe call to `String.format`, its arguments are unpacked to become
+  /// arguments to the Preconditions method.
   private void appendArguments(StringBuilder sb, NewClassTree newClass, VisitorState state) {
     List<? extends ExpressionTree> args = newClass.getArguments();
     if (args.isEmpty()) {
@@ -296,14 +279,12 @@ public final class PreferPreconditions extends BugChecker implements IfTreeMatch
     args.forEach(arg -> sb.append(", ").append(state.getSourceForNode(arg)));
   }
 
-  /**
-   * Returns true if the template string is safe to be passed to Preconditions varargs methods,
-   * which only support {@code %s} placeholders.
-   *
-   * <p>Preconditions' format methods (e.g., {@code checkArgument}) only support the {@code %s}
-   * format specifier. Other specifiers, including {@code %%} for a literal percent sign, are not
-   * supported and would lead to runtime errors if passed to Preconditions.
-   */
+  /// Returns true if the template string is safe to be passed to Preconditions varargs methods,
+  /// which only support `%s` placeholders.
+  ///
+  /// Preconditions' format methods (e.g., `checkArgument`) only support the `%s` format specifier.
+  /// Other specifiers, including `%%` for a literal percent sign, are not supported and would lead
+  /// to runtime errors if passed to Preconditions.
   private static boolean isSafeForPreconditions(String template) {
     int index = 0;
     while ((index = template.indexOf('%', index)) != -1) {
@@ -318,13 +299,11 @@ public final class PreferPreconditions extends BugChecker implements IfTreeMatch
     return true;
   }
 
-  /**
-   * Returns a source representation of {@code condition}, heuristically negated.
-   *
-   * <p>If {@code condition} is a binary operator, we swap it for its negated counterpart (e.g.,
-   * {@code ==} becomes {@code !=}). If it's a unary negation, we strip the negation. Otherwise, we
-   * prefix it with {@code !}.
-   */
+  /// Returns a source representation of `condition`, heuristically negated.
+  ///
+  /// If `condition` is a binary operator, we swap it for its negated counterpart (e.g., `==`
+  /// becomes `!=`). If it's a unary negation, we strip the negation. Otherwise, we prefix it with
+  /// `!`.
   private static String negate(ExpressionTree condition, VisitorState state) {
     condition = stripParentheses(condition);
     if (condition instanceof BinaryTree binary) {
@@ -358,13 +337,13 @@ public final class PreferPreconditions extends BugChecker implements IfTreeMatch
     };
   }
 
-  /** Returns true if either operand of {@code binary} is a float or double. */
+  /// Returns true if either operand of `binary` is a float or double.
   private static boolean isFloatingPoint(BinaryTree binary, VisitorState state) {
     return isFloatingPoint(getType(binary.getLeftOperand()), state)
         || isFloatingPoint(getType(binary.getRightOperand()), state);
   }
 
-  /** Returns true if {@code type} is a float or double. */
+  /// Returns true if `type` is a float or double.
   private static boolean isFloatingPoint(@Nullable Type type, VisitorState state) {
     if (type == null) {
       return false;

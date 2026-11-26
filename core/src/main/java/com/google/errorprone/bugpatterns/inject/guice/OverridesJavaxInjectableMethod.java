@@ -31,13 +31,11 @@ import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.MethodTree;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 
-/**
- * This checker matches methods that 1) are not themselves annotated with @Inject 2) descend from a
- * method that is annotated with @javax.inject.Inject 3) do not descent from a method that is
- * annotated with @com.google.inject.Inject
- *
- * @author sgoldfeder@google.com (Steven Goldfeder)
- */
+/// This checker matches methods that 1) are not themselves annotated with @Inject 2) descend from a
+/// method that is annotated with @javax.inject.Inject 3) do not descent from a method that is
+/// annotated with @com.google.inject.Inject
+///
+/// @author sgoldfeder@google.com (Steven Goldfeder)
 @BugPattern(
     summary =
         "This method is not annotated with @Inject, but it overrides a method that is "

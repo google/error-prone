@@ -27,18 +27,14 @@ import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 
-/**
- * Heuristic to detect if the name for the formal parameter has been used in the comment for an
- * actual parameter - if it has then we shouldn't swap that parameter.
- *
- * @author andrewrice@google.com (Andrew Rice)
- */
+/// Heuristic to detect if the name for the formal parameter has been used in the comment for an
+/// actual parameter - if it has then we shouldn't swap that parameter.
+///
+/// @author andrewrice@google.com (Andrew Rice)
 final class NameInCommentHeuristic implements Heuristic {
 
-  /**
-   * Return true if there are no comments on the original actual parameter of a change which match
-   * the name of the formal parameter.
-   */
+  /// Return true if there are no comments on the original actual parameter of a change which match
+  /// the name of the formal parameter.
   @Override
   public boolean isAcceptableChange(
       Changes changes, Tree node, MethodSymbol symbol, VisitorState state) {

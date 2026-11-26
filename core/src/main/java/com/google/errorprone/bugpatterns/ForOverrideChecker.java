@@ -43,13 +43,11 @@ import com.sun.tools.javac.code.Types;
 import javax.lang.model.element.Modifier;
 import org.jspecify.annotations.Nullable;
 
-/**
- * Verifies that methods marked {@link com.google.errorprone.annotations.ForOverride} are only
- * called from the defining class.
- *
- * <p>Specifically, all calls to the method have to occur within the context of the outermost class
- * where the method is defined.
- */
+/// Verifies that methods marked [com.google.errorprone.annotations.ForOverride] are only called
+/// from the defining class.
+///
+/// Specifically, all calls to the method have to occur within the context of the outermost class
+/// where the method is defined.
 @BugPattern(
     name = "ForOverride",
     summary =
@@ -142,12 +140,10 @@ public class ForOverrideChecker extends BugChecker
     return Description.NO_MATCH;
   }
 
-  /**
-   * Returns the method that 'directly' contains the leaf element of the given path.
-   *
-   * <p>By 'direct', we mean that if the leaf is part of a field initializer of a class, then it is
-   * considered to not be part of any method.
-   */
+  /// Returns the method that 'directly' contains the leaf element of the given path.
+  ///
+  /// By 'direct', we mean that if the leaf is part of a field initializer of a class, then it is
+  /// considered to not be part of any method.
   private static @Nullable MethodTree findDirectMethod(TreePath path) {
     while (true) {
       path = path.getParentPath();
@@ -166,7 +162,7 @@ public class ForOverrideChecker extends BugChecker
     }
   }
 
-  /** Returns true if this method invocation is of the form {@code super.foo()} */
+  /// Returns true if this method invocation is of the form `super.foo()`
   private static boolean isSuperCall(Type type, MethodInvocationTree tree, VisitorState state) {
     if (tree.getMethodSelect() instanceof MemberSelectTree select) {
       if (select.getExpression() instanceof IdentifierTree ident) {
@@ -180,14 +176,12 @@ public class ForOverrideChecker extends BugChecker
     return false;
   }
 
-  /**
-   * Get overridden @ForOverride methods.
-   *
-   * @param state the VisitorState
-   * @param method the method to find overrides for
-   * @return a list of methods annotated @ForOverride that the method overrides, including the
-   *     method itself if it has the annotation
-   */
+  /// Get overridden @ForOverride methods.
+  ///
+  /// @param state the VisitorState
+  /// @param method the method to find overrides for
+  /// @return a list of methods annotated @ForOverride that the method overrides, including the
+  ///   method itself if it has the annotation
   private static ImmutableList<MethodSymbol> getOverriddenMethods(
       VisitorState state, MethodSymbol method) {
     // Static methods cannot override, only overload.
@@ -211,7 +205,7 @@ public class ForOverrideChecker extends BugChecker
     return result.build();
   }
 
-  /** Get the outermost class/interface/enum of an element, or null if none. */
+  /// Get the outermost class/interface/enum of an element, or null if none.
   private static @Nullable Type getOutermostClass(VisitorState state) {
     ClassTree outermostClass = null;
     for (Tree tree : state.getPath()) {

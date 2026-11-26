@@ -18,7 +18,7 @@ package com.google.errorprone.fixes;
 
 import com.sun.tools.javac.tree.JCTree;
 
-/** Describes a tree position with adjustments to the start and end indices. */
+/// Describes a tree position with adjustments to the start and end indices.
 public record AdjustedPosition(
     JCTree position, int startPositionAdjustment, int endPositionAdjustment)
     implements ErrorPronePosition {

@@ -22,7 +22,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** Unit tests for {@link TypeNameShadowing} */
+/// Unit tests for [TypeNameShadowing]
 @RunWith(JUnit4.class)
 public class TypeNameShadowingTest {
 
@@ -357,11 +357,9 @@ public class TypeNameShadowingTest {
         .doTest();
   }
 
-  /**
-   * Tests that we only suggest a fix when the type variable name is style-guide-adherent;
-   * otherwise, it is likely the developer did not mean to use a generic and the fix is misleading
-   * Input program here is alpha-equivalent to the refactorMultiple test case; output only fixes T
-   */
+  /// Tests that we only suggest a fix when the type variable name is style-guide-adherent;
+  /// otherwise, it is likely the developer did not mean to use a generic and the fix is misleading
+  /// Input program here is alpha-equivalent to the refactorMultiple test case; output only fixes T
   @Test
   public void fixOnlyWellNamedVariables() {
     refactoring

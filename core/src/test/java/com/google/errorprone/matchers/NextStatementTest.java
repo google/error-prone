@@ -31,11 +31,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** Test for {@link NextStatement}. */
+/// Test for [NextStatement].
 @RunWith(JUnit4.class)
 public final class NextStatementTest {
 
-  /** A bugchecker to test the ability to notice the 'next statement' */
+  /// A bugchecker to test the ability to notice the 'next statement'
   @BugPattern(
       name = "CompoundAssignmentBeforeReturn",
       summary = "This is a compound assignment before another statement in the same block",

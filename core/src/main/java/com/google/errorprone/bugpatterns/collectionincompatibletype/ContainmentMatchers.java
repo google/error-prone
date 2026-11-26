@@ -24,13 +24,10 @@ import com.google.errorprone.matchers.Matchers;
 import com.sun.source.tree.ExpressionTree;
 import org.jspecify.annotations.Nullable;
 
-/** Matchers for methods which express containment, like {@link java.util.Collection#contains}. */
+/// Matchers for methods which express containment, like [java.util.Collection#contains].
 public final class ContainmentMatchers {
 
-  /**
-   * The least-common ancestor of all of the types of {@link #DIRECT_MATCHERS} and {@link
-   * #TYPE_ARG_MATCHERS}.
-   */
+  /// The least-common ancestor of all of the types of [#DIRECT_MATCHERS] and [#TYPE_ARG_MATCHERS].
   private static final Matcher<ExpressionTree> FIRST_ORDER_MATCHER =
       Matchers.anyMethod()
           .onDescendantOfAny(
@@ -40,7 +37,7 @@ public final class ContainmentMatchers {
               "java.util.Collections",
               "com.google.common.collect.Sets");
 
-  /** The "normal" case of extracting the type of a method argument */
+  /// The "normal" case of extracting the type of a method argument
   private static final ImmutableList<MethodArgMatcher> DIRECT_MATCHERS =
       ImmutableList.of(
           // "Normal" cases, e.g. Collection#remove(Object)
@@ -66,10 +63,8 @@ public final class ContainmentMatchers {
           new MethodArgMatcher("java.util.Vector", 0, 0, "lastIndexOf", "java.lang.Object", "int"),
           new MethodArgMatcher("java.util.Vector", 0, 0, "removeElement", "java.lang.Object"));
 
-  /**
-   * Cases where we need to extract the type argument from a method argument, e.g.
-   * Collection#containsAll(Collection<?>)
-   */
+  /// Cases where we need to extract the type argument from a method argument, e.g.
+  /// `Collection#containsAll(Collection<?>)`
   private static final ImmutableList<TypeArgOfMethodArgMatcher> TYPE_ARG_MATCHERS =
       ImmutableList.of(
           // Make sure to keep that the type or one of its supertype should be present in

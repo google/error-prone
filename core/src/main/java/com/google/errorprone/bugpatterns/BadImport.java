@@ -49,9 +49,7 @@ import java.util.Set;
 import javax.inject.Inject;
 import javax.lang.model.element.Name;
 
-/**
- * @author awturner@google.com (Andy Turner)
- */
+/// @author awturner@google.com (Andy Turner)
 @BugPattern(
     summary =
         "Importing nested classes/static methods/static fields with commonly-used names can make "
@@ -60,14 +58,11 @@ import javax.lang.model.element.Name;
             + "can make the code clearer.",
     severity = WARNING)
 public class BadImport extends BugChecker implements ImportTreeMatcher {
-  /**
-   * Class names which are bad as a direct import if they have an enclosing class.
-   *
-   * <p>The common factor for these names isn't just that they may be vague class names; there are
-   * many more examples of that. What's important is that they are vague <em>and</em> generally
-   * clarified by the name of the outer class (that is, {@code Foo.Builder} is clearer than {@code
-   * Builder}).
-   */
+  /// Class names which are bad as a direct import if they have an enclosing class.
+  ///
+  /// The common factor for these names isn't just that they may be vague class names; there are
+  /// many more examples of that. What's important is that they are vague *and* generally clarified
+  /// by the name of the outer class (that is, `Foo.Builder` is clearer than `Builder`).
   static final ImmutableSet<String> BAD_NESTED_CLASSES =
       ImmutableSet.of(
           "Builder",
@@ -104,19 +99,17 @@ public class BadImport extends BugChecker implements ImportTreeMatcher {
   private static final MultiMatcher<Tree, AnnotationTree> HAS_TYPE_USE_ANNOTATION =
       annotations(AT_LEAST_ONE, (t, state) -> isTypeAnnotation(getSymbol(t.getAnnotationType())));
 
-  /**
-   * Enclosing types that their nested type imports are vague.
-   *
-   * <p>Some types are meant to provide a namespace; therefore, imports for their nested types can
-   * be confusing.
-   *
-   * <p>For instance, unlike its name suggests, {@code org.immutables.value.Value.Immutable} is used
-   * to generate immutable value types, and its import can be misleading. So, importing {@code
-   * org.immutables.value.Value} and using {@code @Value.Immutable} is more favorable than importing
-   * {@code org.immutables.value.Value.Immutable} and using {@code @Immutable}.
-   *
-   * <p>Note that this does not disallow import an enclosing type but its nested types instead.
-   */
+  /// Enclosing types that their nested type imports are vague.
+  ///
+  /// Some types are meant to provide a namespace; therefore, imports for their nested types can be
+  /// confusing.
+  ///
+  /// For instance, unlike its name suggests, `org.immutables.value.Value.Immutable` is used to
+  /// generate immutable value types, and its import can be misleading. So, importing
+  /// `org.immutables.value.Value` and using `@Value.Immutable` is more favorable than importing
+  /// `org.immutables.value.Value.Immutable` and using `@Immutable`.
+  ///
+  /// Note that this does not disallow import an enclosing type but its nested types instead.
   private final ImmutableSet<String> badEnclosingTypes;
 
   private final boolean warnAboutTruth8AssertThat;

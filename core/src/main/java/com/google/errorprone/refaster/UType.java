@@ -20,12 +20,10 @@ import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Types;
 import org.jspecify.annotations.Nullable;
 
-/**
- * A serializable representation of a type template, used for enforcing type constraints on target
- * ASTs.
- *
- * @author Louis Wasserman
- */
+/// A serializable representation of a type template, used for enforcing type constraints on target
+/// ASTs.
+///
+/// @author Louis Wasserman
 public abstract class UType extends Types.SimpleVisitor<Choice<Unifier>, Unifier>
     implements Unifiable<Type>, Inlineable<Type> {
 

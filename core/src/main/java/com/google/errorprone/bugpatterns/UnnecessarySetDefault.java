@@ -63,7 +63,7 @@ import java.util.OptionalDouble;
 import java.util.OptionalInt;
 import java.util.OptionalLong;
 
-/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
+/// A [BugChecker]; see the associated [BugPattern] annotation for details.
 @BugPattern(summary = "Unnecessary call to NullPointerTester#setDefault", severity = SUGGESTION)
 public class UnnecessarySetDefault extends BugChecker implements MethodInvocationTreeMatcher {
 

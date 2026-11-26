@@ -78,7 +78,7 @@ import java.util.stream.Stream;
 import javax.inject.Inject;
 import javax.lang.model.element.Name;
 
-/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
+/// A [BugChecker]; see the associated [BugPattern] annotation for details.
 @BugPattern(
     summary = "Method returns a definitely null value but is not annotated @Nullable",
     severity = SUGGESTION)
@@ -121,14 +121,12 @@ public class ReturnMissingNullable extends BugChecker implements CompilationUnit
               .onClassAny("com.google.common.base.Preconditions", "com.google.common.base.Verify")
               .namedAnyOf("checkArgument", "checkState", "verify"));
 
-  /**
-   * A supplier that returns a set of methods <i>that users can <b>override</b></i> and whose
-   * implementations must in practice always return a nullable type.
-   *
-   * <p>We use this so that we can say things like "An implementation of {@code Map.get} should be
-   * annotated with {@code @Nullable}," <i>not</i> to say that things like "A method with {@code
-   * return map.get(foo)} should be annotated with {@code @Nullable}."
-   */
+  /// A supplier that returns a set of methods _that users can **override**_ and whose
+  /// implementations must in practice always return a nullable type.
+  ///
+  /// We use this so that we can say things like "An implementation of `Map.get` should be annotated
+  /// with `@Nullable`," *not* to say that things like "A method with `return map.get(foo)` should
+  /// be annotated with `@Nullable`."
   // TODO(cpovirk): For performance, generate a Multimap indexed by Name?
   private static final Supplier<ImmutableSet<MethodSymbol>> METHODS_KNOWN_TO_RETURN_NULL =
       memoize(state ->

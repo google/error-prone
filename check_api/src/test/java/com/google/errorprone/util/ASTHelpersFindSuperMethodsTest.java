@@ -34,11 +34,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * Test cases for {@link ASTHelpers#findSuperMethods(MethodSymbol, Types)}.
- *
- * @author Łukasz Hanuszczak (hanuszczak@google.com)
- */
+/// Test cases for [ASTHelpers#findSuperMethods(MethodSymbol, Types)].
+///
+/// @author Łukasz Hanuszczak (hanuszczak@google.com)
 @RunWith(JUnit4.class)
 public final class ASTHelpersFindSuperMethodsTest extends CompilerBasedAbstractTest {
 
@@ -173,19 +171,16 @@ public final class ASTHelpersFindSuperMethodsTest extends CompilerBasedAbstractT
     return scanner.getState().getTypes();
   }
 
-  /**
-   * A quite hacky class used to assert things in {@link ASTHelpersFindSuperMethodsTest}.
-   *
-   * <p>This does two things: it builds a mapping from class names and method names to method
-   * symbols (for easy assertions) and keeps track of the last visited {@link VisitorState}.
-   *
-   * <p>We cannot do assertions in the {@link Scanner#scan(Tree, VisitorState)} like all the other
-   * test cases do because we need data from all processed classes (and {@link Scanner#scan(Tree,
-   * VisitorState)} is triggered for every single class). Therefore we need to make all assertions
-   * in the test method itself but {@link ASTHelpers#findSuperMethods(MethodSymbol, Types)} requires
-   * a {@link VisitorState} to be used. So we simply remember last state passed to the {@link
-   * Scanner#scan(Tree, VisitorState)}.
-   */
+  /// A quite hacky class used to assert things in [ASTHelpersFindSuperMethodsTest].
+  ///
+  /// This does two things: it builds a mapping from class names and method names to method symbols
+  /// (for easy assertions) and keeps track of the last visited [VisitorState].
+  ///
+  /// We cannot do assertions inside [Scanner#scan(Tree, VisitorState)] like the other test cases
+  /// because we need data from all processed classes, and [Scanner#scan(Tree, VisitorState)] is
+  /// triggered for every single class. Therefore we make all assertions in the test method itself,
+  /// where [ASTHelpers#findSuperMethods(MethodSymbol, Types)] requires a [VisitorState]. So we
+  /// remember the last state passed to [Scanner#scan(Tree, VisitorState)].
   private static class FindSuperMethodsTestScanner extends Scanner {
 
     // A `class name -> method name -> method symbol` structure mapping of given files.

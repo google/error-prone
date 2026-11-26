@@ -25,7 +25,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** Tests of internal methods and flag parsing for new-style Error Prone command-line flags. */
+/// Tests of internal methods and flag parsing for new-style Error Prone command-line flags.
 @RunWith(JUnit4.class)
 public final class ErrorProneFlagsTest {
 
@@ -128,7 +128,7 @@ public final class ErrorProneFlagsTest {
     assertThat(nonEmptyFlags.getFlagsMap().isEmpty()).isFalse();
   }
 
-  /** An enum for testing. */
+  /// An enum for testing.
   public enum Colour {
     RED,
     YELLOW,

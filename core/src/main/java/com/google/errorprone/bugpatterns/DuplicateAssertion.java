@@ -47,7 +47,7 @@ import com.sun.source.tree.MethodInvocationTree;
 import com.sun.tools.javac.code.Type;
 import javax.inject.Inject;
 
-/** A BugPattern; see the {@code summary}. */
+/// A BugPattern; see the `summary`.
 @BugPattern(summary = "This assertion is duplicate.", severity = SeverityLevel.WARNING)
 public final class DuplicateAssertion extends BugChecker implements BlockTreeMatcher {
   private static final Matcher<ExpressionTree> JUNIT_ASSERT =
@@ -145,7 +145,7 @@ public final class DuplicateAssertion extends BugChecker implements BlockTreeMat
         || isSubtype(getType(receiver), CUSTOM_SUBJECT_BUILDER.get(state), state);
   }
 
-  /** Returns the number of arguments to skip so we ignore {@code message} arguments. */
+  /// Returns the number of arguments to skip so we ignore `message` arguments.
   private static int argumentsToSkip(MethodInvocationTree tree, VisitorState state) {
     var parameters = getSymbol(tree).getParameters();
     if (!isSameType(parameters.getFirst().type, state.getSymtab().stringType, state)) {

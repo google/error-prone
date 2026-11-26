@@ -22,14 +22,12 @@ import static java.lang.annotation.RetentionPolicy.CLASS;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
-/** Indicates that the annotated element should be used only while holding the specified lock. */
+/// Indicates that the annotated element should be used only while holding the specified lock.
 @Target({FIELD, METHOD})
 @Retention(CLASS)
 public @interface GuardedBy {
-  /**
-   * The lock that should be held, specified in the format given in <a
-   * href="https://errorprone.info/bugpattern/GuardedBy">the documentation for the corresponding
-   * Error Prone check</a>.
-   */
+  /// The lock that should be held, specified in the format given in [the documentation for the
+  /// corresponding Error Prone check](https://errorprone.info/bugpattern/GuardedBy).
+
   String value();
 }

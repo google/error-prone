@@ -44,9 +44,7 @@ import com.sun.source.tree.VariableTree;
 import com.sun.source.util.SimpleTreeVisitor;
 import org.jspecify.annotations.Nullable;
 
-/**
- * @author Ron Shapiro
- */
+/// @author Ron Shapiro
 @BugPattern(
     summary =
         "AndroidInjection.inject() should always be invoked before calling super.lifecycleMethod()",

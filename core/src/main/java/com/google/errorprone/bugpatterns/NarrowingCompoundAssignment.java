@@ -39,7 +39,7 @@ import com.sun.tools.javac.code.Types;
 import com.sun.tools.javac.tree.JCTree.JCBinary;
 import org.jspecify.annotations.Nullable;
 
-/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
+/// A [BugChecker]; see the associated [BugPattern] annotation for details.
 @BugPattern(
     summary = "Compound assignments may hide dangerous casts",
     severity = WARNING,
@@ -96,7 +96,7 @@ public class NarrowingCompoundAssignment extends BugChecker
     return buildDescription(tree).addFix(fix.get()).setMessage(message).build();
   }
 
-  /** Classifies bad casts. */
+  /// Classifies bad casts.
   private static @Nullable String identifyBadCast(Type lhs, Type rhs, Types types) {
     if (!lhs.isPrimitive()) {
       return null;
@@ -113,7 +113,7 @@ public class NarrowingCompoundAssignment extends BugChecker
         "Compound assignments from %s to %s hide lossy casts", prettyType(rhs), prettyType(lhs));
   }
 
-  /** Desugars a compound assignment, making the cast explicit. */
+  /// Desugars a compound assignment, making the cast explicit.
   private static Optional<Fix> rewriteCompoundAssignment(
       CompoundAssignmentTree tree, VisitorState state) {
     CharSequence var = state.getSourceForNode(tree.getVariable());

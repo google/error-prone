@@ -21,7 +21,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** Tests for {@link StaticAssignmentOfThrowable}. */
+/// Tests for [StaticAssignmentOfThrowable].
 @RunWith(JUnit4.class)
 public final class StaticAssignmentOfThrowableTest {
   private final CompilationTestHelper helper =

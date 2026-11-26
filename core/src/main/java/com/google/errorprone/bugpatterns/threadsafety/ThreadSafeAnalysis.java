@@ -46,9 +46,9 @@ import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.type.TypeKind;
 
-/** Analyzes types for deep thread safety. */
+/// Analyzes types for deep thread safety.
 public final class ThreadSafeAnalysis {
-  /** Factory for {@link ThreadSafeAnalysis}. */
+  /// Factory for [ThreadSafeAnalysis].
   public static final class Factory {
     private final WellKnownThreadSafety wellKnownThreadSafety;
 
@@ -93,18 +93,14 @@ public final class ThreadSafeAnalysis {
     return threadSafety.checkInvocation(methodType, symbol);
   }
 
-  /**
-   * Check that an {@code @ThreadSafe}-annotated class:
-   *
-   * <ul>
-   *   <li>does not declare or inherit any fields which are not thread safe,
-   *   <li>any threadsafe supertypes are instantiated with threadsafe type arguments as required by
-   *       their containerOf spec, and
-   *   <li>any enclosing instances are threadsafe.
-   * </ul>
-   *
-   * requiring supertypes to be annotated threadsafe would be too restrictive.
-   */
+  /// Check that an `@ThreadSafe`-annotated class:
+  ///
+  /// - does not declare or inherit any fields which are not thread safe,
+  /// - any threadsafe supertypes are instantiated with threadsafe type arguments as required by
+  ///   their containerOf spec, and
+  /// - any enclosing instances are threadsafe.
+  ///
+  /// requiring supertypes to be annotated threadsafe would be too restrictive.
   public Violation checkForThreadSafety(
       Optional<ClassTree> tree, ImmutableSet<String> threadSafeTypeParams, ClassType type) {
     Violation info = areFieldsThreadSafe(tree, threadSafeTypeParams, type);
@@ -183,12 +179,10 @@ public final class ThreadSafeAnalysis {
             threadSafety.getPrettyName(type.tsym), threadSafety.getPrettyName(superType.tsym)));
   }
 
-  /**
-   * Check a single class' fields for thread safety.
-   *
-   * @param threadSafeTypeParams the in-scope threadsafe type parameters
-   * @param classType the type to check the fields of
-   */
+  /// Check a single class' fields for thread safety.
+  ///
+  /// @param threadSafeTypeParams the in-scope threadsafe type parameters
+  /// @param classType the type to check the fields of
   Violation areFieldsThreadSafe(
       Optional<ClassTree> tree, ImmutableSet<String> threadSafeTypeParams, ClassType classType) {
     ClassSymbol classSym = (ClassSymbol) classType.tsym;
@@ -221,7 +215,7 @@ public final class ThreadSafeAnalysis {
     return Violation.absent();
   }
 
-  /** Check a single field for thread safe. */
+  /// Check a single field for thread safe.
   private Violation isFieldThreadSafe(
       Optional<Tree> tree,
       Set<String> threadSafeTypeParams,
@@ -287,10 +281,8 @@ public final class ThreadSafeAnalysis {
         String.format(message, threadSafety.getPrettyName(classSym), var.getSimpleName()));
   }
 
-  /**
-   * Gets the {@link Tree}'s {@code @ThreadSafe} annotation info, either from an annotation on the
-   * symbol or from the list of well-known immutable types.
-   */
+  /// Gets the [Tree]'s `@ThreadSafe` annotation info, either from an annotation on the symbol or
+  /// from the list of well-known immutable types.
   AnnotationInfo getThreadSafeAnnotation(Tree tree, VisitorState state) {
     Symbol sym = ASTHelpers.getSymbol(tree);
     return getThreadSafeAnnotation(sym, state);

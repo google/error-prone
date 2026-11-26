@@ -21,7 +21,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** Tests the {@link DoNotCallSuggester}. */
+/// Tests the [DoNotCallSuggester].
 @RunWith(JUnit4.class)
 public class DoNotCallSuggesterTest {
 

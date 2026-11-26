@@ -30,7 +30,7 @@ import com.google.errorprone.matchers.Matchers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 
-/** Ban usage of Joda's {@code ConverterManager}. */
+/// Ban usage of Joda's `ConverterManager`.
 @BugPattern(
     summary =
         "Joda-Time's ConverterManager makes the semantics of DateTime/Instant/etc construction"

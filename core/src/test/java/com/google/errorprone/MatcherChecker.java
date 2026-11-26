@@ -23,17 +23,12 @@ import com.google.errorprone.matchers.Matcher;
 import com.sun.source.tree.ExpressionStatementTree;
 import com.sun.source.tree.Tree;
 
-/**
- * A {@link BugChecker} that flags {@link ExpressionStatementTree}s that satisfy both of the
- * following:
- *
- * <ul>
- *   <li>The text of the tree is the same as the given {@code expressionStatement}, and
- *   <li>The given {@code matcher} matches the tree
- * </ul>
- *
- * <p>Useful for testing {@link Matcher}s.
- */
+/// A [BugChecker] that flags [ExpressionStatementTree]s that satisfy both of the following:
+///
+/// - The text of the tree is the same as the given `expressionStatement`, and
+/// - The given `matcher` matches the tree
+///
+/// Useful for testing [Matcher]s.
 public abstract class MatcherChecker extends BugChecker implements ExpressionStatementTreeMatcher {
   private final String expressionStatement;
   private final Matcher<Tree> matcher;

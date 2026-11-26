@@ -31,9 +31,7 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.sun.source.tree.MethodInvocationTree;
 
-/**
- * @author kayco@google.com (Kayla Walker)
- */
+/// @author kayco@google.com (Kayla Walker)
 @BugPattern(
     summary =
         "Math.abs() does not always give a non-negative result. Please consider other "

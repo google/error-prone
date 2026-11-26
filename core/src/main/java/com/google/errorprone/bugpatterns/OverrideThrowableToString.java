@@ -31,11 +31,9 @@ import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.MethodTree;
 
-/**
- * Warns against overriding toString() in a Throwable class and suggests getMessage()
- *
- * @author mariasam@google.com (Maria Sam)
- */
+/// Warns against overriding toString() in a Throwable class and suggests getMessage()
+///
+/// @author mariasam@google.com (Maria Sam)
 @BugPattern(
     summary =
         "To return a custom message with a Throwable class, one should "

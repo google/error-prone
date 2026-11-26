@@ -44,11 +44,9 @@ import com.sun.tools.javac.code.Type;
 import java.util.Optional;
 import javax.inject.Inject;
 
-/**
- * Flags {@code com.sun.source.tree.Tree#toString} usage in {@link BugChecker}s.
- *
- * @author bhagwani@google.com (Sumit Bhagwani)
- */
+/// Flags `com.sun.source.tree.Tree#toString` usage in [BugChecker]s.
+///
+/// @author bhagwani@google.com (Sumit Bhagwani)
 @BugPattern(
     summary =
         "Tree#toString shouldn't be used for Trees deriving from the code being compiled, as it"

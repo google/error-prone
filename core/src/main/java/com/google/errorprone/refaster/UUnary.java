@@ -34,11 +34,9 @@ import com.sun.tools.javac.tree.TreeCopier;
 import com.sun.tools.javac.tree.TreeMaker;
 import org.jspecify.annotations.Nullable;
 
-/**
- * {@link UTree} version of {@link UnaryTree}.
- *
- * @author lowasser@google.com (Louis Wasserman)
- */
+/// [UTree] version of [UnaryTree].
+///
+/// @author lowasser@google.com (Louis Wasserman)
 @AutoValue
 abstract class UUnary extends UExpression implements UnaryTree {
   private static final ImmutableBiMap<Kind, JCTree.Tag> UNARY_OP_CODES =

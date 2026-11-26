@@ -31,9 +31,7 @@ import com.sun.tools.javac.tree.JCTree.JCLiteral;
 import java.util.Objects;
 import org.jspecify.annotations.Nullable;
 
-/**
- * @author Sumit Bhagwani (bhagwani@google.com)
- */
+/// @author Sumit Bhagwani (bhagwani@google.com)
 @BugPattern(
     summary = "Non-trivial compile time constant boolean expressions shouldn't be used.",
     severity = WARNING)

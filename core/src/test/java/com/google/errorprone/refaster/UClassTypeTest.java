@@ -25,11 +25,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * Tests for {@link UClassType}.
- *
- * @author lowasser@google.com (Louis Wasserman)
- */
+/// Tests for [UClassType].
+///
+/// @author lowasser@google.com (Louis Wasserman)
 @RunWith(JUnit4.class)
 public class UClassTypeTest extends AbstractUTreeTest {
   @Test

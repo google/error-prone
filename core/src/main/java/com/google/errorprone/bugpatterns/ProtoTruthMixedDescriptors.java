@@ -42,12 +42,9 @@ import com.sun.tools.javac.code.Type;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * Checks that {@code ProtoTruth}'s {@code ignoringFields} is passed field numbers from the correct
- * proto.
- *
- * @author ghm@google.com (Graeme Morgan)
- */
+/// Checks that `ProtoTruth`'s `ignoringFields` is passed field numbers from the correct proto.
+///
+/// @author ghm@google.com (Graeme Morgan)
 @BugPattern(
     summary =
         "The arguments passed to `ignoringFields` are inconsistent with the proto which is "

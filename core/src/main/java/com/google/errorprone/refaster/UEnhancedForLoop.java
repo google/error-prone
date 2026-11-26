@@ -24,11 +24,9 @@ import com.sun.source.tree.Tree;
 import com.sun.source.tree.TreeVisitor;
 import com.sun.tools.javac.tree.JCTree.JCEnhancedForLoop;
 
-/**
- * A {@link UTree} representation of a {@link EnhancedForLoopTree}.
- *
- * @author lowasser@google.com (Louis Wasserman)
- */
+/// A [UTree] representation of a [EnhancedForLoopTree].
+///
+/// @author lowasser@google.com (Louis Wasserman)
 @AutoValue
 abstract class UEnhancedForLoop extends USimpleStatement implements EnhancedForLoopTree {
 

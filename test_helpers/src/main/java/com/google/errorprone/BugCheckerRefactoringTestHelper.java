@@ -74,17 +74,15 @@ import javax.tools.Diagnostic;
 import javax.tools.DiagnosticCollector;
 import javax.tools.JavaFileObject;
 
-/**
- * Compare a file transformed as suggested by {@link BugChecker} to an expected source.
- *
- * <p>Inputs are a {@link BugChecker} instance, input file and expected file.
- *
- * @author kurs@google.com (Jan Kurs)
- */
+/// Compare a file transformed as suggested by [BugChecker] to an expected source.
+///
+/// Inputs are a [BugChecker] instance, input file and expected file.
+///
+/// @author kurs@google.com (Jan Kurs)
 @CheckReturnValue
 public final class BugCheckerRefactoringTestHelper {
 
-  /** Test mode for matching refactored source against expected source. */
+  /// Test mode for matching refactored source against expected source.
   public enum TestMode {
     TEXT_MATCH {
       @Override
@@ -114,11 +112,9 @@ public final class BugCheckerRefactoringTestHelper {
         }
       }
     },
-    /**
-     * @deprecated prefer {@link #TEXT_MATCH}, which formats the actual and expected output to be
-     *     lenient of whitespace differences. {@link #AST_MATCH} will ignore differences in
-     *     comments, and may miss other differences that aren't detectable in the AST.
-     */
+    /// @deprecated prefer [#TEXT_MATCH], which formats the actual and expected output to be lenient
+    ///   of whitespace differences. [#AST_MATCH] will ignore differences in comments, and may miss
+    ///   other differences that aren't detectable in the AST.
     @Deprecated
     AST_MATCH {
       @Override
@@ -137,15 +133,13 @@ public final class BugCheckerRefactoringTestHelper {
         throws IOException;
   }
 
-  /**
-   * For checks that provide multiple possible fixes, chooses the one that will be applied for the
-   * test.
-   */
+  /// For checks that provide multiple possible fixes, chooses the one that will be applied for the
+  /// test.
   public interface FixChooser {
     Fix choose(List<Fix> fixes);
   }
 
-  /** Predefined FixChoosers for selecting a fix by its position in the list */
+  /// Predefined FixChoosers for selecting a fix by its position in the list
   public enum FixChoosers implements FixChooser {
     FIRST {
       @Override
@@ -191,9 +185,7 @@ public final class BugCheckerRefactoringTestHelper {
     this.scannerSupplier = scannerSupplier;
   }
 
-  /**
-   * @deprecated prefer {@link #newInstance(Class, Class)}
-   */
+  /// @deprecated prefer [#newInstance(Class, Class)]
   @Deprecated
   public static BugCheckerRefactoringTestHelper newInstance(
       BugChecker refactoringBugChecker, Class<?> clazz) {
@@ -201,12 +193,10 @@ public final class BugCheckerRefactoringTestHelper {
         clazz, new OverrideIgnoringScannerSupplier(new ErrorProneScanner(refactoringBugChecker)));
   }
 
-  /**
-   * Returns a new {@link CompilationTestHelper}.
-   *
-   * @param scannerSupplier the {@link ScannerSupplier} to test
-   * @param clazz the class to use to locate file resources
-   */
+  /// Returns a new [CompilationTestHelper].
+  ///
+  /// @param scannerSupplier the [ScannerSupplier] to test
+  /// @param clazz the class to use to locate file resources
   public static BugCheckerRefactoringTestHelper newInstance(
       ScannerSupplier scannerSupplier, Class<?> clazz) {
     return new BugCheckerRefactoringTestHelper(clazz, scannerSupplier);
@@ -218,12 +208,10 @@ public final class BugCheckerRefactoringTestHelper {
         clazz, ScannerSupplier.fromBugCheckerClasses(checkerClass));
   }
 
-  /**
-   * Adds an input file.
-   *
-   * @deprecated prefer {@link #addInputLines}. Declaring tests in the same file using text blocks
-   *     is more readable, as it encourages writing small, focussed tests.
-   */
+  /// Adds an input file.
+  ///
+  /// @deprecated prefer [#addInputLines]. Declaring tests in the same file using text blocks is
+  ///   more readable, as it encourages writing small, focussed tests.
   @Deprecated
   public BugCheckerRefactoringTestHelper.ExpectOutput addInput(String inputFilename) {
     return new ExpectOutput(forResource(clazz, inputFilename));
@@ -261,21 +249,21 @@ public final class BugCheckerRefactoringTestHelper {
     return this;
   }
 
-  /** Configures the compilation to treat the code as test-only. Off by default. */
+  /// Configures the compilation to treat the code as test-only. Off by default.
   @CanIgnoreReturnValue
   public BugCheckerRefactoringTestHelper setTestOnly() {
     this.testOnly = true;
     return this;
   }
 
-  /** If set, fixes that produce output that doesn't compile are allowed. Off by default. */
+  /// If set, fixes that produce output that doesn't compile are allowed. Off by default.
   @CanIgnoreReturnValue
   public BugCheckerRefactoringTestHelper allowBreakingChanges() {
     allowBreakingChanges = true;
     return this;
   }
 
-  /** If set, formatting errors in the output are allowed. Off by default. */
+  /// If set, formatting errors in the output are allowed. Off by default.
   @CanIgnoreReturnValue
   public BugCheckerRefactoringTestHelper allowFormattingErrors() {
     allowFormattingErrors = true;
@@ -288,25 +276,21 @@ public final class BugCheckerRefactoringTestHelper {
     return this;
   }
 
-  /**
-   * Runs the test.
-   *
-   * <p>By default outputs are compared with {@link TestMode#TEXT_MATCH}.
-   */
+  /// Runs the test.
+  ///
+  /// By default outputs are compared with [TestMode#TEXT_MATCH].
   public void doTest() {
     this.doTest(TestMode.TEXT_MATCH);
   }
 
-  /**
-   * Runs the test.
-   *
-   * @param testMode the comparison to use to for the test outputs. The default is {@link
-   *     TestMode#TEXT_MATCH}.
-   * @deprecated prefer {@link #doTest()}, which is equivalent to {@code doTest(TEXT_MATCH)}. {@link
-   *     TestMode#TEXT_MATCH} formats the actual and expected output to be lenient of whitespace
-   *     differences. {@link TestMode#AST_MATCH} will ignore differences in comments, and may miss
-   *     other differences that aren't detectable in the AST.
-   */
+  /// Runs the test.
+  ///
+  /// @param testMode the comparison to use to for the test outputs. The default is
+  ///   [TestMode#TEXT_MATCH].
+  /// @deprecated prefer [#doTest()], which is equivalent to `doTest(TEXT_MATCH)`.
+  ///   [TestMode#TEXT_MATCH] formats the actual and expected output to be lenient of whitespace
+  ///   differences. [TestMode#AST_MATCH] will ignore differences in comments, and may miss other
+  ///   differences that aren't detectable in the AST.
   @Deprecated
   public void doTest(TestMode testMode) {
     checkState(!run, "doTest should only be called once");
@@ -444,7 +428,7 @@ public final class BugCheckerRefactoringTestHelper {
         "Expected a class, package, or module declaration:\n" + tree);
   }
 
-  /** To assert the proper {@code .addInput().addOutput()} chain. */
+  /// To assert the proper `.addInput().addOutput()` chain.
   public final class ExpectOutput {
     private final JavaFileObject input;
 
@@ -457,12 +441,10 @@ public final class BugCheckerRefactoringTestHelper {
       return addInputAndOutput(input, forSourceLines(path, output));
     }
 
-    /**
-     * Adds an output file.
-     *
-     * @deprecated prefer {@link #addOutputLines}. Declaring tests in the same file using text
-     *     blocks is more readable, as it encourages writing small, focussed tests.
-     */
+    /// Adds an output file.
+    ///
+    /// @deprecated prefer [#addOutputLines]. Declaring tests in the same file using text blocks is
+    ///   more readable, as it encourages writing small, focussed tests.
     @Deprecated
     @CanIgnoreReturnValue
     public BugCheckerRefactoringTestHelper addOutput(String outputFilename) {
@@ -482,10 +464,8 @@ public final class BugCheckerRefactoringTestHelper {
     }
   }
 
-  /**
-   * Wraps a {@code InstanceReturningScannerSupplier}, but silently skips {@link #applyOverrides}
-   * instead of throwing {@code UOE}.
-   */
+  /// Wraps a `InstanceReturningScannerSupplier`, but silently skips [#applyOverrides] instead of
+  /// throwing `UOE`.
   private static class OverrideIgnoringScannerSupplier extends ScannerSupplier {
 
     private final ScannerSupplier delegate;

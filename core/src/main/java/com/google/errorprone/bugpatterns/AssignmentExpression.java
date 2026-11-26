@@ -35,7 +35,7 @@ import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 
-/** A BugPattern; see the summary. */
+/// A BugPattern; see the summary.
 @BugPattern(
     summary =
         "The use of an assignment expression can be surprising and hard to read; consider factoring"

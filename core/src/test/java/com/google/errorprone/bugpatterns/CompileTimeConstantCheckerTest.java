@@ -22,7 +22,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** {@link CompileTimeConstantChecker}Test */
+/// [CompileTimeConstantChecker]Test
 @RunWith(JUnit4.class)
 public class CompileTimeConstantCheckerTest {
   private final CompilationTestHelper compilationHelper =
@@ -344,7 +344,7 @@ public class CompileTimeConstantCheckerTest {
         .doTest();
   }
 
-  /** Holder for a method we wish to reference from a test. */
+  /// Holder for a method we wish to reference from a test.
   public static final class Holder {
     public static void m(String s, @CompileTimeConstant String... p) {}
 

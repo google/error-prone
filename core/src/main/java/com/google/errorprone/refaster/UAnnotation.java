@@ -27,11 +27,9 @@ import com.sun.tools.javac.tree.JCTree.JCExpression;
 import java.util.List;
 import org.jspecify.annotations.Nullable;
 
-/**
- * {@link UTree} version of {@link AnnotationTree}.
- *
- * @author lowasser@google.com (Louis Wasserman)
- */
+/// [UTree] version of [AnnotationTree].
+///
+/// @author lowasser@google.com (Louis Wasserman)
 @AutoValue
 abstract class UAnnotation extends UExpression implements AnnotationTree {
   public static UAnnotation create(UTree<?> annotationType, List<UExpression> arguments) {

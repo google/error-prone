@@ -31,7 +31,7 @@ import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.Tree;
 
-/** Refactoring to add {@code @NullMarked} annotation to all top level Java class declarations. */
+/// Refactoring to add `@NullMarked` annotation to all top level Java class declarations.
 @BugPattern(summary = "Apply @NullMarked to this class", severity = SUGGESTION)
 public final class AddNullMarkedToClass extends BugChecker implements CompilationUnitTreeMatcher {
   @Override

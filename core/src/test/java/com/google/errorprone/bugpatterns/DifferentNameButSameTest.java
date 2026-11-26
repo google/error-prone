@@ -21,7 +21,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** Tests for {@link DifferentNameButSame}. */
+/// Tests for [DifferentNameButSame].
 @RunWith(JUnit4.class)
 public final class DifferentNameButSameTest {
   private final BugCheckerRefactoringTestHelper helper =

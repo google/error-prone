@@ -20,7 +20,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** Tests for {@link JodaTimeConverterManager}. */
+/// Tests for [JodaTimeConverterManager].
 @RunWith(JUnit4.class)
 public final class JodaTimeConverterManagerTest {
   private final CompilationTestHelper helper =

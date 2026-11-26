@@ -32,11 +32,9 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import java.util.Objects;
 
-/**
- * Flags ambiguous usages of {@code Map#getOrDefault} within {@code Truth#assertThat}.
- *
- * @author bhagwani@google.com (Sumit Bhagwani)
- */
+/// Flags ambiguous usages of `Map#getOrDefault` within `Truth#assertThat`.
+///
+/// @author bhagwani@google.com (Sumit Bhagwani)
 @BugPattern(
     summary = "Asserting on getOrDefault is unclear; prefer containsEntry or doesNotContainKey",
     severity = WARNING)
@@ -115,10 +113,8 @@ public final class TruthGetOrDefault extends BugChecker implements MethodInvocat
     UNKNOWN;
   }
 
-  /**
-   * Returns {@code Match.SAME} or {@code Match.DIFFERENT} when it can confidently say that both
-   * expressions are same or different, otherwise returns {@code Match.UNKNOWN}.
-   */
+  /// Returns `Match.SAME` or `Match.DIFFERENT` when it can confidently say that both expressions
+  /// are same or different, otherwise returns `Match.UNKNOWN`.
   private static Match areValuesSame(
       ExpressionTree defaultVal, ExpressionTree expectedVal, VisitorState state) {
     if (ASTHelpers.sameVariable(defaultVal, expectedVal)) {

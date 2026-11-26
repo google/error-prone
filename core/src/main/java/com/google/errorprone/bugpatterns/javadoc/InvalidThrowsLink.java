@@ -36,7 +36,7 @@ import com.sun.tools.javac.tree.DCTree.DCErroneous;
 import org.safere.Matcher;
 import org.safere.Pattern;
 
-/** Matches misuse of link tags within throws tags. */
+/// Matches misuse of link tags within throws tags.
 @BugPattern(
     summary =
         "Don't use {@link} or {@code} in @throws tags; mention the exception name directly (e.g.,"

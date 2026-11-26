@@ -19,7 +19,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** Tests for {@link OptionalMapToOptional} bugpattern. */
+/// Tests for [OptionalMapToOptional] bugpattern.
 @RunWith(JUnit4.class)
 public final class OptionalMapToOptionalTest {
   private final CompilationTestHelper helper =

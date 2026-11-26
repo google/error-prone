@@ -35,7 +35,7 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.NewClassTree;
 
-/** Check for calls to Joda-Time's {@code foo.toFoo()} and {@code new Foo(foo)}. */
+/// Check for calls to Joda-Time's `foo.toFoo()` and `new Foo(foo)`.
 @BugPattern(
     summary =
         "Use of Joda-Time's DateTime.toDateTime(), Duration.toDuration(), Instant.toInstant(), "

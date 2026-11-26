@@ -26,7 +26,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** Tests for {@link TooManyParameters}. */
+/// Tests for [TooManyParameters].
 @RunWith(JUnit4.class)
 public class TooManyParametersTest {
   private final CompilationTestHelper compilationHelper =

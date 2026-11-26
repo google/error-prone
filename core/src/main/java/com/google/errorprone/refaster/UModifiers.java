@@ -27,11 +27,9 @@ import com.sun.tools.javac.util.List;
 import java.util.Set;
 import javax.lang.model.element.Modifier;
 
-/**
- * {@code UTree} representation of a {@code ModifiersTree}.
- *
- * @author lowasser@google.com (Louis Wasserman)
- */
+/// `UTree` representation of a `ModifiersTree`.
+///
+/// @author lowasser@google.com (Louis Wasserman)
 @AutoValue
 abstract class UModifiers extends UTree<JCModifiers> implements ModifiersTree {
   public static UModifiers create(long flagBits, UAnnotation... annotations) {

@@ -33,9 +33,7 @@ import com.sun.source.tree.MethodInvocationTree;
 import java.util.List;
 import org.safere.Pattern;
 
-/**
- * @author cushon@google.com (Liam Miller-Cushon)
- */
+/// @author cushon@google.com (Liam Miller-Cushon)
 @BugPattern(
     summary = "Invalid message format-style format specifier ({0}), expected printf-style (%s)",
     explanation =

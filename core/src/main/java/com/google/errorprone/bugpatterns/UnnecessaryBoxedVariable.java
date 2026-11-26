@@ -70,11 +70,9 @@ import java.util.Set;
 import javax.inject.Inject;
 import javax.lang.model.element.ElementKind;
 
-/**
- * Finds and fixes unnecessarily boxed variables.
- *
- * @author awturner@google.com (Andy Turner)
- */
+/// Finds and fixes unnecessarily boxed variables.
+///
+/// @author awturner@google.com (Andy Turner)
 @BugPattern(
     summary = "It is unnecessary for this variable to be boxed. Use the primitive instead.",
     explanation =
@@ -312,17 +310,13 @@ public class UnnecessaryBoxedVariable extends BugChecker implements CompilationU
     }
   }
 
-  /**
-   * Check to see if the variable should be considered for replacement, i.e.
-   *
-   * <ul>
-   *   <li>A variable without an initializer
-   *   <li>Enhanced for loop variables can be replaced if they are loops over primitive arrays
-   *   <li>A variable initialized with a primitive value (which is then auto-boxed)
-   *   <li>A variable initialized with an invocation of {@code Boxed.valueOf}, since that can be
-   *       replaced with {@code Boxed.parseBoxed}.
-   * </ul>
-   */
+  /// Check to see if the variable should be considered for replacement, i.e.
+  ///
+  /// - A variable without an initializer
+  /// - Enhanced for loop variables can be replaced if they are loops over primitive arrays
+  /// - A variable initialized with a primitive value (which is then auto-boxed)
+  /// - A variable initialized with an invocation of `Boxed.valueOf`, since that can be replaced
+  ///   with `Boxed.parseBoxed`.
   private static boolean variableMatches(VariableTree tree, VisitorState state) {
     ExpressionTree expression = tree.getInitializer();
     if (expression == null) {

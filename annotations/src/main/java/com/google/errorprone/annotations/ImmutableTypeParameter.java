@@ -22,13 +22,10 @@ import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
-/**
- * The type parameter to which this annotation is applied should only be instantiated with immutable
- * types.
- *
- * <p>For a definition of immutability and of the semantics enforced by Error Prone, see {@link
- * Immutable}.
- */
+/// The type parameter to which this annotation is applied should only be instantiated with
+/// immutable types.
+///
+/// For a definition of immutability and of the semantics enforced by Error Prone, see [Immutable].
 @Documented
 @Target(TYPE_PARAMETER)
 @Retention(RUNTIME)

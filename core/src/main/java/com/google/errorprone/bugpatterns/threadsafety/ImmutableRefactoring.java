@@ -39,7 +39,7 @@ import java.util.Optional;
 import java.util.Set;
 import javax.inject.Inject;
 
-/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
+/// A [BugChecker]; see the associated [BugPattern] annotation for details.
 @BugPattern(
     name = "ImmutableRefactoring",
     summary = "Refactors uses of the JSR 305 @Immutable to Error Prone's annotation",

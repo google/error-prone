@@ -54,12 +54,10 @@ import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.SafeConstructor;
 import org.yaml.snakeyaml.representer.Representer;
 
-/**
- * Reads each line of the bugpatterns.txt tab-delimited data file, and generates a GitHub Jekyll
- * page for each one.
- *
- * @author alexeagle@google.com (Alex Eagle)
- */
+/// Reads each line of the bugpatterns.txt tab-delimited data file, and generates a GitHub Jekyll
+/// page for each one.
+///
+/// @author alexeagle@google.com (Alex Eagle)
 class BugPatternFileGenerator implements LineProcessor<List<BugPatternInstance>> {
 
   private final Path outputDir;
@@ -68,10 +66,10 @@ class BugPatternFileGenerator implements LineProcessor<List<BugPatternInstance>>
 
   private final Function<BugPatternInstance, SeverityLevel> severityRemapper;
 
-  /** Controls whether yaml front-matter is generated. */
+  /// Controls whether yaml front-matter is generated.
   private final boolean generateFrontMatter;
 
-  /** The base url for links to bugpatterns. */
+  /// The base url for links to bugpatterns.
   private final @Nullable String baseUrl;
 
   private final Set<String> ignore;
@@ -96,10 +94,8 @@ class BugPatternFileGenerator implements LineProcessor<List<BugPatternInstance>>
     result = new HashMap<>();
   }
 
-  /**
-   * Throws if {@code explanationDir} has subdirectories. Side-car explanations are looked up by
-   * name directly in {@code explanationDir}, so a file in a subdirectory would be silently ignored.
-   */
+  /// Throws if `explanationDir` has subdirectories. Side-car explanations are looked up by name
+  /// directly in `explanationDir`, so a file in a subdirectory would be silently ignored.
   private static void checkNoSubdirectories(Path explanationDir) throws IOException {
     try (Stream<Path> children = Files.list(explanationDir)) {
       ImmutableList<String> subdirectories =

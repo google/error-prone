@@ -21,13 +21,11 @@ import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import com.google.errorprone.BugPattern;
 import java.util.Optional;
 
-/**
- * Ban use of YYYY in a SimpleDateFormat pattern, unless it is being used for a week date. Otherwise
- * the user almost certainly meant yyyy instead. See the summary in the {@link BugPattern} below for
- * more details.
- *
- * <p>This bug caused a Twitter outage in December 2014.
- */
+/// Ban use of YYYY in a SimpleDateFormat pattern, unless it is being used for a week date.
+/// Otherwise the user almost certainly meant yyyy instead. See the summary in the [BugPattern]
+/// below for more details.
+///
+/// This bug caused a Twitter outage in December 2014.
 @BugPattern(
     summary =
         "Use of \"YYYY\" (week year) in a date pattern without \"ww\" (week in year). "

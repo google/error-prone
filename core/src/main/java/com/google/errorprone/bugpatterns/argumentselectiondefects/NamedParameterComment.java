@@ -30,13 +30,11 @@ import java.util.Optional;
 import java.util.stream.Stream;
 import org.safere.Pattern;
 
-/**
- * Helper methods for checking if a commented argument matches a formal parameter and for generating
- * comments in the right format.
- *
- * <p>We look for a <i>NamedParameterComment</i>: this is the last block comment before the argument
- * which ends with an equals sign.
- */
+/// Helper methods for checking if a commented argument matches a formal parameter and for
+/// generating comments in the right format.
+///
+/// We look for a *NamedParameterComment*: this is the last block comment before the argument which
+/// ends with an equals sign.
 public final class NamedParameterComment {
 
   private static final CharMatcher ASCII_WHITESPACE = CharMatcher.anyOf(" \t\n\u000b\f\r");
@@ -61,21 +59,19 @@ public final class NamedParameterComment {
 
   private static final String PARAMETER_COMMENT_MARKER = "=";
 
-  /** Encodes the kind of match we found between a comment and the name of the parameter. */
+  /// Encodes the kind of match we found between a comment and the name of the parameter.
   enum MatchType {
-    /** The NamedParameterComment exactly matches the parameter name. */
+    /// The NamedParameterComment exactly matches the parameter name.
     EXACT_MATCH,
 
-    /** The NamedParameterComment doesn't match the parameter name. */
+    /// The NamedParameterComment doesn't match the parameter name.
     BAD_MATCH,
 
-    /**
-     * There is no NamedParameterComment but a word in one of the other comments equals the
-     * parameter name.
-     */
+    /// There is no NamedParameterComment but a word in one of the other comments equals the
+    /// parameter name.
     APPROXIMATE_MATCH,
 
-    /** There is no NamedParameterComment and no approximate matches */
+    /// There is no NamedParameterComment and no approximate matches
     NOT_ANNOTATED,
   }
 
@@ -107,10 +103,8 @@ public final class NamedParameterComment {
     };
   }
 
-  /**
-   * Determine the kind of match we have between the comments on this argument and the formal
-   * parameter name.
-   */
+  /// Determine the kind of match we have between the comments on this argument and the formal
+  /// parameter name.
   static MatchedComment match(Commented actual, String formal) {
     Optional<ErrorProneComment> lastBlockComment =
         Streams.findLast(
@@ -148,10 +142,7 @@ public final class NamedParameterComment {
     return MatchedComment.notAnnotated();
   }
 
-  /**
-   * Generate comment text which {@code exactMatch} would consider to match the formal parameter
-   * name.
-   */
+  /// Generate comment text which `exactMatch` would consider to match the formal parameter name.
   static String toCommentText(String formal) {
     return String.format("/* %s%s */", formal, PARAMETER_COMMENT_MARKER);
   }
@@ -162,10 +153,8 @@ public final class NamedParameterComment {
   // * synthetic constructor parameters, e.g. in anonymous classes (see b/65065109)
   private static final Pattern SYNTHETIC_PARAMETER_NAME = Pattern.compile("(arg|this\\$|x)[0-9]+");
 
-  /**
-   * Returns true if the method has synthetic parameter names, indicating the real names are not
-   * available.
-   */
+  /// Returns true if the method has synthetic parameter names, indicating the real names are not
+  /// available.
   public static boolean containsSyntheticParameterName(MethodSymbol sym) {
     return sym.getParameters().stream()
         .anyMatch(p -> SYNTHETIC_PARAMETER_NAME.matcher(p.getSimpleName()).matches());

@@ -46,7 +46,7 @@ import com.sun.tools.javac.code.Type;
 import javax.inject.Inject;
 import org.jspecify.annotations.Nullable;
 
-/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
+/// A [BugChecker]; see the associated [BugPattern] annotation for details.
 @BugPattern(
     name = "GuardedBy",
     altNames = "GuardedByChecker",
@@ -139,15 +139,11 @@ public class GuardedByChecker extends BugChecker
     return buildDescription(tree).setMessage(buildMessage(guard, locks)).build();
   }
 
-  /**
-   * Construct a diagnostic message, e.g.:
-   *
-   * <ul>
-   *   <li>This access should be guarded by 'this', which is not currently held
-   *   <li>This access should be guarded by 'this'; instead found 'mu'
-   *   <li>This access should be guarded by 'this'; instead found: 'mu1', 'mu2'
-   * </ul>
-   */
+  /// Construct a diagnostic message, e.g.:
+  ///
+  /// - This access should be guarded by 'this', which is not currently held
+  /// - This access should be guarded by 'this'; instead found 'mu'
+  /// - This access should be guarded by 'this'; instead found: 'mu1', 'mu2'
   private static String buildMessage(GuardedByExpression guard, HeldLockSet locks) {
     int heldLocks = locks.allLocks().size();
     StringBuilder message = new StringBuilder();
@@ -207,10 +203,8 @@ public class GuardedByChecker extends BugChecker
     return false;
   }
 
-  /**
-   * Returns true if the lock expression corresponds to a {@code
-   * java.util.concurrent.locks.ReadWriteLock}.
-   */
+  /// Returns true if the lock expression corresponds to a
+  /// `java.util.concurrent.locks.ReadWriteLock`.
   private static boolean isRwLock(GuardedByExpression guard, VisitorState state) {
     Type guardType = guard.type();
     if (guardType == null) {
@@ -234,7 +228,7 @@ public class GuardedByChecker extends BugChecker
     state.reportMatch(description);
   }
 
-  /** Validates that {@code @GuardedBy} strings can be resolved. */
+  /// Validates that `@GuardedBy` strings can be resolved.
   private Description validate(Tree tree, VisitorState state) {
     GuardedByValidationResult result = GuardedByUtils.isGuardedByValid(tree, state);
     if (result.isValid()) {

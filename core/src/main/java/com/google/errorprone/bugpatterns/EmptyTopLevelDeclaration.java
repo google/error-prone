@@ -31,7 +31,7 @@ import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.EmptyStatementTree;
 import com.sun.source.tree.Tree;
 
-/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
+/// A [BugChecker]; see the associated [BugPattern] annotation for details.
 @BugPattern(summary = "Empty top-level type declarations should be omitted", severity = WARNING)
 public final class EmptyTopLevelDeclaration extends BugChecker
     implements CompilationUnitTreeMatcher {

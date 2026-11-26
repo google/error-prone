@@ -36,11 +36,9 @@ import com.sun.tools.javac.code.TypeTag;
 import java.util.Optional;
 import java.util.function.BiFunction;
 
-/**
- * Flags types which do not have well-defined equals behavior.
- *
- * @author eleanorh@google.com (Eleanor Harris)
- */
+/// Flags types which do not have well-defined equals behavior.
+///
+/// @author eleanorh@google.com (Eleanor Harris)
 @BugPattern(
     altNames = {"CollectionUndefinedEquality", "ArrayAsKeyOfSetOrMap"},
     summary = "This type is not guaranteed to implement a useful equals() method.",

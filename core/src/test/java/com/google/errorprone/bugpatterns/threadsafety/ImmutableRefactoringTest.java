@@ -21,7 +21,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** {@link ImmutableRefactoring}Test */
+/// [ImmutableRefactoring]Test
 @RunWith(JUnit4.class)
 public final class ImmutableRefactoringTest {
   private final BugCheckerRefactoringTestHelper compilationHelper =

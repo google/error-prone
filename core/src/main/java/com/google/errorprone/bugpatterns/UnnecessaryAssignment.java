@@ -68,9 +68,7 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javax.lang.model.element.Modifier;
 
-/**
- * Discourage manual initialization or assignment to fields annotated with framework annotations.
- */
+/// Discourage manual initialization or assignment to fields annotated with framework annotations.
 // TODO: b/447474042 - All diagnostics should customize the message to mention the specific
 // annotation
 @BugPattern(
@@ -99,7 +97,7 @@ public final class UnnecessaryAssignment extends BugChecker
                   .collect(toImmutableList())),
           not(UnnecessaryAssignment::isOptionalInject));
 
-  /** Returns true if the tree is annotated with @com.google.inject.Inject(optional = true). */
+  /// Returns true if the tree is annotated with @com.google.inject.Inject(optional = true).
   private static boolean isOptionalInject(Tree tree, VisitorState state) {
     var symbol = getSymbol(tree);
     var compound = symbol.attribute(InjectMatchers.GUICE_INJECT_ANNOTATION.symbol(state));

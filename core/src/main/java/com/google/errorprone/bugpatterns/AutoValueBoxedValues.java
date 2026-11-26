@@ -54,7 +54,7 @@ import java.util.Optional;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.type.TypeKind;
 
-/** See summary for details. */
+/// See summary for details.
 @BugPattern(
     summary =
         "AutoValue instances should not usually contain boxed types that are not Nullable. We"
@@ -94,14 +94,11 @@ public class AutoValueBoxedValues extends BugChecker implements ClassTreeMatcher
     return NO_MATCH;
   }
 
-  /**
-   * Returns the {@link List} of {@link Getter} in the {@link AutoValue} class along with the fixes
-   * to be applied.
-   *
-   * @param classTree The {@link AutoValue} class tree.
-   * @param state The visitor state.
-   * @return The list of {@link Getter} in the class.
-   */
+  /// Returns the [List] of [Getter] in the [AutoValue] class along with the fixes to be applied.
+  ///
+  /// @param classTree The [AutoValue] class tree.
+  /// @param state The visitor state.
+  /// @return The list of [Getter] in the class.
   private ImmutableList<Getter> handleGetterMethods(
       ClassTree classTree, VisitorState state, Optional<ClassTree> builderClass) {
     return classTree.getMembers().stream()
@@ -115,10 +112,8 @@ public class AutoValueBoxedValues extends BugChecker implements ClassTreeMatcher
         .collect(toImmutableList());
   }
 
-  /**
-   * Converts the {@link MethodTree} of a getter to a {@link Getter}. If the getter needs to be
-   * fixed, it returns a {@link Getter} with a non-empty {@link SuggestedFix}.
-   */
+  /// Converts the [MethodTree] of a getter to a [Getter]. If the getter needs to be fixed, it
+  /// returns a [Getter] with a non-empty [SuggestedFix].
   private Getter maybeFixGetter(MethodTree method, VisitorState state) {
     Getter getter = Getter.of(method);
     Type type = getType(method.getReturnType());
@@ -131,13 +126,11 @@ public class AutoValueBoxedValues extends BugChecker implements ClassTreeMatcher
     return getter;
   }
 
-  /**
-   * Identifies and fixes both the setters and the getters in the {@link AutoValue.Builder} class.
-   *
-   * @param classTree The {@link AutoValue.Builder} class tree.
-   * @param state The visitor state.
-   * @param getters The {@link List} of {@link Getter} in the {@link AutoValue} class.
-   */
+  /// Identifies and fixes both the setters and the getters in the [AutoValue.Builder] class.
+  ///
+  /// @param classTree The [AutoValue.Builder] class tree.
+  /// @param state The visitor state.
+  /// @param getters The [List] of [Getter] in the [AutoValue] class.
   private void handleSetterMethods(ClassTree classTree, VisitorState state, List<Getter> getters) {
     // Identify and try to fix the setters.
     classTree.getMembers().stream()
@@ -157,7 +150,7 @@ public class AutoValueBoxedValues extends BugChecker implements ClassTreeMatcher
         .forEach(methodTree -> maybeFixGetterInBuilder(methodTree, state, getters));
   }
 
-  /** Given a setter, it tries to apply a fix if the corresponding getter was also fixed. */
+  /// Given a setter, it tries to apply a fix if the corresponding getter was also fixed.
   private void maybeFixSetter(MethodTree methodTree, VisitorState state, List<Getter> getters) {
     if (isSuppressed(methodTree, state)) {
       return;
@@ -178,10 +171,8 @@ public class AutoValueBoxedValues extends BugChecker implements ClassTreeMatcher
     }
   }
 
-  /**
-   * Given a getter in the Builder class, it tries to apply a fix if the corresponding getter in the
-   * parent {@link AutoValue} class was also fixed.
-   */
+  /// Given a getter in the Builder class, it tries to apply a fix if the corresponding getter in
+  /// the parent [AutoValue] class was also fixed.
   private static void maybeFixGetterInBuilder(
       MethodTree methodTree, VisitorState state, List<Getter> getters) {
     Optional<Getter> fixedGetter =
@@ -201,17 +192,15 @@ public class AutoValueBoxedValues extends BugChecker implements ClassTreeMatcher
     }
   }
 
-  /**
-   * Identifies and fixes the factory method in the {@link AutoValue} class.
-   *
-   * <p>This method only handles the case of "trivial" factory methods, i.e. methods that have one
-   * argument for each getter in the class and contains a single return statement passing all the
-   * arguments to the constructor in the same order.
-   *
-   * @param classTree The {@link AutoValue} class tree.
-   * @param state The visitor state.
-   * @param getters The {@link List} of {@link Getter} in the {@link AutoValue} class.
-   */
+  /// Identifies and fixes the factory method in the [AutoValue] class.
+  ///
+  /// This method only handles the case of "trivial" factory methods, i.e. methods that have one
+  /// argument for each getter in the class and contains a single return statement passing all the
+  /// arguments to the constructor in the same order.
+  ///
+  /// @param classTree The [AutoValue] class tree.
+  /// @param state The visitor state.
+  /// @param getters The [List] of [Getter] in the [AutoValue] class.
   private void handleFactoryMethods(ClassTree classTree, VisitorState state, List<Getter> getters) {
     Optional<MethodTree> trivialFactoryMethod =
         classTree.getMembers().stream()
@@ -237,12 +226,12 @@ public class AutoValueBoxedValues extends BugChecker implements ClassTreeMatcher
     }
   }
 
-  /** Returns true if the given tree has a {@code Nullable} annotation. */
+  /// Returns true if the given tree has a `Nullable` annotation.
   private static boolean hasNullableAnnotation(Tree tree) {
     return NullnessAnnotations.fromAnnotationsOn(getSymbol(tree)).orElse(null) == Nullness.NULLABLE;
   }
 
-  /** Returns true if the method overrides another method. */
+  /// Returns true if the method overrides another method.
   private static boolean isOverride(MethodTree methodTree, VisitorState state) {
     return !findSuperMethods(getSymbol(methodTree), state.getTypes()).isEmpty();
   }
@@ -279,7 +268,7 @@ public class AutoValueBoxedValues extends BugChecker implements ClassTreeMatcher
     return "";
   }
 
-  /** Returns true if the getter and the setter are for the same field. */
+  /// Returns true if the getter and the setter are for the same field.
   private static boolean matchGetterAndSetter(
       MethodTree getter, MethodTree setter, boolean allGettersPrefixed) {
     String getterName = getter.getName().toString();
@@ -293,17 +282,15 @@ public class AutoValueBoxedValues extends BugChecker implements ClassTreeMatcher
             "set" + Ascii.toUpperCase(getterName.charAt(0)) + getterName.substring(1));
   }
 
-  /**
-   * Returns true if the method is a trivial factory method.
-   *
-   * <p>A trivial factory method is a static method that has one argument for each getter in the
-   * class and contains a single return statement passing all the arguments to the constructor in
-   * the same order.
-   *
-   * @param methodTree The method tree to be checked.
-   * @param gettersCount The total number of getters in the class.
-   * @return True if the method is a trivial factory method, false otherwise.
-   */
+  /// Returns true if the method is a trivial factory method.
+  ///
+  /// A trivial factory method is a static method that has one argument for each getter in the class
+  /// and contains a single return statement passing all the arguments to the constructor in the
+  /// same order.
+  ///
+  /// @param methodTree The method tree to be checked.
+  /// @param gettersCount The total number of getters in the class.
+  /// @return True if the method is a trivial factory method, false otherwise.
   private static boolean isTrivialFactoryMethod(MethodTree methodTree, int gettersCount) {
     var params = methodTree.getParameters();
     var statements = methodTree.getBody().getStatements();
@@ -331,15 +318,13 @@ public class AutoValueBoxedValues extends BugChecker implements ClassTreeMatcher
     return paramsNames.equals(constructorArgs);
   }
 
-  /**
-   * Suggests a fix to replace the boxed type with the unboxed type.
-   *
-   * <p>For example, if the type is `Integer`, the fix would be to replace `Integer` with `int`.
-   *
-   * @param tree The tree to be replaced, which can be either a return value or a parameter.
-   * @param state The visitor state.
-   * @param type The boxed type to be replaced.
-   */
+  /// Suggests a fix to replace the boxed type with the unboxed type.
+  ///
+  /// For example, if the type is `Integer`, the fix would be to replace `Integer` with `int`.
+  ///
+  /// @param tree The tree to be replaced, which can be either a return value or a parameter.
+  /// @param state The visitor state.
+  /// @param type The boxed type to be replaced.
   private static void suggestRemoveUnnecessaryBoxing(
       Tree tree, VisitorState state, Type type, SuggestedFix.Builder fix) {
     fix.replace(tree, unboxedTypeOrType(type, state).tsym.getSimpleName().toString());

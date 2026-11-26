@@ -23,11 +23,9 @@ import com.google.errorprone.CompilationTestHelper;
 import javax.lang.model.element.Modifier;
 import org.junit.Test;
 
-/**
- * Tests for {@link ValueClassIdentity}.
- *
- * @author cushon@google.com (Liam Miller-Cushon)
- */
+/// Tests for [ValueClassIdentity].
+///
+/// @author cushon@google.com (Liam Miller-Cushon)
 public class ValueClassIdentityTest {
 
   private final CompilationTestHelper compilationHelper =

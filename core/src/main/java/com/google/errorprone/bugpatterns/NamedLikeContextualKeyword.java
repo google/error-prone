@@ -48,10 +48,8 @@ import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import java.util.Collections;
 
-/**
- * Warns on classes or methods being named similarly to contextual keywords, or invoking such
- * methods.
- */
+/// Warns on classes or methods being named similarly to contextual keywords, or invoking such
+/// methods.
 @BugPattern(
     severity = WARNING,
     summary =

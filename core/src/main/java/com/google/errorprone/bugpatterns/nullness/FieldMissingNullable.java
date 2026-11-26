@@ -49,7 +49,7 @@ import com.sun.tools.javac.code.Symbol;
 import javax.inject.Inject;
 import javax.lang.model.element.Name;
 
-/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
+/// A [BugChecker]; see the associated [BugPattern] annotation for details.
 @BugPattern(
     summary =
         "Field is assigned (or compared against) a definitely null value but is not annotated"

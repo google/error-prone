@@ -42,12 +42,10 @@ import java.util.Arrays;
 import java.util.Set;
 import java.util.function.Predicate;
 
-/**
- * Representation of a {@code Refaster} placeholder method, which can represent an arbitrary
- * operation on a specific set of expressions.
- *
- * @author lowasser@google.com (Louis Wasserman)
- */
+/// Representation of a `Refaster` placeholder method, which can represent an arbitrary operation on
+/// a specific set of expressions.
+///
+/// @author lowasser@google.com (Louis Wasserman)
 record PlaceholderMethod(
     StringName name,
     UType returnType,
@@ -96,7 +94,7 @@ record PlaceholderMethod(
     return annotatedParameters().keySet();
   }
 
-  /** Parameters which must be referenced in any tree matched to this placeholder. */
+  /// Parameters which must be referenced in any tree matched to this placeholder.
   Set<UVariableDecl> requiredParameters() {
     return Maps.filterValues(
             annotatedParameters(),

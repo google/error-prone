@@ -56,9 +56,7 @@ import com.sun.tools.javac.code.Types;
 import java.util.EnumSet;
 import java.util.Set;
 
-/**
- * @author Louis Wasserman
- */
+/// @author Louis Wasserman
 @BugPattern(
     summary = "This comparison method violates the contract",
     severity = SeverityLevel.ERROR)
@@ -67,7 +65,7 @@ public class ComparisonContractViolated extends BugChecker implements MethodTree
   private static final Matcher<ClassTree> COMPARABLE_CLASS_MATCHER =
       isSubtypeOf("java.lang.Comparable");
 
-  /** Matcher for the overriding method of 'int java.util.Comparator.compare(T o1, T o2)' */
+  /// Matcher for the overriding method of 'int java.util.Comparator.compare(T o1, T o2)'
   private static final Matcher<MethodTree> COMPARATOR_METHOD_MATCHER =
       allOf(
           methodIsNamed("compare"),

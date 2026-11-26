@@ -40,14 +40,11 @@ import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.TypeTag;
 import java.util.Optional;
 
-/**
- * Detects usages of {@code Float,DoubleSubject.isWithin(TOLERANCE).of(EXPECTED)} where there are no
- * other floating point values other than {@code EXPECTED} with satisfy the assertion, but {@code
- * TOLERANCE} is not zero. Likewise for older-style JUnit assertions ({@code assertEquals(double,
- * double, double)}).
- *
- * @author ghm@google.com (Graeme Morgan)
- */
+/// Detects usages of `Float,DoubleSubject.isWithin(TOLERANCE).of(EXPECTED)` where there are no
+/// other floating point values other than `EXPECTED` with satisfy the assertion, but `TOLERANCE` is
+/// not zero. Likewise for older-style JUnit assertions (`assertEquals(double, double, double)`).
+///
+/// @author ghm@google.com (Graeme Morgan)
 @BugPattern(
     summary =
         "This fuzzy equality check is using a tolerance less than the gap to the next number. "
@@ -192,11 +189,8 @@ public final class FloatingPointAssertionWithinEpsilon extends BugChecker
           tolerance);
     }
 
-    /**
-     * Checks whether the provided {@code toleranceArgument} and {@code actualArgument} will lead to
-     * an equality check. If so, returns the smallest tolerance that wouldn't for diagnostic
-     * purposes.
-     */
+    /// Checks whether the provided `toleranceArgument` and `actualArgument` will lead to an
+    /// equality check. If so, returns the smallest tolerance that wouldn't for diagnostic purposes.
     private Optional<Double> check(
         ExpressionTree toleranceArgument, ExpressionTree actualArgument) {
       Number actual = ASTHelpers.constValue(actualArgument, Number.class);
@@ -214,14 +208,14 @@ public final class FloatingPointAssertionWithinEpsilon extends BugChecker
       return getOnlyElement(((MethodInvocationTree) receiver).getArguments());
     }
 
-    /** Suggest replacing the tolerance with {@code 0} for JUnit assertions. */
+    /// Suggest replacing the tolerance with `0` for JUnit assertions.
     private static Description.Builder suggestJunitFix(
         BugChecker bugChecker, MethodInvocationTree tree) {
       SuggestedFix fix = SuggestedFix.replace(getLast(tree.getArguments()), "0");
       return bugChecker.buildDescription(tree).addFix(fix);
     }
 
-    /** Suggest replacing {@code isWithin(..).of(foo)} with {@code isEqualTo(foo)} for Truth. */
+    /// Suggest replacing `isWithin(..).of(foo)` with `isEqualTo(foo)` for Truth.
     private Description.Builder suggestTruthFix(
         BugChecker bugChecker, MethodInvocationTree tree, VisitorState state) {
       ExpressionTree within = ASTHelpers.getReceiver(tree);

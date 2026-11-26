@@ -41,7 +41,7 @@ import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Type.ArrayType;
 import javax.inject.Inject;
 
-/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
+/// A [BugChecker]; see the associated [BugPattern] annotation for details.
 @BugPattern(summary = "The types passed to this assertion are incompatible.", severity = WARNING)
 public final class JUnitIncompatibleType extends BugChecker implements MethodInvocationTreeMatcher {
   private static final Matcher<ExpressionTree> ASSERT_EQUALS =
@@ -93,7 +93,7 @@ public final class JUnitIncompatibleType extends BugChecker implements MethodInv
     return NO_MATCH;
   }
 
-  /** Returns the number of arguments to skip so we ignore {@code message} arguments. */
+  /// Returns the number of arguments to skip so we ignore `message` arguments.
   private static int argumentsToSkip(MethodInvocationTree tree, VisitorState state) {
     return isSameType(
             getSymbol(tree).getParameters().getFirst().type, state.getSymtab().stringType, state)

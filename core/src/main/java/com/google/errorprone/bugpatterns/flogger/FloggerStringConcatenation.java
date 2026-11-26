@@ -43,7 +43,7 @@ import com.sun.source.util.SimpleTreeVisitor;
 import java.util.ArrayList;
 import java.util.List;
 
-/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
+/// A [BugChecker]; see the associated [BugPattern] annotation for details.
 @BugPattern(
     summary =
         "Prefer string formatting using printf placeholders (e.g. %s) instead of string"

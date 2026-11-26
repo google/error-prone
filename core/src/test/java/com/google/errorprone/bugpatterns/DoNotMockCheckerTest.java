@@ -28,11 +28,9 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.mockito.Mock;
 
-/**
- * Tests for {@link DoNotMockChecker}.
- *
- * @author amalloy@google.com (Alan Malloy)
- */
+/// Tests for [DoNotMockChecker].
+///
+/// @author amalloy@google.com (Alan Malloy)
 @RunWith(JUnit4.class)
 public final class DoNotMockCheckerTest {
 
@@ -340,12 +338,12 @@ public final class DoNotMockCheckerTest {
         .doTest();
   }
 
-  /** Example meta-annotation to put on the test's classpath. */
+  /// Example meta-annotation to put on the test's classpath.
   @Retention(RUNTIME)
   @DoNotMock("unmockable")
   public @interface AnnotationWithDoNotMock {}
 
-  /** An example usage of this meta-annotation. */
+  /// An example usage of this meta-annotation.
   @AnnotationWithDoNotMock
   public static class AnnotatedClass {}
 

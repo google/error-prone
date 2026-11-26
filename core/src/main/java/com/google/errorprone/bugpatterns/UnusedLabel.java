@@ -34,7 +34,7 @@ import java.util.HashMap;
 import java.util.Map;
 import javax.lang.model.element.Name;
 
-/** A BugPattern; see the summary. */
+/// A BugPattern; see the summary.
 @BugPattern(summary = "This label is unused.", severity = SeverityLevel.WARNING)
 public final class UnusedLabel extends BugChecker implements CompilationUnitTreeMatcher {
   @Override

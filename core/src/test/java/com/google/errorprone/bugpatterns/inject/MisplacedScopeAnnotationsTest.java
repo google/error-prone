@@ -22,7 +22,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** Test for {@link MisplacedScopeAnnotations}. */
+/// Test for [MisplacedScopeAnnotations].
 @RunWith(JUnit4.class)
 public class MisplacedScopeAnnotationsTest {
   private final CompilationTestHelper compilationHelper =

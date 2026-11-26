@@ -34,7 +34,7 @@ import com.sun.tools.javac.code.Type;
 import java.util.List;
 import javax.lang.model.type.TypeKind;
 
-/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
+/// A [BugChecker]; see the associated [BugPattern] annotation for details.
 @BugPattern(
     summary = "`return;` is unnecessary at the end of void methods and constructors.",
     severity = WARNING)

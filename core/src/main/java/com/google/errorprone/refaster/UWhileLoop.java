@@ -23,11 +23,9 @@ import com.sun.source.tree.TreeVisitor;
 import com.sun.source.tree.WhileLoopTree;
 import com.sun.tools.javac.tree.JCTree.JCWhileLoop;
 
-/**
- * A {@link UTree} representation of a {@link WhileLoopTree}.
- *
- * @author lowasser@google.com (Louis Wasserman)
- */
+/// A [UTree] representation of a [WhileLoopTree].
+///
+/// @author lowasser@google.com (Louis Wasserman)
 @AutoValue
 abstract class UWhileLoop extends USimpleStatement implements WhileLoopTree {
   public static UWhileLoop create(UExpression condition, UStatement body) {

@@ -88,7 +88,7 @@ import java.util.Optional;
 import java.util.OptionalInt;
 import javax.lang.model.type.TypeKind;
 
-/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
+/// A [BugChecker]; see the associated [BugPattern] annotation for details.
 @BugPattern(
     summary =
         "Migrate loops in tests to use github.com/google/TestParameterInjector. Test"
@@ -101,9 +101,7 @@ public final class LoopToTestParameter extends BugChecker implements ClassTreeMa
   private static final Matcher<ExpressionTree> ENUM_VALUES =
       staticMethod().onDescendantOf("java.lang.Enum").named("values").withNoParameters();
 
-  /**
-   * Matches common wrappers around {@code Enum.values()} like {@code Arrays.asList(Enum.values())}.
-   */
+  /// Matches common wrappers around `Enum.values()` like `Arrays.asList(Enum.values())`.
   private static final Matcher<MethodInvocationTree> WRAPPED_ENUM_VALUES =
       allOf(
           argumentCount(1),
@@ -113,14 +111,14 @@ public final class LoopToTestParameter extends BugChecker implements ClassTreeMa
               staticMethod().onClass("com.google.common.collect.ImmutableList").named("copyOf"),
               staticMethod().onClass("com.google.common.collect.ImmutableSet").named("copyOf")));
 
-  /** Matches common ways of iterating over all enum values. */
+  /// Matches common ways of iterating over all enum values.
   private static final Matcher<ExpressionTree> ENUM_VALUES_ITERABLE =
       anyOf(
           ENUM_VALUES,
           staticMethod().onClass("java.util.EnumSet").named("allOf"),
           toType(MethodInvocationTree.class, WRAPPED_ENUM_VALUES));
 
-  /** Matches common collection factory methods with explicit elements. */
+  /// Matches common collection factory methods with explicit elements.
   private static final Matcher<ExpressionTree> COLLECTION_FACTORY =
       anyOf(
           staticMethod().onClass("java.util.Arrays").named("asList"),
@@ -145,11 +143,9 @@ public final class LoopToTestParameter extends BugChecker implements ClassTreeMa
               classLiteral(
                   anyOf(isSameType(JUNIT4_RUNNER_CLASS), isSameType(TEST_PARAMETER_INJECTOR)))));
 
-  /**
-   * Skipping refactoring if the loop body contains custom control flow (continue, break, return)
-   * because unwrapping them can lead to compile errors (continue/break outside loop) or semantic
-   * changes (return stopping all iterations vs one parameter set).
-   */
+  /// Skipping refactoring if the loop body contains custom control flow (continue, break, return)
+  /// because unwrapping them can lead to compile errors (continue/break outside loop) or semantic
+  /// changes (return stopping all iterations vs one parameter set).
   private static final Matcher<Tree> CONTAINS_CUSTOM_CONTROL_FLOW =
       contains(kindAnyOf(ImmutableSet.of(CONTINUE, BREAK, RETURN)));
 
@@ -192,19 +188,15 @@ public final class LoopToTestParameter extends BugChecker implements ClassTreeMa
     return describeMatch(tree, fix.build());
   }
 
-  /**
-   * Returns true if the method's parameters are compatible with {@code TestParameterInjector}
-   * (either no parameters, or all annotated with {@code @TestParameter}).
-   */
+  /// Returns true if the method's parameters are compatible with `TestParameterInjector` (either no
+  /// parameters, or all annotated with `@TestParameter`).
   private static boolean compatibleParameters(MethodTree method, VisitorState state) {
     return method.getParameters().stream()
         .allMatch(param -> hasAnnotation(getSymbol(param), TEST_PARAMETER, state));
   }
 
-  /**
-   * Processes a single method, checking if it is a test method with a loop that can be migrated,
-   * and appends suggested fixes to the builder.
-   */
+  /// Processes a single method, checking if it is a test method with a loop that can be migrated,
+  /// and appends suggested fixes to the builder.
   private static void processMethod(MethodTree tree, VisitorState state, SuggestedFix.Builder fix) {
     // Restrict to @Test methods with compatible parameters and exactly one statement (the loop).
     // This is a safety measure to avoid breaking tests with complex setup/teardown.
@@ -228,12 +220,10 @@ public final class LoopToTestParameter extends BugChecker implements ClassTreeMa
         .ifPresent(values -> applyFix(tree, loopTree, values, state, fix));
   }
 
-  /**
-   * Extracts the list of {@code @TestParameter} values from the given loop, returning an empty list
-   * if {@code @TestParameter} can be used without explicit values (e.g., all enum values or {@code
-   * {true, false}} for a boolean), or {@link Optional#empty()} if the loop expression or its
-   * elements cannot be represented as {@code @TestParameter} values.
-   */
+  /// Extracts the list of `@TestParameter` values from the given loop, returning an empty list if
+  /// `@TestParameter` can be used without explicit values (e.g., all enum values or `{true, false}`
+  /// for a boolean), or [Optional#empty()] if the loop expression or its elements cannot be
+  /// represented as `@TestParameter` values.
   private static Optional<ImmutableList<String>> extractTestParameterValues(
       EnhancedForLoopTree loopTree, VisitorState state) {
     ExpressionTree loopExpr = stripParentheses(loopTree.getExpression());
@@ -302,10 +292,8 @@ public final class LoopToTestParameter extends BugChecker implements ClassTreeMa
     return tree instanceof LiteralTree && tree.getKind() != Kind.CHAR_LITERAL;
   }
 
-  /**
-   * Applies the refactoring fix to the method: unwraps the loop body and adds the loop variable as
-   * a method parameter.
-   */
+  /// Applies the refactoring fix to the method: unwraps the loop body and adds the loop variable as
+  /// a method parameter.
   private static void applyFix(
       MethodTree tree,
       EnhancedForLoopTree loopTree,
@@ -354,10 +342,8 @@ public final class LoopToTestParameter extends BugChecker implements ClassTreeMa
     }
   }
 
-  /**
-   * Generates the string representation of the new method parameter for the loop variable,
-   * including the {@code @TestParameter} annotation.
-   */
+  /// Generates the string representation of the new method parameter for the loop variable,
+  /// including the `@TestParameter` annotation.
   private static String getNewMethodParam(
       EnhancedForLoopTree loopTree,
       ImmutableList<String> values,

@@ -49,11 +49,9 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.safere.Pattern;
 
-/**
- * Unit tests for {@code ErrorProneOptions}.
- *
- * @author eaftan@google.com (Eddie Aftandilian)
- */
+/// Unit tests for `ErrorProneOptions`.
+///
+/// @author eaftan@google.com (Eddie Aftandilian)
 @RunWith(JUnit4.class)
 public class ErrorProneOptionsTest {
   @Rule public final TemporaryFolder tempFolder = new TemporaryFolder();

@@ -16,11 +16,9 @@
 
 package com.google.errorprone.refaster;
 
-/**
- * Exception thrown when a class symbol could not be resolved by the compiler.
- *
- * @author Louis Wasserman
- */
+/// Exception thrown when a class symbol could not be resolved by the compiler.
+///
+/// @author Louis Wasserman
 public class CouldNotResolveImportException extends Exception {
   public CouldNotResolveImportException(CharSequence message) {
     super(message.toString());

@@ -678,10 +678,8 @@ import com.google.errorprone.bugpatterns.time.TimeUnitMismatch;
 import com.google.errorprone.bugpatterns.time.ZoneIdOfZ;
 import java.util.Arrays;
 
-/**
- * Static helper class that provides {@link ScannerSupplier}s and {@link BugChecker}s for the
- * built-in Error Prone checks, as opposed to plugin checks or checks used in tests.
- */
+/// Static helper class that provides [ScannerSupplier]s and [BugChecker]s for the built-in Error
+/// Prone checks, as opposed to plugin checks or checks used in tests.
 public final class BuiltInCheckerSuppliers {
   @SafeVarargs
   public static ImmutableSet<BugCheckerInfo> getSuppliers(Class<? extends BugChecker>... checkers) {
@@ -695,37 +693,29 @@ public final class BuiltInCheckerSuppliers {
         .collect(ImmutableSet.toImmutableSet());
   }
 
-  /** Returns a {@link ScannerSupplier} with all {@link BugChecker}s in Error Prone. */
+  /// Returns a [ScannerSupplier] with all [BugChecker]s in Error Prone.
   public static ScannerSupplier allChecks() {
     return ScannerSupplier.fromBugCheckerInfos(
         Iterables.concat(ENABLED_ERRORS, ENABLED_WARNINGS, DISABLED_CHECKS));
   }
 
-  /**
-   * Returns a {@link ScannerSupplier} with the {@link BugChecker}s that are in the ENABLED lists.
-   */
+  /// Returns a [ScannerSupplier] with the [BugChecker]s that are in the ENABLED lists.
   public static ScannerSupplier defaultChecks() {
     return allChecks()
         .filter(Predicates.or(Predicates.in(ENABLED_ERRORS), Predicates.in(ENABLED_WARNINGS)));
   }
 
-  /**
-   * Returns a {@link ScannerSupplier} with the {@link BugChecker}s that are in the ENABLED_ERRORS
-   * list.
-   */
+  /// Returns a [ScannerSupplier] with the [BugChecker]s that are in the ENABLED_ERRORS list.
   public static ScannerSupplier errorChecks() {
     return allChecks().filter(Predicates.in(ENABLED_ERRORS));
   }
 
-  /**
-   * Returns a {@link ScannerSupplier} with the {@link BugChecker}s that are in the ENABLED_WARNINGS
-   * list.
-   */
+  /// Returns a [ScannerSupplier] with the [BugChecker]s that are in the ENABLED_WARNINGS list.
   public static ScannerSupplier warningChecks() {
     return allChecks().filter(Predicates.in(ENABLED_WARNINGS));
   }
 
-  /** A list of all checks with severity ERROR that are on by default. */
+  /// A list of all checks with severity ERROR that are on by default.
   public static final ImmutableSet<BugCheckerInfo> ENABLED_ERRORS =
       getSuppliers(
           // keep-sorted start
@@ -919,7 +909,7 @@ public final class BuiltInCheckerSuppliers {
           // keep-sorted end
           );
 
-  /** A list of all checks with severity WARNING that are on by default. */
+  /// A list of all checks with severity WARNING that are on by default.
   public static final ImmutableSet<BugCheckerInfo> ENABLED_WARNINGS =
       getSuppliers(
           // keep-sorted start
@@ -1236,7 +1226,7 @@ public final class BuiltInCheckerSuppliers {
           // keep-sorted end
           );
 
-  /** A list of all checks that are off by default. */
+  /// A list of all checks that are off by default.
   public static final ImmutableSet<BugCheckerInfo> DISABLED_CHECKS =
       getSuppliers(
           // keep-sorted start

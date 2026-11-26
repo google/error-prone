@@ -24,11 +24,9 @@ import com.sun.source.tree.TreeVisitor;
 import com.sun.tools.javac.tree.JCTree.JCConditional;
 import org.jspecify.annotations.Nullable;
 
-/**
- * {@link UTree} version of {@link ConditionalExpressionTree}.
- *
- * @author lowasser@google.com (Louis Wasserman)
- */
+/// [UTree] version of [ConditionalExpressionTree].
+///
+/// @author lowasser@google.com (Louis Wasserman)
 @AutoValue
 abstract class UConditional extends UExpression implements ConditionalExpressionTree {
   public static UConditional create(

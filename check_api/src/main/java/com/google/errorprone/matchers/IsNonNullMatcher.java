@@ -21,10 +21,8 @@ import static com.google.errorprone.matchers.Matchers.isNonNullUsingDataflow;
 import com.google.errorprone.VisitorState;
 import com.sun.source.tree.ExpressionTree;
 
-/**
- * Matches expressions that can be statically determined to be non-null. The matcher should have few
- * if any false positives but has many, many false negatives.
- */
+/// Matches expressions that can be statically determined to be non-null. The matcher should have
+/// few if any false positives but has many, many false negatives.
 public final class IsNonNullMatcher implements Matcher<ExpressionTree> {
   @Override
   public boolean matches(ExpressionTree tree, VisitorState state) {

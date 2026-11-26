@@ -31,7 +31,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** Tests for {@link DateChecker}. */
+/// Tests for [DateChecker].
 @RunWith(JUnit4.class)
 @SuppressWarnings({"DateChecker", "JdkObsolete", "deprecation"})
 public class DateCheckerTest {

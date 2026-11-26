@@ -18,7 +18,7 @@ package com.google.errorprone.dataflow.nullnesspropagation;
 
 import java.util.Optional;
 
-/** Represents a Java method. Used for custom predicates to match non-null-returning methods. */
+/// Represents a Java method. Used for custom predicates to match non-null-returning methods.
 public interface MethodInfo {
   String clazz();
 

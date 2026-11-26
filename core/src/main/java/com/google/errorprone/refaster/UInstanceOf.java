@@ -25,11 +25,9 @@ import com.sun.tools.javac.tree.JCTree.JCInstanceOf;
 import java.lang.reflect.Proxy;
 import org.jspecify.annotations.Nullable;
 
-/**
- * {@link UTree} representation of a {@link InstanceOfTree}.
- *
- * @author lowasser@google.com (Louis Wasserman)
- */
+/// [UTree] representation of a [InstanceOfTree].
+///
+/// @author lowasser@google.com (Louis Wasserman)
 @AutoValue
 abstract class UInstanceOf extends UExpression {
   public static UInstanceOf create(UExpression expression, UTree<?> type) {

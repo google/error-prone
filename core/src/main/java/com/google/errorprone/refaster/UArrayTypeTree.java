@@ -22,12 +22,9 @@ import com.sun.source.tree.TreeVisitor;
 import com.sun.tools.javac.tree.JCTree.JCArrayTypeTree;
 import org.jspecify.annotations.Nullable;
 
-/**
- * {@link UTree} version of {@link ArrayTypeTree}. This is the AST representation of {@link
- * UArrayType}.
- *
- * @author lowasser@google.com (Louis Wasserman)
- */
+/// [UTree] version of [ArrayTypeTree]. This is the AST representation of [UArrayType].
+///
+/// @author lowasser@google.com (Louis Wasserman)
 @AutoValue
 abstract class UArrayTypeTree extends UExpression implements ArrayTypeTree {
   public static UArrayTypeTree create(UExpression elementType) {

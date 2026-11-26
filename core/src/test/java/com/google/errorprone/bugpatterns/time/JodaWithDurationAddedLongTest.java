@@ -20,7 +20,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** Tests for {@link JodaWithDurationAddedLong}. */
+/// Tests for [JodaWithDurationAddedLong].
 @RunWith(JUnit4.class)
 public class JodaWithDurationAddedLongTest {
   private final CompilationTestHelper helper =

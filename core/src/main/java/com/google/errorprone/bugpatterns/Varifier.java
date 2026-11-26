@@ -47,7 +47,7 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import java.util.regex.Pattern;
 import javax.lang.model.element.TypeElement;
 
-/** Converts some local variables to use {@code var}. */
+/// Converts some local variables to use `var`.
 @BugPattern(severity = WARNING, summary = "Consider using `var` here to avoid boilerplate.")
 public final class Varifier extends BugChecker implements VariableTreeMatcher {
   private static final Matcher<ExpressionTree> BUILD_METHOD =

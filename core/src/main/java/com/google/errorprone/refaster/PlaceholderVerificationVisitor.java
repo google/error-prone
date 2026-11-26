@@ -28,23 +28,19 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-/**
- * Cheap visitor to verify that a tree or set of trees could conceivably match a placeholder, by
- * potentially matching at least all of the required expressions, and not matching forbidden
- * expressions, i.e. other variables known to Refaster.
- *
- * @author lowasser@google.com (Louis Wasserman)
- */
+/// Cheap visitor to verify that a tree or set of trees could conceivably match a placeholder, by
+/// potentially matching at least all of the required expressions, and not matching forbidden
+/// expressions, i.e. other variables known to Refaster.
+///
+/// @author lowasser@google.com (Louis Wasserman)
 final class PlaceholderVerificationVisitor extends TreeScanner<Boolean, Unifier> {
   private final List<UExpression> unmatched;
   private final ImmutableList<UExpression> allowed;
 
-  /**
-   * @param required UExpressions that must potentially match at least one expression in the tested
-   *     code.
-   * @param allowed UExpressions that are explicitly allowed, and excepted from the ban on
-   *     references to known variables
-   */
+  /// @param required UExpressions that must potentially match at least one expression in the tested
+  ///   code.
+  /// @param allowed UExpressions that are explicitly allowed, and excepted from the ban on
+  ///   references to known variables
   PlaceholderVerificationVisitor(
       Collection<? extends UExpression> required, Collection<? extends UExpression> allowed) {
     this.unmatched = new LinkedList<>(required);

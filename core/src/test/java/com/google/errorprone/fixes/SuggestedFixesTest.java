@@ -92,27 +92,25 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * @author cushon@google.com (Liam Miller-Cushon)
- */
+/// @author cushon@google.com (Liam Miller-Cushon)
 @RunWith(JUnit4.class)
 public class SuggestedFixesTest {
 
-  /** Edit modifiers type. */
+  /// Edit modifiers type.
   @Retention(RUNTIME)
   public @interface EditModifiers {
     String[] value() default {};
 
     EditKind kind() default EditKind.ADD;
 
-    /** Kind of edit. */
+    /// Kind of edit.
     enum EditKind {
       ADD,
       REMOVE
     }
   }
 
-  /** Test checker that adds or removes modifiers. */
+  /// Test checker that adds or removes modifiers.
   @BugPattern(summary = "Edits modifiers", severity = ERROR)
   public static final class EditModifiersChecker extends BugChecker
       implements ClassTreeMatcher, VariableTreeMatcher, MethodTreeMatcher {
@@ -364,7 +362,7 @@ public class SuggestedFixesTest {
         .doTest();
   }
 
-  /** Test checker that casts returned expression. */
+  /// Test checker that casts returned expression.
   @BugPattern(severity = ERROR, summary = "Adds casts to returned expressions")
   public static class CastReturn extends BugChecker implements ReturnTreeMatcher {
 
@@ -383,7 +381,7 @@ public class SuggestedFixesTest {
     }
   }
 
-  /** Test checker that casts returned expression. */
+  /// Test checker that casts returned expression.
   @BugPattern(severity = ERROR, summary = "Adds casts to returned expressions")
   public static class CastReturnFullType extends BugChecker implements ReturnTreeMatcher {
 
@@ -536,7 +534,7 @@ public class SuggestedFixesTest {
 
   private static final Supplier<Type> SOMEANNOTATION = typeFromString("some.pkg.SomeAnnotation");
 
-  /** A test check that adds an annotation to all return types. */
+  /// A test check that adds an annotation to all return types.
   @BugPattern(summary = "Add an annotation", severity = ERROR)
   public static class AddAnnotation extends BugChecker implements BugChecker.MethodTreeMatcher {
     @Override
@@ -790,7 +788,7 @@ public class SuggestedFixesTest {
         .doTest();
   }
 
-  /** A test check that replaces all methods' return types with a given type. */
+  /// A test check that replaces all methods' return types with a given type.
   @BugPattern(summary = "Change the method return type", severity = ERROR)
   public static class ReplaceReturnType extends BugChecker implements BugChecker.MethodTreeMatcher {
     private final String newReturnType;
@@ -844,7 +842,7 @@ public class SuggestedFixesTest {
         .doTest();
   }
 
-  /** A test check that replaces all methods' return types with a given type. */
+  /// A test check that replaces all methods' return types with a given type.
   @BugPattern(summary = "Change the method return type", severity = ERROR)
   public static class ReplaceReturnTypeString extends BugChecker
       implements BugChecker.MethodTreeMatcher {
@@ -873,7 +871,7 @@ public class SuggestedFixesTest {
     qualifyDeeplyNestedType(new ReplaceReturnTypeString("pkg.Outer.Inner.Innermost"));
   }
 
-  /** A test check that replaces all methods' return types with a given {@link ClassName}. */
+  /// A test check that replaces all methods' return types with a given [ClassName].
   @BugPattern(summary = "Change the method return type", severity = ERROR)
   public static class ReplaceReturnTypeClassName extends BugChecker
       implements BugChecker.MethodTreeMatcher {
@@ -892,7 +890,7 @@ public class SuggestedFixesTest {
     }
   }
 
-  /** Test checker for {@link #qualifyTypeClassName_dollarPrefixedLoadedType}. */
+  /// Test checker for [#qualifyTypeClassName_dollarPrefixedLoadedType].
   @BugPattern(summary = "Change the method return type", severity = ERROR)
   public static final class ReplaceReturnTypeDollarPrefixed extends ReplaceReturnTypeClassName {
     public ReplaceReturnTypeDollarPrefixed() {
@@ -900,7 +898,7 @@ public class SuggestedFixesTest {
     }
   }
 
-  /** Test checker for {@link #qualifyTypeClassName_unloadedNestedType}. */
+  /// Test checker for [#qualifyTypeClassName_unloadedNestedType].
   @BugPattern(summary = "Change the method return type", severity = ERROR)
   public static final class ReplaceReturnTypeUnloadedNested extends ReplaceReturnTypeClassName {
     public ReplaceReturnTypeUnloadedNested() {
@@ -1172,7 +1170,7 @@ public class SuggestedFixesTest {
         .doTest();
   }
 
-  /** A test check that replaces all checkNotNulls with verifyNotNull. */
+  /// A test check that replaces all checkNotNulls with verifyNotNull.
   @BugPattern(summary = "Replaces checkNotNull with verifyNotNull.", severity = ERROR)
   public static class ReplaceMethodInvocations extends BugChecker
       implements BugChecker.MethodInvocationTreeMatcher {
@@ -1448,7 +1446,7 @@ public class SuggestedFixesTest {
         .doTest();
   }
 
-  /** A test check that replaces checkNotNull using {@code qualifyStaticImport(ClassName, ...)}. */
+  /// A test check that replaces checkNotNull using `qualifyStaticImport(ClassName, ...)`.
   @BugPattern(
       summary = "Replaces checkNotNull with pkg.Outer$Inner.verifyNotNull",
       severity = ERROR)
@@ -1566,7 +1564,7 @@ public class SuggestedFixesTest {
         .doTest();
   }
 
-  /** A test check that suggests an exempting annotation using {@link ClassName}. */
+  /// A test check that suggests an exempting annotation using [ClassName].
   @BugPattern(summary = "Suggests an exempting annotation", severity = ERROR)
   public static class SuggestExemptingAnnotationClassNameChecker extends BugChecker
       implements BugChecker.MethodInvocationTreeMatcher {
@@ -1687,7 +1685,7 @@ public class SuggestedFixesTest {
         .doTest();
   }
 
-  /** A test check that qualifies javadoc link. */
+  /// A test check that qualifies javadoc link.
   @BugPattern(summary = "all javadoc links should be qualified", severity = ERROR)
   public static class JavadocQualifier extends BugChecker implements BugChecker.ClassTreeMatcher {
     @Override
@@ -1754,7 +1752,7 @@ class Test {
         .doTest();
   }
 
-  /** A {@link BugChecker} for testing. */
+  /// A [BugChecker] for testing.
   @BugPattern(summary = "", severity = ERROR)
   public static final class SuppressMe extends BugChecker
       implements LiteralTreeMatcher, VariableTreeMatcher {
@@ -1892,7 +1890,7 @@ class Test {
         .doTest();
   }
 
-  /** A {@link BugChecker} for testing. */
+  /// A [BugChecker] for testing.
   @BugPattern(summary = "", severity = ERROR)
   public static final class SuppressMeWithComment extends BugChecker implements LiteralTreeMatcher {
     private final String lineComment;
@@ -2005,7 +2003,7 @@ public class Test {
         .doTest();
   }
 
-  /** A {@link BugChecker} for testing. */
+  /// A [BugChecker] for testing.
   @BugPattern(summary = "", severity = ERROR)
   public static final class RemoveSuppressFromMe extends BugChecker implements LiteralTreeMatcher {
 
@@ -2137,7 +2135,7 @@ public class Test {
         .doTest();
   }
 
-  /** A {@link BugChecker} for testing. */
+  /// A [BugChecker] for testing.
   @BugPattern(summary = "", severity = ERROR)
   public static final class UpdateDoNotCallArgument extends BugChecker
       implements AnnotationTreeMatcher {
@@ -2178,7 +2176,7 @@ public class Test {
         .doTest();
   }
 
-  /** A test bugchecker that deletes any field whose removal doesn't break the compilation. */
+  /// A test bugchecker that deletes any field whose removal doesn't break the compilation.
   @BugPattern(summary = "", severity = ERROR)
   public static class CompilesWithFixChecker extends BugChecker implements VariableTreeMatcher {
     @Override
@@ -2247,7 +2245,7 @@ public class Test {
         .doTest();
   }
 
-  /** A test bugchecker that deletes an exception from throws. */
+  /// A test bugchecker that deletes an exception from throws.
   @BugPattern(summary = "", severity = ERROR)
   public static class RemovesExceptionsChecker extends BugChecker implements MethodTreeMatcher {
 
@@ -2355,7 +2353,7 @@ public class Test {
         .doTest();
   }
 
-  /** Test checker that renames variables. */
+  /// Test checker that renames variables.
   @BugPattern(summary = "", severity = ERROR)
   public static class RenamesVariableChecker extends BugChecker implements VariableTreeMatcher {
 
@@ -2619,7 +2617,7 @@ public class Test {
         .doTest();
   }
 
-  /** Test checker that removes and adds modifiers in the same fix. */
+  /// Test checker that removes and adds modifiers in the same fix.
   @BugPattern(summary = "", severity = ERROR)
   public static class RemoveAddModifier extends BugChecker implements ClassTreeMatcher {
 
@@ -2649,7 +2647,7 @@ public class Test {
         .doTest();
   }
 
-  /** A bugchecker for testing suggested fixes. */
+  /// A bugchecker for testing suggested fixes.
   @BugPattern(summary = "A bugchecker for testing suggested fixes.", severity = ERROR)
   public static class PrefixAddImportCheck extends BugChecker implements ClassTreeMatcher {
     @Override
@@ -2694,7 +2692,7 @@ public class Test {
         .isEqualTo(URI.create("file:/com/google/Foo.java"));
   }
 
-  /** A {@link BugChecker} for testing. */
+  /// A [BugChecker] for testing.
   @BugPattern(summary = "RenameMethodChecker", severity = ERROR)
   public static class RenameMethodChecker extends BugChecker
       implements MethodInvocationTreeMatcher {
@@ -2742,7 +2740,7 @@ public class Test {
         .doTest();
   }
 
-  /** A {@link BugChecker} for testing. */
+  /// A [BugChecker] for testing.
   @BugPattern(summary = "RenameClassChecker", severity = ERROR)
   public static class RenameClassChecker extends BugChecker implements ClassTreeMatcher {
     @Override
@@ -2791,10 +2789,8 @@ public class Test {
         .doTest();
   }
 
-  /**
-   * Test checker that raises a diagnostic with the result of {@link SuggestedFixes#qualifyType} on
-   * new instances.
-   */
+  /// Test checker that raises a diagnostic with the result of [SuggestedFixes#qualifyType] on new
+  /// instances.
   @BugPattern(summary = "QualifyTypeLocalClassChecker", severity = ERROR)
   public static class QualifyTypeLocalClassChecker extends BugChecker
       implements NewClassTreeMatcher {
@@ -2913,7 +2909,7 @@ public class Test {
         .doTest();
   }
 
-  /** Test checker that adds @SuppressWarnings when compilation succeeds in the current unit. */
+  /// Test checker that adds @SuppressWarnings when compilation succeeds in the current unit.
   @BugPattern(summary = "", severity = ERROR)
   public static final class AddSuppressWarningsIfCompilationSucceedsOnlyInSameCompilationUnit
       extends BugChecker implements ClassTreeMatcher {
@@ -2961,7 +2957,7 @@ public class Test {
         .doTest();
   }
 
-  /** Test checker that adds @SuppressWarnings when compilation succeeds in all units. */
+  /// Test checker that adds @SuppressWarnings when compilation succeeds in all units.
   @BugPattern(summary = "", severity = ERROR)
   public static final class AddSuppressWarningsIfCompilationSucceedsInAllCompilationUnits
       extends BugChecker implements ClassTreeMatcher {
@@ -3049,7 +3045,7 @@ public class Test {
         .orElse(NO_MATCH);
   }
 
-  /** Test checker that casts return expressions to int. */
+  /// Test checker that casts return expressions to int.
   @BugPattern(
       name = "AddSuppressWarningsIfCompilationSucceedsInAllCompilationUnits",
       summary = "",
@@ -3206,7 +3202,7 @@ public class Test {
         .doTest();
   }
 
-  /** Bugpattern for testing. */
+  /// Bugpattern for testing.
   @BugPattern(name = "RemoveAnnotationElement", summary = "", severity = ERROR)
   public static final class RemoveAnnotationElement extends BugChecker
       implements AnnotationTreeMatcher {
@@ -3221,7 +3217,7 @@ public class Test {
     }
   }
 
-  /** A test check that replaces var with explicit types. */
+  /// A test check that replaces var with explicit types.
   @BugPattern(summary = "Replace var with a type", severity = ERROR)
   public static class ReplaceVarWithType extends BugChecker
       implements BugChecker.VariableTreeMatcher {
@@ -3275,7 +3271,7 @@ public class Test {
         .doTest();
   }
 
-  /** A test check that tests variableNamer with extraScope. */
+  /// A test check that tests variableNamer with extraScope.
   @BugPattern(summary = "Test variable namer with extra scope", severity = ERROR)
   public static class VariableNamerChecker extends BugChecker implements MethodTreeMatcher {
     @Override

@@ -53,7 +53,7 @@ import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
 import org.jspecify.annotations.Nullable;
 
-/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
+/// A [BugChecker]; see the associated [BugPattern] annotation for details.
 // TODO(cushon): allow @LazyInit on fields as a suppression mechanism?
 @BugPattern(
     name = "DoubleCheckedLocking",
@@ -74,12 +74,10 @@ public class DoubleCheckedLocking extends BugChecker implements IfTreeMatcher {
     };
   }
 
-  /**
-   * Report a {@link Description} if a field used in double-checked locking is not volatile.
-   *
-   * <p>If the AST node for the field declaration can be located in the current compilation unit,
-   * suggest adding the volatile modifier.
-   */
+  /// Report a [Description] if a field used in double-checked locking is not volatile.
+  ///
+  /// If the AST node for the field declaration can be located in the current compilation unit,
+  /// suggest adding the volatile modifier.
   private Description handleField(IfTree outerIf, VarSymbol sym, VisitorState state) {
     if (sym.getModifiers().contains(Modifier.VOLATILE)) {
       return Description.NO_MATCH;
@@ -107,10 +105,8 @@ public class DoubleCheckedLocking extends BugChecker implements IfTreeMatcher {
           java.lang.Float.class.getName(),
           java.lang.String.class.getName());
 
-  /**
-   * Recognize a small set of known-immutable types that are safe for DCL even without a volatile
-   * field.
-   */
+  /// Recognize a small set of known-immutable types that are safe for DCL even without a volatile
+  /// field.
   private static boolean isImmutable(Type type, VisitorState state) {
     switch (type.getKind()) {
       case BOOLEAN, BYTE, SHORT, INT, CHAR, FLOAT -> {
@@ -126,25 +122,23 @@ public class DoubleCheckedLocking extends BugChecker implements IfTreeMatcher {
         state.getTypes().erasure(type).tsym.getQualifiedName().toString());
   }
 
-  /**
-   * Report a diagnostic for an instance of DCL on a local variable. A match is only reported if a
-   * non-volatile field is written to the variable after acquiring the lock and before the second
-   * null-check on the local.
-   *
-   * <p>e.g.
-   *
-   * <pre>{@code
-   * if ($X == null) {
-   *   synchronized (...) {
-   *     $X = myNonVolatileField;
-   *     if ($X == null) {
-   *       ...
-   *     }
-   *     ...
-   *   }
-   * }
-   * }</pre>
-   */
+  /// Report a diagnostic for an instance of DCL on a local variable. A match is only reported if a
+  /// non-volatile field is written to the variable after acquiring the lock and before the second
+  /// null-check on the local.
+  ///
+  /// e.g.
+  ///
+  /// ```
+  /// if ($X == null) {
+  ///   synchronized (...) {
+  ///     $X = myNonVolatileField;
+  ///     if ($X == null) {
+  ///       ...
+  ///     }
+  ///     ...
+  ///   }
+  /// }
+  /// ```
   private Description handleLocal(DclInfo info, VisitorState state) {
     ExpressionStatementTree expr =
         getChild(info.synchTree().getBlock(), ExpressionStatementTree.class);
@@ -169,14 +163,12 @@ public class DoubleCheckedLocking extends BugChecker implements IfTreeMatcher {
     return handleField(info.outerIf(), fvar, state);
   }
 
-  /**
-   * Information about an instance of DCL.
-   *
-   * @param outerIf The outer if statement
-   * @param synchTree The synchronized statement
-   * @param innerIf The inner if statement
-   * @param sym The variable (local or field) that is double-checked
-   */
+  /// Information about an instance of DCL.
+  ///
+  /// @param outerIf The outer if statement
+  /// @param synchTree The synchronized statement
+  /// @param innerIf The inner if statement
+  /// @param sym The variable (local or field) that is double-checked
   private record DclInfo(
       IfTree outerIf, SynchronizedTree synchTree, IfTree innerIf, VarSymbol sym) {
 
@@ -186,23 +178,21 @@ public class DoubleCheckedLocking extends BugChecker implements IfTreeMatcher {
     }
   }
 
-  /**
-   * Matches an instance of DCL. The canonical pattern is:
-   *
-   * <pre>{@code
-   * if ($X == null) {
-   *   synchronized (...) {
-   *     if ($X == null) {
-   *       ...
-   *     }
-   *     ...
-   *   }
-   * }
-   * }</pre>
-   *
-   * Gaps before the synchronized or inner 'if' statement are ignored, and the operands in the
-   * null-checks are accepted in either order.
-   */
+  /// Matches an instance of DCL. The canonical pattern is:
+  ///
+  /// ```
+  /// if ($X == null) {
+  ///   synchronized (...) {
+  ///     if ($X == null) {
+  ///       ...
+  ///     }
+  ///     ...
+  ///   }
+  /// }
+  /// ```
+  ///
+  /// Gaps before the synchronized or inner 'if' statement are ignored, and the operands in the
+  /// null-checks are accepted in either order.
   private static @Nullable DclInfo findDcl(IfTree outerIf) {
     // TODO(cushon): Optional.ifPresent...
     ExpressionTree outerIfTest = getNullCheckedExpression(outerIf.getCondition());
@@ -231,9 +221,7 @@ public class DoubleCheckedLocking extends BugChecker implements IfTreeMatcher {
     return DclInfo.create(outerIf, synchTree, innerIf, var);
   }
 
-  /**
-   * Matches comparisons to null (e.g. {@code foo == null}) and returns the expression being tested.
-   */
+  /// Matches comparisons to null (e.g. `foo == null`) and returns the expression being tested.
   private static @Nullable ExpressionTree getNullCheckedExpression(ExpressionTree condition) {
     condition = stripParentheses(condition);
     if (!(condition instanceof BinaryTree bin)) {
@@ -250,10 +238,8 @@ public class DoubleCheckedLocking extends BugChecker implements IfTreeMatcher {
     return other;
   }
 
-  /**
-   * Visits (possibly nested) block statements and returns the first child statement with the given
-   * class.
-   */
+  /// Visits (possibly nested) block statements and returns the first child statement with the given
+  /// class.
   private static <T> T getChild(StatementTree tree, Class<T> clazz) {
     return tree.accept(
         new SimpleTreeVisitor<T, Void>() {
@@ -283,13 +269,11 @@ public class DoubleCheckedLocking extends BugChecker implements IfTreeMatcher {
         null);
   }
 
-  /**
-   * Performs a best-effort search for the AST node of a field declaration.
-   *
-   * <p>It will only find fields declared in a lexically enclosing scope of the current location.
-   * Since double-checked locking should always be used on a private field, this should be
-   * reasonably effective.
-   */
+  /// Performs a best-effort search for the AST node of a field declaration.
+  ///
+  /// It will only find fields declared in a lexically enclosing scope of the current location.
+  /// Since double-checked locking should always be used on a private field, this should be
+  /// reasonably effective.
   private static @Nullable JCTree findFieldDeclaration(TreePath path, VarSymbol var) {
     for (TreePath curr = path; curr != null; curr = curr.getParentPath()) {
       Tree leaf = curr.getLeaf();

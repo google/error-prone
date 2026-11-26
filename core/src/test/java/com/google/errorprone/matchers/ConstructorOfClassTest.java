@@ -33,10 +33,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * @author eaftan@google.com (Eddie Aftandilian)
- *     <p>TODO(eaftan): Add test for correct matching of nodes.
- */
+/// @author eaftan@google.com (Eddie Aftandilian)
+// TODO(eaftan): Add test for correct matching of nodes.
 @RunWith(JUnit4.class)
 public class ConstructorOfClassTest extends CompilerBasedAbstractTest {
 

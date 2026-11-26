@@ -39,7 +39,7 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
 import javax.lang.model.element.Modifier;
 
-/** Checks for static fields being assigned with {@code Throwable}. */
+/// Checks for static fields being assigned with `Throwable`.
 @BugPattern(
     severity = WARNING,
     summary =

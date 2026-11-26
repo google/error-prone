@@ -27,7 +27,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** Tests for {@link RefactorSwitch}. */
+/// Tests for [RefactorSwitch].
 @RunWith(JUnit4.class)
 public final class RefactorSwitchTest {
   private static final String SUIT =
@@ -4344,26 +4344,22 @@ public final class RefactorSwitchTest {
         .doTest();
   }
 
-  /**
-   * Asserts that there is exactly one suggested fix and returns it.
-   *
-   * <p>Similar to {@code FixChoosers.FIRST}, but also asserts that there is exactly one fix.
-   */
+  /// Asserts that there is exactly one suggested fix and returns it.
+  ///
+  /// Similar to `FixChoosers.FIRST`, but also asserts that there is exactly one fix.
   public static Fix assertOneFixAndChoose(List<Fix> fixes) {
     assertThat(fixes).hasSize(1);
     return fixes.get(0);
   }
 
-  /** Asserts that there are exactly two suggested fixes and returns the second one. */
+  /// Asserts that there are exactly two suggested fixes and returns the second one.
   public static Fix assertSecondAndLastFixAndChoose(List<Fix> fixes) {
     assertThat(fixes).hasSize(2);
     return fixes.get(1);
   }
 
-  /**
-   * Asserts that there are exactly two suggested fixes, of which only the second is described as
-   * removing the {@code default} case, and returns the second one.
-   */
+  /// Asserts that there are exactly two suggested fixes, of which only the second is described as
+  /// removing the `default` case, and returns the second one.
   public static Fix assertSecondAndLastFixRemovesDefaultAndChoose(List<Fix> fixes) {
     assertThat(fixes).hasSize(2);
     assertThat(fixes.get(0).getShortDescription()).isNotEqualTo(REMOVE_DEFAULT_DESCRIPTION);

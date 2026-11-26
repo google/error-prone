@@ -21,18 +21,15 @@ import com.sun.source.util.TreePath;
 import com.sun.tools.javac.util.Context;
 import java.io.Serializable;
 
-/** An interface to the nullness analysis. */
+/// An interface to the nullness analysis.
 public final class NullnessAnalysis implements Serializable {
 
   private static final Context.Key<NullnessAnalysis> NULLNESS_ANALYSIS_KEY = new Context.Key<>();
 
   private final NullnessPropagationTransfer nullnessPropagation;
 
-  /**
-   * Retrieve an instance of {@link NullnessAnalysis} from the {@code context}. If there is no
-   * {@link NullnessAnalysis} currently in the {@code context}, create one, insert it, and return
-   * it.
-   */
+  /// Retrieve an instance of [NullnessAnalysis] from the `context`. If there is no
+  /// [NullnessAnalysis] currently in the `context`, create one, insert it, and return it.
   public static NullnessAnalysis instance(Context context) {
     NullnessAnalysis instance = context.get(NULLNESS_ANALYSIS_KEY);
     if (instance == null) {
@@ -46,13 +43,11 @@ public final class NullnessAnalysis implements Serializable {
     nullnessPropagation = new NullnessPropagationTransfer();
   }
 
-  /**
-   * Returns the {@link Nullness} of the leaf of {@code exprPath}.
-   *
-   * <p>If the leaf required the compiler to generate autoboxing or autounboxing calls, {@code
-   * getNullness} returns the {@code Nullness} <i>after</i> the boxing/unboxing. This implies that,
-   * in those cases, it will always return {@code NONNULL}.
-   */
+  /// Returns the [Nullness] of the leaf of `exprPath`.
+  ///
+  /// If the leaf required the compiler to generate autoboxing or autounboxing calls, `getNullness`
+  /// returns the `Nullness` *after* the boxing/unboxing. This implies that, in those cases, it will
+  /// always return `NONNULL`.
   public Nullness getNullness(TreePath exprPath, Context context) {
     try {
       nullnessPropagation.setContext(context).setCompilationUnit(exprPath.getCompilationUnit());

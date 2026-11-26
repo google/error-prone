@@ -61,9 +61,7 @@ import java.util.Optional;
 import javax.inject.Inject;
 import javax.lang.model.element.Modifier;
 
-/**
- * @author eaftan@google.com (Eddie Aftandilian)
- */
+/// @author eaftan@google.com (Eddie Aftandilian)
 @BugPattern(
     summary =
         "This looks like a test method but is not run; please add @Test and @Ignore, or, if this"
@@ -167,25 +165,20 @@ public class JUnit4TestNotRun extends BugChecker implements ClassTreeMatcher {
     return NO_MATCH;
   }
 
-  /**
-   * Matches if:
-   *
-   * <ol>
-   *   <li>The method is public, void, and has no parameters;
-   *   <li>the method is not already annotated with {@code @Test}, {@code @Before}, {@code @After},
-   *       {@code @BeforeClass}, or {@code @AfterClass};
-   *   <li>and, the method appears to be a test method, that is:
-   *       <ol type="a">
-   *         <li>The method name starts with "test" (which is a JUnit 3 convention),
-   *         <li>The method name contains underscores,
-   *         <li>or, the method body contains a method call with a name that contains "assert",
-   *             "verify", "check", "fail", or "expect".
-   *       </ol>
-   * </ol>
-   *
-   * Assumes that we have reason to believe we're in a test class (i.e. has a {@code RunWith}
-   * annotation; has other {@code @Test} methods, etc).
-   */
+  /// Matches if:
+  ///
+  /// 1. The method is public, void, and has no parameters;
+  /// 1. the method is not already annotated with `@Test`, `@Before`, `@After`, `@BeforeClass`, or
+  ///    `@AfterClass`;
+  /// 1. and, the method appears to be a test method, that is:
+  ///    1. The method name starts with "test" (which is a JUnit 3 convention),
+  ///    1. The method name contains underscores,
+  ///
+  ///    1. or, the method body contains a method call with a name that contains "assert", "verify",
+  ///       "check", "fail", or "expect".
+  ///
+  /// Assumes that we have reason to believe we're in a test class (i.e. has a `RunWith` annotation;
+  /// has other `@Test` methods, etc).
   private Optional<Description> handleMethod(MethodTree methodTree, VisitorState state) {
     if (EXEMPTING_METHOD_ANNOTATIONS.stream()
         .anyMatch(anno -> hasAnnotation(methodTree, anno, state))) {
@@ -219,15 +212,11 @@ public class JUnit4TestNotRun extends BugChecker implements ClassTreeMatcher {
     return Optional.empty();
   }
 
-  /**
-   * Returns a finding for the given method tree containing fixes:
-   *
-   * <ol>
-   *   <li>Add @Test, remove static modifier if present.
-   *   <li>Add @Test and @Ignore, remove static modifier if present.
-   *   <li>Change visibility to private (for local helper methods).
-   * </ol>
-   */
+  /// Returns a finding for the given method tree containing fixes:
+  ///
+  /// 1. Add @Test, remove static modifier if present.
+  /// 1. Add @Test and @Ignore, remove static modifier if present.
+  /// 1. Change visibility to private (for local helper methods).
   private Description describeFixes(MethodTree methodTree, VisitorState state) {
     Optional<SuggestedFix> removeStatic =
         SuggestedFixes.removeModifiers(methodTree, state, Modifier.STATIC);

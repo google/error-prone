@@ -37,7 +37,7 @@ import com.sun.tools.javac.code.Type;
 import java.util.Optional;
 import javax.inject.Inject;
 
-/** See BugPattern annotation. */
+/// See BugPattern annotation.
 @BugPattern(
     summary =
         "Return value of methods returning Future must be checked. Ignoring returned Futures "

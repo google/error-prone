@@ -23,11 +23,9 @@ import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import java.io.IOException;
 
-/**
- * Abstract type representing a match against a {@code Template}.
- *
- * @author lowasser@google.com (Louis Wasserman)
- */
+/// Abstract type representing a match against a `Template`.
+///
+/// @author lowasser@google.com (Louis Wasserman)
 public abstract class TemplateMatch {
   private final JCTree location;
   private final Unifier unifier;

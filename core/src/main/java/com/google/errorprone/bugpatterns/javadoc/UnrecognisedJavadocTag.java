@@ -37,7 +37,7 @@ import org.jspecify.annotations.Nullable;
 import org.safere.Matcher;
 import org.safere.Pattern;
 
-/** Flags tags which haven't been recognised by the Javadoc parser. */
+/// Flags tags which haven't been recognised by the Javadoc parser.
 @BugPattern(
     summary =
         "This Javadoc tag wasn't recognised by the parser. Is it malformed somehow, perhaps with"

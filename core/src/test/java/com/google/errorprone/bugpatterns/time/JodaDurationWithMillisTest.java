@@ -20,7 +20,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** Tests for {@link JodaDurationWithMillis}. */
+/// Tests for [JodaDurationWithMillis].
 @RunWith(JUnit4.class)
 public class JodaDurationWithMillisTest {
   private final CompilationTestHelper helper =

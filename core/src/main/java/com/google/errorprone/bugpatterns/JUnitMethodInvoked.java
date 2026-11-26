@@ -35,7 +35,7 @@ import com.sun.tools.javac.code.Type;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.type.TypeKind;
 
-/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
+/// A [BugChecker]; see the associated [BugPattern] annotation for details.
 @BugPattern(
     summary =
         "Directly invoking a JUnit test method is discouraged; only the JUnit test runner should"
@@ -54,18 +54,14 @@ public final class JUnitMethodInvoked extends BugChecker implements MethodInvoca
     return isJUnit3TestMethod(method, state) || hasJUnitAnnotation(method, state);
   }
 
-  /**
-   * Returns whether the given method is a JUnit 3 test method. JUnit 3 test methods must have the
-   * following properties:
-   *
-   * <ul>
-   *   <li>public
-   *   <li>have no parameters
-   *   <li>have a void return type
-   *   <li>be declared in a class that extends {@code junit.framework.TestCase}
-   *   <li>have a name starting with "test"
-   * </ul>
-   */
+  /// Returns whether the given method is a JUnit 3 test method. JUnit 3 test methods must have the
+  /// following properties:
+  ///
+  /// - public
+  /// - have no parameters
+  /// - have a void return type
+  /// - be declared in a class that extends `junit.framework.TestCase`
+  /// - have a name starting with "test"
   private static boolean isJUnit3TestMethod(MethodSymbol method, VisitorState state) {
     if (!isSubtype(method.enclClass().type, JUNIT_FRAMEWORK_TESTCASE.get(state), state)) {
       return false;
@@ -98,7 +94,7 @@ public final class JUnitMethodInvoked extends BugChecker implements MethodInvoca
           "org.junit.jupiter.api.Disabled",
           "org.junit.jupiter.api.Test");
 
-  /** Returns whether the given method has a JUnit annotation. */
+  /// Returns whether the given method has a JUnit annotation.
   private static boolean hasJUnitAnnotation(MethodSymbol method, VisitorState state) {
     return JUNIT_ANNOTATIONS.stream()
         .anyMatch(annotation -> hasAnnotation(method, annotation, state));

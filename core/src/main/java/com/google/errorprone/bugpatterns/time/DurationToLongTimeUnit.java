@@ -50,10 +50,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
-/**
- * Reports an error when a Duration or Instant is incorrectly decomposed in order to call an API
- * which accepts a {@code <long, TimeUnit>} pair.
- */
+/// Reports an error when a Duration or Instant is incorrectly decomposed in order to call an API
+/// which accepts a `<long, TimeUnit>` pair.
 @BugPattern(
     summary = "Unit mismatch when decomposing a Duration or Instant to call a <long, TimeUnit> API",
     severity = ERROR)
@@ -166,10 +164,8 @@ public final class DurationToLongTimeUnit extends BugChecker
     return describeMatch(tree, fix);
   }
 
-  /**
-   * Given that this ExpressionTree's type is a {@link java.util.concurrent.TimeUnit}, return the
-   * TimeUnit it likely represents.
-   */
+  /// Given that this ExpressionTree's type is a [java.util.concurrent.TimeUnit], return the
+  /// TimeUnit it likely represents.
   static Optional<TimeUnit> getTimeUnit(ExpressionTree timeUnit) {
     if (timeUnit instanceof IdentifierTree identifierTree) { // e.g., SECONDS
       return Enums.getIfPresent(TimeUnit.class, identifierTree.getName().toString()).toJavaUtil();

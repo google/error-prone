@@ -26,7 +26,7 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.sun.source.tree.MethodInvocationTree;
 
-/** A BugChecker; see the associated BugPattern for details. */
+/// A BugChecker; see the associated BugPattern for details.
 @BugPattern(
     summary =
         "\".\" is rarely useful as a regex, as it matches any character. To match a literal '.'"

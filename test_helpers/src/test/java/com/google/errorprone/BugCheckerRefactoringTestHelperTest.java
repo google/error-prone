@@ -47,7 +47,7 @@ import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** Tests for {@link BugCheckerRefactoringTestHelper}. */
+/// Tests for [BugCheckerRefactoringTestHelper].
 @RunWith(JUnit4.class)
 public class BugCheckerRefactoringTestHelperTest {
 
@@ -240,7 +240,7 @@ public class BugCheckerRefactoringTestHelperTest {
         .doTest();
   }
 
-  /** Mock {@link BugChecker} for testing only. */
+  /// Mock [BugChecker] for testing only.
   @BugPattern(
       summary = "Mock refactoring that replaces all returns with 'return null;' statement.",
       explanation = "For test purposes only.",
@@ -252,7 +252,7 @@ public class BugCheckerRefactoringTestHelperTest {
     }
   }
 
-  /** Mock {@link BugChecker} for testing only. */
+  /// Mock [BugChecker] for testing only.
   @BugPattern(
       summary = "Mock refactoring that removes all annotations declared in package bar ",
       explanation = "For test purposes only.",
@@ -312,7 +312,7 @@ public class BugCheckerRefactoringTestHelperTest {
         .doTest();
   }
 
-  /** Mock {@link BugChecker} for testing only. */
+  /// Mock [BugChecker] for testing only.
   @BugPattern(
       summary = "Mock refactoring that replaces java.util.ArrayList with ArrayList",
       explanation = "For test purposes only.",

@@ -33,7 +33,7 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import java.util.Optional;
 import javax.lang.model.element.Name;
 
-/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
+/// A [BugChecker]; see the associated [BugPattern] annotation for details.
 @BugPattern(
     summary = "Arguments of overriding method are inconsistent with overridden method.",
     severity = WARNING)
@@ -72,11 +72,9 @@ public class OverridingMethodInconsistentArgumentNamesChecker extends BugChecker
         .collect(toImmutableBiMap(i -> methodSymbol.getParameters().get(i).name, i -> i));
   }
 
-  /**
-   * Provides a violation description with suggested parameter ordering.
-   *
-   * <p>We're not returning a suggested fix as re-ordering is not safe and might break the code.
-   */
+  /// Provides a violation description with suggested parameter ordering.
+  ///
+  /// We're not returning a suggested fix as re-ordering is not safe and might break the code.
   public String getDescription(MethodSymbol methodSymbol) {
     return "The parameters of this method are inconsistent with the overridden method."
         + " A consistent order would be: "

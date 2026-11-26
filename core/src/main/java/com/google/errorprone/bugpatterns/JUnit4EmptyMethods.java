@@ -33,12 +33,9 @@ import com.sun.source.tree.MethodTree;
 import com.sun.tools.javac.code.Type;
 import java.util.List;
 
-/**
- * Deletes empty JUnit4 {@code @Before}, {@code @After}, {@code @BeforeClass}, and
- * {@code @AfterClass} methods.
- *
- * @author kak@google.com (Kurt Alfred Kluever)
- */
+/// Deletes empty JUnit4 `@Before`, `@After`, `@BeforeClass`, and `@AfterClass` methods.
+///
+/// @author kak@google.com (Kurt Alfred Kluever)
 @BugPattern(
     summary =
         "Empty JUnit4 @Before, @After, @BeforeClass, and @AfterClass methods are unnecessary and"

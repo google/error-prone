@@ -33,7 +33,7 @@ import com.sun.source.tree.LiteralTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.tools.javac.code.Type;
 
-/** Discourages inadvertently using reference equality on boxed primitives in AtomicReference. */
+/// Discourages inadvertently using reference equality on boxed primitives in AtomicReference.
 @BugPattern(
     summary =
         "Using compareAndSet with boxed primitives is dangerous, as reference rather than value"

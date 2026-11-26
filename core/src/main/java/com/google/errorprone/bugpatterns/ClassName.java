@@ -33,7 +33,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.lang.model.element.Modifier;
 
-/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
+/// A [BugChecker]; see the associated [BugPattern] annotation for details.
 @BugPattern(
     altNames = {"TopLevelName"},
     summary = "The source file name should match the name of the top-level class it contains",

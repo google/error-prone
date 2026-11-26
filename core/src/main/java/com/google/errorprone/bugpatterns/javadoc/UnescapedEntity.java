@@ -60,11 +60,9 @@ import org.jspecify.annotations.Nullable;
 import org.safere.Matcher;
 import org.safere.Pattern;
 
-/**
- * Finds unescaped entities in Javadocs.
- *
- * @author ghm@google.com (Graeme Morgan)
- */
+/// Finds unescaped entities in Javadocs.
+///
+/// @author ghm@google.com (Graeme Morgan)
 @BugPattern(
     summary =
         "Javadoc is interpreted as HTML, so HTML entities such as &, <, > must be escaped. If this"
@@ -85,10 +83,8 @@ public final class UnescapedEntity extends BugChecker
       Pattern.compile(
           String.format("(%s<%s>|%s<%s<%s>>)", TYPE, TYPE_PARAMETERS, TYPE, TYPE, TYPE_PARAMETERS));
 
-  /**
-   * Pattern for code/literal tags which should not be wrapped in a code tag, as they contain HTML
-   * entities, annotations, or other tags.
-   */
+  /// Pattern for code/literal tags which should not be wrapped in a code tag, as they contain HTML
+  /// entities, annotations, or other tags.
   private static final Pattern SHOULD_NOT_WRAP =
       Pattern.compile("&[a-zA-Z0-9]+;|&#[0-9]+;|&#x[0-9a-fA-F]+;|\n *\\*\\s*@|\\{@(literal|code)");
 
@@ -161,17 +157,13 @@ public final class UnescapedEntity extends BugChecker
   private static final class RangesFinder extends DocTreePathScanner<Void, Void> {
     private final VisitorState state;
 
-    /**
-     * Ranges of {@code <pre>} and {@code <code>} tags that could reasonably have an inner
-     * {@literal @}code tag put inside them to escape HTML.
-     */
+    /// Ranges of `<pre>` and `<code>` tags that could reasonably have an inner `@code` tag put
+    /// inside them to escape HTML.
     private final RangeSet<Integer> preTags = TreeRangeSet.create();
 
-    /**
-     * Ranges of source code which should not have an inner {@literal @}code tag. This could be
-     * because they're already escaping literals, or because it's a {@code <pre>} block with
-     * already-escaped HTML.
-     */
+    /// Ranges of source code which should not have an inner `@code` tag. This could be because
+    /// they're already escaping literals, or because it's a `<pre>` block with already-escaped
+    /// HTML.
     private final RangeSet<Integer> dontEmitCodeFix = TreeRangeSet.create();
 
     private final Deque<Integer> startPosStack = new ArrayDeque<>();

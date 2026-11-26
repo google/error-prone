@@ -23,11 +23,9 @@ import com.sun.tools.javac.tree.JCTree.JCBreak;
 import java.util.Objects;
 import org.jspecify.annotations.Nullable;
 
-/**
- * {@code UTree} representation of {@code BreakTree}.
- *
- * @author lowasser@google.com (Louis Wasserman)
- */
+/// `UTree` representation of `BreakTree`.
+///
+/// @author lowasser@google.com (Louis Wasserman)
 final class UBreak extends USimpleStatement implements BreakTree {
 
   private final StringName label;

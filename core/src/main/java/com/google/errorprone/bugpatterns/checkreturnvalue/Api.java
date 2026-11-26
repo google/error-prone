@@ -25,17 +25,15 @@ import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.annotations.CompileTimeConstant;
 
-/**
- * Represents a Java method or constructor.
- *
- * <p>Provides a method to parse an API from a string format, and emit an API as the same sting.
- *
- * @param className Returns the fully qualified type that contains the given method/constructor.
- * @param methodName Returns the simple name of the method. If the API is a constructor (i.e.,
- *     {@code isConstructor() == true}), then {@code "<init>"} is returned.
- * @param parameterTypes Returns the list of fully qualified parameter types for the given
- *     method/constructor.
- */
+/// Represents a Java method or constructor.
+///
+/// Provides a method to parse an API from a string format, and emit an API as the same sting.
+///
+/// @param className Returns the fully qualified type that contains the given method/constructor.
+/// @param methodName Returns the simple name of the method. If the API is a constructor (i.e.,
+///   `isConstructor() == true`), then `"<init>"` is returned.
+/// @param parameterTypes Returns the list of fully qualified parameter types for the given
+///   method/constructor.
 // TODO(kak): do we want to be able to represent classes in addition to methods/constructors?
 // TODO(kak): if not, then consider renaming to `MethodSignature` or something
 public record Api(String className, String methodName, ImmutableList<String> parameterTypes) {
@@ -47,39 +45,33 @@ public record Api(String className, String methodName, ImmutableList<String> par
         "%s#%s(%s)", className(), methodName(), COMMA_JOINER.join(parameterTypes()));
   }
 
-  /** Returns whether this API represents a constructor or not. */
+  /// Returns whether this API represents a constructor or not.
   boolean isConstructor() {
     return methodName().equals("<init>");
   }
 
-  /**
-   * Parses an API string into an {@link Api}, ignoring trailing or inner whitespace between names.
-   *
-   * <p>Example API strings are:
-   *
-   * <ul>
-   *   <li>a constructor (e.g., {@code java.net.URI#<init>(java.lang.String)})
-   *   <li>a static method (e.g., {@code java.net.URI#create(java.lang.String)})
-   *   <li>an instance method (e.g., {@code java.util.List#get(int)})
-   *   <li>an instance method with types erased (e.g., {@code java.util.List#add(java.lang.Object)})
-   * </ul>
-   *
-   * @throws IllegalArgumentException when {@code api} is not well-formed
-   */
+  /// Parses an API string into an [Api], ignoring trailing or inner whitespace between names.
+  ///
+  /// Example API strings are:
+  ///
+  /// - a constructor (e.g., `java.net.URI#<init>(java.lang.String)`)
+  /// - a static method (e.g., `java.net.URI#create(java.lang.String)`)
+  /// - an instance method (e.g., `java.util.List#get(int)`)
+  /// - an instance method with types erased (e.g., `java.util.List#add(java.lang.Object)`)
+  ///
+  /// @throws IllegalArgumentException when `api` is not well-formed
   @VisibleForTesting
   public static Api parse(String api) {
     return parse(api, false);
   }
 
-  /**
-   * Parses an API string that was already known to not include any leading, trailing, or inner
-   * whitespace.
-   *
-   * <p>If the API string contains whitespace, this method may produce an API object with extraneous
-   * spaces attached, or may treat it as malformed (and throw an exception).
-   *
-   * @throws IllegalArgumentException when {@code api} is not well-formed
-   */
+  /// Parses an API string that was already known to not include any leading, trailing, or inner
+  /// whitespace.
+  ///
+  /// If the API string contains whitespace, this method may produce an API object with extraneous
+  /// spaces attached, or may treat it as malformed (and throw an exception).
+  ///
+  /// @throws IllegalArgumentException when `api` is not well-formed
   // TODO(glorioso): Refactoring has shown the folly of this method. It's probably not useful, since
   //   if we're _parsing_ into API objects, there's not as much of a performance concern for
   //   touching whitespaces. If we use bare string identifiers instead, whitespaces are problematic,
@@ -92,16 +84,12 @@ public record Api(String className, String methodName, ImmutableList<String> par
     return new Api(className, methodName, params);
   }
 
-  /**
-   * Parses an API string into an {@link Api}. Example API strings are:
-   *
-   * <ul>
-   *   <li>a constructor (e.g., {@code java.net.URI#<init>(java.lang.String)})
-   *   <li>a static method (e.g., {@code java.net.URI#create(java.lang.String)})
-   *   <li>an instance method (e.g., {@code java.util.List#get(int)})
-   *   <li>an instance method with types erased (e.g., {@code java.util.List#add(java.lang.Object)})
-   * </ul>
-   */
+  /// Parses an API string into an [Api]. Example API strings are:
+  ///
+  /// - a constructor (e.g., `java.net.URI#<init>(java.lang.String)`)
+  /// - a static method (e.g., `java.net.URI#create(java.lang.String)`)
+  /// - an instance method (e.g., `java.util.List#get(int)`)
+  /// - an instance method with types erased (e.g., `java.util.List#add(java.lang.Object)`)
   private static Api parse(String api, boolean assumeNoWhitespace) {
     Parser p = new Parser(api, assumeNoWhitespace);
 

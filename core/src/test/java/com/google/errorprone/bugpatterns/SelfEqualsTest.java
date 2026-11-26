@@ -21,11 +21,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * Unit tests for {@link SelfEquals} bug pattern.
- *
- * @author bhagwani@google.com (Sumit Bhagwani)
- */
+/// Unit tests for [SelfEquals] bug pattern.
+///
+/// @author bhagwani@google.com (Sumit Bhagwani)
 @RunWith(JUnit4.class)
 public class SelfEqualsTest {
   private final CompilationTestHelper compilationHelper =

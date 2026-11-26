@@ -54,22 +54,20 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
 import org.jspecify.annotations.Nullable;
 
-/**
- * Identifies calls to {@code assertThat} and similar methods inside the implementation of a {@code
- * Subject} assertion method. These calls should instead use {@code check(...)}.
- *
- * <pre>{@code
- * // Before:
- * public void hasFoo() {
- *   assertThat(actual().foo()).isEqualTo(expected);
- * }
- *
- * // After:
- * public void hasFoo() {
- *   check("foo()").that(actual().foo()).isEqualTo(expected);
- * }
- * }</pre>
- */
+/// Identifies calls to `assertThat` and similar methods inside the implementation of a `Subject`
+/// assertion method. These calls should instead use `check(...)`.
+///
+/// ```
+/// // Before:
+/// public void hasFoo() {
+///   assertThat(actual().foo()).isEqualTo(expected);
+/// }
+///
+/// // After:
+/// public void hasFoo() {
+///   check("foo()").that(actual().foo()).isEqualTo(expected);
+/// }
+/// ```
 @BugPattern(
     summary =
         "Inside a Subject, use check(...) instead of assert*() to preserve user-supplied messages"
@@ -143,15 +141,13 @@ public final class ChainedAssertionLosesContext extends BugChecker
     }
   }
 
-  /**
-   * Starting from a {@code VisitorState} pointing at part of a fluent assertion statement (like
-   * {@code check()} or {@code assertWithMessage()}, walks up the tree and returns the subsequent
-   * call to {@code that(...)}.
-   *
-   * <p>Often, the call is made directly on the result of the given tree -- like when the input is
-   * {@code check()}, which is part of the expression {@code check().that(...)}. But sometimes there
-   * is an intervening call to {@code withMessage}, {@code about}, or both.
-   */
+  /// Starting from a `VisitorState` pointing at part of a fluent assertion statement (like
+  /// `check()` or `assertWithMessage()`, walks up the tree and returns the subsequent call to
+  /// `that(...)`.
+  ///
+  /// Often, the call is made directly on the result of the given tree -- like when the input is
+  /// `check()`, which is part of the expression `check().that(...)`. But sometimes there is an
+  /// intervening call to `withMessage`, `about`, or both.
   static @Nullable MethodInvocationTree findThatCall(VisitorState state) {
     TreePath path = state.getPath();
     /*

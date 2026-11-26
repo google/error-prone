@@ -71,7 +71,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import javax.inject.Inject;
 import org.jspecify.annotations.Nullable;
 
-/** Helper for establishing whether expressions correspond to a constant expression. */
+/// Helper for establishing whether expressions correspond to a constant expression.
 public final class ConstantExpressions {
   private final Matcher<ExpressionTree> pureMethods;
   private final Supplier<ThreadSafety> threadSafety;
@@ -102,18 +102,16 @@ public final class ConstantExpressions {
     return new ConstantExpressions(WellKnownMutability.fromFlags(flags), flags);
   }
 
-  /** Represents sets of things known to be true and false if a boolean statement evaluated true. */
+  /// Represents sets of things known to be true and false if a boolean statement evaluated true.
   public record Truthiness(
       ImmutableSet<ConstantExpression> requiredTrue,
       ImmutableSet<ConstantExpression> requiredFalse) {}
 
-  /**
-   * Scans an {@link ExpressionTree} to find anything guaranteed to be false or true if this
-   * expression is true.
-   *
-   * <p>{@link #mayImply} and {@link #factKey(ExpressionTree)} mirror the expressions handled here,
-   * so update them when adding new kinds of facts.
-   */
+  /// Scans an [ExpressionTree] to find anything guaranteed to be false or true if this expression
+  /// is true.
+  ///
+  /// [#mayImply] and [#factKey(ExpressionTree)] mirror the expressions handled here, so update them
+  /// when adding new kinds of facts.
   public Truthiness truthiness(ExpressionTree tree, boolean not, VisitorState state) {
     ImmutableSet.Builder<ConstantExpression> requiredTrue = ImmutableSet.builder();
     ImmutableSet.Builder<ConstantExpression> requiredFalse = ImmutableSet.builder();
@@ -193,13 +191,11 @@ public final class ConstantExpressions {
     return new Truthiness(requiredTrue.build(), requiredFalse.build());
   }
 
-  /**
-   * Returns whether {@link #truthiness} of {@code tree} may contain a fact with the given {@link
-   * #factKey(ConstantExpression) key}.
-   *
-   * <p>This mirrors the traversal in {@link #truthiness} without calling {@link
-   * #constantExpression}, which matches each method invocation against the known pure methods.
-   */
+  /// Returns whether [#truthiness] of `tree` may contain a fact with the given
+  /// [`key`][#factKey(ConstantExpression)].
+  ///
+  /// This mirrors the traversal in [#truthiness] without calling [#constantExpression], which
+  /// matches each method invocation against the known pure methods.
   public static boolean mayImply(ExpressionTree tree, boolean not, Object key) {
     tree = stripParentheses(tree);
     if (tree instanceof UnaryTree u && u.getKind() == Kind.LOGICAL_COMPLEMENT) {
@@ -212,12 +208,10 @@ public final class ConstantExpressions {
     return key.equals(factKey(tree));
   }
 
-  /**
-   * Returns the {@link #factKey(ConstantExpression) key} that any fact {@link #truthiness} derives
-   * directly from {@code tree} would have, or {@code null} if {@code tree} cannot yield a fact.
-   *
-   * <p>Keys are opaque, and should only be compared using {@link Object#equals}.
-   */
+  /// Returns the [`key`][#factKey(ConstantExpression)] that any fact [#truthiness] derives directly
+  /// from `tree` would have, or `null` if `tree` cannot yield a fact.
+  ///
+  /// Keys are opaque, and should only be compared using [Object#equals].
   public static @Nullable Object factKey(ExpressionTree tree) {
     tree = stripParentheses(tree);
     return switch (tree.getKind()) {
@@ -229,10 +223,8 @@ public final class ConstantExpressions {
     };
   }
 
-  /**
-   * Returns the key of {@code fact}, which must be from a {@link Truthiness}. Equal facts have
-   * equal keys, which match {@link #factKey(ExpressionTree)} for the trees they're derived from.
-   */
+  /// Returns the key of `fact`, which must be from a [Truthiness]. Equal facts have equal keys,
+  /// which match [#factKey(ExpressionTree)] for the trees they're derived from.
   public static Object factKey(ConstantExpression fact) {
     return switch (fact) {
       case ConstantExpression.PureMethodInvocation p -> p.symbol();
@@ -241,9 +233,9 @@ public final class ConstantExpressions {
     };
   }
 
-  /** Represents a constant expression. */
+  /// Represents a constant expression.
   public sealed interface ConstantExpression {
-    /** Represents a constant literal. */
+    /// Represents a constant literal.
     public static record Literal(@Nullable Object object) implements ConstantExpression {
       @Override
       public void accept(ConstantExpressionVisitor visitor) {
@@ -256,7 +248,7 @@ public final class ConstantExpressions {
       }
     }
 
-    /** Represents a binary equals call on two constant expressions. */
+    /// Represents a binary equals call on two constant expressions.
     public static record ConstantEquals(ConstantExpression lhs, ConstantExpression rhs)
         implements ConstantExpression {
       @Override
@@ -285,10 +277,8 @@ public final class ConstantExpressions {
       }
     }
 
-    /**
-     * Represents both a constant method call or a constant field/local access, depending on the
-     * actual type of {@code symbol}.
-     */
+    /// Represents both a constant method call or a constant field/local access, depending on the
+    /// actual type of `symbol`.
     public static record PureMethodInvocation(
         Symbol symbol,
         ImmutableList<ConstantExpression> arguments,
@@ -335,7 +325,7 @@ public final class ConstantExpressions {
     return symbolizeImmutableExpression(tree, state).map(x -> x);
   }
 
-  /** Returns whether {@code aTree} and {@code bTree} seem to correspond to the same expression. */
+  /// Returns whether `aTree` and `bTree` seem to correspond to the same expression.
   public boolean isSame(ExpressionTree aTree, ExpressionTree bTree, VisitorState state) {
     var a = constantExpression(aTree, state);
     if (a.isEmpty()) {
@@ -345,10 +335,8 @@ public final class ConstantExpressions {
     return b.isPresent() && a.get().equals(b.get());
   }
 
-  /**
-   * Returns a list of the methods called to get to this expression, as well as a terminating
-   * variable if needed.
-   */
+  /// Returns a list of the methods called to get to this expression, as well as a terminating
+  /// variable if needed.
   public Optional<ConstantExpression.PureMethodInvocation> symbolizeImmutableExpression(
       ExpressionTree tree, VisitorState state) {
     var receiver =
@@ -399,7 +387,7 @@ public final class ConstantExpressions {
         || symbol instanceof PackageSymbol;
   }
 
-  /** Visitor for scanning over the components of a constant expression. */
+  /// Visitor for scanning over the components of a constant expression.
   public interface ConstantExpressionVisitor {
     default void visitConstant(Object constant) {}
 

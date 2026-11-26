@@ -33,11 +33,10 @@ import com.sun.tools.javac.code.Symbol.VarSymbol;
 import java.util.List;
 import org.jspecify.annotations.Nullable;
 
-/**
- * Holds information about the method invocation (or new class construction) that we are processing.
- *
- * @author andrewrice@google.com (Andrew Rice)
- */
+/// Holds information about the method invocation (or new class construction) that we are
+/// processing.
+///
+/// @author andrewrice@google.com (Andrew Rice)
 record InvocationInfo(
     Tree tree,
     MethodSymbol symbol,

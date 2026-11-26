@@ -27,7 +27,7 @@ import com.google.errorprone.util.TargetType;
 import com.sun.source.tree.ConditionalExpressionTree;
 import com.sun.source.tree.Tree.Kind;
 
-/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
+/// A [BugChecker]; see the associated [BugPattern] annotation for details.
 @BugPattern(
     summary =
         "This conditional expression may evaluate to null, which will result in an NPE when the"

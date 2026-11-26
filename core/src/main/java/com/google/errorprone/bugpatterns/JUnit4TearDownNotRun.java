@@ -35,12 +35,10 @@ import com.sun.source.tree.MethodTree;
 import java.util.Arrays;
 import java.util.List;
 
-/**
- * Checks for the existence of a JUnit3 style tearDown() method in a JUnit4 test class or methods
- * annotated with a non-JUnit4 @After annotation.
- *
- * @author glorioso@google.com (Nick Glorioso)
- */
+/// Checks for the existence of a JUnit3 style tearDown() method in a JUnit4 test class or methods
+/// annotated with a non-JUnit4 @After annotation.
+///
+/// @author glorioso@google.com (Nick Glorioso)
 @BugPattern(
     summary = "tearDown() method will not be run; please add JUnit's @After annotation",
     severity = ERROR)

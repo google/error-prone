@@ -32,7 +32,7 @@ import com.sun.source.tree.AnnotatedTypeTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.TypeParameterTree;
 
-/** A bugpattern: see the summary. */
+/// A bugpattern: see the summary.
 @BugPattern(
     summary = "`T extends Object` is redundant" + " (unless you are using the Checker Framework).",
     severity = SeverityLevel.WARNING)

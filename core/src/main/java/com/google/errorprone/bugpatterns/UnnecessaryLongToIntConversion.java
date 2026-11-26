@@ -44,7 +44,7 @@ import com.sun.source.tree.TypeCastTree;
 import com.sun.source.util.TreePath;
 import javax.lang.model.type.TypeKind;
 
-/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
+/// A [BugChecker]; see the associated [BugPattern] annotation for details.
 @BugPattern(
     summary =
         "Converting a long or Long to an int to pass as a long parameter is usually not necessary."
@@ -85,15 +85,13 @@ public class UnnecessaryLongToIntConversion extends BugChecker
   private static final String LONGS_CONSTRAIN_TO_RANGE_IMPORT =
       "com.google.common.primitives.Longs";
 
-  /**
-   * Matches if a long or Long is converted to an int for a long parameter in a method invocation.
-   *
-   * <p>Does **not** match if the method parameter is a Long, because passing an int or Integer for
-   * a Long parameter produces an incompatible types error. Does **not** match when a long or Long
-   * is converted to an Integer because this requires first converting to an int and then to an
-   * Integer. This is awkwardly complex and out of scope. Does **not** match when the conversion
-   * occurs in a separate statement prior the method invocation.
-   */
+  /// Matches if a long or Long is converted to an int for a long parameter in a method invocation.
+  ///
+  /// Does \*\*not\*\* match if the method parameter is a Long, because passing an int or Integer
+  /// for a Long parameter produces an incompatible types error. Does \*\*not\*\* match when a long
+  /// or Long is converted to an Integer because this requires first converting to an int and then
+  /// to an Integer. This is awkwardly complex and out of scope. Does \*\*not\*\* match when the
+  /// conversion occurs in a separate statement prior the method invocation.
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
     for (ExpressionTree arg : tree.getArguments()) {

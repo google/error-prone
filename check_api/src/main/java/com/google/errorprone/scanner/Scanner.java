@@ -38,19 +38,17 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 
-/**
- * TODO(eaftan): I'm worried about this performance of this code, specifically the part that handles
- * SuppressWarnings. We should profile it and see where the hotspots are.
- *
- * @author alexeagle@google.com (Alex Eagle)
- * @author eaftan@google.com (Eddie Aftandilian)
- */
+/// TODO(eaftan): I'm worried about this performance of this code, specifically the part that
+/// handles SuppressWarnings. We should profile it and see where the hotspots are.
+///
+/// @author alexeagle@google.com (Alex Eagle)
+/// @author eaftan@google.com (Eddie Aftandilian)
 @CheckReturnValue
 public class Scanner extends TreePathScanner<Void, VisitorState> {
 
   private SuppressionInfo currentSuppressions = SuppressionInfo.EMPTY;
 
-  /** Scan a tree from a position identified by a TreePath. */
+  /// Scan a tree from a position identified by a TreePath.
   @Override
   public Void scan(TreePath path, VisitorState state) {
     SuppressionInfo prevSuppressionInfo = updateSuppressions(path.getLeaf(), state);
@@ -62,7 +60,7 @@ public class Scanner extends TreePathScanner<Void, VisitorState> {
     }
   }
 
-  /** Scan a single node. The current path is updated for the duration of the scan. */
+  /// Scan a single node. The current path is updated for the duration of the scan.
   @Override
   public Void scan(Tree tree, VisitorState state) {
     if (tree == null) {
@@ -78,10 +76,8 @@ public class Scanner extends TreePathScanner<Void, VisitorState> {
     }
   }
 
-  /**
-   * Updates current suppression state with information for the given {@code tree}. Returns the
-   * previous suppression state so that it can be restored when going up the tree.
-   */
+  /// Updates current suppression state with information for the given `tree`. Returns the previous
+  /// suppression state so that it can be restored when going up the tree.
   private SuppressionInfo updateSuppressions(Tree tree, VisitorState state) {
     SuppressionInfo prevSuppressionInfo = currentSuppressions;
     if (tree instanceof CompilationUnitTree compilationUnitTree) {
@@ -97,12 +93,10 @@ public class Scanner extends TreePathScanner<Void, VisitorState> {
     return prevSuppressionInfo;
   }
 
-  /**
-   * Returns if this checker should be suppressed on the current tree path.
-   *
-   * @param suppressible holds information about the suppressibility of a checker
-   * @param errorProneOptions Options object configuring whether or not to suppress non-errors in
-   */
+  /// Returns if this checker should be suppressed on the current tree path.
+  ///
+  /// @param suppressible holds information about the suppressibility of a checker
+  /// @param errorProneOptions Options object configuring whether or not to suppress non-errors in
   protected SuppressedState isSuppressed(
       Suppressible suppressible, ErrorProneOptions errorProneOptions, VisitorState state) {
 
@@ -113,10 +107,8 @@ public class Scanner extends TreePathScanner<Void, VisitorState> {
     return currentSuppressions.suppressedState(suppressible, suppressedInGeneratedCode, state);
   }
 
-  /**
-   * Returns a set of all the custom suppression annotation types used by the {@code BugChecker}s in
-   * this{@code Scanner}.
-   */
+  /// Returns a set of all the custom suppression annotation types used by the `BugChecker`s in this
+  /// `Scanner`.
   protected Set<? extends Name> getCustomSuppressionAnnotations(VisitorState state) {
     return ImmutableSet.of();
   }
@@ -126,10 +118,10 @@ public class Scanner extends TreePathScanner<Void, VisitorState> {
     state.reportMatch(description);
   }
 
-  /** Handles an exception thrown by an individual check. */
+  /// Handles an exception thrown by an individual check.
   protected void handleError(Suppressible s, Throwable t) {}
 
-  /** Returns a mapping between the canonical names of checks and their {@link SeverityLevel}. */
+  /// Returns a mapping between the canonical names of checks and their [SeverityLevel].
   public Map<String, SeverityLevel> severityMap() {
     return Collections.emptyMap();
   }

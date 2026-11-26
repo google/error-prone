@@ -21,7 +21,7 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.sun.source.tree.Tree;
 
-/** An abstract class that detects use of the unsafe APIs. */
+/// An abstract class that detects use of the unsafe APIs.
 public abstract class AbstractBanUnsafeAPIChecker extends BugChecker {
 
   protected <T extends Tree> Description matchHelper(

@@ -38,11 +38,9 @@ import com.sun.source.tree.Tree.Kind;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import java.lang.annotation.Annotation;
 
-/**
- * Checker that ensures implementations of {@link Annotation} override equals and hashCode.
- * Otherwise, the implementation inherits equals and hashCode from {@link Object}, and those do not
- * meet the contract specified by the {@link Annotation} interface.
- */
+/// Checker that ensures implementations of [Annotation] override equals and hashCode. Otherwise,
+/// the implementation inherits equals and hashCode from [Object], and those do not meet the
+/// contract specified by the [Annotation] interface.
 @BugPattern(
     summary =
         "Classes that implement Annotation must override equals and hashCode. Consider "

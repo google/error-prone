@@ -50,7 +50,7 @@ import com.sun.tools.javac.code.Type;
 import java.util.HashMap;
 import java.util.Map;
 
-/** A BugPattern; see the summary. */
+/// A BugPattern; see the summary.
 @BugPattern(
     summary =
         "This collection is already immutable (just not ImmutableList/ImmutableMap); copying it is"
@@ -63,7 +63,7 @@ public final class UnnecessaryCopy extends BugChecker implements CompilationUnit
               "com.google.common.collect.ImmutableList", "com.google.common.collect.ImmutableMap")
           .named("copyOf");
 
-  /** Methods that we know return an immutable collection (just not Immutable). */
+  /// Methods that we know return an immutable collection (just not Immutable).
   private static final Matcher<ExpressionTree> PROTO_GETTER =
       instanceMethod().onDescendantOf(MESSAGE_LITE);
 
@@ -150,6 +150,6 @@ public final class UnnecessaryCopy extends BugChecker implements CompilationUnit
     throw new AssertionError("Unknown type");
   }
 
-  /** A suspicious {@link VariableTree} and the {@code copyOf} call used to initialise it. */
+  /// A suspicious [VariableTree] and the `copyOf` call used to initialise it.
   private record Offender(VariableTree variableTree, MethodInvocationTree methodInvocationTree) {}
 }

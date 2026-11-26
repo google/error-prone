@@ -21,11 +21,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * Unit tests for {@link DefaultPackage} bug pattern.
- *
- * @author bhagwani@google.com (Sumit Bhagwani)
- */
+/// Unit tests for [DefaultPackage] bug pattern.
+///
+/// @author bhagwani@google.com (Sumit Bhagwani)
 @RunWith(JUnit4.class)
 public class DefaultPackageTest {
   private final CompilationTestHelper compilationHelper =

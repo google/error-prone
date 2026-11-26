@@ -55,7 +55,7 @@ import java.util.List;
 import java.util.Set;
 import javax.lang.model.type.TypeKind;
 
-/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
+/// A [BugChecker]; see the associated [BugPattern] annotation for details.
 @BugPattern(
     summary =
         "@Nullable type annotations should not be used for primitive types since they cannot be"

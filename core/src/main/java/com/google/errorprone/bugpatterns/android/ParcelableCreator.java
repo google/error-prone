@@ -42,18 +42,16 @@ import com.sun.tools.javac.code.Types;
 import java.util.List;
 import javax.lang.model.element.Modifier;
 
-/**
- * BugPattern to detect classes which implement android.os.Parcelable but don't have public static
- * CREATOR.
- *
- * @author Sumit Bhagwani (bhagwani@google.com)
- */
+/// BugPattern to detect classes which implement android.os.Parcelable but don't have public static
+/// CREATOR.
+///
+/// @author Sumit Bhagwani (bhagwani@google.com)
 @BugPattern(
     summary = "Detects classes which implement Parcelable but don't have CREATOR",
     severity = SeverityLevel.ERROR)
 public class ParcelableCreator extends BugChecker implements ClassTreeMatcher {
 
-  /** Matches if a non-public non-abstract class/interface is subtype of android.os.Parcelable */
+  /// Matches if a non-public non-abstract class/interface is subtype of android.os.Parcelable
   private static final Matcher<ClassTree> PARCELABLE_MATCHER =
       allOf(isDirectImplementationOf("android.os.Parcelable"), not(hasModifier(Modifier.ABSTRACT)));
 

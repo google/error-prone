@@ -65,7 +65,7 @@ import com.sun.source.tree.ModifiersTree;
 import com.sun.source.tree.VariableTree;
 import java.util.stream.Stream;
 
-/** A BugPattern; see the summary. */
+/// A BugPattern; see the summary.
 @BugPattern(summary = "A qualifier annotation has no effect here.", severity = WARNING)
 public final class UnnecessaryQualifier extends BugChecker
     implements MethodTreeMatcher, VariableTreeMatcher {
@@ -209,10 +209,8 @@ public final class UnnecessaryQualifier extends BugChecker
   private static final ImmutableSet<ClassName> SUPERTYPES_DENOTING_INJECTION_POINTS =
       ImmutableSet.of(ClassName.of("com.google.apps.framework.producers.GraphWrapper"));
 
-  /**
-   * Method annotations denoting that the method provides bindings, so qualifiers on the return type
-   * are OK.
-   */
+  /// Method annotations denoting that the method provides bindings, so qualifiers on the return
+  /// type are OK.
   private static final ImmutableSet<ClassName> PROVIDER_METHODS =
       ImmutableSet.of(
           // keep-sorted start
@@ -228,7 +226,7 @@ public final class UnnecessaryQualifier extends BugChecker
 
   private static final String PROVIDES_PREFIX = "Provides";
 
-  /** Annotations for methods which have parameters injected into them. */
+  /// Annotations for methods which have parameters injected into them.
   private static final ImmutableSet<ClassName> INJECTION_METHODS =
       concat(
               concat(InjectMatchers.INJECT_ANNOTATIONS.stream()).map(ClassName::of),
@@ -243,10 +241,10 @@ public final class UnnecessaryQualifier extends BugChecker
               PROVIDER_METHODS.stream())
           .collect(toImmutableSet());
 
-  /** Annotations for fields which can have qualifiers. */
+  /// Annotations for fields which can have qualifiers.
   private static final ImmutableSet<ClassName> INJECTION_FIELDS = ImmutableSet.of();
 
-  /** Prefixes for annotations on variables which can have qualifiers. */
+  /// Prefixes for annotations on variables which can have qualifiers.
   private static final ImmutableSet<String> INJECTION_PREFIXES = ImmutableSet.of("Bind", "Inject");
 
   private static final ImmutableSet<ClassName> CLASS_ANNOTATIONS_EXEMPTING_METHODS =

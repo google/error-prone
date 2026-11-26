@@ -49,7 +49,7 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.List;
 
-/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
+/// A [BugChecker]; see the associated [BugPattern] annotation for details.
 @BugPattern(
     summary = "Use parameter comments to document ambiguous literals",
     severity = SUGGESTION)

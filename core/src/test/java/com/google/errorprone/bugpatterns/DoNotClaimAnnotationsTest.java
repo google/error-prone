@@ -23,7 +23,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** {@link DoNotClaimAnnotations}Test */
+/// [DoNotClaimAnnotations]Test
 @RunWith(JUnit4.class)
 public class DoNotClaimAnnotationsTest {
 

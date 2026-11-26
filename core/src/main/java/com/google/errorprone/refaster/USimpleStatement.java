@@ -22,11 +22,9 @@ import com.sun.source.tree.StatementTree;
 import com.sun.tools.javac.tree.JCTree.JCStatement;
 import com.sun.tools.javac.util.List;
 
-/**
- * A {@code UStatement} that matches exactly one statement, and inlines to exactly one statement.
- *
- * @author lowasser@google.com (Louis Wasserman)
- */
+/// A `UStatement` that matches exactly one statement, and inlines to exactly one statement.
+///
+/// @author lowasser@google.com (Louis Wasserman)
 abstract class USimpleStatement extends UTree<JCStatement> implements UStatement {
 
   @Override

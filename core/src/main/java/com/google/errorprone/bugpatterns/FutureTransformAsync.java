@@ -53,7 +53,7 @@ import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Optional;
 
-/** See summary for details. */
+/// See summary for details.
 @BugPattern(
     summary = "Use transform instead of transformAsync when all returns are an immediate future.",
     severity = WARNING)
@@ -212,18 +212,16 @@ public final class FutureTransformAsync extends BugChecker implements MethodInvo
     return NO_MATCH;
   }
 
-  /** Returns true if the lambda throws a checked exception. */
+  /// Returns true if the lambda throws a checked exception.
   private static boolean throwsCheckedException(LambdaExpressionTree lambda, VisitorState state) {
     return getThrownExceptions(lambda.getBody(), state).stream()
         .anyMatch(type -> isCheckedExceptionType(type, state));
   }
 
-  /**
-   * Suggests fix to replace transformAsync/callAsync with transform/call.
-   *
-   * <p>If the transformAsync is imported as a static method, it takes care of adding the equivalent
-   * import static for transform.
-   */
+  /// Suggests fix to replace transformAsync/callAsync with transform/call.
+  ///
+  /// If the transformAsync is imported as a static method, it takes care of adding the equivalent
+  /// import static for transform.
   private static void suggestFixTransformAsyncToTransform(
       Method method, MethodInvocationTree tree, VisitorState state, SuggestedFix.Builder fix) {
     ExpressionTree methodSelect = tree.getMethodSelect();
@@ -235,7 +233,7 @@ public final class FutureTransformAsync extends BugChecker implements MethodInvo
     fix.merge(SuggestedFixes.renameMethodInvocation(tree, method.fixedName, state));
   }
 
-  /** Suggests fix to remove the immediateFuture or immediateVoidFuture call. */
+  /// Suggests fix to remove the immediateFuture or immediateVoidFuture call.
   private static void suggestFixRemoveImmediateFuture(
       MethodInvocationTree tree, VisitorState state, SuggestedFix.Builder fix) {
     String typeArgument = "";

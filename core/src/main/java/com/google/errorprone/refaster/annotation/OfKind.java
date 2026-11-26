@@ -22,11 +22,9 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-/**
- * Annotation to specify what tree kinds are allowed or disallowed to match a given expression.
- *
- * @author lowasser@google.com (Louis Wasserman)
- */
+/// Annotation to specify what tree kinds are allowed or disallowed to match a given expression.
+///
+/// @author lowasser@google.com (Louis Wasserman)
 @Target(ElementType.PARAMETER)
 @Retention(RetentionPolicy.SOURCE)
 public @interface OfKind {

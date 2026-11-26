@@ -34,7 +34,7 @@ import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.TypeTag;
 
-/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
+/// A [BugChecker]; see the associated [BugPattern] annotation for details.
 @BugPattern(
     summary =
         "Conversion from int to float may lose precision; use an explicit cast to float if this"
@@ -42,11 +42,9 @@ import com.sun.tools.javac.code.TypeTag;
     severity = WARNING)
 public class IntFloatConversion extends BugChecker implements MethodInvocationTreeMatcher {
 
-  /**
-   * int to float conversions aren't always problematic, this specific issue is that there are float
-   * and double overloads, and when passing an int the float will be resolved in situations where
-   * double precision may be desired.
-   */
+  /// int to float conversions aren't always problematic, this specific issue is that there are
+  /// float and double overloads, and when passing an int the float will be resolved in situations
+  /// where double precision may be desired.
   private static final Matcher<ExpressionTree> MATCHER =
       MethodMatchers.staticMethod()
           .onClass("java.lang.Math")

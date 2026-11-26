@@ -38,7 +38,7 @@ import javax.inject.Inject;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
 
-/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
+/// A [BugChecker]; see the associated [BugPattern] annotation for details.
 @BugPattern(summary = "Fields in Guice modules should be final", severity = WARNING)
 public class MutableGuiceModule extends BugChecker implements VariableTreeMatcher {
 

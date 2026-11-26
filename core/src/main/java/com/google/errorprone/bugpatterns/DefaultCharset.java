@@ -61,7 +61,7 @@ import java.util.Iterator;
 import java.util.List;
 import javax.inject.Inject;
 
-/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
+/// A [BugChecker]; see the associated [BugPattern] annotation for details.
 @BugPattern(
     summary =
         "Implicit use of the platform default charset, which can result in differing behaviour"
@@ -434,7 +434,7 @@ public class DefaultCharset extends BugChecker
     return fix.build();
   }
 
-  /** Convert a boolean append mode to a StandardOpenOption. */
+  /// Convert a boolean append mode to a StandardOpenOption.
   private static String toAppendMode(SuggestedFix.Builder fix, Tree appendArg, VisitorState state) {
     // recognize constants to try to avoid `true ? CREATE, APPEND : CREATE`
     Boolean value = ASTHelpers.constValue(appendArg, Boolean.class);
@@ -456,7 +456,7 @@ public class DefaultCharset extends BugChecker
         state.getSourceForNode(appendArg));
   }
 
-  /** Converts a {@code String} to a {@code File}. */
+  /// Converts a `String` to a `File`.
   private static Object toFile(VisitorState state, Tree fileArg, SuggestedFix.Builder fix) {
     Type type = ASTHelpers.getType(fileArg);
     if (ASTHelpers.isSubtype(type, state.getSymtab().stringType, state)) {
@@ -469,7 +469,7 @@ public class DefaultCharset extends BugChecker
     }
   }
 
-  /** Convert a {@code String} or {@code File} argument to a {@code Path}. */
+  /// Convert a `String` or `File` argument to a `Path`.
   private static String toPath(VisitorState state, Tree fileArg, SuggestedFix.Builder fix) {
     Type type = ASTHelpers.getType(fileArg);
     if (ASTHelpers.isSubtype(type, state.getSymtab().stringType, state)) {

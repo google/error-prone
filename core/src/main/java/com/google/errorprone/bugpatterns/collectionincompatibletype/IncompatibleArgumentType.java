@@ -50,9 +50,7 @@ import javax.lang.model.element.Parameterizable;
 import javax.lang.model.element.TypeParameterElement;
 import org.jspecify.annotations.Nullable;
 
-/**
- * @author glorioso@google.com (Nick Glorioso)
- */
+/// @author glorioso@google.com (Nick Glorioso)
 @BugPattern(
     summary = "Passing argument to a generic method with an incompatible type.",
     severity = ERROR)

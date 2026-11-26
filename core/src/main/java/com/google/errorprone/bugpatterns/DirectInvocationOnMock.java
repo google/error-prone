@@ -57,7 +57,7 @@ import java.util.HashSet;
 import java.util.Set;
 import javax.lang.model.element.AnnotationMirror;
 
-/** A bugpattern; see the description. */
+/// A bugpattern; see the description.
 @BugPattern(
     summary =
         "Methods should not be directly invoked on mocks. Should this be part of a verify(..)"

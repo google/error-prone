@@ -40,7 +40,7 @@ import org.jspecify.annotations.Nullable;
 import org.safere.Matcher;
 import org.safere.Pattern;
 
-/** Flags types being referred to by their non-canonical name. */
+/// Flags types being referred to by their non-canonical name.
 @BugPattern(
     summary = "This type is referred to by a non-canonical name, which may be misleading.",
     severity = WARNING)
@@ -117,10 +117,8 @@ public final class NonCanonicalType extends BugChecker implements MemberSelectTr
         canonicalName, nonCanonicalName);
   }
 
-  /**
-   * Find the non-canonical name which is being used to refer to this type. We can't just use {@code
-   * getSymbol}, given that points to the same symbol as the canonical name.
-   */
+  /// Find the non-canonical name which is being used to refer to this type. We can't just use
+  /// `getSymbol`, given that points to the same symbol as the canonical name.
   private static String getNonCanonicalName(Tree tree) {
     return switch (tree) {
       case IdentifierTree identifierTree -> getSymbol(tree).getQualifiedName().toString();

@@ -19,11 +19,9 @@ package com.google.errorprone.suppliers;
 import com.google.errorprone.VisitorState;
 import java.io.Serializable;
 
-/**
- * Simple supplier pattern, which allows delayed binding to access to runtime elements.
- *
- * @author alexeagle@google.com (Alex Eagle)
- */
+/// Simple supplier pattern, which allows delayed binding to access to runtime elements.
+///
+/// @author alexeagle@google.com (Alex Eagle)
 public interface Supplier<T> extends Serializable {
   T get(VisitorState state);
 }

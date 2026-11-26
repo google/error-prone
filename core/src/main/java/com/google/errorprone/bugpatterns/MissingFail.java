@@ -81,9 +81,7 @@ import java.util.Set;
 import javax.lang.model.element.Name;
 import org.safere.Pattern;
 
-/**
- * @author schmitt@google.com (Peter Schmitt)
- */
+/// @author schmitt@google.com (Peter Schmitt)
 @BugPattern(
     altNames = "missing-fail",
     summary = "Not calling fail() when expecting an exception masks bugs",
@@ -272,10 +270,8 @@ public class MissingFail extends BugChecker implements MethodTreeMatcher {
     return fixBuilder.build();
   }
 
-  /**
-   * Returns a string describing the exception type caught by the given try tree's catch
-   * statement(s), defaulting to {@code "Exception"} if more than one exception type is caught.
-   */
+  /// Returns a string describing the exception type caught by the given try tree's catch
+  /// statement(s), defaulting to `"Exception"` if more than one exception type is caught.
   private static String exceptionToString(TryTree tree, VisitorState state) {
     if (tree.getCatches().size() != 1) {
       return "Exception";
@@ -432,7 +428,7 @@ public class MissingFail extends BugChecker implements MethodTreeMatcher {
     }
   }
 
-  /** Matches any try-tree that is enclosed in a loop. */
+  /// Matches any try-tree that is enclosed in a loop.
   private static class InLoopMatcher implements Matcher<TryTree> {
 
     @Override
@@ -452,10 +448,8 @@ public class MissingFail extends BugChecker implements MethodTreeMatcher {
     }
   }
 
-  /**
-   * Matches any try-tree that is in a JUnit3 {@code setUp} or {@code tearDown} method, their JUnit4
-   * equivalents, a JUnit {@code suite()} method or a {@code main} method.
-   */
+  /// Matches any try-tree that is in a JUnit3 `setUp` or `tearDown` method, their JUnit4
+  /// equivalents, a JUnit `suite()` method or a `main` method.
   private static class IgnoredEnclosingMethodMatcher implements Matcher<TryTree> {
 
     @Override
@@ -477,9 +471,8 @@ public class MissingFail extends BugChecker implements MethodTreeMatcher {
     }
   }
 
-  /**
-   * Matches if any two of the given list of expressions are integer literals with different values.
-   */
+  /// Matches if any two of the given list of expressions are integer literals with different
+  /// values.
   private record UnequalIntegerLiteralMatcher(Matcher<ExpressionTree> methodSelectMatcher)
       implements Matcher<MethodInvocationTree> {
     @Override

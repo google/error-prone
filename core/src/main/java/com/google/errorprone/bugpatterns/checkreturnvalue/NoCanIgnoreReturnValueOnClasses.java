@@ -64,9 +64,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-/**
- * Checker that "pushes" the {@code @CanIgnoreReturnValue} annotation down from classes to methods.
- */
+/// Checker that "pushes" the `@CanIgnoreReturnValue` annotation down from classes to methods.
 @BugPattern(
     summary =
         "@CanIgnoreReturnValue should not be applied to classes as it almost always overmatches (as"
@@ -165,7 +163,7 @@ public final class NoCanIgnoreReturnValueOnClasses extends BugChecker implements
             return super.visitReturn(returnTree, null);
           }
 
-          /** Returns whether the given {@link ExpressionTree} is {@code this}. */
+          /// Returns whether the given [ExpressionTree] is `this`.
           private boolean isThis(ExpressionTree returnExpression) {
             return maybeCastThis(returnExpression) || thises.contains(getSymbol(returnExpression));
           }

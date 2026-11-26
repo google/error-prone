@@ -22,11 +22,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * Unit tests for {@link PreconditionsCheckNotNullRepeated} check.
- *
- * @author bhagwani@google.com (Sumit Bhagwani)
- */
+/// Unit tests for [PreconditionsCheckNotNullRepeated] check.
+///
+/// @author bhagwani@google.com (Sumit Bhagwani)
 @RunWith(JUnit4.class)
 public class PreconditionsCheckNotNullRepeatedTest {
 

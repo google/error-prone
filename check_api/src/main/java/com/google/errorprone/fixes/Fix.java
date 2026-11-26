@@ -19,21 +19,17 @@ package com.google.errorprone.fixes;
 import com.google.common.collect.ImmutableSet;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 
-/**
- * Represents a source code transformation, usually used to fix a bug detected by error-prone.
- *
- * @author eaftan@google.com (Eddie Aftandilian)
- */
+/// Represents a source code transformation, usually used to fix a bug detected by error-prone.
+///
+/// @author eaftan@google.com (Eddie Aftandilian)
 public interface Fix {
 
   String toString(JCCompilationUnit compilationUnit);
 
-  /**
-   * A short description which can be attached to the Fix to differentiate multiple fixes provided
-   * to the user.
-   *
-   * <p>Empty string generates the default description.
-   */
+  /// A short description which can be attached to the Fix to differentiate multiple fixes provided
+  /// to the user.
+  ///
+  /// Empty string generates the default description.
   String getShortDescription();
 
   Replacements.CoalescePolicy getCoalescePolicy();

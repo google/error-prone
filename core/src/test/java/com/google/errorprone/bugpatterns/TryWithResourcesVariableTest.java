@@ -21,7 +21,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** {@link TryWithResourcesVariable}Test */
+/// [TryWithResourcesVariable]Test
 @RunWith(JUnit4.class)
 public class TryWithResourcesVariableTest {
   private final BugCheckerRefactoringTestHelper testHelper =

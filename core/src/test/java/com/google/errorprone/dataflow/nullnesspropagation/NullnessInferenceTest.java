@@ -41,31 +41,25 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * @author bennostein@google.com (Benno Stein)
- */
+/// @author bennostein@google.com (Benno Stein)
 @RunWith(JUnit4.class)
 public class NullnessInferenceTest {
 
   private final CompilationTestHelper compilationHelper =
       CompilationTestHelper.newInstance(NullnessInferenceChecker.class, getClass());
 
-  /**
-   * This method triggers the {@code BugPattern} used to test nullness annotation inference
-   *
-   * @param t Method call whose type arguments' inferred nullness will be inspected
-   * @return {@code t} for use in expressions
-   */
+  /// This method triggers the `BugPattern` used to test nullness annotation inference
+  ///
+  /// @param t Method call whose type arguments' inferred nullness will be inspected
+  /// @return `t` for use in expressions
   public static <T> T inspectInferredGenerics(T t) {
     return t;
   }
 
-  /**
-   * This method triggers the {@code BugPattern} used to test nullness annotation inference
-   *
-   * @param t Expression whose inferred nullness will be inspected
-   * @return {@code t} for use in expressions
-   */
+  /// This method triggers the `BugPattern` used to test nullness annotation inference
+  ///
+  /// @param t Expression whose inferred nullness will be inspected
+  /// @return `t` for use in expressions
   public static <T> T inspectInferredExpression(T t) {
     return t;
   }
@@ -675,7 +669,7 @@ public class AnnotatedMethodTypeParamsTest {
         .doTest();
   }
 
-  /** BugPattern to test inference of nullness qualifiers */
+  /// BugPattern to test inference of nullness qualifiers
   @BugPattern(
       summary = "Test checker for NullnessInferenceTest",
       explanation =

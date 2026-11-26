@@ -21,20 +21,16 @@ import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.ExpressionTree;
 import org.jspecify.annotations.Nullable;
 
-/**
- * Utilities for matching annotations.
- *
- * @author mwacker@google.com (Mike Wacker)
- */
+/// Utilities for matching annotations.
+///
+/// @author mwacker@google.com (Mike Wacker)
 public final class AnnotationMatcherUtils {
 
-  /**
-   * Gets the value for an argument, or null if the argument does not exist.
-   *
-   * @param annotationTree the AST node for the annotation
-   * @param name the name of the argument whose value to get
-   * @return the value of the argument, or null if the argument does not exist
-   */
+  /// Gets the value for an argument, or null if the argument does not exist.
+  ///
+  /// @param annotationTree the AST node for the annotation
+  /// @param name the name of the argument whose value to get
+  /// @return the value of the argument, or null if the argument does not exist
   public static @Nullable ExpressionTree getArgument(AnnotationTree annotationTree, String name) {
     for (ExpressionTree argumentTree : annotationTree.getArguments()) {
       if (!(argumentTree instanceof AssignmentTree assignmentTree)) {

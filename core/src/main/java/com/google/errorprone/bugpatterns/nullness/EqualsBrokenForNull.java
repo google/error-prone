@@ -52,12 +52,10 @@ import java.util.HashSet;
 import java.util.Set;
 import org.jspecify.annotations.Nullable;
 
-/**
- * {@link BugChecker} adds a null check to {@code equals()} method implementations which don't
- * satisfy the null contract of {@link Object#equals} i.e. {@code equals(null)} should return false.
- *
- * @author bhagwani@google.com (Sumit Bhagwani)
- */
+/// [BugChecker] adds a null check to `equals()` method implementations which don't satisfy the null
+/// contract of [Object#equals] i.e. `equals(null)` should return false.
+///
+/// @author bhagwani@google.com (Sumit Bhagwani)
 @BugPattern(
     summary = "equals() implementation may throw NullPointerException when given null",
     severity = SeverityLevel.WARNING)
@@ -126,10 +124,8 @@ public class EqualsBrokenForNull extends BugChecker implements MethodTreeMatcher
         return null;
       }
 
-      /**
-       * Unwraps expressions like `(Foo) foo` or `((Foo) foo)` to return the VarSymbol of `foo`, or
-       * null if the expression wasn't of this form.
-       */
+      /// Unwraps expressions like `(Foo) foo` or `((Foo) foo)` to return the VarSymbol of `foo`, or
+      /// null if the expression wasn't of this form.
       private @Nullable VarSymbol findVariable(Tree tree) {
         while (tree != null) {
           switch (tree) {

@@ -23,24 +23,21 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-/**
- * Annotation representing a type that should not be mocked.
- *
- * <p>When marking a type {@code @DoNotMock}, you should always point to alternative testing
- * solutions such as standard fakes or other testing utilities.
- *
- * <p>Mockito tests can enforce this annotation by using a custom MockMaker which intercepts
- * creation of mocks.
- */
+/// Annotation representing a type that should not be mocked.
+///
+/// When marking a type `@DoNotMock`, you should always point to alternative testing solutions such
+/// as standard fakes or other testing utilities.
+///
+/// Mockito tests can enforce this annotation by using a custom MockMaker which intercepts creation
+/// of mocks.
 @Inherited
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE, ElementType.ANNOTATION_TYPE})
 public @interface DoNotMock {
-  /**
-   * The reason why the annotated type should not be mocked.
-   *
-   * <p>This should suggest alternative APIs to use for testing objects of this type.
-   */
+  /// The reason why the annotated type should not be mocked.
+  ///
+  /// This should suggest alternative APIs to use for testing objects of this type.
+
   String value() default "Create a real instance instead";
 }

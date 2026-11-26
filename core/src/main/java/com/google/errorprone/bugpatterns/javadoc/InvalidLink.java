@@ -54,7 +54,7 @@ import javax.lang.model.element.Element;
 import org.safere.Matcher;
 import org.safere.Pattern;
 
-/** Finds some common errors in {@literal @}link tags. */
+/// Finds some common errors in `@link` tags.
 @BugPattern(summary = "This @link tag looks wrong.", severity = WARNING)
 public final class InvalidLink extends BugChecker
     implements ClassTreeMatcher, MethodTreeMatcher, VariableTreeMatcher {

@@ -31,7 +31,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** {@link GuardedByLockSetAnalyzer}Test */
+/// [GuardedByLockSetAnalyzer]Test
 @RunWith(JUnit4.class)
 public class HeldLockAnalyzerTest {
   private final CompilationTestHelper compilationHelper =
@@ -249,7 +249,7 @@ public class HeldLockAnalyzerTest {
         .doTest();
   }
 
-  /** A customized {@link GuardedByChecker} that prints more test-friendly diagnostics. */
+  /// A customized [GuardedByChecker] that prints more test-friendly diagnostics.
   @BugPattern(name = "GuardedByLockSet", summary = "", explanation = "", severity = ERROR)
   public static class GuardedByLockSetAnalyzer extends GuardedByChecker {
     @Inject

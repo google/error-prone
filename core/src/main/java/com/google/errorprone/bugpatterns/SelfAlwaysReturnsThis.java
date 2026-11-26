@@ -49,7 +49,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
+/// A [BugChecker]; see the associated [BugPattern] annotation for details.
 @BugPattern(
     summary =
         "Non-abstract instance methods named 'self()' or 'getThis()' that return the enclosing"
@@ -115,7 +115,7 @@ public final class SelfAlwaysReturnsThis extends BugChecker implements MethodTre
         return super.visitReturn(returnTree, null);
       }
 
-      /** Returns whether the given {@link ExpressionTree} is {@code this}. */
+      /// Returns whether the given [ExpressionTree] is `this`.
       private boolean isThis(ExpressionTree returnExpression) {
         return maybeCastThis(returnExpression) || thises.contains(getSymbol(returnExpression));
       }

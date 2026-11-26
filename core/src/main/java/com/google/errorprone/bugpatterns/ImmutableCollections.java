@@ -20,7 +20,7 @@ import com.google.common.collect.ImmutableMap;
 import com.sun.tools.javac.code.Type;
 import java.util.Optional;
 
-/** Common utility functions for immutable collections. */
+/// Common utility functions for immutable collections.
 public final class ImmutableCollections {
 
   private ImmutableCollections() {}

@@ -21,13 +21,11 @@ import com.google.errorprone.scanner.ScannerSupplier;
 import com.sun.tools.javac.api.JavacTool;
 import javax.tools.JavaCompiler;
 
-/**
- * An Error Prone compiler that implements {@link javax.tools.JavaCompiler}.
- *
- * <p>Runs all built-in checks by default.
- *
- * @author nik
- */
+/// An Error Prone compiler that implements [javax.tools.JavaCompiler].
+///
+/// Runs all built-in checks by default.
+///
+/// @author nik
 public class ErrorProneJavaCompiler extends BaseErrorProneJavaCompiler {
 
   public ErrorProneJavaCompiler() {

@@ -30,11 +30,9 @@ import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 
-/**
- * Enforce that @CompileTimeConstant parameters are final or effectively final.
- *
- * @author cushon@google.com (Liam Miller-Cushon)
- */
+/// Enforce that @CompileTimeConstant parameters are final or effectively final.
+///
+/// @author cushon@google.com (Liam Miller-Cushon)
 @BugPattern(
     summary = "@CompileTimeConstant parameters should be final or effectively final",
     severity = ERROR)

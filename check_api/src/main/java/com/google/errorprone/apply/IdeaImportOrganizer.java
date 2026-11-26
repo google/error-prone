@@ -25,17 +25,13 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
-/**
- * Organizes imports based on the default format provided by IntelliJ IDEA.
- *
- * <p>This groups the imports into three groups, each delimited by a newline:
- *
- * <ol>
- *   <li>Non-static, non-{@code java.*}, non-{@code javax.*} imports.
- *   <li>{@code javax.*} and {@code java.*} imports, with {@code javax.*} imports ordered first.
- *   <li>Static imports.
- * </ol>
- */
+/// Organizes imports based on the default format provided by IntelliJ IDEA.
+///
+/// This groups the imports into three groups, each delimited by a newline:
+///
+/// 1. Non-static, non-`java.*`, non-`javax.*` imports.
+/// 1. `javax.*` and `java.*` imports, with `javax.*` imports ordered first.
+/// 1. Static imports.
 public class IdeaImportOrganizer implements ImportOrganizer {
 
   private static final String JAVA_PREFIX = "java.";

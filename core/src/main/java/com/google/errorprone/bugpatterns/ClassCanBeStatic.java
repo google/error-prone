@@ -37,10 +37,8 @@ import javax.inject.Inject;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.NestingKind;
 
-/**
- * @author alexloh@google.com (Alex Loh)
- * @author cushon@google.com (Liam Miller-Cushon)
- */
+/// @author alexloh@google.com (Alex Loh)
+/// @author cushon@google.com (Liam Miller-Cushon)
 @BugPattern(
     summary = "Inner class is non-static but does not reference enclosing class",
     severity = WARNING,

@@ -16,15 +16,13 @@
 
 package com.google.errorprone.apply;
 
-/**
- * All the differences to be applied to a source file to be applied in a refactoring.
- *
- * @author sjnickerson@google.com (Simon Nickerson)
- */
+/// All the differences to be applied to a source file to be applied in a refactoring.
+///
+/// @author sjnickerson@google.com (Simon Nickerson)
 public interface Diff {
-  /** Gets the name of the file this difference applies to */
+  /// Gets the name of the file this difference applies to
   String getRelevantFileName();
 
-  /** Applies this difference to the supplied {@code sourceFile}. */
+  /// Applies this difference to the supplied `sourceFile`.
   void applyDifferences(SourceFile sourceFile);
 }

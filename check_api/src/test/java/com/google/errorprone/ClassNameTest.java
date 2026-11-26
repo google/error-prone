@@ -32,7 +32,7 @@ import com.sun.tools.javac.file.JavacFileManager;
 import com.sun.tools.javac.util.Context;
 import org.junit.Test;
 
-/** Tests for {@link ClassName}. */
+/// Tests for [ClassName].
 public final class ClassNameTest {
 
   @Test

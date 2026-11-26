@@ -38,10 +38,10 @@ import com.sun.tools.javac.util.Names;
 import java.util.HashSet;
 import java.util.Set;
 
-/** Analyzes trees for references to their enclosing instance. */
+/// Analyzes trees for references to their enclosing instance.
 public final class CanBeStaticAnalyzer extends TreeScanner {
 
-  /** Returns true if the tree references its enclosing class. */
+  /// Returns true if the tree references its enclosing class.
   public static boolean referencesOuter(Tree tree, Symbol owner, VisitorState state) {
     CanBeStaticAnalyzer scanner = new CanBeStaticAnalyzer(owner, state);
     ((JCTree) tree).accept(scanner);
@@ -179,7 +179,7 @@ public final class CanBeStaticAnalyzer extends TreeScanner {
     }
   }
 
-  /** Is sym a non-static member of an enclosing class of currentClass? */
+  /// Is sym a non-static member of an enclosing class of currentClass?
   private static boolean memberOfEnclosing(Symbol owner, VisitorState state, Symbol sym) {
     if (sym == null || !sym.hasOuterInstance()) {
       return false;
@@ -199,13 +199,11 @@ public final class CanBeStaticAnalyzer extends TreeScanner {
     // skip annotations; the keys of key/value pairs look like unqualified method invocations
   }
 
-  /**
-   * Stores the result of a can-be-static query.
-   *
-   * @param canPossiblyBeStatic Whether the method could *possibly* be static: i.e., this is false
-   *     if it references an instance field.
-   * @param methodsReferenced Set of instance methods referenced by the method under inspection.
-   */
+  /// Stores the result of a can-be-static query.
+  ///
+  /// @param canPossiblyBeStatic Whether the method could \*possibly\* be static: i.e., this is
+  ///   false if it references an instance field.
+  /// @param methodsReferenced Set of instance methods referenced by the method under inspection.
   record CanBeStaticResult(
       boolean canPossiblyBeStatic, ImmutableSet<MethodSymbol> methodsReferenced) {
     static CanBeStaticResult of(boolean canPossiblyBeStatic, Set<MethodSymbol> methodsReferenced) {

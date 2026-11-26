@@ -49,7 +49,7 @@ import com.sun.tools.javac.code.Symbol.TypeSymbol;
 import java.util.List;
 import javax.lang.model.element.ElementKind;
 
-/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
+/// A [BugChecker]; see the associated [BugPattern] annotation for details.
 @BugPattern(
     summary =
         "Switch handles all enum values: an explicit default case is unnecessary and defeats error"
@@ -276,7 +276,7 @@ public class UnnecessaryDefaultInEnumSwitch extends BugChecker
     return unrecognizedDescription.addFix(fix).build();
   }
 
-  /** Returns true if the default is empty, or contains only a break statement. */
+  /// Returns true if the default is empty, or contains only a break statement.
   private static boolean trivialDefault(List<? extends StatementTree> defaultStatements) {
     if (defaultStatements.isEmpty()) {
       return true;
@@ -316,7 +316,7 @@ public class UnnecessaryDefaultInEnumSwitch extends BugChecker
     return initialComments + defaultSource;
   }
 
-  /** Returns the comments between the "default:" case and the first statement within it, if any. */
+  /// Returns the comments between the "default:" case and the first statement within it, if any.
   private static String comments(
       CaseTree defaultCase,
       List<? extends StatementTree> defaultStatements,

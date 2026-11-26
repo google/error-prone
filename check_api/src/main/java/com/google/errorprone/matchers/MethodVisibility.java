@@ -23,11 +23,9 @@ import com.sun.source.tree.MethodTree;
 import java.util.Set;
 import javax.lang.model.element.Modifier;
 
-/**
- * A matcher for method visibility (public, private, protected, or default).
- *
- * @author eaftan@google.com (Eddie Aftandilian)
- */
+/// A matcher for method visibility (public, private, protected, or default).
+///
+/// @author eaftan@google.com (Eddie Aftandilian)
 public class MethodVisibility implements Matcher<MethodTree> {
 
   private final Visibility visibility;
@@ -48,7 +46,7 @@ public class MethodVisibility implements Matcher<MethodTree> {
     }
   }
 
-  /** The visibility of a member. */
+  /// The visibility of a member.
   public enum Visibility {
     PUBLIC(Modifier.PUBLIC),
     PROTECTED(Modifier.PROTECTED),

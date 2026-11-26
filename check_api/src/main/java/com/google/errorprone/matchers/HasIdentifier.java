@@ -24,11 +24,9 @@ import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.util.TreePathScanner;
 
-/**
- * Matches if the given matcher matches all of the identifiers under this syntax tree.
- *
- * @author alexloh@google.com (Alex Loh)
- */
+/// Matches if the given matcher matches all of the identifiers under this syntax tree.
+///
+/// @author alexloh@google.com (Alex Loh)
 public class HasIdentifier implements Matcher<Tree> {
 
   private final Matcher<IdentifierTree> nodeMatcher;
@@ -43,7 +41,7 @@ public class HasIdentifier implements Matcher<Tree> {
     return firstNonNull(matches, false);
   }
 
-  /** AST Visitor that matches identifiers in a Tree */
+  /// AST Visitor that matches identifiers in a Tree
   private static class HasIdentifierScanner extends TreePathScanner<Boolean, Void> {
 
     private Matcher<IdentifierTree> idMatcher;

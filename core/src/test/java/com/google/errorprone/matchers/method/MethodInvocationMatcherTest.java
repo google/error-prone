@@ -36,7 +36,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** Tests a basic combination of a few ordinary method matchers. */
+/// Tests a basic combination of a few ordinary method matchers.
 @RunWith(JUnit4.class)
 public class MethodInvocationMatcherTest {
 
@@ -62,7 +62,7 @@ public class MethodInvocationMatcherTest {
         .doTest();
   }
 
-  /** A {@link BugChecker} for test. */
+  /// A [BugChecker] for test.
   @BugPattern(
       summary = "Checker that flags the given method invocation if the matcher matches",
       severity = ERROR)

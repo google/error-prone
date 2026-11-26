@@ -56,7 +56,7 @@ import com.sun.tools.javac.code.Type;
 import org.jspecify.annotations.Nullable;
 import org.safere.Pattern;
 
-/** See the summary. */
+/// See the summary.
 @BugPattern(
     summary =
         "The non-constant portion of a comparison generally comes first. For equality, prefer"

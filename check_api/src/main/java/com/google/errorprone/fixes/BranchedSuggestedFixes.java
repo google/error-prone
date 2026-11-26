@@ -18,31 +18,29 @@ package com.google.errorprone.fixes;
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 
-/**
- * Helper class for accumulating a branching tree of alternative fixes designed to help build as set
- * of potential fixes with different options in them.
- *
- * <p>Consider building a list of fixes from a set of operations A followed by B or C then D or E.
- * The resulting list should be ABD, ACD, ABE, ACE.
- *
- * <pre>{@code
- * BranchedSuggestedFixes a = BranchedSuggestedFixes.builder()
- *   .startWith(A)
- *   .then()
- *   .addOption(B)
- *   .addOption(C)
- *   .then()
- *   .addOption(D)
- *   .addOption(E)
- *   .build();
- * }</pre>
- *
- * This class assumes that in order to build a valid set of fixes you must make some progress at
- * each branch. So two calls to branch with no merges in between will result in an empty list of
- * fixes at the end.
- *
- * @author andrewrice@google.com (Andrew Rice)
- */
+/// Helper class for accumulating a branching tree of alternative fixes designed to help build as
+/// set of potential fixes with different options in them.
+///
+/// Consider building a list of fixes from a set of operations A followed by B or C then D or E. The
+/// resulting list should be ABD, ACD, ABE, ACE.
+///
+/// ```
+/// BranchedSuggestedFixes a = BranchedSuggestedFixes.builder()
+///   .startWith(A)
+///   .then()
+///   .addOption(B)
+///   .addOption(C)
+///   .then()
+///   .addOption(D)
+///   .addOption(E)
+///   .build();
+/// ```
+///
+/// This class assumes that in order to build a valid set of fixes you must make some progress at
+/// each branch. So two calls to branch with no merges in between will result in an empty list of
+/// fixes at the end.
+///
+/// @author andrewrice@google.com (Andrew Rice)
 public final class BranchedSuggestedFixes {
 
   private final ImmutableList<SuggestedFix> fixes;
@@ -59,7 +57,7 @@ public final class BranchedSuggestedFixes {
     return new Builder();
   }
 
-  /** Builder class for BranchedSuggestedFixes */
+  /// Builder class for BranchedSuggestedFixes
   public static class Builder {
 
     private ImmutableList.Builder<SuggestedFix> builder = ImmutableList.builder();

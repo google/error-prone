@@ -38,14 +38,14 @@ import java.util.List;
 import java.util.stream.Stream;
 import javax.inject.Inject;
 
-/** A collection of types with known mutability. */
+/// A collection of types with known mutability.
 @Immutable
 public final class WellKnownMutability implements ThreadSafetyKnownTypes {
 
-  /** Types that are known to be immutable. */
+  /// Types that are known to be immutable.
   private final ImmutableMap<String, AnnotationInfo> knownImmutableClasses;
 
-  /** Types that are known to be mutable. */
+  /// Types that are known to be mutable.
   private final ImmutableSet<String> knownMutableClasses;
 
   @Inject
@@ -69,10 +69,8 @@ public final class WellKnownMutability implements ThreadSafetyKnownTypes {
     return knownImmutableClasses;
   }
 
-  /**
-   * @deprecated {@link #getKnownImmutableClasses()} is clearer if you're dealing with this specific
-   *     class.
-   */
+  /// @deprecated [#getKnownImmutableClasses()] is clearer if you're dealing with this specific
+  ///   class.
   @Override
   @Deprecated
   public ImmutableMap<String, AnnotationInfo> getKnownSafeClasses() {
@@ -83,10 +81,7 @@ public final class WellKnownMutability implements ThreadSafetyKnownTypes {
     return knownMutableClasses;
   }
 
-  /**
-   * @deprecated {@link #getKnownMutableClasses()} is clearer if you're dealing with this specific
-   *     class.
-   */
+  /// @deprecated [#getKnownMutableClasses()] is clearer if you're dealing with this specific class.
   @Override
   @Deprecated
   public ImmutableSet<String> getKnownUnsafeClasses() {
@@ -400,19 +395,15 @@ public final class WellKnownMutability implements ThreadSafetyKnownTypes {
     return state.getTypes().isAssignable(type, to);
   }
 
-  /**
-   * Compile-time equivalent of {@code com.google.io.protocol.ProtocolSupport#isProto2MessageClass}.
-   */
+  /// Compile-time equivalent of `com.google.io.protocol.ProtocolSupport#isProto2MessageClass`.
   public static boolean isProto2MessageClass(VisitorState state, Type type) {
     checkNotNull(type);
     return isAssignableTo(type, MESSAGE_LITE, state)
         && !isAssignableTo(type, PROTOCOL_MESSAGE_TYPE, state);
   }
 
-  /**
-   * Compile-time equivalent of {@code
-   * com.google.io.protocol.ProtocolSupport#isProto2MutableMessageClass}.
-   */
+  /// Compile-time equivalent of
+  /// `com.google.io.protocol.ProtocolSupport#isProto2MutableMessageClass`.
   public static boolean isProto2MutableMessageClass(VisitorState state, Type type) {
     checkNotNull(type);
     return isAssignableTo(type, MUTABLE_MESSAGE_LITE, state)
@@ -424,7 +415,7 @@ public final class WellKnownMutability implements ThreadSafetyKnownTypes {
     return isAssignableTo(type, ENUM_LITE, state);
   }
 
-  /** Returns true if the type is an annotation. */
+  /// Returns true if the type is an annotation.
   public static boolean isAnnotation(VisitorState state, Type type) {
     return isAssignableTo(type, Suppliers.ANNOTATION_TYPE, state);
   }

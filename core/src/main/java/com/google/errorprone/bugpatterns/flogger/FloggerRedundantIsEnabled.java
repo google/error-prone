@@ -47,9 +47,7 @@ import java.util.List;
 import java.util.Optional;
 import org.jspecify.annotations.Nullable;
 
-/**
- * @author mariasam@google.com (Maria Sam)
- */
+/// @author mariasam@google.com (Maria Sam)
 @BugPattern(
     summary =
         "Logger level check is already implied in the log() call. "
@@ -100,13 +98,11 @@ public class FloggerRedundantIsEnabled extends BugChecker implements IfTreeMatch
         .orElse(NO_MATCH);
   }
 
-  /**
-   * Examines the then-block of the given if-tree. If the then-block contains exactly one statement,
-   * and that one statement is a Flogger `log` method invocation, then returns that statement as a
-   * {@link MethodInvocationTree}. Else returns an empty Optional.
-   *
-   * <p>Adapted from {@link com.google.errorprone.bugpatterns.ImplementAssertionWithChaining}.
-   */
+  /// Examines the then-block of the given if-tree. If the then-block contains exactly one
+  /// statement, and that one statement is a Flogger `log` method invocation, then returns that
+  /// statement as a [MethodInvocationTree]. Else returns an empty Optional.
+  ///
+  /// Adapted from [com.google.errorprone.bugpatterns.ImplementAssertionWithChaining].
   private static Optional<MethodInvocationTree> extractLoneLogInvocation(
       IfTree ifTree, VisitorState state) {
     // Get lone statement from then-block.
@@ -129,7 +125,7 @@ public class FloggerRedundantIsEnabled extends BugChecker implements IfTreeMatch
     return Optional.empty();
   }
 
-  /** Strip any parentheses or `!` from the given expression. */
+  /// Strip any parentheses or `!` from the given expression.
   private static ExpressionTree unwrap(ExpressionTree expr) {
     return expr.accept(
         new SimpleTreeVisitor<ExpressionTree, Void>() {
@@ -153,10 +149,8 @@ public class FloggerRedundantIsEnabled extends BugChecker implements IfTreeMatch
         null);
   }
 
-  /**
-   * Determines whether the two given logger invocations are operations on the same logger, at the
-   * same level.
-   */
+  /// Determines whether the two given logger invocations are operations on the same logger, at the
+  /// same level.
   private static boolean sameLoggerAtSameLevel(
       ExpressionTree expr1, ExpressionTree expr2, VisitorState state) {
     ExpressionTree atLevel1 = getReceiver(expr1);

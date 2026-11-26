@@ -88,11 +88,9 @@ import java.util.Set;
 import javax.lang.model.element.Name;
 import org.jspecify.annotations.Nullable;
 
-/**
- * Static utility methods for common functionality in the nullable checkers.
- *
- * @author awturner@google.com (Andy Turner)
- */
+/// Static utility methods for common functionality in the nullable checkers.
+///
+/// @author awturner@google.com (Andy Turner)
 public final class NullnessUtils {
   private NullnessUtils() {}
 
@@ -103,17 +101,15 @@ public final class NullnessUtils {
   private static final Matcher<ExpressionTree> EMPTY_TO_NULL =
       staticMethod().onClass("com.google.common.base.Strings").named("emptyToNull");
 
-  /**
-   * Returns {@code true} if the flags request that we look to add @Nullable annotations only where
-   * they are nearly certain to be correct and to be about as uncontroversial as nullness
-   * annotations can ever be. In Google terms, that means annotations that we'd be willing to roll
-   * out across the depot with global approval.
-   *
-   * <p>If this method returns {@code false}, that gives checkers permission to be more aggressive.
-   * Their suggestions should still be very likely to be correct, but the goal is more to assist a
-   * human who is aiming to annotate a codebase. The expectation, then, is that at least one human
-   * will check whether each new annotation is justified.
-   */
+  /// Returns `true` if the flags request that we look to add @Nullable annotations only where they
+  /// are nearly certain to be correct and to be about as uncontroversial as nullness annotations
+  /// can ever be. In Google terms, that means annotations that we'd be willing to roll out across
+  /// the depot with global approval.
+  ///
+  /// If this method returns `false`, that gives checkers permission to be more aggressive. Their
+  /// suggestions should still be very likely to be correct, but the goal is more to assist a human
+  /// who is aiming to annotate a codebase. The expectation, then, is that at least one human will
+  /// check whether each new annotation is justified.
   static boolean nullnessChecksShouldBeConservative(ErrorProneFlags flags) {
     return flags.getBoolean("Nullness:Conservative").orElse(true);
   }
@@ -217,20 +213,14 @@ public final class NullnessUtils {
     return false;
   }
 
-  /**
-   * Returns a {@link SuggestedFix} to add a {@code Nullable} annotation to the given method's
-   * return type.
-   */
+  /// Returns a [SuggestedFix] to add a `Nullable` annotation to the given method's return type.
   static SuggestedFix fixByAddingNullableAnnotationToReturnType(
       VisitorState state, MethodTree method) {
     return fixByAddingNullableAnnotationToElementOrType(
         state, method, method.getReturnType(), "nullness:return");
   }
 
-  /**
-   * Returns a {@link SuggestedFix} to add a {@code Nullable} annotation to the given variable's
-   * type.
-   */
+  /// Returns a [SuggestedFix] to add a `Nullable` annotation to the given variable's type.
   static SuggestedFix fixByAddingNullableAnnotationToType(
       VisitorState state, VariableTree variable) {
     return fixByAddingNullableAnnotationToElementOrType(
@@ -262,12 +252,10 @@ public final class NullnessUtils {
         state, typeTree, nullableAnnotationToUse, suppressionToRemove);
   }
 
-  /**
-   * Returns a {@link SuggestedFix} to add a <b>type-use</b> {@code Nullable} annotation to the
-   * given tree. The tree should be a "type-use-only" location, like a type argument or a bounds of
-   * a type parameter or wildcard. Prefer to use {@link #fixByAddingNullableAnnotationToReturnType}
-   * and {@link #fixByAddingNullableAnnotationToType} instead of this method when applicable.
-   */
+  /// Returns a [SuggestedFix] to add a **type-use** `Nullable` annotation to the given tree. The
+  /// tree should be a "type-use-only" location, like a type argument or a bounds of a type
+  /// parameter or wildcard. Prefer to use [#fixByAddingNullableAnnotationToReturnType] and
+  /// [#fixByAddingNullableAnnotationToType] instead of this method when applicable.
   static SuggestedFix fixByAnnotatingTypeUseOnlyLocationWithNullableAnnotation(
       VisitorState state, Tree typeTree) {
     NullableAnnotationToUse nullableAnnotationToUse = pickNullableAnnotation(state);
@@ -356,9 +344,7 @@ public final class NullnessUtils {
       return new NullableAnnotationToUse(null, name, isTypeUse, isAlreadyInScope);
     }
 
-    /**
-     * Returns a {@link SuggestedFix} to add a {@code Nullable} annotation after the given position.
-     */
+    /// Returns a [SuggestedFix] to add a `Nullable` annotation after the given position.
     final SuggestedFix fixPostfixingOnto(
         int position, VisitorState state, @Nullable String suppressionToRemove) {
       return prepareBuilder(state, suppressionToRemove)
@@ -366,7 +352,7 @@ public final class NullnessUtils {
           .build();
     }
 
-    /** Returns a {@link SuggestedFix} to add a {@code Nullable} annotation after the given tree. */
+    /// Returns a [SuggestedFix] to add a `Nullable` annotation after the given tree.
     final SuggestedFix fixPostfixingOnto(
         Tree tree, VisitorState state, @Nullable String suppressionToRemove) {
       return prepareBuilder(state, suppressionToRemove)
@@ -374,9 +360,7 @@ public final class NullnessUtils {
           .build();
     }
 
-    /**
-     * Returns a {@link SuggestedFix} to add a {@code Nullable} annotation before the given tree.
-     */
+    /// Returns a [SuggestedFix] to add a `Nullable` annotation before the given tree.
     final SuggestedFix fixPrefixingOnto(
         Tree tree, VisitorState state, @Nullable String suppressionToRemove) {
       return prepareBuilder(state, suppressionToRemove).prefixWith(tree, "@" + use() + " ").build();
@@ -489,40 +473,34 @@ public final class NullnessUtils {
     return new NullCheck(name, varSymbol, methodSymbol, polarity);
   }
 
-  /**
-   * A check of a variable or method call against {@code null}, like {@code foo == null}, or {@code
-   * foo.method() == null}.
-   *
-   * <p>This class exposes the variable in two forms: the {@link VarSymbol} (if available) and the
-   * {@link Name} (if the null check was performed on a bare identifier, like {@code foo}). Many
-   * callers restrict themselves to bare identifiers because it's easy and safe: Using {@code
-   * Symbol} might lead code to assume that a null check of {@code foo.bar} guarantees something
-   * about {@code otherFoo.bar}, which is represented by the same symbol.
-   *
-   * <p>Even when restricting themselves to bare identifiers, callers should be wary when examining
-   * code that might:
-   *
-   * <ul>
-   *   <li>assign a new value to the identifier after the null check but before some usage
-   *   <li>declare a new identifier that hides the old
-   * </ul>
-   *
-   * TODO(cpovirk): What our callers really care about is not "bare identifiers" but "this
-   * particular 'instance' of a variable," so we could generalize to cover more cases of that. For
-   * example, we could probably assume that a null check of {@code foo.bar} ensures that {@code
-   * foo.bar} is non-null in the future. One case that might be particularly useful is {@code
-   * this.bar}. We might even go further, assuming that {@code foo.bar()} will continue to have the
-   * same value in some cases.
-   *
-   * @param bareIdentifier Returns the bare identifier that was checked against {@code null}, if the
-   *     null check took that form. Prefer this over {@link
-   *     #varSymbolButUsuallyPreferBareIdentifier} in most cases, as discussed in the class
-   *     documentation.
-   * @param varSymbolButUsuallyPreferBareIdentifier Returns the symbol that was checked against
-   *     {@code null}.
-   * @param methodSymbol Returns the method symbol that was checked against {@code null}, if the
-   *     null check took that form.
-   */
+  /// A check of a variable or method call against `null`, like `foo == null`, or `foo.method() ==
+  /// null`.
+  ///
+  /// This class exposes the variable in two forms: the [VarSymbol] (if available) and the [Name]
+  /// (if the null check was performed on a bare identifier, like `foo`). Many callers restrict
+  /// themselves to bare identifiers because it's easy and safe: Using `Symbol` might lead code to
+  /// assume that a null check of `foo.bar` guarantees something about `otherFoo.bar`, which is
+  /// represented by the same symbol.
+  ///
+  /// Even when restricting themselves to bare identifiers, callers should be wary when examining
+  /// code that might:
+  ///
+  /// - assign a new value to the identifier after the null check but before some usage
+  /// - declare a new identifier that hides the old
+  ///
+  /// TODO(cpovirk): What our callers really care about is not "bare identifiers" but "this
+  /// particular 'instance' of a variable," so we could generalize to cover more cases of that. For
+  /// example, we could probably assume that a null check of `foo.bar` ensures that `foo.bar` is
+  /// non-null in the future. One case that might be particularly useful is `this.bar`. We might
+  /// even go further, assuming that `foo.bar()` will continue to have the same value in some cases.
+  ///
+  /// @param bareIdentifier Returns the bare identifier that was checked against `null`, if the null
+  ///   check took that form. Prefer this over [#varSymbolButUsuallyPreferBareIdentifier] in most
+  ///   cases, as discussed in the class documentation.
+  /// @param varSymbolButUsuallyPreferBareIdentifier Returns the symbol that was checked against
+  ///   `null`.
+  /// @param methodSymbol Returns the method symbol that was checked against `null`, if the null
+  ///   check took that form.
   record NullCheck(
       @Nullable Name bareIdentifier,
       @Nullable VarSymbol varSymbolButUsuallyPreferBareIdentifier,
@@ -548,12 +526,9 @@ public final class NullnessUtils {
     }
   }
 
-  /**
-   * Returns {@code true} if the given expression can definitely evaluate to {@code null} along at
-   * least one execution branch (for example, explicit {@code null} literals, conditional/ternary
-   * branches returning {@code null}, known-null variables, or calls to methods like {@code
-   * Optional.orNull()}).
-   */
+  /// Returns `true` if the given expression can definitely evaluate to `null` along at least one
+  /// execution branch (for example, explicit `null` literals, conditional/ternary branches
+  /// returning `null`, known-null variables, or calls to methods like `Optional.orNull()`).
   public static boolean hasDefinitelyNullBranch(
       ExpressionTree tree,
       Set<VarSymbol> definitelyNullVars,
@@ -645,7 +620,7 @@ public final class NullnessUtils {
     }.visit(tree, null);
   }
 
-  /** Returns true if this is {@code x == null ? x : ...} or similar. */
+  /// Returns true if this is `x == null ? x : ...` or similar.
   private static boolean isTernaryXIfXIsNull(ConditionalExpressionTree tree) {
     NullCheck nullCheck = getNullCheck(tree.getCondition());
     if (nullCheck == null) {
@@ -659,7 +634,7 @@ public final class NullnessUtils {
     return type != null && state.getTypes().isSubtype(type, JAVA_LANG_VOID_TYPE.get(state));
   }
 
-  /** Returns x if the path's leaf is the only statement inside {@code if (x == null) { ... }}. */
+  /// Returns x if the path's leaf is the only statement inside `if (x == null) { ... }`.
   static ImmutableSet<Name> varsProvenNullByParentIf(TreePath path) {
     Tree parent = path.getParentPath().getLeaf();
     if (!(parent instanceof BlockTree blockTree)) {
@@ -685,7 +660,7 @@ public final class NullnessUtils {
     return ImmutableSet.of(nullCheck.bareIdentifier());
   }
 
-  /** Returns x if the path's leaf is inside {@code (x == null) ? ... : ...}. */
+  /// Returns x if the path's leaf is inside `(x == null) ? ... : ...`.
   public static ImmutableSet<Name> varsProvenNullByParentTernary(TreePath path) {
     Tree child = path.getLeaf();
     for (Tree tree : path.getParentPath()) {

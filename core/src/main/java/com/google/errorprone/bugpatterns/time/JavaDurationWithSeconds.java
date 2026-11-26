@@ -31,7 +31,7 @@ import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 
-/** Check for calls to {@code duration.withSeconds(long)}. */
+/// Check for calls to `duration.withSeconds(long)`.
 @BugPattern(
     summary = "Use of java.time.Duration.withSeconds(long) is not allowed.",
     explanation =

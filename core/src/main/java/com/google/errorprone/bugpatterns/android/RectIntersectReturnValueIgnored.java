@@ -29,9 +29,7 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import javax.inject.Inject;
 
-/**
- * @author avenet@google.com (Arnaud J. Venet)
- */
+/// @author avenet@google.com (Arnaud J. Venet)
 @BugPattern(
     summary = "Return value of android.graphics.Rect.intersect() must be checked",
     severity = ERROR)

@@ -41,11 +41,9 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.logging.Logger;
 
-/**
- * Template representing a sequence of consecutive statements.
- *
- * @author lowasser@google.com (Louis Wasserman)
- */
+/// Template representing a sequence of consecutive statements.
+///
+/// @author lowasser@google.com (Louis Wasserman)
 @AutoValue
 public abstract class BlockTemplate extends Template<BlockTemplateMatch> {
   private static final Logger logger = Logger.getLogger(BlockTemplate.class.toString());
@@ -104,10 +102,8 @@ public abstract class BlockTemplate extends Template<BlockTemplateMatch> {
 
   abstract ImmutableList<UStatement> templateStatements();
 
-  /**
-   * If the tree is a {@link JCBlock}, returns a list of disjoint matches corresponding to the exact
-   * list of template statements found consecutively; otherwise, returns an empty list.
-   */
+  /// If the tree is a [JCBlock], returns a list of disjoint matches corresponding to the exact list
+  /// of template statements found consecutively; otherwise, returns an empty list.
   @Override
   public Iterable<BlockTemplateMatch> match(
       JCTree tree, Context context, JCCompilationUnit compilationUnit) {
@@ -196,7 +192,7 @@ public abstract class BlockTemplate extends Template<BlockTemplateMatch> {
     return choice.concat(Choice.of(List.<BlockTemplateMatch>nil()));
   }
 
-  /** Returns a {@code String} representation of a statement, including semicolon. */
+  /// Returns a `String` representation of a statement, including semicolon.
   private static String printStatement(Inliner inliner, JCStatement statement) {
     StringWriter writer = new StringWriter();
     try {
@@ -207,10 +203,7 @@ public abstract class BlockTemplate extends Template<BlockTemplateMatch> {
     return writer.toString();
   }
 
-  /**
-   * Returns a {@code String} representation of a sequence of statements, with semicolons and
-   * newlines.
-   */
+  /// Returns a `String` representation of a sequence of statements, with semicolons and newlines.
   private static String printStatements(Inliner inliner, Iterable<JCStatement> statements) {
     StringWriter writer = new StringWriter();
     try {

@@ -27,7 +27,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** Tests for {@link StatementSwitchToExpressionSwitch}. */
+/// Tests for [StatementSwitchToExpressionSwitch].
 @RunWith(JUnit4.class)
 public final class StatementSwitchToExpressionSwitchTest {
   private static final String SUIT =
@@ -5562,11 +5562,9 @@ public final class StatementSwitchToExpressionSwitchTest {
         .doTest();
   }
 
-  /**
-   * Asserts that there is exactly one suggested fix and returns it.
-   *
-   * <p>Similar to {@code FixChoosers.FIRST}, but also asserts that there is exactly one fix.
-   */
+  /// Asserts that there is exactly one suggested fix and returns it.
+  ///
+  /// Similar to `FixChoosers.FIRST`, but also asserts that there is exactly one fix.
   public static Fix assertOneFixAndChoose(List<Fix> fixes) {
     assertThat(fixes).hasSize(1);
     return fixes.get(0);

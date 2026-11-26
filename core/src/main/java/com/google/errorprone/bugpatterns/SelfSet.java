@@ -36,7 +36,7 @@ import com.sun.source.tree.MethodInvocationTree;
 import javax.inject.Inject;
 import org.safere.Pattern;
 
-/** A BugPattern; see the summary. */
+/// A BugPattern; see the summary.
 @BugPattern(
     severity = WARNING,
     summary = "This setter seems to be invoked with a value from its own getter. Is it redundant?")

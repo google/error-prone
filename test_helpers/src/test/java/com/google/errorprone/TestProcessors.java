@@ -36,10 +36,10 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import javax.tools.Diagnostic;
 
-/** Shared annotation processor fixtures for test helper tests. */
+/// Shared annotation processor fixtures for test helper tests.
 public final class TestProcessors {
 
-  /** Processor that fails compilation whenever {@code @Trigger} is present. */
+  /// Processor that fails compilation whenever `@Trigger` is present.
   @SupportedAnnotationTypes("Trigger")
   public static final class FailingProcessor extends AbstractProcessor {
     @Override
@@ -60,11 +60,9 @@ public final class TestProcessors {
     }
   }
 
-  /**
-   * Writes a JAR in {@code directory} containing {@code processorClass} and a {@code
-   * META-INF/services/javax.annotation.processing.Processor} entry registering it, and returns the
-   * path to the JAR.
-   */
+  /// Writes a JAR in `directory` containing `processorClass` and a
+  /// `META-INF/services/javax.annotation.processing.Processor` entry registering it, and returns
+  /// the path to the JAR.
   public static Path createProcessorJar(Path directory, Class<? extends Processor> processorClass)
       throws IOException {
     Path jarPath = directory.resolve("processor.jar");

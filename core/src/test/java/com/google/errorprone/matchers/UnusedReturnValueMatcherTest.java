@@ -33,11 +33,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** Tests for {@link UnusedReturnValueMatcher}. */
+/// Tests for [UnusedReturnValueMatcher].
 @RunWith(JUnit4.class)
 public final class UnusedReturnValueMatcherTest {
 
-  /** Checker using {@link UnusedReturnValueMatcher}. */
+  /// Checker using [UnusedReturnValueMatcher].
   @BugPattern(severity = WARNING, summary = "bad")
   public static class Checker extends BugChecker
       implements MethodInvocationTreeMatcher, NewClassTreeMatcher, MemberReferenceTreeMatcher {
@@ -301,7 +301,7 @@ public final class UnusedReturnValueMatcherTest {
         .doTest();
   }
 
-  /** {@link Checker} with {@code allowInExceptionTesting = false}. */
+  /// [Checker] with `allowInExceptionTesting = false`.
   @BugPattern(severity = WARNING, summary = "bad")
   public static class NotAllowedInExceptionTesting extends Checker {
     @Override

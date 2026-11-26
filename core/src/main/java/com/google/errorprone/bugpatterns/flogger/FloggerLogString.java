@@ -30,13 +30,11 @@ import com.google.errorprone.matchers.Matcher;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 
-/**
- * Detects invocations of {@code LoggingApi.log(String)} for which the argument is not a
- * compile-time constant and provides suggested alternatives.
- *
- * <p>Currently the suggestions are only made in the error message; eventually most of these things
- * should be actual suggested fixes.
- */
+/// Detects invocations of `LoggingApi.log(String)` for which the argument is not a compile-time
+/// constant and provides suggested alternatives.
+///
+/// Currently the suggestions are only made in the error message; eventually most of these things
+/// should be actual suggested fixes.
 @BugPattern(
     summary =
         "Arguments to log(String) must be compile-time constants or parameters annotated with"

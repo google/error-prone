@@ -38,11 +38,9 @@ import com.sun.tools.javac.tree.JCTree.JCMethodInvocation;
 import java.util.Optional;
 import org.safere.Pattern;
 
-/**
- * Utility class to find calls "nearby" other calls.
- *
- * <p>TODO(glorioso): Coalesce this with ByteBufferBackingArray since they have similar aims?
- */
+/// Utility class to find calls "nearby" other calls.
+///
+/// TODO(glorioso): Coalesce this with ByteBufferBackingArray since they have similar aims?
 public final class NearbyCallers {
   private NearbyCallers() {}
 
@@ -57,23 +55,21 @@ public final class NearbyCallers {
               .withNoParameters(),
           not(instanceMethod().anyClass().namedAnyOf("getCachedSize", "getSerializedSize")));
 
-  /**
-   * Returns whether or not there is a call matching {@code secondaryMethodMatcher} with the same
-   * receiver as the method call represented by {@code primaryMethod} in "nearby" code.
-   *
-   * <p>This is generally used to ensure that developers calling {@code primaryMethod} should likely
-   * also be checking {@code secondaryMethodMatcher} (as a signal that they understand the
-   * edge-cases of {@code primaryMethod}).
-   *
-   * @param primaryMethod the tree that contains the primary method call (e.g.: what might have
-   *     weird edge-cases).
-   * @param secondaryMethodMatcher A matcher to identify the secondary method call (e.g.: that shows
-   *     a demonstration of the knowledge of the edge-cases in {@code primaryMethod})
-   * @param state the visitor state of this matcher
-   * @param checkProtoChains whether or not to check a chain of protobuf getter methods to see if
-   *     it's the 'same receiver' (e.g., {@code a.getB().getC().getSeconds()} and {@code
-   *     a.getB().getC().getNanos()}
-   */
+  /// Returns whether or not there is a call matching `secondaryMethodMatcher` with the same
+  /// receiver as the method call represented by `primaryMethod` in "nearby" code.
+  ///
+  /// This is generally used to ensure that developers calling `primaryMethod` should likely also be
+  /// checking `secondaryMethodMatcher` (as a signal that they understand the edge-cases of
+  /// `primaryMethod`).
+  ///
+  /// @param primaryMethod the tree that contains the primary method call (e.g.: what might have
+  ///   weird edge-cases).
+  /// @param secondaryMethodMatcher A matcher to identify the secondary method call (e.g.: that
+  ///   shows a demonstration of the knowledge of the edge-cases in `primaryMethod`)
+  /// @param state the visitor state of this matcher
+  /// @param checkProtoChains whether or not to check a chain of protobuf getter methods to see if
+  ///   it's the 'same receiver' (e.g., `a.getB().getC().getSeconds()` and
+  ///   `a.getB().getC().getNanos()`
   static boolean containsCallToSameReceiverNearby(
       MethodInvocationTree primaryMethod,
       Matcher<ExpressionTree> secondaryMethodMatcher,

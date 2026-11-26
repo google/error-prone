@@ -24,14 +24,10 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.Collection;
 
-/**
- * Compatibility shims for {@link Log}.
- *
- * <ul>
- *   <li>Return type and static inner classes changed in JDK 25
- *       https://github.com/openjdk/jdk/commit/4890b74c048a1472b87687294c316ecfb324e4ba
- * </ul>
- */
+/// Compatibility shims for [Log].
+///
+/// - Return type and static inner classes changed in JDK 25
+///   https://github.com/openjdk/jdk/commit/4890b74c048a1472b87687294c316ecfb324e4ba
 public final class ErrorProneLog {
 
   private static final Constructor<DiscardDiagnosticHandler>

@@ -56,7 +56,7 @@ import java.util.function.Supplier;
 import java.util.stream.Stream;
 import javax.lang.model.element.Modifier;
 
-/** Flags instances of non-API types from being accepted or returned in APIs. */
+/// Flags instances of non-API types from being accepted or returned in APIs.
 @BugPattern(
     summary = "Certain types should not be passed across API boundaries.",
     // something about reducing build visibility
@@ -290,7 +290,7 @@ public final class NonApiType extends BugChecker implements MethodTreeMatcher {
     return NO_MATCH;
   }
 
-  /** Returns true if the method and all of its enclosing classes are {@code public}. */
+  /// Returns true if the method and all of its enclosing classes are `public`.
   private static boolean isPubliclyVisible(MethodSymbol method) {
     for (Symbol symbol = method;
         symbol != null && !(symbol instanceof PackageSymbol);
@@ -302,7 +302,7 @@ public final class NonApiType extends BugChecker implements MethodTreeMatcher {
     return true;
   }
 
-  /** Returns the methods (if any) that the given method overrides (even "effective overrides"). */
+  /// Returns the methods (if any) that the given method overrides (even "effective overrides").
   private static Stream<MethodSymbol> superMethods(MethodSymbol method, VisitorState state) {
     // constructors, private methods, and static methods can never override another method
     if (method.isConstructor() || method.isPrivate() || method.isStatic()) {

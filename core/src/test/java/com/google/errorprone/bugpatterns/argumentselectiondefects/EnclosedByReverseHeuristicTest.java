@@ -30,15 +30,13 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * Tests for EnclosedByReverseHeuristic
- *
- * @author andrewrice@google.com (Andrew Rice)
- */
+/// Tests for EnclosedByReverseHeuristic
+///
+/// @author andrewrice@google.com (Andrew Rice)
 @RunWith(JUnit4.class)
 public class EnclosedByReverseHeuristicTest {
 
-  /** A {@link BugChecker} which runs the EnclosedByReverseHeuristic and prints the result */
+  /// A [BugChecker] which runs the EnclosedByReverseHeuristic and prints the result
   @BugPattern(
       name = "EnclosedByReverseHeuristic",
       severity = SeverityLevel.ERROR,

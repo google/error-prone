@@ -28,10 +28,8 @@ import com.google.errorprone.matchers.Matcher;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 
-/**
- * Checks for usages of {@code per} without a corresponding call to {@code atMostEvery}, {@code
- * every}, or {@code onAverageEvery} in the same logging chain.
- */
+/// Checks for usages of `per` without a corresponding call to `atMostEvery`, `every`, or
+/// `onAverageEvery` in the same logging chain.
 @BugPattern(
     summary =
         "per() methods are no-ops unless combined with atMostEvery(), every(), or onAverageEvery()",

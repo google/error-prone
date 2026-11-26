@@ -27,7 +27,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** {@link ImmutableChecker}Test */
+/// [ImmutableChecker]Test
 @RunWith(JUnit4.class)
 public class ImmutableCheckerTest {
 
@@ -1889,7 +1889,7 @@ class Test extends Super {
         .doTest();
   }
 
-  /** A sample superclass with a mutable field. */
+  /// A sample superclass with a mutable field.
   public static class SuperFieldSuppressionTest {
     @LazyInit public int x = 0;
 
@@ -1925,7 +1925,7 @@ class Test extends Super {
         .doTest();
   }
 
-  /** Test class annotated with @Immutable. */
+  /// Test class annotated with @Immutable.
   @Immutable(containerOf = {"T"})
   public static class ClassPathTest<T> {}
 

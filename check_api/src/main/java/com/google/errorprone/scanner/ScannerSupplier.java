@@ -43,15 +43,13 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
-/**
- * Supplies {@link Scanner}s and provides access to the backing sets of all {@link BugChecker}s and
- * enabled {@link BugChecker}s.
- */
+/// Supplies [Scanner]s and provides access to the backing sets of all [BugChecker]s and enabled
+/// [BugChecker]s.
 public abstract class ScannerSupplier implements Supplier<Scanner> {
 
   /* Static factory methods and helpers */
 
-  /** Returns a {@link ScannerSupplier} with a specific list of {@link BugChecker} classes. */
+  /// Returns a [ScannerSupplier] with a specific list of [BugChecker] classes.
   @SafeVarargs
   public static ScannerSupplier fromBugCheckerClasses(
       Class<? extends BugChecker>... checkerClasses) {
@@ -67,7 +65,7 @@ public abstract class ScannerSupplier implements Supplier<Scanner> {
     return severities.buildOrThrow();
   }
 
-  /** Returns a {@link ScannerSupplier} with a specific list of {@link BugChecker} classes. */
+  /// Returns a [ScannerSupplier] with a specific list of [BugChecker] classes.
   public static ScannerSupplier fromBugCheckerClasses(
       Iterable<Class<? extends BugChecker>> checkers) {
     ImmutableList.Builder<BugCheckerInfo> builder = ImmutableList.builder();
@@ -77,7 +75,7 @@ public abstract class ScannerSupplier implements Supplier<Scanner> {
     return fromBugCheckerInfos(builder.build());
   }
 
-  /** Returns a {@link ScannerSupplier} built from a list of {@link BugCheckerInfo}s. */
+  /// Returns a [ScannerSupplier] built from a list of [BugCheckerInfo]s.
   public static ScannerSupplier fromBugCheckerInfos(Iterable<BugCheckerInfo> checkers) {
     ImmutableBiMap<String, BugCheckerInfo> allChecks =
         Streams.stream(checkers)
@@ -90,26 +88,19 @@ public abstract class ScannerSupplier implements Supplier<Scanner> {
         ErrorProneFlags.empty());
   }
 
-  /**
-   * Returns a {@link ScannerSupplier} that just returns the {@link Scanner} that was passed in.
-   * Used mostly for testing. Does not implement any method other than {@link
-   * ScannerSupplier#get()}.
-   */
+  /// Returns a [ScannerSupplier] that just returns the [Scanner] that was passed in. Used mostly
+  /// for testing. Does not implement any method other than [ScannerSupplier#get()].
   public static ScannerSupplier fromScanner(Scanner scanner) {
     return new InstanceReturningScannerSupplierImpl(scanner);
   }
 
   /* Instance methods */
 
-  /**
-   * Returns a map of check name to {@link BugCheckerInfo} for all {@link BugCheckerInfo}s in this
-   * {@link ScannerSupplier}, including disabled ones.
-   */
+  /// Returns a map of check name to [BugCheckerInfo] for all [BugCheckerInfo]s in this
+  /// [ScannerSupplier], including disabled ones.
   public abstract ImmutableBiMap<String, BugCheckerInfo> getAllChecks();
 
-  /**
-   * Returns the set of {@link BugCheckerInfo}s that are enabled in this {@link ScannerSupplier}.
-   */
+  /// Returns the set of [BugCheckerInfo]s that are enabled in this [ScannerSupplier].
   public abstract ImmutableSet<BugCheckerInfo> getEnabledChecks();
 
   public abstract ImmutableMap<String, SeverityLevel> severities();
@@ -122,23 +113,19 @@ public abstract class ScannerSupplier implements Supplier<Scanner> {
 
   public abstract ErrorProneFlags getFlags();
 
-  /**
-   * Applies options to this {@link ScannerSupplier}.
-   *
-   * <p>Command-line options to override check severities may do any of the following:
-   *
-   * <ul>
-   *   <li>Enable a check that is currently off
-   *   <li>Disable a check that is currently on
-   *   <li>Change the severity of a check that is on, promoting a warning to an error or demoting an
-   *       error to a warning
-   * </ul>
-   *
-   * @param errorProneOptions an {@link ErrorProneOptions} object that encapsulates the overrides
-   *     for this compilation
-   * @throws InvalidCommandLineOptionException if the override map attempts to disable a check that
-   *     may not be disabled
-   */
+  /// Applies options to this [ScannerSupplier].
+  ///
+  /// Command-line options to override check severities may do any of the following:
+  ///
+  /// - Enable a check that is currently off
+  /// - Disable a check that is currently on
+  /// - Change the severity of a check that is on, promoting a warning to an error or demoting an
+  ///   error to a warning
+  ///
+  /// @param errorProneOptions an [ErrorProneOptions] object that encapsulates the overrides for
+  ///   this compilation
+  /// @throws InvalidCommandLineOptionException if the override map attempts to disable a check that
+  ///   may not be disabled
   @CheckReturnValue
   public ScannerSupplier applyOverrides(ErrorProneOptions errorProneOptions) {
     ImmutableMap<String, Severity> severityOverrides = errorProneOptions.getSeverityMap();
@@ -242,11 +229,8 @@ public abstract class ScannerSupplier implements Supplier<Scanner> {
         ErrorProneFlags.fromMap(flagsMap));
   }
 
-  /**
-   * Composes this {@link ScannerSupplier} with the {@code other} {@link ScannerSupplier}. The set
-   * of checks that are turned on is the intersection of the checks on in {@code this} and {@code
-   * other}.
-   */
+  /// Composes this [ScannerSupplier] with the `other` [ScannerSupplier]. The set of checks that are
+  /// turned on is the intersection of the checks on in `this` and `other`.
   @CheckReturnValue
   public ScannerSupplier plus(ScannerSupplier other) {
     HashBiMap<String, BugCheckerInfo> combinedAllChecks = HashBiMap.create(this.getAllChecks());
@@ -287,10 +271,8 @@ public abstract class ScannerSupplier implements Supplier<Scanner> {
         combinedFlags);
   }
 
-  /**
-   * Filters this {@link ScannerSupplier} based on the provided predicate. Returns a {@link
-   * ScannerSupplier} with only the checks enabled that satisfy the predicate.
-   */
+  /// Filters this [ScannerSupplier] based on the provided predicate. Returns a [ScannerSupplier]
+  /// with only the checks enabled that satisfy the predicate.
   @CheckReturnValue
   public ScannerSupplier filter(Predicate<? super BugCheckerInfo> predicate) {
     ImmutableSet<String> disabled =

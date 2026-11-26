@@ -91,7 +91,7 @@ import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 import org.jspecify.annotations.Nullable;
 
-/** Checker that detects likely time-unit mismatches by looking at identifier names. */
+/// Checker that detects likely time-unit mismatches by looking at identifier names.
 @BugPattern(
     summary =
         "An value that appears to be represented in one unit is used where another appears to be "
@@ -322,10 +322,8 @@ public final class TimeUnitMismatch extends BugChecker
    * uses the same mismatch rules for division as for the other two.
    */
 
-  /**
-   * Checks whether this call is a call to {@code TimeUnit.to*} and, if so, whether the units of its
-   * parameter and its receiver disagree.
-   */
+  /// Checks whether this call is a call to `TimeUnit.to*` and, if so, whether the units of its
+  /// parameter and its receiver disagree.
   @CanIgnoreReturnValue
   private boolean checkTimeUnitToUnit(
       MethodInvocationTree tree, MethodSymbol methodSymbol, VisitorState state) {
@@ -485,14 +483,12 @@ public final class TimeUnitMismatch extends BugChecker
         .build();
   }
 
-  /**
-   * Extracts the "argument name," as defined in section 2.1 of "Nomen est Omen," from the
-   * expression. This translates a potentially complex expression into a simple name that can be
-   * used by the similarity metric.
-   *
-   * <p>"Nomen est Omen: Exploring and Exploiting Similarities between Argument and Parameter
-   * Names," ICSE 2016
-   */
+  /// Extracts the "argument name," as defined in section 2.1 of "Nomen est Omen," from the
+  /// expression. This translates a potentially complex expression into a simple name that can be
+  /// used by the similarity metric.
+  ///
+  /// "Nomen est Omen: Exploring and Exploiting Similarities between Argument and Parameter Names,"
+  /// ICSE 2016
   private static @Nullable String extractArgumentName(ExpressionTree expr) {
     switch (expr) {
       case TypeCastTree typeCast -> {
@@ -581,16 +577,14 @@ public final class TimeUnitMismatch extends BugChecker
     return unit == null ? null : TreeAndTimeUnit.of(tree, unit, unit);
   }
 
-  /**
-   * The result of inspecting a tree. Given {@code getFooSeconds() * 1000}, {@link
-   * TreeAndTimeUnit#innermostTree()} refers to {@code getFooSeconds()}, {@link
-   * TreeAndTimeUnit#outermostUnit()} is MILLISECONDS, and {@link TreeAndTimeUnit#innermostUnit()}
-   * is SECONDS.
-   *
-   * @param innermostTree The innermost tree expressing a unit, ignoring any conversions around it.
-   * @param outermostUnit The effective unit of the expression we started from.
-   * @param innermostUnit The underlying unit of {@link #innermostTree()}.
-   */
+  /// The result of inspecting a tree. Given `getFooSeconds() * 1000`,
+  /// [TreeAndTimeUnit#innermostTree()] refers to `getFooSeconds()`,
+  /// [TreeAndTimeUnit#outermostUnit()] is MILLISECONDS, and [TreeAndTimeUnit#innermostUnit()] is
+  /// SECONDS.
+  ///
+  /// @param innermostTree The innermost tree expressing a unit, ignoring any conversions around it.
+  /// @param outermostUnit The effective unit of the expression we started from.
+  /// @param innermostUnit The underlying unit of [#innermostTree()].
   private record TreeAndTimeUnit(
       ExpressionTree innermostTree, TimeUnit outermostUnit, TimeUnit innermostUnit) {
     static TreeAndTimeUnit of(ExpressionTree tree, TimeUnit timeUnit, TimeUnit underlyingUnit) {
@@ -696,14 +690,14 @@ public final class TimeUnitMismatch extends BugChecker
     return units.size() == 1 ? getOnlyElement(units) : null;
   }
 
-  /** Returns true if the input looks like [from, seconds]. */
+  /// Returns true if the input looks like `[from, seconds]`.
   private static boolean hasNameOfFromUnits(List<String> words) {
     return words.size() == 2
         && words.get(0).equals("from")
         && UNIT_FOR_SUFFIX.containsKey(words.get(1));
   }
 
-  /** Returns true if the input looks like [five, seconds]. */
+  /// Returns true if the input looks like `[five, seconds]`.
   private static boolean isNamedForNumberOfUnits(List<String> words) {
     return words.size() == 2
         && NUMBER_WORDS.contains(words.get(0))
@@ -734,10 +728,8 @@ public final class TimeUnitMismatch extends BugChecker
           "fifty",
           "sixty");
 
-  /**
-   * Converts "MS"/"MSec"/etc. to "Ms"/etc. and "microSeconds"/"MicroSeconds"/etc. to
-   * "microseconds"/"Microseconds"/etc.
-   */
+  /// Converts "MS"/"MSec"/etc. to "Ms"/etc. and "microSeconds"/"MicroSeconds"/etc. to
+  /// "microseconds"/"Microseconds"/etc.
   private static ImmutableList<String> fixUnitCamelCase(List<String> words) {
     ImmutableList.Builder<String> out = ImmutableList.builderWithExpectedSize(words.size());
     int i = 0;
@@ -811,10 +803,8 @@ public final class TimeUnitMismatch extends BugChecker
               .inverse()
               .entries());
 
-  /**
-   * {@link Description#NO_MATCH}, returned by all our {@code match*} methods because any matches
-   * have already been reported by manual calls to {@link VisitorState#reportMatch}.
-   */
+  /// [Description#NO_MATCH], returned by all our `match*` methods because any matches have already
+  /// been reported by manual calls to [VisitorState#reportMatch].
   private static final Description ANY_MATCHES_WERE_ALREADY_REPORTED = Description.NO_MATCH;
 
   private static final Supplier<Type> JAVA_UTIL_CONCURRENT_TIMEUNIT =

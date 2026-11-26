@@ -67,10 +67,8 @@ import com.sun.tools.javac.util.Name;
 import java.util.stream.Stream;
 import javax.lang.model.type.TypeKind;
 
-/**
- * Matches expressions that invoke or reference a non-void method or constructor and which do not
- * use their return value and are not in a context where non-use of the return value is allowed.
- */
+/// Matches expressions that invoke or reference a non-void method or constructor and which do not
+/// use their return value and are not in a context where non-use of the return value is allowed.
 @CheckReturnValue
 public final class UnusedReturnValueMatcher implements Matcher<ExpressionTree> {
 
@@ -87,7 +85,7 @@ public final class UnusedReturnValueMatcher implements Matcher<ExpressionTree> {
       Sets.immutableEnumSet(
           Sets.filter(ALLOW_MATCHERS.keySet(), k -> !k.equals(AllowReason.EXCEPTION_TESTING)));
 
-  /** Gets an instance of this matcher. */
+  /// Gets an instance of this matcher.
   public static UnusedReturnValueMatcher get(boolean allowInExceptionThrowers) {
     return new UnusedReturnValueMatcher(
         allowInExceptionThrowers ? ALLOW_MATCHERS.keySet() : DISALLOW_EXCEPTION_TESTING);
@@ -122,10 +120,8 @@ public final class UnusedReturnValueMatcher implements Matcher<ExpressionTree> {
     return isVoid(state.getTypes().findDescriptorType(getType(tree)).getReturnType());
   }
 
-  /**
-   * Returns {@code true} if and only if the given {@code tree} is an invocation of or reference to
-   * a constructor or non-{@code void} method for which the return value is considered unused.
-   */
+  /// Returns `true` if and only if the given `tree` is an invocation of or reference to a
+  /// constructor or non-`void` method for which the return value is considered unused.
   public static boolean isReturnValueUnused(ExpressionTree tree, VisitorState state) {
     Symbol sym = getSymbol(tree);
     if (!(sym instanceof MethodSymbol methodSymbol) || isVoid(tree, methodSymbol)) {
@@ -143,18 +139,14 @@ public final class UnusedReturnValueMatcher implements Matcher<ExpressionTree> {
         : parent instanceof ExpressionStatementTree;
   }
 
-  /**
-   * Returns {@code true} if the given expression is allowed to have an unused return value based on
-   * its context.
-   */
+  /// Returns `true` if the given expression is allowed to have an unused return value based on its
+  /// context.
   public boolean isAllowed(ExpressionTree tree, VisitorState state) {
     return getAllowReasons(tree, state).findAny().isPresent();
   }
 
-  /**
-   * Returns a stream of reasons the given expression is allowed to have an unused return value
-   * based on its context.
-   */
+  /// Returns a stream of reasons the given expression is allowed to have an unused return value
+  /// based on its context.
   public Stream<AllowReason> getAllowReasons(ExpressionTree tree, VisitorState state) {
     return validAllowReasons.stream()
         .filter(reason -> ALLOW_MATCHERS.get(reason).matches(tree, state));
@@ -241,7 +233,7 @@ public final class UnusedReturnValueMatcher implements Matcher<ExpressionTree> {
         && getOnlyElement(parentBlock.getStatements()) == t;
   }
 
-  /** Allow return values to be ignored in tests that expect an exception to be thrown. */
+  /// Allow return values to be ignored in tests that expect an exception to be thrown.
   public static boolean expectedExceptionTest(VisitorState state) {
     // Allow unused return values in tests that check for thrown exceptions, e.g.:
     //
@@ -261,10 +253,7 @@ public final class UnusedReturnValueMatcher implements Matcher<ExpressionTree> {
           instanceMethod().onDescendantOf("org.mockito.stubbing.Stubber").named("when"),
           instanceMethod().onDescendantOf("org.mockito.InOrder").named("verify"));
 
-  /**
-   * Don't match the method that is invoked through {@code Mockito.verify(t)} or {@code
-   * doReturn(val).when(t)}.
-   */
+  /// Don't match the method that is invoked through `Mockito.verify(t)` or `doReturn(val).when(t)`.
   public static boolean mockitoInvocation(Tree tree, VisitorState state) {
     if (!(tree instanceof JCMethodInvocation invocation)) {
       return false;
@@ -276,22 +265,18 @@ public final class UnusedReturnValueMatcher implements Matcher<ExpressionTree> {
     return MOCKITO_MATCHER.matches(receiver, state);
   }
 
-  /**
-   * Enumeration of known reasons that an unused return value may be allowed because of the context
-   * in which the method is used. Suppression is not considered here; these are reasons that don't
-   * have anything to do with specific checkers.
-   */
+  /// Enumeration of known reasons that an unused return value may be allowed because of the context
+  /// in which the method is used. Suppression is not considered here; these are reasons that don't
+  /// have anything to do with specific checkers.
   public enum AllowReason {
-    /**
-     * The context is one in which the method is probably being called to test for an exception it
-     * throws.
-     */
+    /// The context is one in which the method is probably being called to test for an exception it
+    /// throws.
     EXCEPTION_TESTING,
-    /** The context is a mocking call such as in {@code verify(foo).getBar();}. */
+    /// The context is a mocking call such as in `verify(foo).getBar();`.
     MOCKING_CALL,
-    /** The method returns {@code java.lang.Void} at this use-site. */
+    /// The method returns `java.lang.Void` at this use-site.
     RETURNS_JAVA_LANG_VOID,
-    /** The method is a known Builder setter method (that always returns "this"). */
+    /// The method is a known Builder setter method (that always returns "this").
     KNOWN_BUILDER_SETTER,
   }
 }

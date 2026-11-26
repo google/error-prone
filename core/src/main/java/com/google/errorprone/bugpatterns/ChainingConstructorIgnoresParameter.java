@@ -45,23 +45,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Checks, if two constructors in a class both accept {@code Foo foo} and one calls the other, that
- * the caller passes {@code foo} as a parameter. The goal is to catch copy-paste errors:
- *
- * <pre>
- *   MissileLauncher(Location target, boolean askForConfirmation) {
- *     ...
- *   }
- *   MissileLauncher(Location target) {
- *     this(target, false);
- *   }
- *   MissileLauncher(boolean askForConfirmation) {
- *     this(TEST_TARGET, <b>false</b>); // should be askForConfirmation
- *   }</pre>
- *
- * @author cpovirk@google.com (Chris Povirk)
- */
+/// Checks, if two constructors in a class both accept `Foo foo` and one calls the other, that the
+/// caller passes `foo` as a parameter. The goal is to catch copy-paste errors:
+///
+/// <pre>
+///   MissileLauncher(Location target, boolean askForConfirmation) {
+///     ...
+///   }
+///   MissileLauncher(Location target) {
+///     this(target, false);
+///   }
+///   MissileLauncher(boolean askForConfirmation) {
+///     this(TEST_TARGET, <b>false</b>); // should be askForConfirmation
+///   }</pre>
+///
+/// @author cpovirk@google.com (Chris Povirk)
 @BugPattern(
     severity = ERROR,
     summary =

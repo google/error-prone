@@ -56,7 +56,7 @@ import com.sun.source.util.TreePath;
 import java.util.function.Function;
 import javax.inject.Inject;
 
-/** Suggests comparing the result of {@code compareTo} to only {@code 0}. */
+/// Suggests comparing the result of `compareTo` to only `0`.
 @BugPattern(
     summary =
         """

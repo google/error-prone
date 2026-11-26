@@ -50,11 +50,9 @@ import java.util.Map;
 import java.util.logging.Logger;
 import javax.lang.model.element.Modifier;
 
-/**
- * Scanner implementation to extract a single Refaster rule from a {@code ClassTree}.
- *
- * @author lowasser@google.com (Louis Wasserman)
- */
+/// Scanner implementation to extract a single Refaster rule from a `ClassTree`.
+///
+/// @author lowasser@google.com (Louis Wasserman)
 public final class RefasterRuleBuilderScanner extends SimpleTreeVisitor<Void, Void> {
   private static final Logger logger =
       Logger.getLogger(RefasterRuleBuilderScanner.class.toString());

@@ -36,7 +36,7 @@ import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Types;
 import javax.lang.model.type.UnionType;
 
-/** A BugPattern; see the summary. */
+/// A BugPattern; see the summary.
 @BugPattern(summary = "throwIfUnchecked(knownCheckedException) is a no-op.", severity = ERROR)
 public class ThrowIfUncheckedKnownChecked extends BugChecker
     implements MethodInvocationTreeMatcher {

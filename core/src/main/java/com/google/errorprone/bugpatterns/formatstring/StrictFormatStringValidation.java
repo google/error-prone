@@ -45,10 +45,8 @@ import java.util.List;
 import javax.lang.model.element.ElementKind;
 import org.jspecify.annotations.Nullable;
 
-/**
- * Format string validation utility that fails on more cases than {@link FormatStringValidation} to
- * enforce strict format string checking.
- */
+/// Format string validation utility that fails on more cases than [FormatStringValidation] to
+/// enforce strict format string checking.
 public final class StrictFormatStringValidation {
 
   private static final Matcher<ExpressionTree> MOCKITO_MATCHERS =
@@ -101,7 +99,7 @@ public final class StrictFormatStringValidation {
     }
   }
 
-  /** Helps {@code validate()} validate a format string that is declared as a method parameter. */
+  /// Helps `validate()` validate a format string that is declared as a method parameter.
   private static @Nullable ValidationResult validateFormatStringParameter(
       ExpressionTree formatStringTree,
       Symbol formatStringSymbol,
@@ -158,11 +156,9 @@ public final class StrictFormatStringValidation {
     return null;
   }
 
-  /**
-   * Helps {@code validate()} validate a format string that is a variable, but not a parameter. This
-   * method assumes that the format string variable has already been asserted to be final or
-   * effectively final.
-   */
+  /// Helps `validate()` validate a format string that is a variable, but not a parameter. This
+  /// method assumes that the format string variable has already been asserted to be final or
+  /// effectively final.
   private static ValidationResult validateFormatStringVariable(
       ExpressionTree formatStringTree,
       Symbol formatStringSymbol,
@@ -249,17 +245,12 @@ public final class StrictFormatStringValidation {
     }
   }
 
-  /**
-   * Returns whether an input {@link Symbol} is a format string in a {@link FormatMethod}. This is
-   * true if the {@link Symbol} is a {@link String} parameter in a {@link FormatMethod} and is
-   * either:
-   *
-   * <ol>
-   *   <li>Annotated with {@link FormatString}
-   *   <li>The first {@link String} parameter in the method with no other parameters annotated
-   *       {@link FormatString}.
-   * </ol>
-   */
+  /// Returns whether an input [Symbol] is a format string in a [FormatMethod]. This is true if the
+  /// [Symbol] is a [String] parameter in a [FormatMethod] and is either:
+  ///
+  /// 1. Annotated with [FormatString]
+  /// 1. The first [String] parameter in the method with no other parameters annotated
+  ///    [FormatString].
   private static boolean isFormatStringParameter(Symbol formatString, VisitorState state) {
     Type stringType = state.getSymtab().stringType;
 

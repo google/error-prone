@@ -22,7 +22,7 @@ import com.google.errorprone.VisitorState;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Type;
 
-/** Analysis helpers for flogger. */
+/// Analysis helpers for flogger.
 final class FloggerHelpers {
 
   private static final char STRING_FORMAT = 's';

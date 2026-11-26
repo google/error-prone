@@ -33,13 +33,11 @@ import com.sun.source.tree.MethodInvocationTree;
 import com.sun.tools.javac.code.Type;
 import java.util.List;
 
-/**
- * {@link Matchers#methodInvocation(Matcher)} is not exactly deprecated, but it is legacy, and in
- * particular is not needed when the argument is a MethodMatcher, since MethodMatcher already does
- * the unwrapping that methodInvocation does.
- *
- * @author amalloy@google.com (Alan Malloy)
- */
+/// [Matchers#methodInvocation(Matcher)] is not exactly deprecated, but it is legacy, and in
+/// particular is not needed when the argument is a MethodMatcher, since MethodMatcher already does
+/// the unwrapping that methodInvocation does.
+///
+/// @author amalloy@google.com (Alan Malloy)
 @BugPattern(
     summary = "It is not necessary to wrap a MethodMatcher with methodInvocation().",
     severity = WARNING)

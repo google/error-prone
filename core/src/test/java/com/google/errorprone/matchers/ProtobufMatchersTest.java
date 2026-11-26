@@ -43,7 +43,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** Tests for {@link ProtobufMatchers}. */
+/// Tests for [ProtobufMatchers].
 @RunWith(JUnit4.class)
 public final class ProtobufMatchersTest {
 
@@ -186,7 +186,7 @@ public final class ProtobufMatchersTest {
         .doTest();
   }
 
-  /** BugChecker for testing method matchers. */
+  /// BugChecker for testing method matchers.
   @BugPattern(
       summary = "Reports matched method categories from ProtobufMatchers",
       severity = SeverityLevel.WARNING)
@@ -221,7 +221,7 @@ public final class ProtobufMatchersTest {
     }
   }
 
-  /** BugChecker for testing type predicates. */
+  /// BugChecker for testing type predicates.
   @BugPattern(
       summary = "Reports matched type predicates from ProtobufMatchers",
       severity = SeverityLevel.WARNING)

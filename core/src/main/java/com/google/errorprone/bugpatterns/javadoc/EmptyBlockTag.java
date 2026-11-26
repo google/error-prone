@@ -41,12 +41,9 @@ import com.sun.source.util.DocTreePath;
 import com.sun.source.util.DocTreePathScanner;
 import java.util.List;
 
-/**
- * Matches block tags ({@literal @}param, {@literal @}return, {@literal @}throws,
- * {@literal @}deprecated) with an empty description.
- *
- * @author andrewash@google.com (Andrew Ash)
- */
+/// Matches block tags (`@param`, `@return`, `@throws`, `@deprecated`) with an empty description.
+///
+/// @author andrewash@google.com (Andrew Ash)
 @BugPattern(
     summary =
         "A block tag (@param, @return, @throws, @deprecated) has an empty description. Block tags"

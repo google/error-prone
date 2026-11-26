@@ -21,13 +21,11 @@ import com.sun.source.tree.Tree;
 import com.sun.source.util.TreeScanner;
 import org.jspecify.annotations.Nullable;
 
-/**
- * A matcher that recursively inspects a tree, applying the given matcher to all levels of each tree
- * and returning {@code true} if any match is found.
- *
- * <p>This matcher may be slow. Please avoid using it if there is any other way to implement your
- * check.
- */
+/// A matcher that recursively inspects a tree, applying the given matcher to all levels of each
+/// tree and returning `true` if any match is found.
+///
+/// This matcher may be slow. Please avoid using it if there is any other way to implement your
+/// check.
 public class Contains implements Matcher<Tree> {
 
   private final Matcher<Tree> matcher;

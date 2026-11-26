@@ -26,12 +26,10 @@ import com.sun.source.tree.PackageTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 
-/**
- * Matches if the given annotation matcher matches all of or any of the annotations on the tree
- * node.
- *
- * @author eaftan@google.com (Eddie Aftandilian)
- */
+/// Matches if the given annotation matcher matches all of or any of the annotations on the tree
+/// node.
+///
+/// @author eaftan@google.com (Eddie Aftandilian)
 public class AnnotationMatcher<T extends Tree> extends ChildMultiMatcher<T, AnnotationTree> {
 
   public AnnotationMatcher(MatchType matchType, Matcher<AnnotationTree> nodeMatcher) {

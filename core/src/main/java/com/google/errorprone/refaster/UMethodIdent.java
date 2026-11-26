@@ -25,7 +25,7 @@ import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
 
-/** Identifier representing an unqualified instant method. */
+/// Identifier representing an unqualified instant method.
 @AutoValue
 public abstract class UMethodIdent extends UIdent {
   public static UMethodIdent create(UClassIdent classIdent, CharSequence member, UType memberType) {

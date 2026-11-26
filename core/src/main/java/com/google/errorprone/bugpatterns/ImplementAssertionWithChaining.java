@@ -53,20 +53,18 @@ import java.util.List;
 import org.jspecify.annotations.Nullable;
 import org.safere.Pattern;
 
-/**
- * Migrates Truth subjects from a manual "test and fail" approach to one using {@code
- * Subject.check(...)}. For example:
- *
- * <pre>{@code
- * // Before:
- * if (actual().foo() != expected) {
- *   failWithActual("expected to have foo", expected);
- * }
- *
- * // After:
- * check("foo()").that(actual().foo()).isEqualTo(expected);
- * }</pre>
- */
+/// Migrates Truth subjects from a manual "test and fail" approach to one using
+/// `Subject.check(...)`. For example:
+///
+/// ```
+/// // Before:
+/// if (actual().foo() != expected) {
+///   failWithActual("expected to have foo", expected);
+/// }
+///
+/// // After:
+/// check("foo()").that(actual().foo()).isEqualTo(expected);
+/// ```
 @BugPattern(
     summary = "Prefer check(...), which usually generates more readable failure messages.",
     severity = SUGGESTION)
@@ -166,10 +164,8 @@ public final class ImplementAssertionWithChaining extends BugChecker implements 
     return isSubtype(getType(tree), state.getSymtab().enumSym.type, state);
   }
 
-  /**
-   * Checks that the statement, after unwrapping any braces, consists of a single call to a {@code
-   * fail*} method.
-   */
+  /// Checks that the statement, after unwrapping any braces, consists of a single call to a `fail*`
+  /// method.
   private static boolean isCallToFail(StatementTree then, VisitorState state) {
     while (then instanceof BlockTree) {
       List<? extends StatementTree> statements = ((BlockTree) then).getStatements();
@@ -193,15 +189,13 @@ public final class ImplementAssertionWithChaining extends BugChecker implements 
     return FAIL_METHOD.matches(methodSelect, state);
   }
 
-  /**
-   * Converts the tree for the actual value under test (like {@code actual().foo()}) to a string
-   * suitable for passing to {@code Subject.check(...)} (like {@code "foo()"}, which Truth appends
-   * to the name is has for the actual value, producing something like {@code "bar.foo()"}).
-   *
-   * <p>Sometimes the tree contains multiple method calls, like {@code actual().foo().bar()}. In
-   * that case, they appear "backward" as we walk the tree (i.e., bar, foo), so we add each one to
-   * the beginning of the list as we go.
-   */
+  /// Converts the tree for the actual value under test (like `actual().foo()`) to a string suitable
+  /// for passing to `Subject.check(...)` (like `"foo()"`, which Truth appends to the name is has
+  /// for the actual value, producing something like `"bar.foo()"`).
+  ///
+  /// Sometimes the tree contains multiple method calls, like `actual().foo().bar()`. In that case,
+  /// they appear "backward" as we walk the tree (i.e., bar, foo), so we add each one to the
+  /// beginning of the list as we go.
   static @Nullable String makeCheckDescription(ExpressionTree actual, VisitorState state) {
     /*
      * This conveniently also acts as a check that the actual and expected values aren't backward,

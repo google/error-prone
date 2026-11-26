@@ -49,7 +49,7 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.function.IntPredicate;
 
-/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
+/// A [BugChecker]; see the associated [BugPattern] annotation for details.
 @BugPattern(
     summary = "Comparison to value that is out of range for the compared type",
     explanation =
@@ -137,15 +137,13 @@ public class ComparisonOutOfRange extends BugChecker implements BinaryTreeMatche
           return minResult == maxResult ? describeMatch(/* willEvaluateTo= */ minResult) : NO_MATCH;
         }
 
-        /**
-         * Suggested fixes are as follows. For the byte equality case, convert the constant to its
-         * byte representation. For example, "255" becomes "-1. For other cases, replace the
-         * comparison with "true"/"false" since it's not clear what was intended and that is
-         * semantically equivalent.
-         *
-         * <p>TODO(eaftan): Suggested fixes don't handle side-effecting expressions, such as (d =
-         * reader.read()) == -1. Maybe add special case handling for assignments.
-         */
+        /// Suggested fixes are as follows. For the byte equality case, convert the constant to its
+        /// byte representation. For example, "255" becomes "-1. For other cases, replace the
+        /// comparison with "true"/"false" since it's not clear what was intended and that is
+        /// semantically equivalent.
+        ///
+        /// TODO(eaftan): Suggested fixes don't handle side-effecting expressions, such as (d =
+        /// reader.read()) == -1. Maybe add special case handling for assignments.
         Description describeMatch(boolean willEvaluateTo) {
           boolean byteEqualityMatch =
               isSameType(testedValueType.get(state), state.getSymtab().byteType, state)

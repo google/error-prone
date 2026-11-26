@@ -38,11 +38,9 @@ import com.sun.source.util.DocTreePathScanner;
 import com.sun.source.util.SimpleTreeVisitor;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 
-/**
- * Matches invalid usage of {@literal @inheritDoc}.
- *
- * @author ghm@google.com (Graeme Morgan)
- */
+/// Matches invalid usage of `{@inheritDoc}`.
+///
+/// @author ghm@google.com (Graeme Morgan)
 @BugPattern(
     summary = "Invalid use of @inheritDoc.",
     severity = WARNING,

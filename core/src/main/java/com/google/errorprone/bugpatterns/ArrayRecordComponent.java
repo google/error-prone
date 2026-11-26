@@ -26,7 +26,7 @@ import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.VariableTree;
 import javax.lang.model.type.TypeKind;
 
-/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
+/// A [BugChecker]; see the associated [BugPattern] annotation for details.
 @BugPattern(summary = "Record components should not be arrays.", severity = WARNING)
 public final class ArrayRecordComponent extends BugChecker implements VariableTreeMatcher {
   @Override

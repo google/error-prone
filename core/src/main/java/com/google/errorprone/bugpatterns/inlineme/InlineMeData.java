@@ -64,7 +64,7 @@ record InlineMeData(
     // TODO(glorioso): be tolerant of trailing semicolon in replacement
     String replacement, ImmutableSet<String> imports, ImmutableSet<String> staticImports) {
 
-  /** Builds the {@code @InlineMe} annotation as it would be found in source code. */
+  /// Builds the `@InlineMe` annotation as it would be found in source code.
   static String buildAnnotation(
       String replacement, Set<String> imports, Set<String> staticImports) {
 
@@ -147,7 +147,7 @@ record InlineMeData(
     return w.toString();
   }
 
-  /** Copies statements, inserting appropriate qualifiers so make it inline-ready. */
+  /// Copies statements, inserting appropriate qualifiers so make it inline-ready.
   private static class QualifyingTreeCopier extends TreeCopier<Void> {
     private final TreeMaker treeMaker;
     private final VisitorState state;

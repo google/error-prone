@@ -51,9 +51,7 @@ import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
 import java.util.List;
 import org.jspecify.annotations.Nullable;
 
-/**
- * @author bhagwani@google.com (Sumit Bhagwani)
- */
+/// @author bhagwani@google.com (Sumit Bhagwani)
 @BugPattern(
     summary = "Testing an object for equality with itself will always be true.",
     severity = ERROR)

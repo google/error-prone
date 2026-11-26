@@ -41,7 +41,7 @@ import java.lang.annotation.Annotation;
 import java.util.Optional;
 import org.jspecify.annotations.Nullable;
 
-/** A base Error Prone check implementation to enforce compliance with a given API diff. */
+/// A base Error Prone check implementation to enforce compliance with a given API diff.
 public abstract class ApiDiffChecker extends BugChecker
     implements IdentifierTreeMatcher, MemberSelectTreeMatcher {
 
@@ -120,10 +120,8 @@ public abstract class ApiDiffChecker extends BugChecker
         && hasAnnotation(sym, alsoForbidApisAnnotated.get().getName(), state);
   }
 
-  /**
-   * Finds the class of the expression's receiver: the declaring class of a static member access, or
-   * the type that an instance member is accessed on.
-   */
+  /// Finds the class of the expression's receiver: the declaring class of a static member access,
+  /// or the type that an instance member is accessed on.
   private static @Nullable ClassSymbol getReceiver(ExpressionTree tree, Symbol sym) {
     if (ASTHelpers.isStatic(sym) || sym instanceof ClassSymbol) {
       return sym.enclClass();

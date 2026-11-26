@@ -33,13 +33,11 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import org.safere.Pattern;
 
-/**
- * Error checker for calls to the Preconditions class in Guava which use 'expensive' methods of
- * producing the error string. In most cases, users are better off using the equivalent methods
- * which defer the computation of the string until the test actually fails.
- *
- * @author sjnickerson@google.com (Simon Nickerson)
- */
+/// Error checker for calls to the Preconditions class in Guava which use 'expensive' methods of
+/// producing the error string. In most cases, users are better off using the equivalent methods
+/// which defer the computation of the string until the test actually fails.
+///
+/// @author sjnickerson@google.com (Simon Nickerson)
 @BugPattern(
     altNames = "PreconditionsExpensiveString",
     summary =

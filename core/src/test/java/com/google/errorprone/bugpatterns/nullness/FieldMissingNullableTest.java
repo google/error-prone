@@ -22,9 +22,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * @author kmb@google.com (Kevin Bierhoff)
- */
+/// @author kmb@google.com (Kevin Bierhoff)
 @RunWith(JUnit4.class)
 public class FieldMissingNullableTest {
 
@@ -498,10 +496,8 @@ public class FieldMissingNullableTest {
         .doTest();
   }
 
-  /**
-   * Makes sure the check never flags methods returning a primitive. Returning null from them is a
-   * bug, of course, but we're not trying to find those bugs in this check.
-   */
+  /// Makes sure the check never flags methods returning a primitive. Returning null from them is a
+  /// bug, of course, but we're not trying to find those bugs in this check.
   @Test
   public void negativeCases_primitiveFieldType() {
     createCompilationTestHelper()

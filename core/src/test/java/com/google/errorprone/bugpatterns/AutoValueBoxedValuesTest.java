@@ -30,7 +30,7 @@ import java.util.List;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-/** Unit tests for {@link AutoValueBoxedValues}. */
+/// Unit tests for [AutoValueBoxedValues].
 @RunWith(TestParameterInjector.class)
 public class AutoValueBoxedValuesTest {
   private final CompilationTestHelper compilationHelper =

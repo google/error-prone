@@ -35,7 +35,7 @@ import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 
-/** Check for calls to {@code duration.withNanos(int)}. */
+/// Check for calls to `duration.withNanos(int)`.
 @BugPattern(
     summary = "Use of java.time.Duration.withNanos(int) is not allowed.",
     explanation =

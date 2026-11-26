@@ -42,11 +42,9 @@ import java.util.Map;
 import java.util.Set;
 import org.jspecify.annotations.Nullable;
 
-/**
- * A checker that suggests deduplicating literals with existing constant variables.
- *
- * @author cushon@google.com (Liam Miller-Cushon)
- */
+/// A checker that suggests deduplicating literals with existing constant variables.
+///
+/// @author cushon@google.com (Liam Miller-Cushon)
 @BugPattern(
     summary =
         "This expression was previously declared as a constant;"
@@ -54,28 +52,28 @@ import org.jspecify.annotations.Nullable;
     severity = ERROR)
 public class DeduplicateConstants extends BugChecker implements CompilationUnitTreeMatcher {
 
-  /** A lexical scope for constant declarations. */
+  /// A lexical scope for constant declarations.
   static class Scope {
 
-    /** A map from string literals to constant declarations. */
+    /// A map from string literals to constant declarations.
     private final HashMap<String, VarSymbol> values = new HashMap<>();
 
-    /** Declarations that are hidden in the current scope. */
+    /// Declarations that are hidden in the current scope.
     private final Set<Name> hidden = new HashSet<>();
 
-    /** The parent of the current scope. */
+    /// The parent of the current scope.
     private final Scope parent;
 
     Scope(Scope parent) {
       this.parent = parent;
     }
 
-    /** Enters a new sub-scope. */
+    /// Enters a new sub-scope.
     Scope enter() {
       return new Scope(this);
     }
 
-    /** Returns an in-scope constant variable with the given value. */
+    /// Returns an in-scope constant variable with the given value.
     public @Nullable VarSymbol get(String value) {
       VarSymbol sym = getInternal(value);
       if (sym == null) {
@@ -101,16 +99,14 @@ public class DeduplicateConstants extends BugChecker implements CompilationUnitT
       return null;
     }
 
-    /** Adds a constant declaration with the given value to the current scope. */
+    /// Adds a constant declaration with the given value to the current scope.
     public void put(String value, VarSymbol sym) {
       hidden.remove(sym.getSimpleName());
       values.put(value, sym);
     }
 
-    /**
-     * Records a non-constant variable declaration that hides any previously declared constants of
-     * the same name.
-     */
+    /// Records a non-constant variable declaration that hides any previously declared constants of
+    /// the same name.
     public void remove(VarSymbol sym) {
       hidden.add(sym.getSimpleName());
     }

@@ -21,30 +21,26 @@ import com.sun.source.util.TreePath;
 import com.sun.tools.javac.util.Context;
 import java.lang.annotation.Annotation;
 
-/**
- * Interface for a transformation over Java source.
- *
- * @author lowasser@google.com (Louis Wasserman)
- */
+/// Interface for a transformation over Java source.
+///
+/// @author lowasser@google.com (Louis Wasserman)
 public interface CodeTransformer {
-  /** Apply recursively from the leaf node in the given {@link TreePath}. */
+  /// Apply recursively from the leaf node in the given [TreePath].
   void apply(TreePath path, Context context, DescriptionListener listener);
 
-  /**
-   * Returns a map of annotation data logically applied to this code transformer.
-   *
-   * <p>As an example, if a {@code CodeTransformer} expressed as a Refaster rule had an annotation
-   * applied to it:
-   *
-   * <pre>{@code
-   * @MyCustomAnnotation("value")
-   * public class AnnotatedRefasterRule {
-   *    @BeforeTemplate void before(String x) {...}
-   *    @AfterTemplate void after(String x) {...}
-   * }
-   * }</pre>
-   *
-   * You could retrieve the value of {@code @MyCustomAnnotation} from this map.
-   */
+  /// Returns a map of annotation data logically applied to this code transformer.
+  ///
+  /// As an example, if a `CodeTransformer` expressed as a Refaster rule had an annotation applied
+  /// to it:
+  ///
+  /// ```
+  /// @MyCustomAnnotation("value")
+  /// public class AnnotatedRefasterRule {
+  ///    @BeforeTemplate void before(String x) {...}
+  ///    @AfterTemplate void after(String x) {...}
+  /// }
+  /// ```
+  ///
+  /// You could retrieve the value of `@MyCustomAnnotation` from this map.
   ImmutableClassToInstanceMap<Annotation> annotations();
 }

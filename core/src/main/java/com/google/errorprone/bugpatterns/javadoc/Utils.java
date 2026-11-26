@@ -55,7 +55,7 @@ import java.util.Optional;
 import javax.lang.model.element.ElementKind;
 import org.jspecify.annotations.Nullable;
 
-/** Common utility methods for fixing Javadocs. */
+/// Common utility methods for fixing Javadocs.
 final class Utils {
   static Optional<String> getBestMatch(String to, int maxEditDistance, Iterable<String> choices) {
     String bestMatch = null;
@@ -117,10 +117,8 @@ final class Utils {
     return (int) positions.getEndPosition(compilationUnitTree, getDocCommentTree(state), docTree);
   }
 
-  /**
-   * Gets a {@link DiagnosticPosition} for the {@link DocTree} pointed to by {@code path}, attached
-   * to the {@link Tree} which it documents.
-   */
+  /// Gets a [DiagnosticPosition] for the [DocTree] pointed to by `path`, attached to the [Tree]
+  /// which it documents.
   static ErrorPronePosition diagnosticPosition(DocTreePath path, VisitorState state) {
     int startPosition = getStartPosition(path.getLeaf(), state);
     Tree tree = path.getTreePath().getLeaf();
@@ -148,7 +146,7 @@ final class Utils {
     return JavacTrees.instance(state.context).getDocCommentTree(state.getPath());
   }
 
-  /** Returns a map of positions to trees which can be documented by Javadoc. */
+  /// Returns a map of positions to trees which can be documented by Javadoc.
   static ImmutableMap<Integer, TreePath> getJavadoccableTrees(CompilationUnitTree tree) {
     ImmutableMap.Builder<Integer, TreePath> javadoccablePositions = ImmutableMap.builder();
     new TreePathScanner<Void, Void>() {
@@ -206,11 +204,9 @@ final class Utils {
     return javadoccablePositions.buildKeepingLast();
   }
 
-  /**
-   * Returns true if the given symbol represents a class that can be documented by Javadoc.
-   *
-   * <p>Notably, anonymous classes and local classes <b>cannot</b> have Javadoc.
-   */
+  /// Returns true if the given symbol represents a class that can be documented by Javadoc.
+  ///
+  /// Notably, anonymous classes and local classes **cannot** have Javadoc.
   private static boolean isJavadoccableClass(Symbol sym) {
     // enclClass returns sym if sym is a ClassSymbol, which is what we want in this case
     ClassSymbol classSym = sym.enclClass();

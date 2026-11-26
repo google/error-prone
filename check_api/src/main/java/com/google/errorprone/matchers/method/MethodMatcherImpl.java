@@ -59,7 +59,7 @@ final class MethodMatcherImpl
         ConstructorClassMatcher,
         ParameterMatcher {
 
-  /** The kind of method or constructor being matched. */
+  /// The kind of method or constructor being matched.
   private enum Kind {
     ANY_METHOD,
     INSTANCE_METHOD,
@@ -166,7 +166,7 @@ final class MethodMatcherImpl
     return parameterConstraint == null || parameterConstraint.matches(sym, state);
   }
 
-  /** The type of the class in which a member method or constructor is declared. */
+  /// The type of the class in which a member method or constructor is declared.
   private Type ownerType(ExpressionTree tree, MethodSymbol sym) {
     if (kind == Kind.CONSTRUCTOR) {
       return sym.owner.type;

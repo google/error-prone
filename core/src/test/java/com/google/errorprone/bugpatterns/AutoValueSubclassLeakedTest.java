@@ -23,7 +23,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** Tests for {@link AutoValueSubclassLeaked}. */
+/// Tests for [AutoValueSubclassLeaked].
 @RunWith(JUnit4.class)
 public final class AutoValueSubclassLeakedTest {
   private final CompilationTestHelper helper =
