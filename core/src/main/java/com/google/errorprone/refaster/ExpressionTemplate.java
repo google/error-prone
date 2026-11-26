@@ -31,6 +31,7 @@ import com.google.errorprone.refaster.annotation.AlsoNegation;
 import com.google.errorprone.refaster.annotation.UseImportPolicy;
 import com.sun.source.tree.ConditionalExpressionTree;
 import com.sun.source.tree.Tree;
+import com.sun.source.util.TreePath;
 import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.api.JavacTrees;
 import com.sun.tools.javac.code.Type;
@@ -138,7 +139,26 @@ public abstract class ExpressionTemplate extends Template<ExpressionTemplateMatc
       JCTree target, Context context, JCCompilationUnit compilationUnit) {
     if (target instanceof JCExpression targetExpr) {
       Optional<Unifier> unifier =
-          unify(targetExpr, new Unifier(context, compilationUnit)).findFirst();
+          unify(
+                  targetExpr,
+                  new Unifier(context, compilationUnit, expressionArgumentTypes(), autoboxing()))
+              .findFirst();
+      if (unifier.isPresent()) {
+        return ImmutableList.of(new ExpressionTemplateMatch(targetExpr, unifier.get()));
+      }
+    }
+    return ImmutableList.of();
+  }
+
+  @Override
+  Iterable<ExpressionTemplateMatch> match(
+      JCTree target, Unifier.MatchContext matchContext, @Nullable TreePath currentPath) {
+    if (target instanceof JCExpression targetExpr) {
+      Optional<Unifier> unifier =
+          unify(
+                  targetExpr,
+                  new Unifier(matchContext, currentPath, expressionArgumentTypes(), autoboxing()))
+              .findFirst();
       if (unifier.isPresent()) {
         return ImmutableList.of(new ExpressionTemplateMatch(targetExpr, unifier.get()));
       }

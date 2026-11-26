@@ -51,10 +51,39 @@ final class RefasterSuppressionHelper {
         .equals(SuppressionInfo.SuppressedState.SUPPRESSED);
   }
 
+  /// Probe that reports SUPPRESSED if and only if `@SuppressWarnings("all")` is active.
+  static final Suppressible SUPPRESS_ALL_PROBE =
+      new Suppressible() {
+        @Override
+        public ImmutableSet<String> allNames() {
+          return ImmutableSet.of();
+        }
+
+        @Override
+        public String canonicalName() {
+          return "";
+        }
+
+        @Override
+        public boolean supportsSuppressWarnings() {
+          return true;
+        }
+
+        @Override
+        public ImmutableSet<Class<? extends Annotation>> customSuppressionAnnotations() {
+          return ImmutableSet.of();
+        }
+
+        @Override
+        public boolean suppressedByAnyOf(Set<Name> annotations, VisitorState s) {
+          return false;
+        }
+      };
+
   /// Adapts a [`RefasterRule<?, ?>`][RefasterRule] into a [Suppressible].
-  private record RefasterSuppressible(RefasterRule<?, ?> rule) implements Suppressible {
+  record RefasterSuppressible(RefasterRule<?, ?> rule) implements Suppressible {
     @Override
-    public Set<String> allNames() {
+    public ImmutableSet<String> allNames() {
       return ImmutableSet.of(canonicalName());
     }
 
@@ -69,7 +98,7 @@ final class RefasterSuppressionHelper {
     }
 
     @Override
-    public Set<Class<? extends Annotation>> customSuppressionAnnotations() {
+    public ImmutableSet<Class<? extends Annotation>> customSuppressionAnnotations() {
       return ImmutableSet.of();
     }
 
