@@ -118,28 +118,30 @@ abstract class RefasterScanner<M extends TemplateMatch, T extends Template<M>>
             continue matchLoop;
           }
         }
-        Description.Builder builder =
-            Description.builder(
-                    ErrorPronePosition.from(match.getLocation()),
-                    rule().qualifiedTemplateClass(),
-                    "",
-                    "")
-                .overrideSeverity(SeverityLevel.WARNING);
-
-        if (rule().afterTemplates().isEmpty()) {
-          builder.addFix(SuggestedFix.prefixWith(match.getLocation(), "/* match found */ "));
-        } else {
-          for (T afterTemplate : rule().afterTemplates()) {
-            builder.addFix(afterTemplate.replace(match));
-          }
-        }
-        listener().onDescribed(builder.build());
+        listener().onDescribed(buildDescription(rule(), match));
       }
     }
     return super.scan(tree, context);
   }
 
-  private static final SimpleTreeVisitor<Tree, Void> SKIP_PARENS =
+  static <M extends TemplateMatch, T extends Template<M>> Description buildDescription(
+      RefasterRule<M, T> rule, M match) {
+    Description.Builder builder =
+        Description.builder(
+                ErrorPronePosition.from(match.getLocation()), rule.qualifiedTemplateClass(), "", "")
+            .overrideSeverity(SeverityLevel.WARNING);
+
+    if (rule.afterTemplates().isEmpty()) {
+      builder.addFix(SuggestedFix.prefixWith(match.getLocation(), "/* match found */ "));
+    } else {
+      for (T afterTemplate : rule.afterTemplates()) {
+        builder.addFix(afterTemplate.replace(match));
+      }
+    }
+    return builder.build();
+  }
+
+  static final SimpleTreeVisitor<Tree, Void> SKIP_PARENS =
       new SimpleTreeVisitor<Tree, Void>() {
         @Override
         public Tree visitParenthesized(ParenthesizedTree node, Void v) {

@@ -19,18 +19,25 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.sun.tools.javac.util.List.nil;
 
 import com.google.common.base.Function;
+import com.google.common.collect.ImmutableMap;
+import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import com.sun.source.util.TreePath;
+import com.sun.tools.javac.code.Symbol;
+import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symtab;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Types;
+import com.sun.tools.javac.main.JavaCompiler;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
 import com.sun.tools.javac.tree.TreeMaker;
 import com.sun.tools.javac.util.Context;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import org.jspecify.annotations.Nullable;
 
@@ -39,23 +46,138 @@ import org.jspecify.annotations.Nullable;
 ///
 /// @author Louis Wasserman
 public final class Unifier {
+  /** Per-compilation-unit cached javac services shared across template match attempts. */
+  static final class MatchContext {
+    private final Context context;
+    private final JCCompilationUnit compilationUnit;
+    private final Types types;
+    private final TreeMaker treeMaker;
+    private final JavaCompiler compiler;
+    private final Symtab symtab;
+    private final VisitorState visitorState;
+    private final Map<String, Optional<ClassSymbol>> resolvedClassCache = new HashMap<>();
+
+    MatchContext(Context context, JCCompilationUnit compilationUnit) {
+      this.context = checkNotNull(context);
+      this.compilationUnit = checkNotNull(compilationUnit);
+      this.types = Types.instance(context);
+      this.treeMaker = TreeMaker.instance(context);
+      this.compiler = JavaCompiler.instance(context);
+      this.symtab = Symtab.instance(context);
+      this.visitorState = VisitorState.createForUtilityPurposes(context);
+    }
+
+    Context context() {
+      return context;
+    }
+
+    JCCompilationUnit compilationUnit() {
+      return compilationUnit;
+    }
+
+    Types types() {
+      return types;
+    }
+
+    TreeMaker treeMaker() {
+      return treeMaker;
+    }
+
+    VisitorState visitorState() {
+      return visitorState;
+    }
+
+    @Nullable ClassSymbol resolveClassOrNull(String qualifiedClass) {
+      Optional<ClassSymbol> cached = resolvedClassCache.get(qualifiedClass);
+      if (cached != null) {
+        return cached.orElse(null);
+      }
+      ClassSymbol resolved = null;
+      try {
+        Symbol symbol = compiler.resolveBinaryNameOrIdent(qualifiedClass);
+        if (symbol != null
+            && !symbol.equals(symtab.errSymbol)
+            && symbol instanceof ClassSymbol classSymbol) {
+          resolved = classSymbol;
+        }
+      } catch (NullPointerException ignored) {
+        resolved = null;
+      }
+      resolvedClassCache.put(qualifiedClass, Optional.ofNullable(resolved));
+      return resolved;
+    }
+  }
+
   private final Bindings bindings;
 
   private final Context context;
   private final Types types;
   private final TreeMaker treeMaker;
   private final JCCompilationUnit compilationUnit;
+  private final @Nullable MatchContext matchContext;
+  private final @Nullable TreePath currentPath;
+  private final @Nullable ImmutableMap<String, UType> expectedArgTypes;
+  private final boolean autoboxing;
 
   public Unifier(Context context, JCCompilationUnit compilationUnit) {
+    this(context, compilationUnit, null, true);
+  }
+
+  Unifier(
+      Context context,
+      JCCompilationUnit compilationUnit,
+      @Nullable ImmutableMap<String, UType> expectedArgTypes,
+      boolean autoboxing) {
     this.bindings = Bindings.create();
     this.context = checkNotNull(context);
     this.types = Types.instance(context);
     this.treeMaker = TreeMaker.instance(context);
     this.compilationUnit = checkNotNull(compilationUnit);
+    this.matchContext = null;
+    this.currentPath = null;
+    this.expectedArgTypes = expectedArgTypes;
+    this.autoboxing = autoboxing;
+  }
+
+  Unifier(
+      MatchContext matchContext,
+      @Nullable TreePath currentPath,
+      @Nullable ImmutableMap<String, UType> expectedArgTypes,
+      boolean autoboxing) {
+    this.bindings = Bindings.create();
+    this.context = matchContext.context();
+    this.types = matchContext.types();
+    this.treeMaker = matchContext.treeMaker();
+    this.compilationUnit = matchContext.compilationUnit();
+    this.matchContext = matchContext;
+    this.currentPath = currentPath;
+    this.expectedArgTypes = expectedArgTypes;
+    this.autoboxing = autoboxing;
   }
 
   public Unifier(Context context) {
     this(context, defaultCompilationUnit(context));
+  }
+
+  private Unifier(
+      Context context,
+      Bindings bindings,
+      Types types,
+      TreeMaker treeMaker,
+      JCCompilationUnit compilationUnit,
+      @Nullable MatchContext matchContext,
+      @Nullable TreePath currentPath,
+      @Nullable ImmutableMap<String, UType> expectedArgTypes,
+      boolean autoboxing) {
+    this.context = context;
+    this.bindings = Bindings.create(bindings);
+    this.types = types;
+    this.treeMaker = treeMaker;
+    this.compilationUnit = checkNotNull(compilationUnit);
+    this.matchContext = matchContext;
+    this.currentPath = currentPath;
+    this.expectedArgTypes = expectedArgTypes;
+    this.autoboxing = autoboxing;
   }
 
   private static JCCompilationUnit defaultCompilationUnit(Context context) {
@@ -64,23 +186,52 @@ public final class Unifier {
     return compilationUnit;
   }
 
-  private Unifier(
-      Context context,
-      Bindings bindings,
-      Types types,
-      TreeMaker treeMaker,
-      JCCompilationUnit compilationUnit) {
-    this.context = context;
-    this.bindings = Bindings.create(bindings);
-    this.types = types;
-    this.treeMaker = treeMaker;
-    this.compilationUnit = checkNotNull(compilationUnit);
-  }
-
   /// Returns a `Unifier` containing all the bindings from this `Unifier`, but which can succeed or
   /// fail independently of this `Unifier`.
   public Unifier fork() {
-    return new Unifier(context, bindings, types, treeMaker, compilationUnit);
+    return new Unifier(
+        context,
+        bindings,
+        types,
+        treeMaker,
+        compilationUnit,
+        matchContext,
+        currentPath,
+        expectedArgTypes,
+        autoboxing);
+  }
+
+  @Nullable VisitorState sharedVisitorState() {
+    return matchContext != null ? matchContext.visitorState() : null;
+  }
+
+  @Nullable TreePath currentPath() {
+    return currentPath;
+  }
+
+  @Nullable UType expectedArgType(String argName) {
+    return expectedArgTypes != null ? expectedArgTypes.get(argName) : null;
+  }
+
+  boolean autoboxing() {
+    return autoboxing;
+  }
+
+  @Nullable ClassSymbol resolveClassOrNull(String qualifiedClass) {
+    if (matchContext != null) {
+      return matchContext.resolveClassOrNull(qualifiedClass);
+    }
+    try {
+      Symbol symbol = JavaCompiler.instance(context).resolveBinaryNameOrIdent(qualifiedClass);
+      if (symbol != null
+          && !symbol.equals(Symtab.instance(context).errSymbol)
+          && symbol instanceof ClassSymbol classSymbol) {
+        return classSymbol;
+      }
+    } catch (NullPointerException ignored) {
+      return null;
+    }
+    return null;
   }
 
   public JCCompilationUnit compilationUnit() {

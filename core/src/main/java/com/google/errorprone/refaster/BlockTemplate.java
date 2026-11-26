@@ -27,6 +27,7 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.refaster.UStatement.UnifierWithUnconsumedStatements;
 import com.google.errorprone.refaster.annotation.UseImportPolicy;
 import com.sun.source.tree.StatementTree;
+import com.sun.source.util.TreePath;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCBlock;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
@@ -40,6 +41,7 @@ import java.lang.annotation.Annotation;
 import java.util.Map;
 import java.util.Optional;
 import java.util.logging.Logger;
+import org.jspecify.annotations.Nullable;
 
 /// Template representing a sequence of consecutive statements.
 ///
@@ -110,7 +112,27 @@ public abstract class BlockTemplate extends Template<BlockTemplateMatch> {
     // TODO(lowasser): consider nonconsecutive matches?
     if (tree instanceof JCBlock block) {
       ImmutableList<JCStatement> targetStatements = ImmutableList.copyOf(block.getStatements());
-      return matchesStartingAnywhere(block, 0, targetStatements, context, compilationUnit)
+      return matchesStartingAnywhere(
+              block, 0, targetStatements, context, compilationUnit, null, null)
+          .findFirst()
+          .orElse(List.nil());
+    }
+    return ImmutableList.of();
+  }
+
+  @Override
+  Iterable<BlockTemplateMatch> match(
+      JCTree tree, Unifier.MatchContext matchContext, @Nullable TreePath currentPath) {
+    if (tree instanceof JCBlock block) {
+      ImmutableList<JCStatement> targetStatements = ImmutableList.copyOf(block.getStatements());
+      return matchesStartingAnywhere(
+              block,
+              0,
+              targetStatements,
+              matchContext.context(),
+              matchContext.compilationUnit(),
+              matchContext,
+              currentPath)
           .findFirst()
           .orElse(List.nil());
     }
@@ -122,16 +144,30 @@ public abstract class BlockTemplate extends Template<BlockTemplateMatch> {
       int offset,
       ImmutableList<? extends StatementTree> statements,
       Context context,
-      JCCompilationUnit compilationUnit) {
+      JCCompilationUnit compilationUnit,
+      Unifier.@Nullable MatchContext matchContext,
+      @Nullable TreePath currentPath) {
     if (statements.isEmpty()) {
       return Choice.none();
     }
     JCStatement firstStatement = (JCStatement) statements.getFirst();
+    ImmutableList<UStatement> tmplStatements = templateStatements();
+    if (!tmplStatements.isEmpty()) {
+      UStatement firstTemplateStatement = tmplStatements.getFirst();
+      if (((firstTemplateStatement instanceof USimpleStatement
+                  && !(firstTemplateStatement instanceof UClassDecl))
+              || firstTemplateStatement instanceof UIf)
+          && firstTemplateStatement.getKind() != firstStatement.getKind()) {
+        return Choice.none();
+      }
+    }
+    Unifier initialUnifier =
+        matchContext != null
+            ? new Unifier(matchContext, currentPath, expressionArgumentTypes(), autoboxing())
+            : new Unifier(context, compilationUnit, expressionArgumentTypes(), autoboxing());
     Choice<UnifierWithUnconsumedStatements> choice =
-        Choice.of(
-            UnifierWithUnconsumedStatements.create(
-                new Unifier(context, compilationUnit), statements));
-    for (UStatement templateStatement : templateStatements()) {
+        Choice.of(UnifierWithUnconsumedStatements.create(initialUnifier, statements));
+    for (UStatement templateStatement : tmplStatements) {
       choice = choice.flatMap(templateStatement);
     }
     return choice.flatMap((UnifierWithUnconsumedStatements state) -> {
@@ -153,7 +189,7 @@ public abstract class BlockTemplate extends Template<BlockTemplateMatch> {
           boolean verified =
               ExpressionTemplate.trueOrNull(
                   ExpressionTemplate.PLACEHOLDER_VERIFIER.scan(
-                      templateStatements(), checkedUnifier.get()));
+                      tmplStatements, checkedUnifier.get()));
           if (!verified) {
             return Choice.none();
           }
@@ -162,7 +198,9 @@ public abstract class BlockTemplate extends Template<BlockTemplateMatch> {
                   offset + consumedStatements,
                   statements.subList(consumedStatements, statements.size()),
                   context,
-                  compilationUnit)
+                  compilationUnit,
+                  matchContext,
+                  currentPath)
               .map(list -> list.prepend(match));
         }
       } catch (CouldNotResolveImportException e) {
@@ -177,7 +215,9 @@ public abstract class BlockTemplate extends Template<BlockTemplateMatch> {
       int offset,
       ImmutableList<? extends StatementTree> statements,
       Context context,
-      JCCompilationUnit compilationUnit) {
+      JCCompilationUnit compilationUnit,
+      Unifier.@Nullable MatchContext matchContext,
+      @Nullable TreePath currentPath) {
     Choice<List<BlockTemplateMatch>> choice = Choice.none();
     for (int i = 0; i < statements.size(); i++) {
       choice =
@@ -187,7 +227,9 @@ public abstract class BlockTemplate extends Template<BlockTemplateMatch> {
                   offset + i,
                   statements.subList(i, statements.size()),
                   context,
-                  compilationUnit));
+                  compilationUnit,
+                  matchContext,
+                  currentPath));
     }
     return choice.concat(Choice.of(List.<BlockTemplateMatch>nil()));
   }
