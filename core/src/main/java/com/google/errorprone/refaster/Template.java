@@ -32,6 +32,7 @@ import com.google.errorprone.refaster.PlaceholderMethod.PlaceholderExpressionKey
 import com.google.errorprone.refaster.UTypeVar.TypeWithExpression;
 import com.google.errorprone.refaster.annotation.NoAutoboxing;
 import com.sun.source.tree.ModifiersTree;
+import com.sun.source.util.TreePath;
 import com.sun.tools.javac.code.Kinds.KindSelector;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
@@ -103,6 +104,11 @@ public abstract class Template<M extends TemplateMatch> implements Serializable 
 
   public abstract Iterable<M> match(
       JCTree tree, Context context, JCCompilationUnit compilationUnit);
+
+  Iterable<M> match(
+      JCTree tree, Unifier.MatchContext matchContext, @Nullable TreePath currentPath) {
+    return match(tree, matchContext.context(), matchContext.compilationUnit());
+  }
 
   public abstract Fix replace(M match);
 
@@ -445,21 +451,19 @@ public abstract class Template<M extends TemplateMatch> implements Serializable 
 
     // Set up the resolution phase:
     try {
-      Field field = AttrContext.class.getDeclaredField("pendingResolutionPhase");
-      field.setAccessible(true);
-      field.set(env.info, newMethodResolutionPhase(autoboxing()));
+      InferReflectionHandles.PENDING_RESOLUTION_PHASE_FIELD.set(
+          env.info,
+          autoboxing()
+              ? InferReflectionHandles.METHOD_RESOLUTION_PHASE_BOX
+              : InferReflectionHandles.METHOD_RESOLUTION_PHASE_BASIC);
     } catch (ReflectiveOperationException e) {
       throw new LinkageError(e.getMessage(), e);
     }
 
     Object resultInfo;
     try {
-      Class<?> resultInfoClass = Class.forName("com.sun.tools.javac.comp.Attr$ResultInfo");
-      Constructor<?> resultInfoCtor =
-          resultInfoClass.getDeclaredConstructor(Attr.class, KindSelector.class, Type.class);
-      resultInfoCtor.setAccessible(true);
       resultInfo =
-          resultInfoCtor.newInstance(
+          InferReflectionHandles.RESULT_INFO_CTOR.newInstance(
               Attr.instance(inliner.getContext()), KindSelector.PCK, Type.noType);
     } catch (ReflectiveOperationException e) {
       throw new LinkageError(e.getMessage(), e);
@@ -482,19 +486,57 @@ public abstract class Template<M extends TemplateMatch> implements Serializable 
     }
   }
 
-  /// Reflectively instantiate the package-private `MethodResolutionPhase` enum.
-  private static @Nullable Object newMethodResolutionPhase(boolean autoboxing) {
-    for (Class<?> c : Resolve.class.getDeclaredClasses()) {
-      if (!c.getName().equals("com.sun.tools.javac.comp.Resolve$MethodResolutionPhase")) {
-        continue;
-      }
-      for (Object e : c.getEnumConstants()) {
-        if (e.toString().equals(autoboxing ? "BOX" : "BASIC")) {
-          return e;
+  /// Lazily cached reflective handles into package-private javac type inference internals.
+  private static final class InferReflectionHandles {
+    static final Field PENDING_RESOLUTION_PHASE_FIELD;
+    static final @Nullable Object METHOD_RESOLUTION_PHASE_BOX;
+    static final @Nullable Object METHOD_RESOLUTION_PHASE_BASIC;
+    static final Constructor<?> RESULT_INFO_CTOR;
+    static final Method CHECK_METHOD;
+
+    static {
+      try {
+        PENDING_RESOLUTION_PHASE_FIELD =
+            AttrContext.class.getDeclaredField("pendingResolutionPhase");
+        PENDING_RESOLUTION_PHASE_FIELD.setAccessible(true);
+
+        Object box = null;
+        Object basic = null;
+        for (Class<?> c : Resolve.class.getDeclaredClasses()) {
+          if (!c.getName().equals("com.sun.tools.javac.comp.Resolve$MethodResolutionPhase")) {
+            continue;
+          }
+          for (Object e : c.getEnumConstants()) {
+            if (e.toString().equals("BOX")) {
+              box = e;
+            } else if (e.toString().equals("BASIC")) {
+              basic = e;
+            }
+          }
         }
+        METHOD_RESOLUTION_PHASE_BOX = box;
+        METHOD_RESOLUTION_PHASE_BASIC = basic;
+
+        Class<?> resultInfoClass = Class.forName("com.sun.tools.javac.comp.Attr$ResultInfo");
+        RESULT_INFO_CTOR =
+            resultInfoClass.getDeclaredConstructor(Attr.class, KindSelector.class, Type.class);
+        RESULT_INFO_CTOR.setAccessible(true);
+
+        CHECK_METHOD =
+            Resolve.class.getDeclaredMethod(
+                "checkMethod",
+                Env.class,
+                Type.class,
+                Symbol.class,
+                resultInfoClass,
+                List.class,
+                List.class,
+                Warner.class);
+        CHECK_METHOD.setAccessible(true);
+      } catch (ReflectiveOperationException e) {
+        throw new LinkageError(e.getMessage(), e);
       }
     }
-    return null;
   }
 
   /// Reflectively invoke Resolve.checkMethod(), which despite being package-private is apparently
@@ -509,21 +551,8 @@ public abstract class Template<M extends TemplateMatch> implements Serializable 
       Env<AttrContext> env)
       throws InferException {
     try {
-      Method checkMethod;
-      checkMethod =
-          Resolve.class.getDeclaredMethod(
-              "checkMethod",
-              Env.class,
-              Type.class,
-              Symbol.class,
-              Class.forName(
-                  "com.sun.tools.javac.comp.Attr$ResultInfo"), // ResultInfo is package-private
-              List.class,
-              List.class,
-              Warner.class);
-      checkMethod.setAccessible(true);
       return (Type.MethodType)
-          checkMethod.invoke(
+          InferReflectionHandles.CHECK_METHOD.invoke(
               Resolve.instance(inliner.getContext()),
               env,
               site,
