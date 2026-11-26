@@ -21,6 +21,7 @@ import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.common.collect.Iterables.isEmpty;
 import static com.google.common.collect.Streams.concat;
 import static com.google.errorprone.VisitorState.memoize;
+import static com.google.errorprone.bugpatterns.NonInheritedEqualsTypes.CLASSES_WITH_NON_INHERITED_EQUALS;
 import static com.google.errorprone.matchers.ProtobufMatchers.DYNAMIC_MESSAGE;
 import static com.google.errorprone.matchers.ProtobufMatchers.MESSAGE;
 import static com.google.errorprone.matchers.ProtobufMatchers.MESSAGE_LITE;
@@ -404,34 +405,4 @@ public final class TypeCompatibility {
       VisitorState.memoize(state -> state.getName("equals"));
 
   private static final Supplier<Type> JAVA_UTIL_COLLECTION = typeFromString("java.util.Collection");
-
-  private static final ImmutableSet<String> CLASSES_WITH_NON_INHERITED_EQUALS =
-      ImmutableSet.of(
-          "com.google.common.base.Converter",
-          "com.google.common.base.Equivalence",
-          "com.google.common.base.Function",
-          "com.google.common.base.Predicate",
-          "com.google.common.base.Supplier",
-          "com.google.common.flags.Flag",
-          "com.google.common.flogger.MetadataKey",
-          "com.google.common.reflect.AbstractInvocationHandler",
-          "com.sun.tools.javac.code.Type",
-          "java.awt.RenderingHints.Key",
-          "java.lang.ProcessHandle",
-          "java.net.InetAddress",
-          "java.nio.file.Path",
-          "java.security.BasicPermission",
-          "java.security.Permission",
-          "java.security.Principal",
-          "java.text.AttributedCharacterIterator.Attribute",
-          "java.text.Collator",
-          "java.text.DateFormat",
-          "java.text.NumberFormat",
-          "java.time.Clock",
-          "java.time.chrono.ChronoLocalDate",
-          "java.time.chrono.ChronoLocalDateTime",
-          "java.time.chrono.ChronoPeriod",
-          "java.time.chrono.ChronoZonedDateTime",
-          "java.util.Collection",
-          "java.util.Comparator");
 }
