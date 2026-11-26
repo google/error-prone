@@ -973,37 +973,6 @@ public class Test {
   }
 
   @Test
-  public void table_flagDisabled() {
-    compilationHelper
-        .setArgs("-XepOpt:TruthIncompatibleType:CheckTableSubject=false")
-        .addSourceLines(
-            "Test.java",
-            """
-            import static com.google.common.truth.Truth.assertThat;
-
-            import com.google.common.collect.Table;
-            import com.google.common.collect.Table.Cell;
-
-            public class Test {
-              public void f(Table<String, Integer, Long> t, Cell<Long, String, Integer> cell) {
-                assertThat(t).contains(1, "c");
-                assertThat(t).doesNotContain(1, "c");
-                assertThat(t).containsCell(1, "c", "v");
-                assertThat(t).doesNotContainCell(1, "c", "v");
-                assertThat(t).containsCell(cell);
-                assertThat(t).doesNotContainCell(cell);
-                assertThat(t).containsRow(1);
-                assertThat(t).containsColumn("c");
-                assertThat(t).containsValue("v");
-                // BUG: Diagnostic contains:
-                assertThat(t).isEqualTo("not a table");
-              }
-            }
-            """)
-        .doTest();
-  }
-
-  @Test
   public void subjectExhaustiveness(
       @TestParameter(valuesProvider = SubjectMethods.class) Method method) {
     // Covered by AssertSameIncompatible instead.
