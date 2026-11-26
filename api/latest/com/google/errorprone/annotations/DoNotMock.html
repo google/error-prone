@@ -76,13 +76,12 @@ loadScripts(document, 'script');</script>
 <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/annotation/Retention.html" title="class or interface in java.lang.annotation" class="external-link">@Retention</a>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/annotation/RetentionPolicy.html#RUNTIME" title="class or interface in java.lang.annotation" class="external-link">RUNTIME</a>)
 <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/annotation/Target.html" title="class or interface in java.lang.annotation" class="external-link">@Target</a>({<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/annotation/ElementType.html#TYPE" title="class or interface in java.lang.annotation" class="external-link">TYPE</a>,<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/annotation/ElementType.html#ANNOTATION_TYPE" title="class or interface in java.lang.annotation" class="external-link">ANNOTATION_TYPE</a>})
 </span><span class="modifiers">public @interface </span><span class="element-name type-name-label">DoNotMock</span></div>
-<div class="block">Annotation representing a type that should not be mocked.
-
-<p>When marking a type <code>@DoNotMock</code>, you should always point to alternative testing
-solutions such as standard fakes or other testing utilities.
-
-<p>Mockito tests can enforce this annotation by using a custom MockMaker which intercepts
-creation of mocks.</div>
+<div class="block"><p>Annotation representing a type that should not be mocked.</p>
+<p>When marking a type <code>@DoNotMock</code>, you should always point to alternative testing solutions such
+as standard fakes or other testing utilities.</p>
+<p>Mockito tests can enforce this annotation by using a custom MockMaker which intercepts creation
+of mocks.</p>
+</div>
 </div>
 </section>
 <section class="summary">
@@ -118,9 +117,9 @@ creation of mocks.</div>
 <h3>value</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">value</span></div>
-<div class="block">The reason why the annotated type should not be mocked.
-
-<p>This should suggest alternative APIs to use for testing objects of this type.</div>
+<div class="block"><p>The reason why the annotated type should not be mocked.</p>
+<p>This should suggest alternative APIs to use for testing objects of this type.</p>
+</div>
 <dl class="notes">
 <dt>Default:</dt>
 <dd><code>"Create a real instance instead"</code></dd>

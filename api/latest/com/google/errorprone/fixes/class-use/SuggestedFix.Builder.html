@@ -128,8 +128,7 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color"><span class="type-name-label">SuggestedFix.Builder.</span><code><a href="../SuggestedFix.Builder.html#addStaticImport(com.google.errorprone.ClassName,java.lang.String)" class="member-name-link">addStaticImport</a><wbr>(<a href="../../ClassName.html" title="class in com.google.errorprone">ClassName</a>&nbsp;className,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;memberName)</code></div>
 <div class="col-last even-row-color">
-<div class="block">Add a static import statement for <code>memberName</code> on <code>className</code> as part of this
-SuggestedFix.</div>
+<div class="block">Add a static import statement for <code>memberName</code> on <code>className</code> as part of this SuggestedFix.</div>
 </div>
 <div class="col-first odd-row-color"><code><a href="../SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a></code></div>
 <div class="col-second odd-row-color"><span class="type-name-label">SuggestedFix.Builder.</span><code><a href="../SuggestedFix.Builder.html#addStaticImport(java.lang.String)" class="member-name-link">addStaticImport</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;importString)</code></div>
@@ -142,8 +141,8 @@ SuggestedFix.</div>
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;newValues,
  <a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last even-row-color">
-<div class="block">Returns a fix that appends <code>newValues</code> to the <code>parameterName</code> argument for <code>
-annotation</code>, regardless of whether there is already an argument.</div>
+<div class="block">Returns a fix that appends <code>newValues</code> to the <code>parameterName</code> argument for <code>annotation</code>,
+regardless of whether there is already an argument.</div>
 </div>
 <div class="col-first odd-row-color"><code>static <a href="../SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a></code></div>
 <div class="col-second odd-row-color"><span class="type-name-label">SuggestedFix.</span><code><a href="../SuggestedFix.html#builder()" class="member-name-link">builder</a>()</code></div>
@@ -248,8 +247,8 @@ string.</div>
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;parameterName,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;newValues)</code></div>
 <div class="col-last even-row-color">
-<div class="block">Returns a fix that updates <code>newValues</code> to the <code>parameterName</code> argument for <code>
-annotation</code>, regardless of whether there is already an argument.</div>
+<div class="block">Returns a fix that updates <code>newValues</code> to the <code>parameterName</code> argument for <code>annotation</code>,
+regardless of whether there is already an argument.</div>
 </div>
 <div class="col-first odd-row-color"><code>static <a href="../SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a></code></div>
 <div class="col-second odd-row-color"><span class="type-name-label">SuggestedFixes.</span><code><a href="../SuggestedFixes.html#updateAnnotationArgumentValues(com.sun.source.tree.AnnotationTree,java.lang.String,java.util.Collection)" class="member-name-link">updateAnnotationArgumentValues</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/AnnotationTree.html" title="class or interface in com.sun.source.tree" class="external-link">AnnotationTree</a>&nbsp;annotation,
@@ -257,7 +256,8 @@ annotation</code>, regardless of whether there is already an argument.</div>
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;newValues)</code></div>
 <div class="col-last odd-row-color">
 <div class="block"><span class="deprecated-label">Deprecated.</span>
-<div class="deprecation-comment">use <a href="../SuggestedFixes.html#updateAnnotationArgumentValues(com.sun.source.tree.AnnotationTree,com.google.errorprone.VisitorState,java.lang.String,java.util.Collection)"><code>SuggestedFixes.updateAnnotationArgumentValues(AnnotationTree, VisitorState, String, Collection)</code></a> instead</div>
+<div class="deprecation-comment">This overload is deprecated; instead use
+<a href="../SuggestedFixes.html#updateAnnotationArgumentValues(com.sun.source.tree.AnnotationTree,com.google.errorprone.VisitorState,java.lang.String,java.util.Collection)"><code>SuggestedFixes.updateAnnotationArgumentValues(AnnotationTree, VisitorState, String, Collection)</code></a>.</div>
 </div>
 </div>
 </div>
@@ -271,8 +271,8 @@ annotation</code>, regardless of whether there is already an argument.</div>
  <a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;warningToSuppress)</code></div>
 <div class="col-last even-row-color">
-<div class="block">Modifies <code>fixBuilder</code> to either create a new <code>@SuppressWarnings</code> element on the
-closest suppressible node, or add <code>warningToSuppress</code> to that node if there's already a
+<div class="block">Modifies <code>fixBuilder</code> to either create a new <code>@SuppressWarnings</code> element on the closest
+suppressible node, or add <code>warningToSuppress</code> to that node if there's already a
 <code>SuppressWarnings</code> annotation there.</div>
 </div>
 <div class="col-first odd-row-color"><code>static void</code></div>
@@ -281,8 +281,8 @@ closest suppressible node, or add <code>warningToSuppress</code> to that node if
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;warningToSuppress,
  @Nullable <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;lineComment)</code></div>
 <div class="col-last odd-row-color">
-<div class="block">Modifies <code>fixBuilder</code> to either create a new <code>@SuppressWarnings</code> element on the
-closest suppressible node, or add <code>warningToSuppress</code> to that node if there's already a
+<div class="block">Modifies <code>fixBuilder</code> to either create a new <code>@SuppressWarnings</code> element on the closest
+suppressible node, or add <code>warningToSuppress</code> to that node if there's already a
 <code>SuppressWarnings</code> annotation there.</div>
 </div>
 <div class="col-first even-row-color"><code>static void</code></div>
@@ -292,8 +292,8 @@ closest suppressible node, or add <code>warningToSuppress</code> to that node if
  @Nullable <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;lineComment,
  boolean&nbsp;commentOnNewLine)</code></div>
 <div class="col-last even-row-color">
-<div class="block">Modifies <code>fixBuilder</code> to either create a new <code>@SuppressWarnings</code> element on the
-closest suppressible node, or add <code>warningToSuppress</code> to that node if there's already a
+<div class="block">Modifies <code>fixBuilder</code> to either create a new <code>@SuppressWarnings</code> element on the closest
+suppressible node, or add <code>warningToSuppress</code> to that node if there's already a
 <code>SuppressWarnings</code> annotation there.</div>
 </div>
 <div class="col-first odd-row-color"><code><a href="../SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a></code></div>
@@ -306,15 +306,15 @@ closest suppressible node, or add <code>warningToSuppress</code> to that node if
  @Nullable <a href="../SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a>&nbsp;existingFix,
  com.sun.tools.javac.code.Type&nbsp;type)</code></div>
 <div class="col-last even-row-color">
-<div class="block">Pretty-prints a Type for use in fixes, qualifying any enclosed type names using <a href="../SuggestedFixes.html#qualifyType(com.google.errorprone.VisitorState,com.google.errorprone.fixes.SuggestedFix.Builder,com.sun.tools.javac.code.Symbol)"><code>SuggestedFixes.qualifyType(VisitorState, SuggestedFix.Builder, Symbol)</code></a>}.</div>
+<div class="block">Pretty-prints a Type for use in fixes, qualifying any enclosed type names using
+<a href="../SuggestedFixes.html#qualifyType(com.google.errorprone.VisitorState,com.google.errorprone.fixes.SuggestedFix.Builder,com.sun.tools.javac.code.Symbol)"><code>SuggestedFixes.qualifyType(VisitorState, SuggestedFix.Builder, Symbol)</code></a>.</div>
 </div>
 <div class="col-first odd-row-color"><code>static void</code></div>
 <div class="col-second odd-row-color"><span class="type-name-label">SuggestedFixes.</span><code><a href="../SuggestedFixes.html#qualifyDocReference(com.google.errorprone.fixes.SuggestedFix.Builder,com.sun.source.util.DocTreePath,com.google.errorprone.VisitorState)" class="member-name-link">qualifyDocReference</a><wbr>(<a href="../SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a>&nbsp;fix,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/util/DocTreePath.html" title="class or interface in com.sun.source.util" class="external-link">DocTreePath</a>&nbsp;docPath,
  <a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last odd-row-color">
-<div class="block">Fully qualifies a javadoc reference, e.g. for replacing <code>{&#64;link List}</code> with
-<code>{&#64;link java.util.List}</code>.</div>
+<div class="block">Fully qualifies a javadoc reference, e.g. for replacing <code>{@link List}</code> with <code>{@link java.util.List}</code>.</div>
 </div>
 <div class="col-first even-row-color"><code>static <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second even-row-color"><span class="type-name-label">SuggestedFixes.</span><code><a href="../SuggestedFixes.html#qualifyStaticImport(com.google.errorprone.ClassName,java.lang.String,com.google.errorprone.fixes.SuggestedFix.Builder,com.google.errorprone.VisitorState)" class="member-name-link">qualifyStaticImport</a><wbr>(<a href="../../ClassName.html" title="class in com.google.errorprone">ClassName</a>&nbsp;className,
@@ -322,16 +322,16 @@ closest suppressible node, or add <code>warningToSuppress</code> to that node if
  <a href="../SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a>&nbsp;fix,
  <a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last even-row-color">
-<div class="block">Provides a name to use for the static member <code>memberName</code> on <code>className</code>, trying to
-static import it if possible.</div>
+<div class="block">Provides a name to use for the static member <code>memberName</code> on <code>className</code>, trying to static
+import it if possible.</div>
 </div>
 <div class="col-first odd-row-color"><code>static <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second odd-row-color"><span class="type-name-label">SuggestedFixes.</span><code><a href="../SuggestedFixes.html#qualifyStaticImport(java.lang.String,com.google.errorprone.fixes.SuggestedFix.Builder,com.google.errorprone.VisitorState)" class="member-name-link">qualifyStaticImport</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;qualifiedName,
  <a href="../SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a>&nbsp;fix,
  <a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last odd-row-color">
-<div class="block">Provides a name to use for the (fully qualified) method provided in <code>qualifiedName</code>,
-trying to static import it if possible.</div>
+<div class="block">Provides a name to use for the (fully qualified) method provided in <code>qualifiedName</code>, trying to
+static import it if possible.</div>
 </div>
 <div class="col-first even-row-color"><code>static <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second even-row-color"><span class="type-name-label">SuggestedFixes.</span><code><a href="../SuggestedFixes.html#qualifyType(com.google.errorprone.VisitorState,com.google.errorprone.fixes.SuggestedFix.Builder,com.google.errorprone.ClassName)" class="member-name-link">qualifyType</a><wbr>(<a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
@@ -367,8 +367,8 @@ trying to static import it if possible.</div>
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;warningToRemove)</code></div>
 <div class="col-last even-row-color">
 <div class="block">Modifies <code>fixBuilder</code> to either remove a <code>warningToRemove</code> warning from the closest
-<code>SuppressWarning</code> node or remove the entire <code>SuppressWarning</code> node if <code>
-warningToRemove</code> is the only warning in that node.</div>
+<code>SuppressWarning</code> node or remove the entire <code>SuppressWarning</code> node if <code>warningToRemove</code> is the
+only warning in that node.</div>
 </div>
 <div class="col-first odd-row-color"><code>static void</code></div>
 <div class="col-second odd-row-color"><span class="type-name-label">SuggestedFixes.</span><code><a href="../SuggestedFixes.html#replaceDocTree(com.google.errorprone.fixes.SuggestedFix.Builder,com.sun.source.util.DocTreePath,java.lang.String)" class="member-name-link">replaceDocTree</a><wbr>(<a href="../SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a>&nbsp;fix,

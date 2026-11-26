@@ -78,7 +78,8 @@ loadScripts(document, 'script');</script>
 <div class="horizontal-scroll">
 <div class="type-signature"><span class="modifiers">public final class </span><span class="element-name type-name-label">StaticImports</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
-<div class="block">Logic for inspecting static imports used by <a href="NonCanonicalStaticImport.html" title="class in com.google.errorprone.bugpatterns"><code>NonCanonicalStaticImport</code></a>, <a href="NonCanonicalStaticMemberImport.html" title="class in com.google.errorprone.bugpatterns"><code>NonCanonicalStaticMemberImport</code></a>, and <a href="UnnecessaryStaticImport.html" title="class in com.google.errorprone.bugpatterns"><code>UnnecessaryStaticImport</code></a>.</div>
+<div class="block">Logic for inspecting static imports used by <a href="NonCanonicalStaticImport.html" title="class in com.google.errorprone.bugpatterns"><code>NonCanonicalStaticImport</code></a>,
+<a href="NonCanonicalStaticMemberImport.html" title="class in com.google.errorprone.bugpatterns"><code>NonCanonicalStaticMemberImport</code></a>, and <a href="UnnecessaryStaticImport.html" title="class in com.google.errorprone.bugpatterns"><code>UnnecessaryStaticImport</code></a>.</div>
 </div>
 </section>
 <section class="summary">
@@ -145,8 +146,8 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">@Nullable <a href="StaticImports.StaticImportInfo.html" title="class in com.google.errorprone.bugpatterns">StaticImports.StaticImportInfo</a></span>&nbsp;<span class="element-name">tryCreate</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ImportTree.html" title="class or interface in com.sun.source.tree" class="external-link">ImportTree</a>&nbsp;tree,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
 <div class="block">Returns a <a href="StaticImports.StaticImportInfo.html" title="class in com.google.errorprone.bugpatterns"><code>StaticImports.StaticImportInfo</code></a> if the given import is a static single-type import. Returns
-<code>null</code> otherwise, e.g. because the import is non-static, or an on-demand import, or
-statically imports a field or method.</div>
+<code>null</code> otherwise, e.g. because the import is non-static, or an on-demand import, or statically
+imports a field or method.</div>
 </div>
 </section>
 </li>

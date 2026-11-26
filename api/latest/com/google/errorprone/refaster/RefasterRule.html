@@ -201,19 +201,17 @@ and @AfterTemplates.</div>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public abstract</span>&nbsp;<span class="return-type">com.google.common.collect.ImmutableClassToInstanceMap&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/annotation/Annotation.html" title="class or interface in java.lang.annotation" class="external-link">Annotation</a>&gt;</span>&nbsp;<span class="element-name">annotations</span>()</div>
 <div class="block"><span class="description-from-type-label">Description copied from interface:&nbsp;<code><a href="../CodeTransformer.html#annotations()">CodeTransformer</a></code></span></div>
-<div class="block">Returns a map of annotation data logically applied to this code transformer.
-
-<p>As an example, if a <code>CodeTransformer</code> expressed as a Refaster rule had an annotation
-applied to it:
-
-<pre><code>@MyCustomAnnotation("value")
+<div class="block"><p>Returns a map of annotation data logically applied to this code transformer.</p>
+<p>As an example, if a <code>CodeTransformer</code> expressed as a Refaster rule had an annotation applied
+to it:</p>
+<pre><code>@MyCustomAnnotation(&quot;value&quot;)
 public class AnnotatedRefasterRule {
    @BeforeTemplate void before(String x) {...}
    @AfterTemplate void after(String x) {...}
 }
 </code></pre>
-
-You could retrieve the value of <code>@MyCustomAnnotation</code> from this map.</div>
+<p>You could retrieve the value of <code>@MyCustomAnnotation</code> from this map.</p>
+</div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="../CodeTransformer.html#annotations()">annotations</a></code>&nbsp;in interface&nbsp;<code><a href="../CodeTransformer.html" title="interface in com.google.errorprone">CodeTransformer</a></code></dd>

@@ -102,7 +102,8 @@ individual AST nodes, a supplier gives contextual information from the traversal
 <div class="col-first even-row-color"><code>static <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a></code></div>
 <div class="col-second even-row-color"><span class="type-name-label">ClassName.</span><code><a href="../ClassName.html#of(java.lang.String)" class="member-name-link">of</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name)</code></div>
 <div class="col-last even-row-color">
-<div class="block">Constructs a <a href="../ClassName.html" title="class in com.google.errorprone"><code>ClassName</code></a> from a qualified canonical or binary class name (e.g.</div>
+<div class="block">Constructs a <a href="../ClassName.html" title="class in com.google.errorprone"><code>ClassName</code></a> from a qualified canonical or binary class name (e.g.
+<code>&quot;java.util.List&quot;</code>, <code>&quot;java.util.Map.Entry&quot;</code>, or <code>&quot;java.util.Map$Entry&quot;</code>).</div>
 </div>
 </div>
 </section>
@@ -141,8 +142,7 @@ individual AST nodes, a supplier gives contextual information from the traversal
 <div class="col-second odd-row-color"><span class="type-name-label">SuggestedFix.Builder.</span><code><a href="../fixes/SuggestedFix.Builder.html#addStaticImport(com.google.errorprone.ClassName,java.lang.String)" class="member-name-link">addStaticImport</a><wbr>(<a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a>&nbsp;className,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;memberName)</code></div>
 <div class="col-last odd-row-color">
-<div class="block">Add a static import statement for <code>memberName</code> on <code>className</code> as part of this
-SuggestedFix.</div>
+<div class="block">Add a static import statement for <code>memberName</code> on <code>className</code> as part of this SuggestedFix.</div>
 </div>
 <div class="col-first even-row-color"><code>static <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second even-row-color"><span class="type-name-label">SuggestedFixes.</span><code><a href="../fixes/SuggestedFixes.html#qualifyStaticImport(com.google.errorprone.ClassName,java.lang.String,com.google.errorprone.fixes.SuggestedFix.Builder,com.google.errorprone.VisitorState)" class="member-name-link">qualifyStaticImport</a><wbr>(<a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a>&nbsp;className,
@@ -150,8 +150,8 @@ SuggestedFix.</div>
  <a href="../fixes/SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a>&nbsp;fix,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last even-row-color">
-<div class="block">Provides a name to use for the static member <code>memberName</code> on <code>className</code>, trying to
-static import it if possible.</div>
+<div class="block">Provides a name to use for the static member <code>memberName</code> on <code>className</code>, trying to static
+import it if possible.</div>
 </div>
 <div class="col-first odd-row-color"><code>static <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second odd-row-color"><span class="type-name-label">SuggestedFixes.</span><code><a href="../fixes/SuggestedFixes.html#qualifyType(com.google.errorprone.VisitorState,com.google.errorprone.fixes.SuggestedFix.Builder,com.google.errorprone.ClassName)" class="member-name-link">qualifyType</a><wbr>(<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
@@ -738,8 +738,8 @@ meta-annotation.</div>
 <div class="col-first even-row-color"><code>static <a href="../suppliers/Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a><wbr>&lt;@Nullable com.sun.tools.javac.code.Type&gt;</code></div>
 <div class="col-second even-row-color"><span class="type-name-label">Suppliers.</span><code><a href="../suppliers/Suppliers.html#arrayOf(com.google.errorprone.ClassName)" class="member-name-link">arrayOf</a><wbr>(<a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a>&nbsp;elementType)</code></div>
 <div class="col-last even-row-color">
-<div class="block">Supplies the array type <code>elementType[]</code>, or <code>null</code> if <code>elementType</code> is not
-available in the current compilation.</div>
+<div class="block">Supplies the array type <code>elementType[]</code>, or <code>null</code> if <code>elementType</code> is not available in the
+current compilation.</div>
 </div>
 </div>
 </section>
@@ -897,45 +897,45 @@ available in the current compilation.</div>
 <div class="col-second odd-row-color"><span class="type-name-label">MoreAnnotations.</span><code><a href="../util/MoreAnnotations.html#getBooleanValue(javax.lang.model.element.Element,com.google.errorprone.ClassName)" class="member-name-link">getBooleanValue</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.compiler/javax/lang/model/element/Element.html" title="class or interface in javax.lang.model.element" class="external-link">Element</a>&nbsp;sym,
  <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a>&nbsp;annotationName)</code></div>
 <div class="col-last odd-row-color">
-<div class="block">Shorthand for extracting the "value" boolean of a named annotation on an element.</div>
+<div class="block">Shorthand for extracting the &quot;value&quot; boolean of a named annotation on an element.</div>
 </div>
 <div class="col-first even-row-color"><code>static <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a><wbr>&lt;com.sun.tools.javac.code.Symbol.VarSymbol&gt;</code></div>
 <div class="col-second even-row-color"><span class="type-name-label">MoreAnnotations.</span><code><a href="../util/MoreAnnotations.html#getEnumValue(javax.lang.model.element.Element,com.google.errorprone.ClassName)" class="member-name-link">getEnumValue</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.compiler/javax/lang/model/element/Element.html" title="class or interface in javax.lang.model.element" class="external-link">Element</a>&nbsp;sym,
  <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a>&nbsp;annotationName)</code></div>
 <div class="col-last even-row-color">
-<div class="block">Shorthand for extracting the "value" enum of a named annotation on an element.</div>
+<div class="block">Shorthand for extracting the &quot;value&quot; enum of a named annotation on an element.</div>
 </div>
 <div class="col-first odd-row-color"><code>static com.google.common.collect.ImmutableList<wbr>&lt;com.sun.tools.javac.code.Symbol.VarSymbol&gt;</code></div>
 <div class="col-second odd-row-color"><span class="type-name-label">MoreAnnotations.</span><code><a href="../util/MoreAnnotations.html#getEnumValues(javax.lang.model.element.Element,com.google.errorprone.ClassName)" class="member-name-link">getEnumValues</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.compiler/javax/lang/model/element/Element.html" title="class or interface in javax.lang.model.element" class="external-link">Element</a>&nbsp;sym,
  <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a>&nbsp;annotationName)</code></div>
 <div class="col-last odd-row-color">
-<div class="block">Shorthand for extracting the "value" enum values of a named annotation on an element.</div>
+<div class="block">Shorthand for extracting the &quot;value&quot; enum values of a named annotation on an element.</div>
 </div>
 <div class="col-first even-row-color"><code>static com.google.common.collect.ImmutableList<wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
 <div class="col-second even-row-color"><span class="type-name-label">MoreAnnotations.</span><code><a href="../util/MoreAnnotations.html#getStrings(javax.lang.model.element.Element,com.google.errorprone.ClassName)" class="member-name-link">getStrings</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.compiler/javax/lang/model/element/Element.html" title="class or interface in javax.lang.model.element" class="external-link">Element</a>&nbsp;sym,
  <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a>&nbsp;annotationName)</code></div>
 <div class="col-last even-row-color">
-<div class="block">Shorthand for extracting a list of strings from the "value" element of a named annotation on an
-element.</div>
+<div class="block">Shorthand for extracting a list of strings from the &quot;value&quot; element of a named annotation on
+an element.</div>
 </div>
 <div class="col-first odd-row-color"><code>static <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
 <div class="col-second odd-row-color"><span class="type-name-label">MoreAnnotations.</span><code><a href="../util/MoreAnnotations.html#getStringValue(javax.lang.model.element.Element,com.google.errorprone.ClassName)" class="member-name-link">getStringValue</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.compiler/javax/lang/model/element/Element.html" title="class or interface in javax.lang.model.element" class="external-link">Element</a>&nbsp;sym,
  <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a>&nbsp;annotationName)</code></div>
 <div class="col-last odd-row-color">
-<div class="block">Shorthand for extracting the "value" string of a named annotation on an element.</div>
+<div class="block">Shorthand for extracting the &quot;value&quot; string of a named annotation on an element.</div>
 </div>
 <div class="col-first even-row-color"><code>static com.google.common.collect.ImmutableList<wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.compiler/javax/lang/model/type/TypeMirror.html" title="class or interface in javax.lang.model.type" class="external-link">TypeMirror</a>&gt;</code></div>
 <div class="col-second even-row-color"><span class="type-name-label">MoreAnnotations.</span><code><a href="../util/MoreAnnotations.html#getTypes(javax.lang.model.element.Element,com.google.errorprone.ClassName)" class="member-name-link">getTypes</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.compiler/javax/lang/model/element/Element.html" title="class or interface in javax.lang.model.element" class="external-link">Element</a>&nbsp;sym,
  <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a>&nbsp;annotationName)</code></div>
 <div class="col-last even-row-color">
-<div class="block">Shorthand for extracting a list of types from the "value" element of a named annotation on an
+<div class="block">Shorthand for extracting a list of types from the &quot;value&quot; element of a named annotation on an
 element.</div>
 </div>
 <div class="col-first odd-row-color"><code>static <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.compiler/javax/lang/model/type/TypeMirror.html" title="class or interface in javax.lang.model.type" class="external-link">TypeMirror</a>&gt;</code></div>
 <div class="col-second odd-row-color"><span class="type-name-label">MoreAnnotations.</span><code><a href="../util/MoreAnnotations.html#getTypeValue(javax.lang.model.element.Element,com.google.errorprone.ClassName)" class="member-name-link">getTypeValue</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.compiler/javax/lang/model/element/Element.html" title="class or interface in javax.lang.model.element" class="external-link">Element</a>&nbsp;sym,
  <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a>&nbsp;annotationName)</code></div>
 <div class="col-last odd-row-color">
-<div class="block">Shorthand for extracting the "value" type of a named annotation on an element.</div>
+<div class="block">Shorthand for extracting the &quot;value&quot; type of a named annotation on an element.</div>
 </div>
 <div class="col-first even-row-color"><code>static boolean</code></div>
 <div class="col-second even-row-color"><span class="type-name-label">ASTHelpers.</span><code><a href="../util/ASTHelpers.html#hasAnnotation(com.sun.source.tree.Tree,com.google.errorprone.ClassName,com.google.errorprone.VisitorState)" class="member-name-link">hasAnnotation</a><wbr>(@Nullable <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;tree,

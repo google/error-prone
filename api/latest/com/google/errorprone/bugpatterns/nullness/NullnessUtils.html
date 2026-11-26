@@ -103,15 +103,14 @@ loadScripts(document, 'script');</script>
  com.google.common.collect.ImmutableSet&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.compiler/javax/lang/model/element/Name.html" title="class or interface in javax.lang.model.element" class="external-link">Name</a>&gt;&nbsp;varsProvenNullByParentIf,
  <a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;stateForCompilationUnit)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Returns <code>true</code> if the given expression can definitely evaluate to <code>null</code> along at
-least one execution branch (for example, explicit <code>null</code> literals, conditional/ternary
-branches returning <code>null</code>, known-null variables, or calls to methods like <code>
-Optional.orNull()</code>).</div>
+<div class="block">Returns <code>true</code> if the given expression can definitely evaluate to <code>null</code> along at least one
+execution branch (for example, explicit <code>null</code> literals, conditional/ternary branches
+returning <code>null</code>, known-null variables, or calls to methods like <code>Optional.orNull()</code>).</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static com.google.common.collect.ImmutableSet<wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.compiler/javax/lang/model/element/Name.html" title="class or interface in javax.lang.model.element" class="external-link">Name</a>&gt;</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#varsProvenNullByParentTernary(com.sun.source.util.TreePath)" class="member-name-link">varsProvenNullByParentTernary</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/util/TreePath.html" title="class or interface in com.sun.source.util" class="external-link">TreePath</a>&nbsp;path)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Returns x if the path's leaf is inside <code>(x == null) ? ... : ...</code>.</div>
+<div class="block">Returns x if the path's leaf is inside `(x == null) ?</div>
 </div>
 </div>
 </div>
@@ -138,10 +137,9 @@ Optional.orNull()</code>).</div>
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;com.sun.tools.javac.code.Symbol.VarSymbol&gt;&nbsp;definitelyNullVars,
  com.google.common.collect.ImmutableSet&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.compiler/javax/lang/model/element/Name.html" title="class or interface in javax.lang.model.element" class="external-link">Name</a>&gt;&nbsp;varsProvenNullByParentIf,
  <a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;stateForCompilationUnit)</span></div>
-<div class="block">Returns <code>true</code> if the given expression can definitely evaluate to <code>null</code> along at
-least one execution branch (for example, explicit <code>null</code> literals, conditional/ternary
-branches returning <code>null</code>, known-null variables, or calls to methods like <code>
-Optional.orNull()</code>).</div>
+<div class="block">Returns <code>true</code> if the given expression can definitely evaluate to <code>null</code> along at least one
+execution branch (for example, explicit <code>null</code> literals, conditional/ternary branches
+returning <code>null</code>, known-null variables, or calls to methods like <code>Optional.orNull()</code>).</div>
 </div>
 </section>
 </li>

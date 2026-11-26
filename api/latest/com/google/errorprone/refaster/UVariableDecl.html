@@ -109,15 +109,14 @@ loadScripts(document, 'script');</script>
 <div class="type-signature"><span class="modifiers">public abstract class </span><span class="element-name type-name-label">UVariableDecl</span>
 <span class="extends-implements">extends <a href="UTree.html" title="class in com.google.errorprone.refaster">UTree</a>&lt;com.sun.tools.javac.tree.JCTree.JCStatement&gt;
 implements <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/VariableTree.html" title="class or interface in com.sun.source.tree" class="external-link">VariableTree</a></span></div>
-<div class="block">A <a href="UTree.html" title="class in com.google.errorprone.refaster"><code>UTree</code></a> representation of a local variable declaration.
-
-<p>A <code>UVariableDecl</code> can be unified with any variable declaration which has a matching type
-and initializer. Annotations and modifiers are preserved for the corresponding replacement, as
-well as the variable name. <code>ULocalVarIdent</code> instances are used to represent references to
-local variables.
-
+<div class="block"><p>A <a href="UTree.html" title="class in com.google.errorprone.refaster"><code>UTree</code></a> representation of a local variable declaration.</p>
+<p>A <code>UVariableDecl</code> can be unified with any variable declaration which has a matching type and
+initializer. Annotations and modifiers are preserved for the corresponding replacement, as well
+as the variable name. <code>ULocalVarIdent</code> instances are used to represent references to local
+variables.</p>
 <p>As a result, we can modify variable declarations and initializations in target code while
-preserving variable names and other contextual information.</div>
+preserving variable names and other contextual information.</p>
+</div>
 <dl class="notes">
 <dt>Author:</dt>
 <dd>lowasser@google.com (Louis Wasserman)</dd>

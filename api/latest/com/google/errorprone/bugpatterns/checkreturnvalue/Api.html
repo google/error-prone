@@ -90,17 +90,17 @@ loadScripts(document, 'script');</script>
 <dt>Record Components:</dt>
 <dd><code><span id="param-className">className</span></code> - Returns the fully qualified type that contains the given method/constructor.</dd>
 <dd><code><span id="param-methodName">methodName</span></code> - Returns the simple name of the method. If the API is a constructor (i.e.,
-    <code>isConstructor() == true</code>), then <code>"&lt;init&gt;"</code> is returned.</dd>
+<code>isConstructor() == true</code>), then <code>&quot;&lt;init&gt;&quot;</code> is returned.</dd>
 <dd><code><span id="param-parameterTypes">parameterTypes</span></code> - Returns the list of fully qualified parameter types for the given
-    method/constructor.</dd>
+method/constructor.</dd>
 </dl>
 <hr>
 <div class="horizontal-scroll">
 <div class="type-signature"><span class="modifiers">public record </span><span class="element-name type-name-label">Api</span>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;className, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;methodName, com.google.common.collect.ImmutableList&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;parameterTypes)
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Record.html" title="class or interface in java.lang" class="external-link">Record</a></span></div>
-<div class="block">Represents a Java method or constructor.
-
-<p>Provides a method to parse an API from a string format, and emit an API as the same sting.</div>
+<div class="block"><p>Represents a Java method or constructor.</p>
+<p>Provides a method to parse an API from a string format, and emit an API as the same sting.</p>
+</div>
 </div>
 </section>
 <section class="summary">
@@ -230,16 +230,15 @@ loadScripts(document, 'script');</script>
 <h3>parse</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="Api.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">Api</a></span>&nbsp;<span class="element-name">parse</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;api)</span></div>
-<div class="block">Parses an API string into an <a href="Api.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue"><code>Api</code></a>, ignoring trailing or inner whitespace between names.
-
-<p>Example API strings are:
-
+<div class="block"><p>Parses an API string into an <a href="Api.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue"><code>Api</code></a>, ignoring trailing or inner whitespace between names.</p>
+<p>Example API strings are:</p>
 <ul>
-  <li>a constructor (e.g., <code>java.net.URI#&lt;init&gt;(java.lang.String)</code>)
-  <li>a static method (e.g., <code>java.net.URI#create(java.lang.String)</code>)
-  <li>an instance method (e.g., <code>java.util.List#get(int)</code>)
-  <li>an instance method with types erased (e.g., <code>java.util.List#add(java.lang.Object)</code>)
-</ul></div>
+<li>a constructor (e.g., <code>java.net.URI#&lt;init&gt;(java.lang.String)</code>)</li>
+<li>a static method (e.g., <code>java.net.URI#create(java.lang.String)</code>)</li>
+<li>an instance method (e.g., <code>java.util.List#get(int)</code>)</li>
+<li>an instance method with types erased (e.g., <code>java.util.List#add(java.lang.Object)</code>)</li>
+</ul>
+</div>
 <dl class="notes">
 <dt>Throws:</dt>
 <dd><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/IllegalArgumentException.html" title="class or interface in java.lang" class="external-link">IllegalArgumentException</a></code> - when <code>api</code> is not well-formed</dd>

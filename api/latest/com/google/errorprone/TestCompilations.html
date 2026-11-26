@@ -80,10 +80,10 @@ loadScripts(document, 'script');</script>
 <div class="horizontal-scroll">
 <div class="type-signature"><span class="modifiers">public final class </span><span class="element-name type-name-label">TestCompilations</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
-<div class="block">Shared helpers for configuring compiler options and creating <code>JavacTaskImpl</code> instances in
-Error Prone tests.
-
-<p>Intended for internal use by Error Prone test helpers only.</div>
+<div class="block"><p>Shared helpers for configuring compiler options and creating <code>JavacTaskImpl</code> instances in Error
+Prone tests.</p>
+<p>Intended for internal use by Error Prone test helpers only.</p>
+</div>
 </div>
 </section>
 <section class="summary">
@@ -102,16 +102,16 @@ Error Prone tests.
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static com.google.common.collect.ImmutableList<wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#defaultTestArgs(java.util.List)" class="member-name-link">defaultTestArgs</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;extraArgs)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Returns <code>extraArgs</code> prefixed with Error Prone's preferred test defaults and <code>
--proc:none</code> (unless annotation processing is explicitly configured in <code>extraArgs</code>).</div>
+<div class="block">Returns <code>extraArgs</code> prefixed with Error Prone's preferred test defaults and <code>-proc:none</code>
+(unless annotation processing is explicitly configured in <code>extraArgs</code>).</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static com.google.common.collect.ImmutableList<wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#defaultTestArgs(java.util.List,boolean)" class="member-name-link">defaultTestArgs</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;extraArgs,
  boolean&nbsp;disableImplicitProcessing)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Returns <code>extraArgs</code> prefixed with Error Prone's preferred test defaults and, when <code>
-disableImplicitProcessing</code> is <code>true</code> and annotation processing is not explicitly
-configured in <code>extraArgs</code>, <code>-proc:none</code>.</div>
+<div class="block">Returns <code>extraArgs</code> prefixed with Error Prone's preferred test defaults and, when
+<code>disableImplicitProcessing</code> is <code>true</code> and annotation processing is not explicitly configured
+in <code>extraArgs</code>, <code>-proc:none</code>.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static com.sun.tools.javac.api.JavacTaskImpl</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getTask(java.io.Writer,javax.tools.DiagnosticListener,java.util.List,java.lang.Iterable)" class="member-name-link">getTask</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/io/Writer.html" title="class or interface in java.io" class="external-link">Writer</a>&nbsp;out,
@@ -119,9 +119,8 @@ configured in <code>extraArgs</code>, <code>-proc:none</code>.</div>
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;extraJavacArgs,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;? extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.compiler/javax/tools/JavaFileObject.html" title="class or interface in javax.tools" class="external-link">JavaFileObject</a>&gt;&nbsp;compilationUnits)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Creates a <code>JavacTaskImpl</code> using <a href="FileManagers.html#testFileManager()"><code>FileManagers.testFileManager()</code></a> with Error Prone's
-required production javac options and preferred test defaults layered before <code>
-extraJavacArgs</code>.</div>
+<div class="block">Creates a <code>JavacTaskImpl</code> using <a href="FileManagers.html#testFileManager()"><code>FileManagers.testFileManager()</code></a> with Error Prone's required
+production javac options and preferred test defaults layered before <code>extraJavacArgs</code>.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static com.sun.tools.javac.api.JavacTaskImpl</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getTask(java.io.Writer,javax.tools.DiagnosticListener,java.util.List,java.lang.Iterable,com.sun.tools.javac.util.Context)" class="member-name-link">getTask</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/io/Writer.html" title="class or interface in java.io" class="external-link">Writer</a>&nbsp;out,
@@ -130,16 +129,16 @@ extraJavacArgs</code>.</div>
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;? extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.compiler/javax/tools/JavaFileObject.html" title="class or interface in javax.tools" class="external-link">JavaFileObject</a>&gt;&nbsp;compilationUnits,
  com.sun.tools.javac.util.Context&nbsp;context)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Creates a <code>JavacTaskImpl</code> using <a href="FileManagers.html#testFileManager()"><code>FileManagers.testFileManager()</code></a> and the given
-<code>context</code>, with Error Prone's required production javac options and preferred test
-defaults layered before <code>extraJavacArgs</code>.</div>
+<div class="block">Creates a <code>JavacTaskImpl</code> using <a href="FileManagers.html#testFileManager()"><code>FileManagers.testFileManager()</code></a> and the given <code>context</code>, with
+Error Prone's required production javac options and preferred test defaults layered before
+<code>extraJavacArgs</code>.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static com.google.common.collect.ImmutableList<wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#withTestOnlyAndDeps(java.util.List,boolean)" class="member-name-link">withTestOnlyAndDeps</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;args,
  boolean&nbsp;testOnly)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Augments <code>args</code> with <code>-XepCompilingTestOnlyCode</code> (when <code>testOnly</code> is <code>
-true</code>) and the <code>com.google.errorprone.deps_for_test_inputs</code> classpath (when set).</div>
+<div class="block">Augments <code>args</code> with <code>-XepCompilingTestOnlyCode</code> (when <code>testOnly</code> is <code>true</code>) and the
+<code>com.google.errorprone.deps_for_test_inputs</code> classpath (when set).</div>
 </div>
 </div>
 </div>
@@ -163,8 +162,8 @@ true</code>) and the <code>com.google.errorprone.deps_for_test_inputs</code> cla
 <h3>defaultTestArgs</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">com.google.common.collect.ImmutableList&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</span>&nbsp;<span class="element-name">defaultTestArgs</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;extraArgs)</span></div>
-<div class="block">Returns <code>extraArgs</code> prefixed with Error Prone's preferred test defaults and <code>
--proc:none</code> (unless annotation processing is explicitly configured in <code>extraArgs</code>).</div>
+<div class="block">Returns <code>extraArgs</code> prefixed with Error Prone's preferred test defaults and <code>-proc:none</code>
+(unless annotation processing is explicitly configured in <code>extraArgs</code>).</div>
 </div>
 </section>
 </li>
@@ -174,9 +173,9 @@ true</code>) and the <code>com.google.errorprone.deps_for_test_inputs</code> cla
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">com.google.common.collect.ImmutableList&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</span>&nbsp;<span class="element-name">defaultTestArgs</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;extraArgs,
  boolean&nbsp;disableImplicitProcessing)</span></div>
-<div class="block">Returns <code>extraArgs</code> prefixed with Error Prone's preferred test defaults and, when <code>
-disableImplicitProcessing</code> is <code>true</code> and annotation processing is not explicitly
-configured in <code>extraArgs</code>, <code>-proc:none</code>.</div>
+<div class="block">Returns <code>extraArgs</code> prefixed with Error Prone's preferred test defaults and, when
+<code>disableImplicitProcessing</code> is <code>true</code> and annotation processing is not explicitly configured
+in <code>extraArgs</code>, <code>-proc:none</code>.</div>
 </div>
 </section>
 </li>
@@ -186,8 +185,8 @@ configured in <code>extraArgs</code>, <code>-proc:none</code>.</div>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">com.google.common.collect.ImmutableList&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</span>&nbsp;<span class="element-name">withTestOnlyAndDeps</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;args,
  boolean&nbsp;testOnly)</span></div>
-<div class="block">Augments <code>args</code> with <code>-XepCompilingTestOnlyCode</code> (when <code>testOnly</code> is <code>
-true</code>) and the <code>com.google.errorprone.deps_for_test_inputs</code> classpath (when set).</div>
+<div class="block">Augments <code>args</code> with <code>-XepCompilingTestOnlyCode</code> (when <code>testOnly</code> is <code>true</code>) and the
+<code>com.google.errorprone.deps_for_test_inputs</code> classpath (when set).</div>
 </div>
 </section>
 </li>
@@ -199,9 +198,8 @@ true</code>) and the <code>com.google.errorprone.deps_for_test_inputs</code> cla
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.compiler/javax/tools/DiagnosticListener.html" title="class or interface in javax.tools" class="external-link">DiagnosticListener</a>&lt;? super <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.compiler/javax/tools/JavaFileObject.html" title="class or interface in javax.tools" class="external-link">JavaFileObject</a>&gt;&nbsp;diagnosticListener,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;extraJavacArgs,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;? extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.compiler/javax/tools/JavaFileObject.html" title="class or interface in javax.tools" class="external-link">JavaFileObject</a>&gt;&nbsp;compilationUnits)</span></div>
-<div class="block">Creates a <code>JavacTaskImpl</code> using <a href="FileManagers.html#testFileManager()"><code>FileManagers.testFileManager()</code></a> with Error Prone's
-required production javac options and preferred test defaults layered before <code>
-extraJavacArgs</code>.</div>
+<div class="block">Creates a <code>JavacTaskImpl</code> using <a href="FileManagers.html#testFileManager()"><code>FileManagers.testFileManager()</code></a> with Error Prone's required
+production javac options and preferred test defaults layered before <code>extraJavacArgs</code>.</div>
 </div>
 </section>
 </li>
@@ -214,9 +212,9 @@ extraJavacArgs</code>.</div>
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;extraJavacArgs,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;? extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.compiler/javax/tools/JavaFileObject.html" title="class or interface in javax.tools" class="external-link">JavaFileObject</a>&gt;&nbsp;compilationUnits,
  com.sun.tools.javac.util.Context&nbsp;context)</span></div>
-<div class="block">Creates a <code>JavacTaskImpl</code> using <a href="FileManagers.html#testFileManager()"><code>FileManagers.testFileManager()</code></a> and the given
-<code>context</code>, with Error Prone's required production javac options and preferred test
-defaults layered before <code>extraJavacArgs</code>.</div>
+<div class="block">Creates a <code>JavacTaskImpl</code> using <a href="FileManagers.html#testFileManager()"><code>FileManagers.testFileManager()</code></a> and the given <code>context</code>, with
+Error Prone's required production javac options and preferred test defaults layered before
+<code>extraJavacArgs</code>.</div>
 </div>
 </section>
 </li>

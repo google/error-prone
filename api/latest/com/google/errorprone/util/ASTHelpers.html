@@ -277,22 +277,22 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#boxedClass(com.sun.tools.javac.code.Type,com.google.errorprone.VisitorState)" class="member-name-link">boxedClass</a><wbr>(@Nullable com.sun.tools.javac.code.Type&nbsp;type,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Returns the <code>Symbol.ClassSymbol</code> of the boxed wrapper class for a primitive <code>type</code>, or
-<code>null</code> if <code>type</code> is null or not a primitive type.</div>
+<div class="block">Returns the <code>Symbol.ClassSymbol</code> of the boxed wrapper class for a primitive <code>type</code>, or <code>null</code> if
+<code>type</code> is null or not a primitive type.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a><wbr>&lt;com.sun.tools.javac.code.Type&gt;</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#boxedType(com.sun.tools.javac.code.Type,com.google.errorprone.VisitorState)" class="member-name-link">boxedType</a><wbr>(@Nullable com.sun.tools.javac.code.Type&nbsp;type,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Returns the boxed wrapper type if <code>type</code> is a primitive type, or <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html#empty()" title="class or interface in java.util" class="external-link"><code>Optional.empty()</code></a>
-if it is not a primitive type.</div>
+<div class="block">Returns the boxed wrapper type if <code>type</code> is a primitive type, or <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html#empty()" title="class or interface in java.util" class="external-link"><code>Optional.empty()</code></a> if it is
+not a primitive type.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static @Nullable com.sun.tools.javac.code.Type</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#boxedTypeOrType(com.sun.tools.javac.code.Type,com.google.errorprone.VisitorState)" class="member-name-link">boxedTypeOrType</a><wbr>(@Nullable com.sun.tools.javac.code.Type&nbsp;type,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Returns the boxed wrapper type if <code>type</code> is a primitive type, <code>null</code> if <code>
-type</code> is null, or <code>type</code> itself if it is already a reference type.</div>
+<div class="block">Returns the boxed wrapper type if <code>type</code> is a primitive type, <code>null</code> if <code>type</code> is null, or
+<code>type</code> itself if it is already a reference type.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#canBeRemoved(com.sun.tools.javac.code.Symbol.ClassSymbol)" class="member-name-link">canBeRemoved</a><wbr>(com.sun.tools.javac.code.Symbol.ClassSymbol&nbsp;symbol)</code></div>
@@ -387,8 +387,8 @@ none was found.</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static @Nullable <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/util/TreePath.html" title="class or interface in com.sun.source.util" class="external-link">TreePath</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#findEnclosingMethodPath(com.sun.source.util.TreePath)" class="member-name-link">findEnclosingMethodPath</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/util/TreePath.html" title="class or interface in com.sun.source.util" class="external-link">TreePath</a>&nbsp;path)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Finds the <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/util/TreePath.html" title="class or interface in com.sun.source.util" class="external-link"><code>TreePath</code></a> to the enclosing <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/MethodTree.html" title="class or interface in com.sun.source.tree" class="external-link"><code>MethodTree</code></a> in the current scope (not
-crossing class or lambda boundaries).</div>
+<div class="block">Finds the <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/util/TreePath.html" title="class or interface in com.sun.source.util" class="external-link"><code>TreePath</code></a> to the enclosing <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/MethodTree.html" title="class or interface in com.sun.source.tree" class="external-link"><code>MethodTree</code></a> in the current scope (not crossing class or
+lambda boundaries).</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static &lt;T&gt;&nbsp;@Nullable T</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#findEnclosingNode(com.sun.source.util.TreePath,java.lang.Class)" class="member-name-link">findEnclosingNode</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/util/TreePath.html" title="class or interface in com.sun.source.util" class="external-link">TreePath</a>&nbsp;path,
@@ -402,8 +402,8 @@ crossing class or lambda boundaries).</div>
  com.sun.tools.javac.code.Type&nbsp;startClass,
  com.sun.tools.javac.code.Types&nbsp;types)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Finds all methods in any superclass of <code>startClass</code> with a certain <code>name</code> that
-match the given <code>predicate</code>.</div>
+<div class="block">Finds all methods in any superclass of <code>startClass</code> with a certain <code>name</code> that match the given
+<code>predicate</code>.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static @Nullable <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/MethodTree.html" title="class or interface in com.sun.source.tree" class="external-link">MethodTree</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#findMethod(com.sun.tools.javac.code.Symbol.MethodSymbol,com.google.errorprone.VisitorState)" class="member-name-link">findMethod</a><wbr>(com.sun.tools.javac.code.Symbol.MethodSymbol&nbsp;symbol,
@@ -428,17 +428,17 @@ the enclosing node to the top-level <code>CompilationUnitTree</code>.</div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#findSuperMethods(com.sun.tools.javac.code.Symbol.MethodSymbol,com.sun.tools.javac.code.Types)" class="member-name-link">findSuperMethods</a><wbr>(com.sun.tools.javac.code.Symbol.MethodSymbol&nbsp;methodSymbol,
  com.sun.tools.javac.code.Types&nbsp;types)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Finds supermethods of <code>methodSymbol</code>, not including <code>methodSymbol</code> itself, and
-including interfaces.</div>
+<div class="block">Finds supermethods of <code>methodSymbol</code>, not including <code>methodSymbol</code> itself, and including
+interfaces.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4 method-summary-table-tab6"><code>static &lt;T extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/annotation/Annotation.html" title="class or interface in java.lang.annotation" class="external-link">Annotation</a>&gt;<br>@Nullable T</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4 method-summary-table-tab6"><code><a href="#getAnnotation(com.sun.source.tree.Tree,java.lang.Class)" class="member-name-link">getAnnotation</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;tree,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;T&gt;&nbsp;annotationClass)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4 method-summary-table-tab6">
 <div class="block"><span class="deprecated-label">Deprecated.</span>
-<div class="deprecation-comment">If <code>annotationClass</code> contains a member that is a <code>Class</code> or an array of
-    them, attempting to access that member from the Error Prone checker code will result in a
-    runtime exception.</div>
+<div class="deprecation-comment">If <code>annotationClass</code> contains a member that is a <code>Class</code> or an array of them,
+attempting to access that member from the Error Prone checker code will result in a runtime
+exception.</div>
 </div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4 method-summary-table-tab6"><code>static &lt;T extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/annotation/Annotation.html" title="class or interface in java.lang.annotation" class="external-link">Annotation</a>&gt;<br>@Nullable T</code></div>
@@ -446,9 +446,9 @@ including interfaces.</div>
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;T&gt;&nbsp;annotationClass)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4 method-summary-table-tab6">
 <div class="block"><span class="deprecated-label">Deprecated.</span>
-<div class="deprecation-comment">If <code>annotationClass</code> contains a member that is a <code>Class</code> or an array of
-    them, attempting to access that member from the Error Prone checker code will result in a
-    runtime exception.</div>
+<div class="deprecation-comment">If <code>annotationClass</code> contains a member that is a <code>Class</code> or an array of them,
+attempting to access that member from the Error Prone checker code will result in a runtime
+exception.</div>
 </div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.compiler/javax/lang/model/element/AnnotationMirror.html" title="class or interface in javax.lang.model.element" class="external-link">AnnotationMirror</a></code></div>
@@ -475,8 +475,8 @@ including interfaces.</div>
  @Nullable com.sun.tools.javac.code.Symbol&nbsp;target,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Returns whether <code>anno</code> corresponds to a type annotation, or <code>null</code> if it could not
-be determined.</div>
+<div class="block">Returns whether <code>anno</code> corresponds to a type annotation, or <code>null</code> if it could not be
+determined.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static @Nullable <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/AnnotationTree.html" title="class or interface in com.sun.source.tree" class="external-link">AnnotationTree</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getAnnotationWithSimpleName(java.util.List,java.lang.String)" class="member-name-link">getAnnotationWithSimpleName</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;? extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/AnnotationTree.html" title="class or interface in com.sun.source.tree" class="external-link">AnnotationTree</a>&gt;&nbsp;annotations,
@@ -502,8 +502,8 @@ be determined.</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;com.sun.tools.javac.code.Symbol&gt;</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getEnclosedElements(com.sun.tools.javac.code.Symbol)" class="member-name-link">getEnclosedElements</a><wbr>(com.sun.tools.javac.code.Symbol&nbsp;symbol)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">A wrapper for <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.compiler/javax/lang/model/element/Element.html#getEnclosedElements()" title="class or interface in javax.lang.model.element" class="external-link"><code>Element.getEnclosedElements()</code></a> to avoid binary compatibility issues for
-covariant overrides in subtypes of <code>Symbol</code>.</div>
+<div class="block">A wrapper for <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.compiler/javax/lang/model/element/Element.html#getEnclosedElements()" title="class or interface in javax.lang.model.element" class="external-link"><code>Element.getEnclosedElements()</code></a> to avoid binary compatibility issues for covariant
+overrides in subtypes of <code>Symbol</code>.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getErasedTypeTree(com.sun.source.tree.Tree)" class="member-name-link">getErasedTypeTree</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;tree)</code></div>
@@ -579,13 +579,15 @@ covariant overrides in subtypes of <code>Symbol</code>.</div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getSourcePath(com.google.errorprone.VisitorState)" class="member-name-link">getSourcePath</a><wbr>(<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Extract a canonical repository/workspace-relative filename from the <a href="../VisitorState.html" title="class in com.google.errorprone"><code>VisitorState</code></a>'s
-compilation unit, normalizing away workspace roots (e.g.</div>
+compilation unit, normalizing away workspace roots (e.g. <code>/execroot/&lt;workspace&gt;/</code>) and build
+output directories (e.g. <code>blaze-out/.../(bin|genfiles)/</code> or `bazel-out/...</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getSourcePath(com.sun.source.tree.CompilationUnitTree)" class="member-name-link">getSourcePath</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/CompilationUnitTree.html" title="class or interface in com.sun.source.tree" class="external-link">CompilationUnitTree</a>&nbsp;tree)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Extract a canonical repository/workspace-relative filename from a <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/CompilationUnitTree.html" title="class or interface in com.sun.source.tree" class="external-link"><code>CompilationUnitTree</code></a>,
-normalizing away workspace roots (e.g.</div>
+normalizing away workspace roots (e.g. <code>/execroot/&lt;workspace&gt;/</code>) and build output directories
+(e.g. <code>blaze-out/.../(bin|genfiles)/</code> or `bazel-out/...</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static int</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getStartPosition(com.sun.source.tree.Tree)" class="member-name-link">getStartPosition</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;tree)</code></div>
@@ -644,14 +646,12 @@ normalizing away workspace roots (e.g.</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static @Nullable com.sun.tools.javac.code.Type.ClassType</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getType(com.sun.source.tree.ClassTree)" class="member-name-link">getType</a><wbr>(@Nullable <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ClassTree.html" title="class or interface in com.sun.source.tree" class="external-link">ClassTree</a>&nbsp;tree)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Returns the <code>ClassType</code> for the given type <code>ClassTree</code> or <code>null</code> if <code>
-tree</code> was <code>null</code>.</div>
+<div class="block">Returns the <code>ClassType</code> for the given type <code>ClassTree</code> or <code>null</code> if <code>tree</code> was <code>null</code>.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static @Nullable com.sun.tools.javac.code.Type</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getType(com.sun.source.tree.Tree)" class="member-name-link">getType</a><wbr>(@Nullable <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;tree)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Returns the <code>Type</code> of the given tree, or <code>null</code> if the type could not be
-determined.</div>
+<div class="block">Returns the <code>Type</code> of the given tree, or <code>null</code> if the type could not be determined.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static com.google.common.collect.ImmutableListMultimap<wbr>&lt;com.sun.tools.javac.code.Symbol.TypeVariableSymbol, com.sun.tools.javac.code.Type&gt;</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getTypeSubstitution(com.sun.tools.javac.code.Type,com.sun.tools.javac.code.Symbol)" class="member-name-link">getTypeSubstitution</a><wbr>(com.sun.tools.javac.code.Type&nbsp;type,
@@ -678,9 +678,9 @@ determined.</div>
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4 method-summary-table-tab6">
 <div class="block"><span class="deprecated-label">Deprecated.</span>
-<div class="deprecation-comment">prefer <a href="#hasAnnotation(com.sun.source.tree.Tree,com.google.errorprone.ClassName,com.google.errorprone.VisitorState)"><code>hasAnnotation(Tree, ClassName, VisitorState)</code></a> to avoid needing a
-    runtime dependency on the annotation class, and to prevent issues if there is skew between
-    the definition of the annotation on the runtime and compile-time classpaths</div>
+<div class="deprecation-comment">prefer <a href="#hasAnnotation(com.sun.source.tree.Tree,com.google.errorprone.ClassName,com.google.errorprone.VisitorState)"><code>hasAnnotation(Tree, ClassName, VisitorState)</code></a> to avoid needing a runtime
+dependency on the annotation class, and to prevent issues if there is skew between the
+definition of the annotation on the runtime and compile-time classpaths</div>
 </div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
@@ -711,8 +711,8 @@ determined.</div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4 method-summary-table-tab6">
 <div class="block"><span class="deprecated-label">Deprecated.</span>
 <div class="deprecation-comment">prefer <a href="#hasAnnotation(com.sun.tools.javac.code.Symbol,com.google.errorprone.ClassName,com.google.errorprone.VisitorState)"><code>hasAnnotation(Symbol, ClassName, VisitorState)</code></a> to avoid needing a
-    runtime dependency on the annotation class, and to prevent issues if there is skew between
-    the definition of the annotation on the runtime and compile-time classpaths</div>
+runtime dependency on the annotation class, and to prevent issues if there is skew between
+the definition of the annotation on the runtime and compile-time classpaths</div>
 </div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
@@ -775,7 +775,7 @@ its type.</div>
  com.sun.tools.javac.code.Type&nbsp;onlyParameterType,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Returns whether <code>existingMethod</code> has an overload (or "nearly" an overload) with the given
+<div class="block">Returns whether <code>existingMethod</code> has an overload (or &quot;nearly&quot; an overload) with the given
 <code>targetMethodName</code>, and only a single parameter of type <code>onlyParameterType</code>.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
@@ -824,8 +824,7 @@ Character, Short, Integer, Long, Float, Double).</div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#isCheckedExceptionType(com.sun.tools.javac.code.Type,com.google.errorprone.VisitorState)" class="member-name-link">isCheckedExceptionType</a><wbr>(com.sun.tools.javac.code.Type&nbsp;t,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Returns true if <code>t</code> is a subtype of Throwable but not a subtype of RuntimeException or
-Error.</div>
+<div class="block">Returns true if <code>t</code> is a subtype of Throwable but not a subtype of RuntimeException or Error.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#isConsideredFinal(com.sun.tools.javac.code.Symbol)" class="member-name-link">isConsideredFinal</a><wbr>(com.sun.tools.javac.code.Symbol&nbsp;symbol)</code></div>
@@ -857,8 +856,8 @@ which is ultimately assigned to a static field.</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#isJUnitTestCode(com.google.errorprone.VisitorState)" class="member-name-link">isJUnitTestCode</a><wbr>(<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Returns true if the leaf node in the <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/util/TreePath.html" title="class or interface in com.sun.source.util" class="external-link"><code>TreePath</code></a> from <code>state</code> sits somewhere
-underneath a class or method that is marked as JUnit 3 or 4 test code.</div>
+<div class="block">Returns true if the leaf node in the <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/util/TreePath.html" title="class or interface in com.sun.source.util" class="external-link"><code>TreePath</code></a> from <code>state</code> sits somewhere underneath a class
+or method that is marked as JUnit 3 or 4 test code.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#isKotlin(com.sun.tools.javac.code.Symbol,com.google.errorprone.VisitorState)" class="member-name-link">isKotlin</a><wbr>(com.sun.tools.javac.code.Symbol&nbsp;symbol,
@@ -869,8 +868,8 @@ underneath a class or method that is marked as JUnit 3 or 4 test code.</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#isRecord(com.sun.tools.javac.code.Symbol)" class="member-name-link">isRecord</a><wbr>(com.sun.tools.javac.code.Symbol&nbsp;symbol)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Returns whether the given <code>Symbol</code> is a record, a record's canonical constructor or a
-member that is part of a record's state vector.</div>
+<div class="block">Returns whether the given <code>Symbol</code> is a record, a record's canonical constructor or a member
+that is part of a record's state vector.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#isSameType(com.sun.tools.javac.code.Type,com.google.errorprone.ClassName,com.google.errorprone.VisitorState)" class="member-name-link">isSameType</a><wbr>(com.sun.tools.javac.code.Type&nbsp;s,
@@ -916,8 +915,8 @@ member that is part of a record's state vector.</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#isTestNgTestCode(com.google.errorprone.VisitorState)" class="member-name-link">isTestNgTestCode</a><wbr>(<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Returns true if the leaf node in the <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/util/TreePath.html" title="class or interface in com.sun.source.util" class="external-link"><code>TreePath</code></a> from <code>state</code> sits somewhere
-underneath a class or method that is marked as TestNG test code.</div>
+<div class="block">Returns true if the leaf node in the <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/util/TreePath.html" title="class or interface in com.sun.source.util" class="external-link"><code>TreePath</code></a> from <code>state</code> sits somewhere underneath a class
+or method that is marked as TestNG test code.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#isVoidType(com.sun.tools.javac.code.Type,com.google.errorprone.VisitorState)" class="member-name-link">isVoidType</a><wbr>(com.sun.tools.javac.code.Type&nbsp;type,
@@ -939,8 +938,8 @@ operands in both orders.</div>
  com.sun.tools.javac.code.Type&nbsp;startClass,
  com.sun.tools.javac.code.Types&nbsp;types)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Finds all methods in any superclass of <code>startClass</code> with a certain <code>name</code> that
-match the given <code>predicate</code>.</div>
+<div class="block">Finds all methods in any superclass of <code>startClass</code> with a certain <code>name</code> that match the given
+<code>predicate</code>.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#methodCanBeOverridden(com.sun.tools.javac.code.Symbol.MethodSymbol)" class="member-name-link">methodCanBeOverridden</a><wbr>(com.sun.tools.javac.code.Symbol.MethodSymbol&nbsp;methodSymbol)</code></div>
@@ -951,8 +950,8 @@ match the given <code>predicate</code>.</div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#methodIsPublicAndNotAnOverride(com.sun.tools.javac.code.Symbol.MethodSymbol,com.google.errorprone.VisitorState)" class="member-name-link">methodIsPublicAndNotAnOverride</a><wbr>(com.sun.tools.javac.code.Symbol.MethodSymbol&nbsp;method,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Returns true if the given method symbol is public (both the method and the enclosing class) and
-does <i>not</i> have a super-method (i.e., it is not an <code>@Override</code>).</div>
+<div class="block">Returns true if the given method symbol is public (both the method and the enclosing class)
+and does <em>not</em> have a super-method (i.e., it is not an <code>@Override</code>).</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static @Nullable com.sun.tools.javac.code.Symbol.ClassSymbol</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#outermostClass(com.sun.tools.javac.code.Symbol)" class="member-name-link">outermostClass</a><wbr>(com.sun.tools.javac.code.Symbol&nbsp;symbol)</code></div>
@@ -963,14 +962,15 @@ does <i>not</i> have a super-method (i.e., it is not an <code>@Override</code>).
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#overridesObjectEquals(com.sun.tools.javac.code.Symbol.TypeSymbol,com.google.errorprone.VisitorState)" class="member-name-link">overridesObjectEquals</a><wbr>(com.sun.tools.javac.code.Symbol.TypeSymbol&nbsp;symbol,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Returns whether <code>symbol</code> declares or inherits an implementation of <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#equals(java.lang.Object)" title="class or interface in java.lang" class="external-link"><code>Object.equals(Object)</code></a>
-other than the default implementation in <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link"><code>Object</code></a>.</div>
+<div class="block">Returns whether <code>symbol</code> declares or inherits an implementation of <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#equals(java.lang.Object)" title="class or interface in java.lang" class="external-link"><code>Object.equals(Object)</code></a> other than
+the default implementation in <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link"><code>Object</code></a>.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#overridesObjectHashCode(com.sun.tools.javac.code.Symbol.TypeSymbol,com.google.errorprone.VisitorState)" class="member-name-link">overridesObjectHashCode</a><wbr>(com.sun.tools.javac.code.Symbol.TypeSymbol&nbsp;symbol,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Returns whether <code>symbol</code> declares or inherits an implementation of <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#hashCode()" title="class or interface in java.lang" class="external-link"><code>Object.hashCode()</code></a> other than the default implementation in <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link"><code>Object</code></a>.</div>
+<div class="block">Returns whether <code>symbol</code> declares or inherits an implementation of <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#hashCode()" title="class or interface in java.lang" class="external-link"><code>Object.hashCode()</code></a> other
+than the default implementation in <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link"><code>Object</code></a>.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#requiresParentheses(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)" class="member-name-link">requiresParentheses</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&nbsp;expression,
@@ -985,8 +985,8 @@ other than the default implementation in <a href="https://docs.oracle.com/en/jav
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;com.sun.tools.javac.code.Type&gt;&nbsp;argTypes,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;com.sun.tools.javac.code.Type&gt;&nbsp;tyargTypes)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Given a Type (<code>base</code>), find the method named <code>name</code>, with the appropriate <code>
-argTypes</code> and <code>tyargTypes</code> and return its MethodSymbol.</div>
+<div class="block">Given a Type (<code>base</code>), find the method named <code>name</code>, with the appropriate <code>argTypes</code> and
+<code>tyargTypes</code> and return its MethodSymbol.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#sameVariable(com.sun.source.tree.ExpressionTree,com.sun.source.tree.ExpressionTree)" class="member-name-link">sameVariable</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&nbsp;expr1,
@@ -1004,7 +1004,8 @@ argTypes</code> and <code>tyargTypes</code> and return its MethodSymbol.</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/stream/Stream.html" title="class or interface in java.util.stream" class="external-link">Stream</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#streamReceivers(com.sun.source.tree.ExpressionTree)" class="member-name-link">streamReceivers</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&nbsp;tree)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Returns a <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/stream/Stream.html" title="class or interface in java.util.stream" class="external-link"><code>Stream</code></a> of <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link"><code>ExpressionTree</code></a>s resulting from calling <a href="#getReceiver(com.sun.source.tree.ExpressionTree)"><code>getReceiver(ExpressionTree)</code></a> repeatedly until no receiver exists.</div>
+<div class="block">Returns a <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/stream/Stream.html" title="class or interface in java.util.stream" class="external-link"><code>Stream</code></a> of <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link"><code>ExpressionTree</code></a>s resulting from calling <a href="#getReceiver(com.sun.source.tree.ExpressionTree)"><code>getReceiver(ExpressionTree)</code></a>
+repeatedly until no receiver exists.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/stream/Stream.html" title="class or interface in java.util.stream" class="external-link">Stream</a><wbr>&lt;com.sun.tools.javac.code.Symbol.MethodSymbol&gt;</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#streamSuperMethods(com.sun.tools.javac.code.Symbol.MethodSymbol,com.sun.tools.javac.code.Types)" class="member-name-link">streamSuperMethods</a><wbr>(com.sun.tools.javac.code.Symbol.MethodSymbol&nbsp;methodSymbol,
@@ -1039,14 +1040,15 @@ argTypes</code> and <code>tyargTypes</code> and return its MethodSymbol.</div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#unboxedType(com.sun.tools.javac.code.Type,com.google.errorprone.VisitorState)" class="member-name-link">unboxedType</a><wbr>(@Nullable com.sun.tools.javac.code.Type&nbsp;type,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Returns the unboxed primitive type if <code>type</code> is a boxed primitive, or <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html#empty()" title="class or interface in java.util" class="external-link"><code>Optional.empty()</code></a> if it cannot be unboxed.</div>
+<div class="block">Returns the unboxed primitive type if <code>type</code> is a boxed primitive, or <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html#empty()" title="class or interface in java.util" class="external-link"><code>Optional.empty()</code></a> if it
+cannot be unboxed.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static @Nullable com.sun.tools.javac.code.Type</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#unboxedTypeOrType(com.sun.tools.javac.code.Type,com.google.errorprone.VisitorState)" class="member-name-link">unboxedTypeOrType</a><wbr>(@Nullable com.sun.tools.javac.code.Type&nbsp;type,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Returns the unboxed primitive type if <code>type</code> is a boxed primitive, <code>null</code> if <code>
-type</code> is null, or <code>type</code> itself if it cannot be unboxed.</div>
+<div class="block">Returns the unboxed primitive type if <code>type</code> is a boxed primitive, <code>null</code> if <code>type</code> is null,
+or <code>type</code> itself if it cannot be unboxed.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#variableIsStaticFinal(com.sun.tools.javac.code.Symbol.VarSymbol)" class="member-name-link">variableIsStaticFinal</a><wbr>(com.sun.tools.javac.code.Symbol.VarSymbol&nbsp;var)</code></div>
@@ -1101,8 +1103,8 @@ type</code> is null, or <code>type</code> itself if it cannot be unboxed.</div>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">sameVariable</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&nbsp;expr1,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&nbsp;expr2)</span></div>
 <div class="block">Determines whether two expressions refer to the same variable. Note that returning false
-doesn't necessarily mean the expressions do *not* refer to the same field. We don't attempt to
-do any complex analysis here, just catch the obvious cases.</div>
+doesn't necessarily mean the expressions do *not* refer to the same field. We don't attempt
+to do any complex analysis here, just catch the obvious cases.</div>
 </div>
 </section>
 </li>
@@ -1111,8 +1113,8 @@ do any complex analysis here, just catch the obvious cases.</div>
 <h3>getDeclaredSymbol</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">@Nullable com.sun.tools.javac.code.Symbol</span>&nbsp;<span class="element-name">getDeclaredSymbol</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;tree)</span></div>
-<div class="block">Gets the symbol declared by a tree. Returns null if <code>tree</code> does not declare a symbol or
-is null.</div>
+<div class="block">Gets the symbol declared by a tree. Returns null if <code>tree</code> does not declare a symbol or is
+null.</div>
 </div>
 </section>
 </li>
@@ -1121,12 +1123,13 @@ is null.</div>
 <h3>getSymbol</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">@Nullable com.sun.tools.javac.code.Symbol</span>&nbsp;<span class="element-name">getSymbol</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;tree)</span></div>
-<div class="block">Gets the symbol that a tree declares or refers to.
-
-<p>Returns null if <code>tree</code> is null, if it is a kind of tree that has no symbol, or if
-javac attached no symbol to an identifier or member select, as for some module names. A <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ParenthesizedTree.html" title="class or interface in com.sun.source.tree" class="external-link"><code>ParenthesizedTree</code></a> has no symbol, so <code>getSymbol((x))</code> returns null where <code>
-getSymbol(x)</code> returns the symbol of <code>x</code>. Call <a href="#stripParentheses(com.sun.source.tree.Tree)"><code>stripParentheses(Tree)</code></a> first where
-the parentheses do not matter.</div>
+<div class="block"><p>Gets the symbol that a tree declares or refers to.</p>
+<p>Returns null if <code>tree</code> is null, if it is a kind of tree that has no symbol, or if javac
+attached no symbol to an identifier or member select, as for some module names. A
+<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ParenthesizedTree.html" title="class or interface in com.sun.source.tree" class="external-link"><code>ParenthesizedTree</code></a> has no symbol, so <code>getSymbol((x))</code> returns null where <code>getSymbol(x)</code>
+returns the symbol of <code>x</code>. Call <a href="#stripParentheses(com.sun.source.tree.Tree)"><code>stripParentheses(Tree)</code></a> first where the parentheses do not
+matter.</p>
+</div>
 </div>
 </section>
 </li>
@@ -1199,11 +1202,11 @@ the parentheses do not matter.</div>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">canBeRemoved</span><wbr><span class="parameters">(com.sun.tools.javac.code.Symbol&nbsp;symbol,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
-<div class="block">Returns whether this symbol is safe to remove. That is, if it cannot be accessed from outside
-its own compilation unit.
-
+<div class="block"><p>Returns whether this symbol is safe to remove. That is, if it cannot be accessed from outside
+its own compilation unit.</p>
 <p>For variables this just means that one of the enclosing elements is private; for methods, it
-also means that this symbol is not an override.</div>
+also means that this symbol is not an override.</p>
+</div>
 </div>
 </section>
 </li>
@@ -1268,11 +1271,11 @@ also means that this symbol is not an override.</div>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="type-parameters">&lt;T&gt;</span>&nbsp;<span class="return-type">@Nullable <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/util/TreePath.html" title="class or interface in com.sun.source.util" class="external-link">TreePath</a></span>&nbsp;<span class="element-name">findPathFromEnclosingNodeToTopLevel</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/util/TreePath.html" title="class or interface in com.sun.source.util" class="external-link">TreePath</a>&nbsp;path,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;T&gt;&nbsp;klass)</span></div>
-<div class="block">Given a TreePath, finds the first enclosing node of the given type and returns the path from
-the enclosing node to the top-level <code>CompilationUnitTree</code>.
-
-<p>If you are looking for "the enclosing method," consider whether <a href="#findEnclosingMethodPath(com.sun.source.util.TreePath)"><code>findEnclosingMethodPath(TreePath)</code></a> would be more appropriate: It avoids crossing class and lambda
-boundaries.</div>
+<div class="block"><p>Given a TreePath, finds the first enclosing node of the given type and returns the path from
+the enclosing node to the top-level <code>CompilationUnitTree</code>.</p>
+<p>If you are looking for &quot;the enclosing method,&quot; consider whether <a href="#findEnclosingMethodPath(com.sun.source.util.TreePath)"><code>findEnclosingMethodPath(TreePath)</code></a>
+would be more appropriate: It avoids crossing class and lambda boundaries.</p>
+</div>
 </div>
 </section>
 </li>
@@ -1281,8 +1284,9 @@ boundaries.</div>
 <h3>enclosingElements</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/stream/Stream.html" title="class or interface in java.util.stream" class="external-link">Stream</a>&lt;com.sun.tools.javac.code.Symbol&gt;</span>&nbsp;<span class="element-name">enclosingElements</span><wbr><span class="parameters">(com.sun.tools.javac.code.Symbol&nbsp;sym)</span></div>
-<div class="block">Returns a stream of the owner hierarchy starting from <code>sym</code>, as described by <code>Symbol.owner</code>. Returns <code>sym</code> itself first, followed by its owners, closest first, up to
-the owning package and possibly module.</div>
+<div class="block">Returns a stream of the owner hierarchy starting from <code>sym</code>, as described by <code>Symbol.owner</code>.
+Returns <code>sym</code> itself first, followed by its owners, closest first, up to the owning package
+and possibly module.</div>
 </div>
 </section>
 </li>
@@ -1292,11 +1296,11 @@ the owning package and possibly module.</div>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="type-parameters">&lt;T&gt;</span>&nbsp;<span class="return-type">@Nullable T</span>&nbsp;<span class="element-name">findEnclosingNode</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/util/TreePath.html" title="class or interface in com.sun.source.util" class="external-link">TreePath</a>&nbsp;path,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;T&gt;&nbsp;klass)</span></div>
-<div class="block">Given a TreePath, walks up the tree until it finds a node of the given type. Returns null if no
-such node is found.
-
-<p>If you are looking for "the enclosing method," consider whether <a href="#findEnclosingMethod(com.google.errorprone.VisitorState)"><code>findEnclosingMethod(VisitorState)</code></a>
-would be more appropriate: It avoids crossing class and lambda boundaries.</div>
+<div class="block"><p>Given a TreePath, walks up the tree until it finds a node of the given type. Returns null if
+no such node is found.</p>
+<p>If you are looking for &quot;the enclosing method,&quot; consider whether <a href="#findEnclosingMethod(com.google.errorprone.VisitorState)"><code>findEnclosingMethod(VisitorState)</code></a> would
+be more appropriate: It avoids crossing class and lambda boundaries.</p>
+</div>
 </div>
 </section>
 </li>
@@ -1305,8 +1309,8 @@ would be more appropriate: It avoids crossing class and lambda boundaries.</div>
 <h3>findEnclosingMethodPath</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">@Nullable <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/util/TreePath.html" title="class or interface in com.sun.source.util" class="external-link">TreePath</a></span>&nbsp;<span class="element-name">findEnclosingMethodPath</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/util/TreePath.html" title="class or interface in com.sun.source.util" class="external-link">TreePath</a>&nbsp;path)</span></div>
-<div class="block">Finds the <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/util/TreePath.html" title="class or interface in com.sun.source.util" class="external-link"><code>TreePath</code></a> to the enclosing <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/MethodTree.html" title="class or interface in com.sun.source.tree" class="external-link"><code>MethodTree</code></a> in the current scope (not
-crossing class or lambda boundaries). Returns <code>null</code> if no such node found.</div>
+<div class="block">Finds the <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/util/TreePath.html" title="class or interface in com.sun.source.util" class="external-link"><code>TreePath</code></a> to the enclosing <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/MethodTree.html" title="class or interface in com.sun.source.tree" class="external-link"><code>MethodTree</code></a> in the current scope (not crossing class or
+lambda boundaries). Returns <code>null</code> if no such node found.</div>
 </div>
 </section>
 </li>
@@ -1324,11 +1328,9 @@ crossing class or lambda boundaries). Returns <code>null</code> if no such node 
 <h3>getRootAssignable</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">@Nullable <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a></span>&nbsp;<span class="element-name">getRootAssignable</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/MethodInvocationTree.html" title="class or interface in com.sun.source.tree" class="external-link">MethodInvocationTree</a>&nbsp;methodInvocationTree)</span></div>
-<div class="block">Find the root assignable expression of a chain of field accesses. If there is no root (i.e, a
-bare method call or a static method call), return null.
-
-<p>Examples:
-
+<div class="block"><p>Find the root assignable expression of a chain of field accesses. If there is no root (i.e, a
+bare method call or a static method call), return null.</p>
+<p>Examples:</p>
 <pre><code>a.trim().intern() ==&gt; a
 a.b.trim().intern() ==&gt; a.b
 this.intValue.foo() ==&gt; this.intValue
@@ -1336,7 +1338,8 @@ this.foo() ==&gt; this
 intern() ==&gt; null
 String.format() ==&gt; null
 java.lang.String.format() ==&gt; null
-</code></pre></div>
+</code></pre>
+</div>
 </div>
 </section>
 </li>
@@ -1345,9 +1348,9 @@ java.lang.String.format() ==&gt; null
 <h3>getReturnType</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">com.sun.tools.javac.code.Type</span>&nbsp;<span class="element-name">getReturnType</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&nbsp;expressionTree)</span></div>
-<div class="block">Gives the return type of an ExpressionTree that represents a method select.
-
-<p>TODO(eaftan): Are there other places this could be used?</div>
+<div class="block"><p>Gives the return type of an ExpressionTree that represents a method select.</p>
+<p>TODO(eaftan): Are there other places this could be used?</p>
+</div>
 </div>
 </section>
 </li>
@@ -1356,12 +1359,12 @@ java.lang.String.format() ==&gt; null
 <h3>getResultType</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">@Nullable com.sun.tools.javac.code.Type</span>&nbsp;<span class="element-name">getResultType</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&nbsp;expressionTree)</span></div>
-<div class="block">Returns the type that this expression tree will evaluate to. If it's a literal, an identifier,
+<div class="block"><p>Returns the type that this expression tree will evaluate to. If it's a literal, an identifier,
 or a member select this is the actual type, if it's a method invocation then it's the return
 type of the method (after instantiating generic types), if it's a constructor then it's the
-type of the returned class.
-
-<p>TODO(andrewrice) consider replacing <code>getReturnType</code> with this method</div>
+type of the returned class.</p>
+<p>TODO(andrewrice) consider replacing <code>getReturnType</code> with this method</p>
+</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>expressionTree</code> - the tree to evaluate</dd>
@@ -1376,18 +1379,17 @@ type of the returned class.
 <h3>getReceiverType</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">com.sun.tools.javac.code.Type</span>&nbsp;<span class="element-name">getReceiverType</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&nbsp;expressionTree)</span></div>
-<div class="block">Returns the type of a receiver of a method call expression. Precondition: the expressionTree
-corresponds to a method call.
-
-<p>Examples:
-
+<div class="block"><p>Returns the type of a receiver of a method call expression. Precondition: the expressionTree
+corresponds to a method call.</p>
+<p>Examples:</p>
 <pre><code>a.b.foo() ==&gt; type of a.b
 a.bar().foo() ==&gt; type of a.bar()
 this.foo() ==&gt; type of this
 foo() ==&gt; type of this
 TheClass.aStaticMethod() ==&gt; TheClass
 aStaticMethod() ==&gt; type of class in which method is defined
-</code></pre></div>
+</code></pre>
+</div>
 </div>
 </section>
 </li>
@@ -1396,10 +1398,8 @@ aStaticMethod() ==&gt; type of class in which method is defined
 <h3>getReceiver</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">@Nullable <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a></span>&nbsp;<span class="element-name">getReceiver</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&nbsp;expressionTree)</span></div>
-<div class="block">Returns the receiver of an expression.
-
-<p>Examples:
-
+<div class="block"><p>Returns the receiver of an expression.</p>
+<p>Examples:</p>
 <pre><code>a.foo() ==&gt; a
 a.b.foo() ==&gt; a.b
 a.bar().foo() ==&gt; a.bar()
@@ -1410,7 +1410,8 @@ foo() ==&gt; null
 TheClass.aStaticMethod() ==&gt; TheClass
 aStaticMethod() ==&gt; null
 aStaticallyImportedMethod() ==&gt; null
-</code></pre></div>
+</code></pre>
+</div>
 </div>
 </section>
 </li>
@@ -1419,14 +1420,12 @@ aStaticallyImportedMethod() ==&gt; null
 <h3>streamReceivers</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/stream/Stream.html" title="class or interface in java.util.stream" class="external-link">Stream</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;</span>&nbsp;<span class="element-name">streamReceivers</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&nbsp;tree)</span></div>
-<div class="block">Returns a <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/stream/Stream.html" title="class or interface in java.util.stream" class="external-link"><code>Stream</code></a> of <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link"><code>ExpressionTree</code></a>s resulting from calling <a href="#getReceiver(com.sun.source.tree.ExpressionTree)"><code>getReceiver(ExpressionTree)</code></a> repeatedly until no receiver exists.
-
-<p>For example, give <code>foo().bar().baz()</code>, returns a stream of <code>[foo().bar(),
-foo()]</code>.
-
-<p>This can be more convenient than manually traversing up a tree, as it handles the
-termination condition automatically. Typical uses cases would include traversing fluent call
-chains.</div>
+<div class="block"><p>Returns a <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/stream/Stream.html" title="class or interface in java.util.stream" class="external-link"><code>Stream</code></a> of <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link"><code>ExpressionTree</code></a>s resulting from calling <a href="#getReceiver(com.sun.source.tree.ExpressionTree)"><code>getReceiver(ExpressionTree)</code></a>
+repeatedly until no receiver exists.</p>
+<p>For example, give <code>foo().bar().baz()</code>, returns a stream of <code>[foo().bar(), foo()]</code>.</p>
+<p>This can be more convenient than manually traversing up a tree, as it handles the termination
+condition automatically. Typical uses cases would include traversing fluent call chains.</p>
+</div>
 </div>
 </section>
 </li>
@@ -1489,8 +1488,8 @@ none was found.</div>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;com.sun.tools.javac.code.Symbol.MethodSymbol&gt;</span>&nbsp;<span class="element-name">findSuperMethods</span><wbr><span class="parameters">(com.sun.tools.javac.code.Symbol.MethodSymbol&nbsp;methodSymbol,
  com.sun.tools.javac.code.Types&nbsp;types)</span></div>
-<div class="block">Finds supermethods of <code>methodSymbol</code>, not including <code>methodSymbol</code> itself, and
-including interfaces.</div>
+<div class="block">Finds supermethods of <code>methodSymbol</code>, not including <code>methodSymbol</code> itself, and including
+interfaces.</div>
 </div>
 </section>
 </li>
@@ -1512,14 +1511,14 @@ including interfaces.</div>
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Predicate.html" title="class or interface in java.util.function" class="external-link">Predicate</a>&lt;com.sun.tools.javac.code.Symbol.MethodSymbol&gt;&nbsp;predicate,
  com.sun.tools.javac.code.Type&nbsp;startClass,
  com.sun.tools.javac.code.Types&nbsp;types)</span></div>
-<div class="block">Finds all methods in any superclass of <code>startClass</code> with a certain <code>name</code> that
-match the given <code>predicate</code>.</div>
+<div class="block">Finds all methods in any superclass of <code>startClass</code> with a certain <code>name</code> that match the given
+<code>predicate</code>.</div>
 <dl class="notes">
 <dt>Returns:</dt>
-<dd>The (possibly empty) list of methods in any superclass that match <code>predicate</code> and
-    have the given <code>name</code>. Results are returned least-abstract first, i.e., starting in
-    the <code>startClass</code> itself, progressing through its superclasses, and finally interfaces
-    in an unspecified order.</dd>
+<dd>The (possibly empty) list of methods in any superclass that match <code>predicate</code> and have
+the given <code>name</code>. Results are returned least-abstract first, i.e., starting in the
+<code>startClass</code> itself, progressing through its superclasses, and finally interfaces in an
+unspecified order.</dd>
 </dl>
 </div>
 </section>
@@ -1532,13 +1531,13 @@ match the given <code>predicate</code>.</div>
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Predicate.html" title="class or interface in java.util.function" class="external-link">Predicate</a>&lt;com.sun.tools.javac.code.Symbol.MethodSymbol&gt;&nbsp;predicate,
  com.sun.tools.javac.code.Type&nbsp;startClass,
  com.sun.tools.javac.code.Types&nbsp;types)</span></div>
-<div class="block">Finds all methods in any superclass of <code>startClass</code> with a certain <code>name</code> that
-match the given <code>predicate</code>.</div>
+<div class="block">Finds all methods in any superclass of <code>startClass</code> with a certain <code>name</code> that match the given
+<code>predicate</code>.</div>
 <dl class="notes">
 <dt>Returns:</dt>
-<dd>The (possibly empty) set of methods in any superclass that match <code>predicate</code> and
-    have the given <code>name</code>. The set's iteration order will be the same as the order
-    documented in <a href="#matchingMethods(com.sun.tools.javac.util.Name,java.util.function.Predicate,com.sun.tools.javac.code.Type,com.sun.tools.javac.code.Types)"><code>matchingMethods(Name, java.util.function.Predicate, Type, Types)</code></a>.</dd>
+<dd>The (possibly empty) set of methods in any superclass that match <code>predicate</code> and have
+the given <code>name</code>. The set's iteration order will be the same as the order documented in
+<a href="#matchingMethods(com.sun.tools.javac.util.Name,java.util.function.Predicate,com.sun.tools.javac.code.Type,com.sun.tools.javac.code.Types)"><code>matchingMethods(Name, java.util.function.Predicate, Type, Types)</code></a>.</dd>
 </dl>
 </div>
 </section>
@@ -1561,11 +1560,11 @@ match the given <code>predicate</code>.</div>
 <h3>isRecord</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isRecord</span><wbr><span class="parameters">(com.sun.tools.javac.code.Symbol&nbsp;symbol)</span></div>
-<div class="block">Returns whether the given <code>Symbol</code> is a record, a record's canonical constructor or a
-member that is part of a record's state vector.
-
+<div class="block"><p>Returns whether the given <code>Symbol</code> is a record, a record's canonical constructor or a member
+that is part of a record's state vector.</p>
 <p>Health warning: some things are flagged within a compilation, but won't be flagged across
-compilation boundaries, like canonical constructors.</div>
+compilation boundaries, like canonical constructors.</p>
+</div>
 </div>
 </section>
 </li>
@@ -1596,14 +1595,14 @@ compilation boundaries, like canonical constructors.</div>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">hasAnnotation</span><wbr><span class="parameters">(@Nullable com.sun.tools.javac.code.Symbol&nbsp;sym,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;annotationClass,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
-<div class="block">Determines whether a symbol has an annotation of the given type. This includes annotations
-inherited from superclasses due to <code>@Inherited</code>.
-
-<p>Prefer <a href="#hasAnnotation(com.sun.tools.javac.code.Symbol,com.google.errorprone.ClassName,com.google.errorprone.VisitorState)"><code>hasAnnotation(Symbol, ClassName, VisitorState)</code></a>.</div>
+<div class="block"><p>Determines whether a symbol has an annotation of the given type. This includes annotations
+inherited from superclasses due to <code>@Inherited</code>.</p>
+<p>Prefer <a href="#hasAnnotation(com.sun.tools.javac.code.Symbol,com.google.errorprone.ClassName,com.google.errorprone.VisitorState)"><code>hasAnnotation(Symbol, ClassName, VisitorState)</code></a>.</p>
+</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>annotationClass</code> - the binary class name of the annotation (e.g.
-    "org.jspecify.annotations.Nullable", or "some.package.OuterClassName$InnerClassName")</dd>
+&quot;org.jspecify.annotations.Nullable&quot;, or &quot;some.package.OuterClassName$InnerClassName&quot;)</dd>
 <dt>Returns:</dt>
 <dd>true if the symbol is annotated with given type.</dd>
 </dl>
@@ -1638,8 +1637,8 @@ inherited from superclasses due to <code>@Inherited</code>.</div>
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
 <div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
 <div class="deprecation-comment">prefer <a href="#hasAnnotation(com.sun.tools.javac.code.Symbol,com.google.errorprone.ClassName,com.google.errorprone.VisitorState)"><code>hasAnnotation(Symbol, ClassName, VisitorState)</code></a> to avoid needing a
-    runtime dependency on the annotation class, and to prevent issues if there is skew between
-    the definition of the annotation on the runtime and compile-time classpaths</div>
+runtime dependency on the annotation class, and to prevent issues if there is skew between
+the definition of the annotation on the runtime and compile-time classpaths</div>
 </div>
 <div class="block">Check for the presence of an annotation, considering annotation inheritance.</div>
 <dl class="notes">
@@ -1656,13 +1655,13 @@ inherited from superclasses due to <code>@Inherited</code>.</div>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">hasAnnotation</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;tree,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;annotationClass,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
-<div class="block">Check for the presence of an annotation, considering annotation inheritance.
-
-<p>Prefer <a href="#hasAnnotation(com.sun.source.tree.Tree,com.google.errorprone.ClassName,com.google.errorprone.VisitorState)"><code>hasAnnotation(Tree, ClassName, VisitorState)</code></a>.</div>
+<div class="block"><p>Check for the presence of an annotation, considering annotation inheritance.</p>
+<p>Prefer <a href="#hasAnnotation(com.sun.source.tree.Tree,com.google.errorprone.ClassName,com.google.errorprone.VisitorState)"><code>hasAnnotation(Tree, ClassName, VisitorState)</code></a>.</p>
+</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>annotationClass</code> - the binary class name of the annotation (e.g.
-    "org.jspecify.annotations.Nullable", or "some.package.OuterClassName$InnerClassName")</dd>
+&quot;org.jspecify.annotations.Nullable&quot;, or &quot;some.package.OuterClassName$InnerClassName&quot;)</dd>
 <dt>Returns:</dt>
 <dd>true if the tree is annotated with given type.</dd>
 </dl>
@@ -1695,9 +1694,9 @@ inherited from superclasses due to <code>@Inherited</code>.</div>
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;? extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/annotation/Annotation.html" title="class or interface in java.lang.annotation" class="external-link">Annotation</a>&gt;&nbsp;annotationClass,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
 <div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
-<div class="deprecation-comment">prefer <a href="#hasAnnotation(com.sun.source.tree.Tree,com.google.errorprone.ClassName,com.google.errorprone.VisitorState)"><code>hasAnnotation(Tree, ClassName, VisitorState)</code></a> to avoid needing a
-    runtime dependency on the annotation class, and to prevent issues if there is skew between
-    the definition of the annotation on the runtime and compile-time classpaths</div>
+<div class="deprecation-comment">prefer <a href="#hasAnnotation(com.sun.source.tree.Tree,com.google.errorprone.ClassName,com.google.errorprone.VisitorState)"><code>hasAnnotation(Tree, ClassName, VisitorState)</code></a> to avoid needing a runtime
+dependency on the annotation class, and to prevent issues if there is skew between the
+definition of the annotation on the runtime and compile-time classpaths</div>
 </div>
 <div class="block">Check for the presence of an annotation, considering annotation inheritance.</div>
 <dl class="notes">
@@ -1719,7 +1718,7 @@ inherited from superclasses due to <code>@Inherited</code>.</div>
 <dt>Parameters:</dt>
 <dd><code>sym</code> - The symbol to inspect for annotations</dd>
 <dd><code>annotationClasses</code> - The annotations of interest to look for, Each name must be in binary
-    form, e.g. "com.google.Foo$Bar", not "com.google.Foo.Bar".</dd>
+form, e.g. &quot;com.google.Foo$Bar&quot;, not &quot;com.google.Foo.Bar&quot;.</dd>
 <dt>Returns:</dt>
 <dd>A possibly-empty set of annotations present on the queried element.</dd>
 </dl>
@@ -1732,12 +1731,12 @@ inherited from superclasses due to <code>@Inherited</code>.</div>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">hasDirectAnnotationWithSimpleName</span><wbr><span class="parameters">(com.sun.tools.javac.code.Symbol&nbsp;sym,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;simpleName)</span></div>
-<div class="block">Check for the presence of an annotation with the given simple name directly on this symbol or
+<div class="block"><p>Check for the presence of an annotation with the given simple name directly on this symbol or
 its type. (If the given symbol is a method symbol, the type searched for annotations is its
-return type.)
-
-<p>This method looks only a annotations that are directly present. It does <b>not</b> consider
-annotation inheritance (see JLS 9.6.4.3).</div>
+return type.)</p>
+<p>This method looks only a annotations that are directly present. It does <strong>not</strong> consider
+annotation inheritance (see JLS 9.6.4.3).</p>
+</div>
 </div>
 </section>
 </li>
@@ -1765,14 +1764,13 @@ annotation inheritance (see JLS 9.6.4.3).</div>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">hasDirectAnnotation</span><wbr><span class="parameters">(com.sun.tools.javac.code.Symbol.MethodSymbol&nbsp;sym,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;qualifiedName)</span></div>
-<div class="block">Check for the presence of an annotation with the given qualified name directly on this symbol
+<div class="block"><p>Check for the presence of an annotation with the given qualified name directly on this symbol
 or its type. (If the given symbol is a method symbol, the type searched for annotations is its
-return type.)
-
-<p>This method looks only at annotations that are directly present. It does <b>not</b> consider
-annotation inheritance (see JLS 9.6.4.3).
-
-<p>Prefer <a href="#hasDirectAnnotation(com.sun.tools.javac.code.Symbol,com.google.errorprone.ClassName)"><code>hasDirectAnnotation(Symbol, ClassName)</code></a>.</div>
+return type.)</p>
+<p>This method looks only at annotations that are directly present. It does <strong>not</strong> consider
+annotation inheritance (see JLS 9.6.4.3).</p>
+<p>Prefer <a href="#hasDirectAnnotation(com.sun.tools.javac.code.Symbol,com.google.errorprone.ClassName)"><code>hasDirectAnnotation(Symbol, ClassName)</code></a>.</p>
+</div>
 </div>
 </section>
 </li>
@@ -1782,12 +1780,12 @@ annotation inheritance (see JLS 9.6.4.3).
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">hasDirectAnnotation</span><wbr><span class="parameters">(@Nullable com.sun.tools.javac.code.Symbol&nbsp;sym,
  <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a>&nbsp;annotationClass)</span></div>
-<div class="block">Check for the presence of an annotation with the given class name directly on this symbol or
+<div class="block"><p>Check for the presence of an annotation with the given class name directly on this symbol or
 its type. (If the given symbol is a method symbol, the type searched for annotations is its
-return type; if a variable symbol, its type.)
-
-<p>This method looks only at annotations that are directly present. It does <b>not</b> consider
-annotation inheritance (see JLS 9.6.4.3).</div>
+return type; if a variable symbol, its type.)</p>
+<p>This method looks only at annotations that are directly present. It does <strong>not</strong> consider
+annotation inheritance (see JLS 9.6.4.3).</p>
+</div>
 </div>
 </section>
 </li>
@@ -1802,8 +1800,8 @@ Does *not* consider annotation inheritance.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>tree</code> - the tree to check for the presence of the annotation</dd>
-<dd><code>simpleName</code> - the simple name of the annotation to look for, e.g. "Nullable" or
-    "CheckReturnValue"</dd>
+<dd><code>simpleName</code> - the simple name of the annotation to look for, e.g. &quot;Nullable&quot; or
+&quot;CheckReturnValue&quot;</dd>
 </dl>
 </div>
 </section>
@@ -1828,15 +1826,15 @@ Does *not* consider annotation inheritance.</div>
 </span><span class="modifiers">public static</span>&nbsp;<span class="type-parameters">&lt;T extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/annotation/Annotation.html" title="class or interface in java.lang.annotation" class="external-link">Annotation</a>&gt;</span>&nbsp;<span class="return-type">@Nullable T</span>&nbsp;<span class="element-name">getAnnotation</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;tree,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;T&gt;&nbsp;annotationClass)</span></div>
 <div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
-<div class="deprecation-comment">If <code>annotationClass</code> contains a member that is a <code>Class</code> or an array of
-    them, attempting to access that member from the Error Prone checker code will result in a
-    runtime exception. Instead, operate on <code>getSymbol(tree).getAnnotationMirrors()</code> to
-    meta-syntactically inspect the annotation. Note that this method (and the <code>
-    getSymbol</code>-based replacement suggested above) looks for annotations not just on the given
-    tree (such as a <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/MethodTree.html" title="class or interface in com.sun.source.tree" class="external-link"><code>MethodTree</code></a>) but also on the symbol referred to by the given tree
-    (such as on the <code>Symbol.MethodSymbol</code> that is being called by the given <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/MethodInvocationTree.html" title="class or interface in com.sun.source.tree" class="external-link"><code>MethodInvocationTree</code></a>). If you want to examine annotations only on the given tree, then use
-    <a href="#getAnnotations(com.sun.source.tree.Tree)"><code>getAnnotations(Tree)</code></a> (or a direct call to a <code>getAnnotations</code> method declared on a
-    specific <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link"><code>Tree</code></a> subclass) instead.</div>
+<div class="deprecation-comment">If <code>annotationClass</code> contains a member that is a <code>Class</code> or an array of them,
+attempting to access that member from the Error Prone checker code will result in a runtime
+exception. Instead, operate on <code>getSymbol(tree).getAnnotationMirrors()</code> to
+meta-syntactically inspect the annotation. Note that this method (and the <code>getSymbol</code>-based
+replacement suggested above) looks for annotations not just on the given tree (such as a
+<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/MethodTree.html" title="class or interface in com.sun.source.tree" class="external-link"><code>MethodTree</code></a>) but also on the symbol referred to by the given tree (such as on the
+<code>Symbol.MethodSymbol</code> that is being called by the given <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/MethodInvocationTree.html" title="class or interface in com.sun.source.tree" class="external-link"><code>MethodInvocationTree</code></a>). If you want to
+examine annotations only on the given tree, then use <a href="#getAnnotations(com.sun.source.tree.Tree)"><code>getAnnotations(Tree)</code></a> (or a direct call to
+a <code>getAnnotations</code> method declared on a specific <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link"><code>Tree</code></a> subclass) instead.</div>
 </div>
 <div class="block">Retrieves an annotation, considering annotation inheritance.</div>
 </div>
@@ -1850,10 +1848,10 @@ Does *not* consider annotation inheritance.</div>
 </span><span class="modifiers">public static</span>&nbsp;<span class="type-parameters">&lt;T extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/annotation/Annotation.html" title="class or interface in java.lang.annotation" class="external-link">Annotation</a>&gt;</span>&nbsp;<span class="return-type">@Nullable T</span>&nbsp;<span class="element-name">getAnnotation</span><wbr><span class="parameters">(com.sun.tools.javac.code.Symbol&nbsp;sym,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;T&gt;&nbsp;annotationClass)</span></div>
 <div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
-<div class="deprecation-comment">If <code>annotationClass</code> contains a member that is a <code>Class</code> or an array of
-    them, attempting to access that member from the Error Prone checker code will result in a
-    runtime exception. Instead, operate on <code>sym.getAnnotationMirrors()</code> to
-    meta-syntactically inspect the annotation.</div>
+<div class="deprecation-comment">If <code>annotationClass</code> contains a member that is a <code>Class</code> or an array of them,
+attempting to access that member from the Error Prone checker code will result in a runtime
+exception. Instead, operate on <code>sym.getAnnotationMirrors()</code> to meta-syntactically inspect
+the annotation.</div>
 </div>
 <div class="block">Retrieves an annotation, considering annotation inheritance.</div>
 </div>
@@ -1903,8 +1901,8 @@ Does *not* consider annotation inheritance.</div>
 <h3>getEnclosedElements</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;com.sun.tools.javac.code.Symbol&gt;</span>&nbsp;<span class="element-name">getEnclosedElements</span><wbr><span class="parameters">(com.sun.tools.javac.code.Symbol&nbsp;symbol)</span></div>
-<div class="block">A wrapper for <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.compiler/javax/lang/model/element/Element.html#getEnclosedElements()" title="class or interface in javax.lang.model.element" class="external-link"><code>Element.getEnclosedElements()</code></a> to avoid binary compatibility issues for
-covariant overrides in subtypes of <code>Symbol</code>.</div>
+<div class="block">A wrapper for <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.compiler/javax/lang/model/element/Element.html#getEnclosedElements()" title="class or interface in javax.lang.model.element" class="external-link"><code>Element.getEnclosedElements()</code></a> to avoid binary compatibility issues for covariant
+overrides in subtypes of <code>Symbol</code>.</div>
 </div>
 </section>
 </li>
@@ -1922,8 +1920,7 @@ covariant overrides in subtypes of <code>Symbol</code>.</div>
 <h3>getType</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">@Nullable com.sun.tools.javac.code.Type</span>&nbsp;<span class="element-name">getType</span><wbr><span class="parameters">(@Nullable <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;tree)</span></div>
-<div class="block">Returns the <code>Type</code> of the given tree, or <code>null</code> if the type could not be
-determined.</div>
+<div class="block">Returns the <code>Type</code> of the given tree, or <code>null</code> if the type could not be determined.</div>
 </div>
 </section>
 </li>
@@ -1932,8 +1929,7 @@ determined.</div>
 <h3>getType</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">@Nullable com.sun.tools.javac.code.Type.ClassType</span>&nbsp;<span class="element-name">getType</span><wbr><span class="parameters">(@Nullable <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ClassTree.html" title="class or interface in com.sun.source.tree" class="external-link">ClassTree</a>&nbsp;tree)</span></div>
-<div class="block">Returns the <code>ClassType</code> for the given type <code>ClassTree</code> or <code>null</code> if <code>
-tree</code> was <code>null</code>.</div>
+<div class="block">Returns the <code>ClassType</code> for the given type <code>ClassTree</code> or <code>null</code> if <code>tree</code> was <code>null</code>.</div>
 </div>
 </section>
 </li>
@@ -1968,10 +1964,10 @@ tree</code> was <code>null</code>.</div>
 <h3>enclosingPackage</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;com.sun.tools.javac.code.Symbol.PackageSymbol&gt;</span>&nbsp;<span class="element-name">enclosingPackage</span><wbr><span class="parameters">(com.sun.tools.javac.code.Symbol&nbsp;sym)</span></div>
-<div class="block">Return the enclosing <code>PackageSymbol</code> of the given symbol, or <code>null</code>.
-
-<p>Prefer this to <code>Symbol.packge()</code>, which throws a <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/NullPointerException.html" title="class or interface in java.lang" class="external-link"><code>NullPointerException</code></a> for
-symbols that are not contained by a package: https://bugs.openjdk.java.net/browse/JDK-8231911</div>
+<div class="block"><p>Return the enclosing <code>PackageSymbol</code> of the given symbol, or <code>null</code>.</p>
+<p>Prefer this to <code>Symbol.packge()</code>, which throws a <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/NullPointerException.html" title="class or interface in java.lang" class="external-link"><code>NullPointerException</code></a> for symbols that are not
+contained by a package: https://bugs.openjdk.java.net/browse/JDK-8231911</p>
+</div>
 </div>
 </section>
 </li>
@@ -2053,8 +2049,7 @@ symbols that are not contained by a package: https://bugs.openjdk.java.net/brows
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isCheckedExceptionType</span><wbr><span class="parameters">(com.sun.tools.javac.code.Type&nbsp;t,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
-<div class="block">Returns true if <code>t</code> is a subtype of Throwable but not a subtype of RuntimeException or
-Error.</div>
+<div class="block">Returns true if <code>t</code> is a subtype of Throwable but not a subtype of RuntimeException or Error.</div>
 </div>
 </section>
 </li>
@@ -2129,7 +2124,8 @@ Character, Short, Integer, Long, Float, Double).</div>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;com.sun.tools.javac.code.Type&gt;</span>&nbsp;<span class="element-name">unboxedType</span><wbr><span class="parameters">(@Nullable com.sun.tools.javac.code.Type&nbsp;type,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
-<div class="block">Returns the unboxed primitive type if <code>type</code> is a boxed primitive, or <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html#empty()" title="class or interface in java.util" class="external-link"><code>Optional.empty()</code></a> if it cannot be unboxed.</div>
+<div class="block">Returns the unboxed primitive type if <code>type</code> is a boxed primitive, or <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html#empty()" title="class or interface in java.util" class="external-link"><code>Optional.empty()</code></a> if it
+cannot be unboxed.</div>
 </div>
 </section>
 </li>
@@ -2139,8 +2135,8 @@ Character, Short, Integer, Long, Float, Double).</div>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">@Nullable com.sun.tools.javac.code.Type</span>&nbsp;<span class="element-name">unboxedTypeOrType</span><wbr><span class="parameters">(@Nullable com.sun.tools.javac.code.Type&nbsp;type,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
-<div class="block">Returns the unboxed primitive type if <code>type</code> is a boxed primitive, <code>null</code> if <code>
-type</code> is null, or <code>type</code> itself if it cannot be unboxed.</div>
+<div class="block">Returns the unboxed primitive type if <code>type</code> is a boxed primitive, <code>null</code> if <code>type</code> is null,
+or <code>type</code> itself if it cannot be unboxed.</div>
 </div>
 </section>
 </li>
@@ -2150,8 +2146,8 @@ type</code> is null, or <code>type</code> itself if it cannot be unboxed.</div>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;com.sun.tools.javac.code.Type&gt;</span>&nbsp;<span class="element-name">boxedType</span><wbr><span class="parameters">(@Nullable com.sun.tools.javac.code.Type&nbsp;type,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
-<div class="block">Returns the boxed wrapper type if <code>type</code> is a primitive type, or <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html#empty()" title="class or interface in java.util" class="external-link"><code>Optional.empty()</code></a>
-if it is not a primitive type.</div>
+<div class="block">Returns the boxed wrapper type if <code>type</code> is a primitive type, or <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html#empty()" title="class or interface in java.util" class="external-link"><code>Optional.empty()</code></a> if it is
+not a primitive type.</div>
 </div>
 </section>
 </li>
@@ -2161,8 +2157,8 @@ if it is not a primitive type.</div>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">@Nullable com.sun.tools.javac.code.Type</span>&nbsp;<span class="element-name">boxedTypeOrType</span><wbr><span class="parameters">(@Nullable com.sun.tools.javac.code.Type&nbsp;type,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
-<div class="block">Returns the boxed wrapper type if <code>type</code> is a primitive type, <code>null</code> if <code>
-type</code> is null, or <code>type</code> itself if it is already a reference type.</div>
+<div class="block">Returns the boxed wrapper type if <code>type</code> is a primitive type, <code>null</code> if <code>type</code> is null, or
+<code>type</code> itself if it is already a reference type.</div>
 </div>
 </section>
 </li>
@@ -2172,8 +2168,8 @@ type</code> is null, or <code>type</code> itself if it is already a reference ty
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">@Nullable com.sun.tools.javac.code.Symbol.ClassSymbol</span>&nbsp;<span class="element-name">boxedClass</span><wbr><span class="parameters">(@Nullable com.sun.tools.javac.code.Type&nbsp;type,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
-<div class="block">Returns the <code>Symbol.ClassSymbol</code> of the boxed wrapper class for a primitive <code>type</code>, or
-<code>null</code> if <code>type</code> is null or not a primitive type.</div>
+<div class="block">Returns the <code>Symbol.ClassSymbol</code> of the boxed wrapper class for a primitive <code>type</code>, or <code>null</code> if
+<code>type</code> is null or not a primitive type.</div>
 </div>
 </section>
 </li>
@@ -2214,8 +2210,8 @@ wildcards and capture variables.</div>
  @Nullable com.sun.tools.javac.code.Symbol&nbsp;superTypeSym,
  int&nbsp;typeArgIndex,
  com.sun.tools.javac.code.Types&nbsp;types)</span></div>
-<div class="block">Extracts the appropriate type argument from a specific supertype of the given <code>type</code>.
-This handles the case when a subtype has different type arguments than the expected type. For
+<div class="block">Extracts the appropriate type argument from a specific supertype of the given <code>type</code>. This
+handles the case when a subtype has different type arguments than the expected type. For
 example, <code>ClassToInstanceMap&lt;T&gt;</code> implements <code>Map&lt;Class&lt;? extends T&gt;, T&gt;</code>.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
@@ -2254,8 +2250,8 @@ example, <code>ClassToInstanceMap&lt;T&gt;</code> implements <code>Map&lt;Class&
 <h3>isJUnitTestCode</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isJUnitTestCode</span><wbr><span class="parameters">(<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
-<div class="block">Returns true if the leaf node in the <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/util/TreePath.html" title="class or interface in com.sun.source.util" class="external-link"><code>TreePath</code></a> from <code>state</code> sits somewhere
-underneath a class or method that is marked as JUnit 3 or 4 test code.</div>
+<div class="block">Returns true if the leaf node in the <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/util/TreePath.html" title="class or interface in com.sun.source.util" class="external-link"><code>TreePath</code></a> from <code>state</code> sits somewhere underneath a class
+or method that is marked as JUnit 3 or 4 test code.</div>
 </div>
 </section>
 </li>
@@ -2264,8 +2260,8 @@ underneath a class or method that is marked as JUnit 3 or 4 test code.</div>
 <h3>isTestNgTestCode</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isTestNgTestCode</span><wbr><span class="parameters">(<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
-<div class="block">Returns true if the leaf node in the <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/util/TreePath.html" title="class or interface in com.sun.source.util" class="external-link"><code>TreePath</code></a> from <code>state</code> sits somewhere
-underneath a class or method that is marked as TestNG test code.</div>
+<div class="block">Returns true if the leaf node in the <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/util/TreePath.html" title="class or interface in com.sun.source.util" class="external-link"><code>TreePath</code></a> from <code>state</code> sits somewhere underneath a class
+or method that is marked as TestNG test code.</div>
 </div>
 </section>
 </li>
@@ -2285,7 +2281,8 @@ underneath a class or method that is marked as TestNG test code.</div>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/AnnotationTree.html" title="class or interface in com.sun.source.tree" class="external-link">AnnotationTree</a>&gt;</span>&nbsp;<span class="element-name">getAnnotationsWithSimpleName</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;? extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/AnnotationTree.html" title="class or interface in com.sun.source.tree" class="external-link">AnnotationTree</a>&gt;&nbsp;annotations,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name)</span></div>
-<div class="block">Returns a list of <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/AnnotationTree.html" title="class or interface in com.sun.source.tree" class="external-link"><code>AnnotationTree</code></a> with the given simple name. This is useful for <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/annotation/Repeatable.html" title="class or interface in java.lang.annotation" class="external-link"><code>Repeatable</code></a> annotations</div>
+<div class="block">Returns a list of <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/AnnotationTree.html" title="class or interface in com.sun.source.tree" class="external-link"><code>AnnotationTree</code></a> with the given simple name. This is useful for
+<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/annotation/Repeatable.html" title="class or interface in java.lang.annotation" class="external-link"><code>Repeatable</code></a> annotations</div>
 </div>
 </section>
 </li>
@@ -2296,8 +2293,8 @@ underneath a class or method that is marked as TestNG test code.</div>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">@Nullable com.sun.tools.javac.code.TypeAnnotations.AnnotationType</span>&nbsp;<span class="element-name">getAnnotationType</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/AnnotationTree.html" title="class or interface in com.sun.source.tree" class="external-link">AnnotationTree</a>&nbsp;anno,
  @Nullable com.sun.tools.javac.code.Symbol&nbsp;target,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
-<div class="block">Returns whether <code>anno</code> corresponds to a type annotation, or <code>null</code> if it could not
-be determined.</div>
+<div class="block">Returns whether <code>anno</code> corresponds to a type annotation, or <code>null</code> if it could not be
+determined.</div>
 </div>
 </section>
 </li>
@@ -2306,8 +2303,8 @@ be determined.</div>
 <h3>getFileName</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">getFileName</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/CompilationUnitTree.html" title="class or interface in com.sun.source.tree" class="external-link">CompilationUnitTree</a>&nbsp;tree)</span></div>
-<div class="block">Extract the filename from a <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/CompilationUnitTree.html" title="class or interface in com.sun.source.tree" class="external-link"><code>CompilationUnitTree</code></a>, with special handling for jar files.
-The return value is normalized to always use '/' to separate elements of the path and to always
+<div class="block">Extract the filename from a <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/CompilationUnitTree.html" title="class or interface in com.sun.source.tree" class="external-link"><code>CompilationUnitTree</code></a>, with special handling for jar files. The
+return value is normalized to always use '/' to separate elements of the path and to always
 have a leading '/'.</div>
 </div>
 </section>
@@ -2318,9 +2315,8 @@ have a leading '/'.</div>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">getSourcePath</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/CompilationUnitTree.html" title="class or interface in com.sun.source.tree" class="external-link">CompilationUnitTree</a>&nbsp;tree)</span></div>
 <div class="block">Extract a canonical repository/workspace-relative filename from a <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/CompilationUnitTree.html" title="class or interface in com.sun.source.tree" class="external-link"><code>CompilationUnitTree</code></a>,
-normalizing away workspace roots (e.g. <code>/execroot/&lt;workspace&gt;/</code>) and build output
-directories (e.g. <code>blaze-out/.../(bin|genfiles)/</code> or <code>
-bazel-out/.../(bin|genfiles)/</code>).</div>
+normalizing away workspace roots (e.g. <code>/execroot/&lt;workspace&gt;/</code>) and build output directories
+(e.g. <code>blaze-out/.../(bin|genfiles)/</code> or <code>bazel-out/.../(bin|genfiles)/</code>).</div>
 </div>
 </section>
 </li>
@@ -2330,9 +2326,8 @@ bazel-out/.../(bin|genfiles)/</code>).</div>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">getSourcePath</span><wbr><span class="parameters">(<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
 <div class="block">Extract a canonical repository/workspace-relative filename from the <a href="../VisitorState.html" title="class in com.google.errorprone"><code>VisitorState</code></a>'s
-compilation unit, normalizing away workspace roots (e.g. <code>/execroot/&lt;workspace&gt;/</code>) and
-build output directories (e.g. <code>blaze-out/.../(bin|genfiles)/</code> or <code>
-bazel-out/.../(bin|genfiles)/</code>).</div>
+compilation unit, normalizing away workspace roots (e.g. <code>/execroot/&lt;workspace&gt;/</code>) and build
+output directories (e.g. <code>blaze-out/.../(bin|genfiles)/</code> or <code>bazel-out/.../(bin|genfiles)/</code>).</div>
 </div>
 </section>
 </li>
@@ -2342,7 +2337,8 @@ bazel-out/.../(bin|genfiles)/</code>).</div>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">getFileNameFromUri</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/net/URI.html" title="class or interface in java.net" class="external-link">URI</a>&nbsp;uri)</span></div>
 <div class="block">Extract the filename from the URI, with special handling for jar files. The return value is
-normalized to always use '/' to separate elements of the path and to always have a leading '/'.</div>
+normalized to always use '/' to separate elements of the path and to always have a leading
+'/'.</div>
 </div>
 </section>
 </li>
@@ -2355,11 +2351,9 @@ normalized to always use '/' to separate elements of the path and to always have
  com.sun.tools.javac.util.Name&nbsp;name,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;com.sun.tools.javac.code.Type&gt;&nbsp;argTypes,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;com.sun.tools.javac.code.Type&gt;&nbsp;tyargTypes)</span></div>
-<div class="block">Given a Type (<code>base</code>), find the method named <code>name</code>, with the appropriate <code>
-argTypes</code> and <code>tyargTypes</code> and return its MethodSymbol.
-
-<p>Ex:
-
+<div class="block"><p>Given a Type (<code>base</code>), find the method named <code>name</code>, with the appropriate <code>argTypes</code> and
+<code>tyargTypes</code> and return its MethodSymbol.</p>
+<p>Ex:</p>
 <pre><code>.....
 class A {}
 class B {
@@ -2370,17 +2364,17 @@ class B {
 MethodSymbol meth =  ASTHelpers.resolveExistingMethod(
    state,
    symbol,
-   state.getName("hashCode"),
+   state.getName(&quot;hashCode&quot;),
    ImmutableList.&lt;Type&gt;of(),
    ImmutableList.&lt;Type&gt;of());
 </code></pre>
-
-<code>meth</code> could be different MethodSymbol's depending on whether <code>symbol</code> represented
-<code>B</code> or <code>A</code>. (B's hashCode method or Object#hashCode).</div>
+<p><code>meth</code> could be different MethodSymbol's depending on whether <code>symbol</code> represented <code>B</code> or <code>A</code>.
+(B's hashCode method or Object#hashCode).</p>
+</div>
 <dl class="notes">
 <dt>Returns:</dt>
 <dd>a MethodSymbol representing the method symbol resolved from the context of this type,
-    or <code>null</code> if the method could not be resolved.</dd>
+or <code>null</code> if the method could not be resolved.</dd>
 </dl>
 </div>
 </section>
@@ -2391,8 +2385,8 @@ MethodSymbol meth =  ASTHelpers.resolveExistingMethod(
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">overridesObjectEquals</span><wbr><span class="parameters">(com.sun.tools.javac.code.Symbol.TypeSymbol&nbsp;symbol,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
-<div class="block">Returns whether <code>symbol</code> declares or inherits an implementation of <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#equals(java.lang.Object)" title="class or interface in java.lang" class="external-link"><code>Object.equals(Object)</code></a>
-other than the default implementation in <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link"><code>Object</code></a>.</div>
+<div class="block">Returns whether <code>symbol</code> declares or inherits an implementation of <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#equals(java.lang.Object)" title="class or interface in java.lang" class="external-link"><code>Object.equals(Object)</code></a> other than
+the default implementation in <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link"><code>Object</code></a>.</div>
 </div>
 </section>
 </li>
@@ -2402,7 +2396,8 @@ other than the default implementation in <a href="https://docs.oracle.com/en/jav
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">overridesObjectHashCode</span><wbr><span class="parameters">(com.sun.tools.javac.code.Symbol.TypeSymbol&nbsp;symbol,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
-<div class="block">Returns whether <code>symbol</code> declares or inherits an implementation of <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#hashCode()" title="class or interface in java.lang" class="external-link"><code>Object.hashCode()</code></a> other than the default implementation in <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link"><code>Object</code></a>.</div>
+<div class="block">Returns whether <code>symbol</code> declares or inherits an implementation of <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#hashCode()" title="class or interface in java.lang" class="external-link"><code>Object.hashCode()</code></a> other
+than the default implementation in <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link"><code>Object</code></a>.</div>
 </div>
 </section>
 </li>
@@ -2411,10 +2406,10 @@ other than the default implementation in <a href="https://docs.oracle.com/en/jav
 <h3>getGeneratedBy</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">com.google.common.collect.ImmutableSet&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</span>&nbsp;<span class="element-name">getGeneratedBy</span><wbr><span class="parameters">(<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
-<div class="block">Returns the value of the <code>@Generated</code> annotation on enclosing classes, if present.
-
-<p>Although <code>@Generated</code> can be applied to non-class program elements, there are no known
-cases of that happening, so it isn't supported here.</div>
+<div class="block"><p>Returns the value of the <code>@Generated</code> annotation on enclosing classes, if present.</p>
+<p>Although <code>@Generated</code> can be applied to non-class program elements, there are no known cases
+of that happening, so it isn't supported here.</p>
+</div>
 </div>
 </section>
 </li>
@@ -2454,11 +2449,11 @@ annotation doesn't have <code>values</code> set, returns the string name of the 
 <h3>isInStaticInitializer</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isInStaticInitializer</span><wbr><span class="parameters">(<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
-<div class="block">Attempts to detect whether we're in a static-initializer-like context: that includes direct
+<div class="block"><p>Attempts to detect whether we're in a static-initializer-like context: that includes direct
 assignments to static fields, assignments to enum fields, being contained within an expression
-which is ultimately assigned to a static field.
-
-<p>This is very much a heuristic, and not fool-proof.</div>
+which is ultimately assigned to a static field.</p>
+<p>This is very much a heuristic, and not fool-proof.</p>
+</div>
 </div>
 </section>
 </li>
@@ -2479,10 +2474,10 @@ which is ultimately assigned to a static field.
 <h3>variableIsStaticFinal</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">variableIsStaticFinal</span><wbr><span class="parameters">(com.sun.tools.javac.code.Symbol.VarSymbol&nbsp;var)</span></div>
-<div class="block">Whether the variable is (or should be regarded as) static final.
-
-<p>We regard instance fields within enums as "static final", as they will only have a finite
-number of instances tied to an (effectively) static final enum value.</div>
+<div class="block"><p>Whether the variable is (or should be regarded as) static final.</p>
+<p>We regard instance fields within enums as &quot;static final&quot;, as they will only have a finite
+number of instances tied to an (effectively) static final enum value.</p>
+</div>
 </div>
 </section>
 </li>
@@ -2514,8 +2509,8 @@ number of instances tied to an (effectively) static final enum value.</div>
 <h3>outermostClass</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">@Nullable com.sun.tools.javac.code.Symbol.ClassSymbol</span>&nbsp;<span class="element-name">outermostClass</span><wbr><span class="parameters">(com.sun.tools.javac.code.Symbol&nbsp;symbol)</span></div>
-<div class="block">Returns the outermost enclosing owning class, or <code>null</code>. Doesn't crash on symbols that
-aren't containing in a package, unlike <code>Symbol.outermostClass()</code> (see b/123431414).</div>
+<div class="block">Returns the outermost enclosing owning class, or <code>null</code>. Doesn't crash on symbols that aren't
+containing in a package, unlike <code>Symbol.outermostClass()</code> (see b/123431414).</div>
 </div>
 </section>
 </li>
@@ -2543,7 +2538,8 @@ aren't containing in a package, unlike <code>Symbol.outermostClass()</code> (see
 <h3>getStartPosition</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getStartPosition</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;tree)</span></div>
-<div class="block">Returns the start position of the node. To get the end position of a node, use <a href="../VisitorState.html#getEndPosition(com.sun.source.tree.Tree)"><code>VisitorState.getEndPosition(Tree)</code></a>.</div>
+<div class="block">Returns the start position of the node. To get the end position of a node, use
+<a href="../VisitorState.html#getEndPosition(com.sun.source.tree.Tree)"><code>VisitorState.getEndPosition(Tree)</code></a>.</div>
 </div>
 </section>
 </li>
@@ -2580,10 +2576,10 @@ aren't containing in a package, unlike <code>Symbol.outermostClass()</code> (see
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">methodIsPublicAndNotAnOverride</span><wbr><span class="parameters">(com.sun.tools.javac.code.Symbol.MethodSymbol&nbsp;method,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
-<div class="block">Returns true if the given method symbol is public (both the method and the enclosing class) and
-does <i>not</i> have a super-method (i.e., it is not an <code>@Override</code>).
-
-<p>This method is useful (in part) for determining whether to suggest API improvements or not.</div>
+<div class="block"><p>Returns true if the given method symbol is public (both the method and the enclosing class)
+and does <em>not</em> have a super-method (i.e., it is not an <code>@Override</code>).</p>
+<p>This method is useful (in part) for determining whether to suggest API improvements or not.</p>
+</div>
 </div>
 </section>
 </li>
@@ -2592,9 +2588,9 @@ does <i>not</i> have a super-method (i.e., it is not an <code>@Override</code>).
 <h3>isAbstract</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isAbstract</span><wbr><span class="parameters">(com.sun.tools.javac.code.Symbol.MethodSymbol&nbsp;method)</span></div>
-<div class="block">Returns true if the given method symbol is abstract.
-
-<p><b>Note:</b> this API does not consider interface <code>default</code> methods to be abstract.</div>
+<div class="block"><p>Returns true if the given method symbol is abstract.</p>
+<p><strong>Note:</strong> this API does not consider interface <code>default</code> methods to be abstract.</p>
+</div>
 </div>
 </section>
 </li>
@@ -2608,7 +2604,7 @@ from <code>Flags</code>.</div>
 <dl class="notes">
 <dt>Returns:</dt>
 <dd>a set of strings representing the flags in the given long, in lowercase. Elements of
-    the set are strings like "static" or "final".</dd>
+the set are strings like &quot;static&quot; or &quot;final&quot;.</dd>
 </dl>
 </div>
 </section>
@@ -2630,8 +2626,8 @@ from <code>Flags</code>.</div>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">com.google.common.collect.ImmutableListMultimap&lt;com.sun.tools.javac.code.Symbol.TypeVariableSymbol, com.sun.tools.javac.code.Type&gt;</span>&nbsp;<span class="element-name">getTypeSubstitution</span><wbr><span class="parameters">(com.sun.tools.javac.code.Type&nbsp;type,
  com.sun.tools.javac.code.Symbol&nbsp;sym)</span></div>
 <div class="block">Returns the mapping between type variables and their instantiations in the given type. For
-example, the instantiation of <code>Map&lt;K, V&gt;</code> as <code>Map&lt;String, Integer&gt;</code> would be
-represented as a <code>TypeSubstitution</code> from <code>[K, V]</code> to <code>[String, Integer]</code>.</div>
+example, the instantiation of <code>Map&lt;K, V&gt;</code> as <code>Map&lt;String, Integer&gt;</code> would be represented as a
+<code>TypeSubstitution</code> from <code>[K, V]</code> to <code>[String, Integer]</code>.</div>
 </div>
 </section>
 </li>
@@ -2673,7 +2669,7 @@ represented as a <code>TypeSubstitution</code> from <code>[K, V]</code> to <code
  com.sun.tools.javac.util.Name&nbsp;targetMethodName,
  com.sun.tools.javac.code.Type&nbsp;onlyParameterType,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
-<div class="block">Returns whether <code>existingMethod</code> has an overload (or "nearly" an overload) with the given
+<div class="block">Returns whether <code>existingMethod</code> has an overload (or &quot;nearly&quot; an overload) with the given
 <code>targetMethodName</code>, and only a single parameter of type <code>onlyParameterType</code>.</div>
 </div>
 </section>
@@ -2691,8 +2687,7 @@ represented as a <code>TypeSubstitution</code> from <code>[K, V]</code> to <code
 <h3>isSwitchDefault</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isSwitchDefault</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/CaseTree.html" title="class or interface in com.sun.source.tree" class="external-link">CaseTree</a>&nbsp;caseTree)</span></div>
-<div class="block">Returns whether <code>caseTree</code> is the default case of a switch statement. This includes
-<code>case null, default -&gt;</code>.</div>
+<div class="block">Returns whether <code>caseTree</code> is the default case of a switch statement. This includes <code>case null, default -&gt;</code>.</div>
 </div>
 </section>
 </li>

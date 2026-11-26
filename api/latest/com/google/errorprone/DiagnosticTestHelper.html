@@ -306,18 +306,14 @@ our bug marker pattern.</div>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">expectErrorMessage</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;key,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Predicate.html" title="class or interface in java.util.function" class="external-link">Predicate</a>&lt;? super <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;matcher)</span></div>
-<div class="block">Expects an error message matching <code>matcher</code> at the line below a comment matching the key.
-For example, given the source
-
-<pre>
-  // BUG: Diagnostic matches: X
+<div class="block"><p>Expects an error message matching <code>matcher</code> at the line below a comment matching the key. For
+example, given the source</p>
+<pre><code>  // BUG: Diagnostic matches: X
   a = b + c;
-</pre>
-
-... you can use <code>expectErrorMessage("X", Predicates.containsPattern("Can't add b to
-c"));</code>
-
-<p>Error message keys that don't match any diagnostics will cause test to fail.</div>
+</code></pre>
+<p>... you can use <code>expectErrorMessage(&quot;X&quot;, Predicates.containsPattern(&quot;Can't add b to c&quot;));</code></p>
+<p>Error message keys that don't match any diagnostics will cause test to fail.</p>
+</div>
 </div>
 </section>
 </li>

@@ -90,11 +90,9 @@ loadScripts(document, 'script');</script>
 <div class="type-signature"><span class="modifiers">public final class </span><span class="element-name type-name-label">RecordAccessorInCompactConstructor</span>
 <span class="extends-implements">extends <a href="BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a>
 implements <a href="BugChecker.MethodInvocationTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MethodInvocationTreeMatcher</a></span></div>
-<div class="block">Detects when record accessors read uninitialized fields inside a compact constructor. Use the
-component parameter instead.
-
-<p>Example:
-
+<div class="block"><p>Detects when record accessors read uninitialized fields inside a compact constructor. Use the
+component parameter instead.</p>
+<p>Example:</p>
 <div class="snippet-container"><button class="copy snippet-copy" aria-label="Copy snippet" onclick="copySnippet(this)"><span data-copied="Copied!">Copy</span><img src="../../../../resource-files/copy.svg" alt="Copy snippet"></button>
 <pre class="snippet" id="snippet-com.google.errorprone.bugpatterns.RecordAccessorInCompactConstructor1"><code class="language-java">record R(int x) {
   public R {
@@ -103,6 +101,7 @@ component parameter instead.
 }
 </code></pre>
 </div>
+
 </div>
 <dl class="notes">
 <dt>See Also:</dt>

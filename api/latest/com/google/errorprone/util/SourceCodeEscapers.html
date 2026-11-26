@@ -77,10 +77,10 @@ loadScripts(document, 'script');</script>
 <div class="horizontal-scroll">
 <div class="type-signature"><span class="modifiers">public final class </span><span class="element-name type-name-label">SourceCodeEscapers</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
-<div class="block">A factory for Escaper instances used to escape strings for safe use in Java.
-
+<div class="block"><p>A factory for Escaper instances used to escape strings for safe use in Java.</p>
 <p>This is a subset of source code escapers that are in the process of being open-sources as part
-of guava, see: https://github.com/google/guava/issues/1620</div>
+of guava, see: https://github.com/google/guava/issues/1620</p>
+</div>
 </div>
 </section>
 <section class="summary">
@@ -99,14 +99,14 @@ of guava, see: https://github.com/google/guava/issues/1620</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static com.google.common.escape.CharEscaper</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getJavaTextBlockEscaper()" class="member-name-link">getJavaTextBlockEscaper</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Returns an <code>Escaper</code> instance that escapes special characters in a string so it can
-safely be included in either a Java text block.</div>
+<div class="block">Returns an <code>Escaper</code> instance that escapes special characters in a string so it can safely be
+included in either a Java text block.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static com.google.common.escape.CharEscaper</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#javaCharEscaper()" class="member-name-link">javaCharEscaper</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Returns an <code>Escaper</code> instance that escapes special characters in a string so it can
-safely be included in either a Java character literal or string literal.</div>
+<div class="block">Returns an <code>Escaper</code> instance that escapes special characters in a string so it can safely be
+included in either a Java character literal or string literal.</div>
 </div>
 </div>
 </div>
@@ -130,11 +130,13 @@ safely be included in either a Java character literal or string literal.</div>
 <h3>javaCharEscaper</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">com.google.common.escape.CharEscaper</span>&nbsp;<span class="element-name">javaCharEscaper</span>()</div>
-<div class="block">Returns an <code>Escaper</code> instance that escapes special characters in a string so it can
-safely be included in either a Java character literal or string literal. This is the preferred
-way to escape Java characters for use in String or character literals.
-
-<p>See: <a href="https://java.sun.com/docs/books/jls/third_edition/html/lexical.html#101089">The Java Language Specification</a> for more details.</div>
+<div class="block"><p>Returns an <code>Escaper</code> instance that escapes special characters in a string so it can safely be
+included in either a Java character literal or string literal. This is the preferred way to
+escape Java characters for use in String or character literals.</p>
+<p>See: <a href="https://java.sun.com/docs/books/jls/third_edition/html/lexical.html#101089">The Java Language
+Specification</a> for
+more details.</p>
+</div>
 </div>
 </section>
 </li>
@@ -143,16 +145,16 @@ way to escape Java characters for use in String or character literals.
 <h3>getJavaTextBlockEscaper</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">com.google.common.escape.CharEscaper</span>&nbsp;<span class="element-name">getJavaTextBlockEscaper</span>()</div>
-<div class="block">Returns an <code>Escaper</code> instance that escapes special characters in a string so it can
-safely be included in either a Java text block.
-
+<div class="block"><p>Returns an <code>Escaper</code> instance that escapes special characters in a string so it can safely be
+included in either a Java text block.</p>
 <p>Double quotes are not escaped. If the string contents contain a run of three or more
 consecutive double quotes, additional action is required to make it safe to include in a text
-block.
-
-<p>See: <a href="https://docs.oracle.com/javase/specs/jls/se21/html/jls-3.html#jls-3.10.6">The Java Language Specification</a> for more details.
-
-<p>The Guava FR for this is: https://github.com/google/guava/issues/7421</div>
+block.</p>
+<p>See: <a href="https://docs.oracle.com/javase/specs/jls/se21/html/jls-3.html#jls-3.10.6">The Java Language
+Specification</a> for
+more details.</p>
+<p>The Guava FR for this is: https://github.com/google/guava/issues/7421</p>
+</div>
 </div>
 </section>
 </li>

@@ -91,26 +91,23 @@ loadScripts(document, 'script');</script>
 <section class="class-description" id="class-description">
 <dl class="notes">
 <dt>Record Components:</dt>
-<dd><code><span id="param-base">base</span></code> - If present, base of access path is contained Element; if absent, base is `this`</dd>
+<dd><code><span id="param-base">base</span></code> - If present, base of access path is contained Element; if absent, base is <code>this</code></dd>
 </dl>
 <hr>
 <div class="horizontal-scroll">
 <div class="type-signature"><span class="modifiers">public record </span><span class="element-name type-name-label">AccessPath</span>(@Nullable <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.compiler/javax/lang/model/element/Element.html" title="class or interface in javax.lang.model.element" class="external-link">Element</a>&nbsp;base, com.google.common.collect.ImmutableList&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;path)
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Record.html" title="class or interface in java.lang" class="external-link">Record</a></span></div>
-<div class="block">A sequence of field names or autovalue accessors, along with a receiver: either a variable or a
+<div class="block"><p>A sequence of field names or autovalue accessors, along with a receiver: either a variable or a
 reference (explicit or implicit) to <code>this</code>. Fields and autovalue accessors are stored as
-strings, with a "()" appended to accessor names to distinguish them from fields of the same name
-
-<p>For example:
-
-<p><code>x.f.g</code>, the <code>g</code> field of the <code>f</code> field of the local variable <code>x</code> is
-represented by {base = Some x, fields = "g" :: "f" :: nil}
-
-<p><code>foo.bar</code>, the <code>bar</code> field of the <code>foo</code> field of the implicit <code>this</code>
-is represented by {base = None, fields = "bar" :: "foo" :: nil}
-
-<p><code>x.foo().foo</code>, the <code>foo</code> field of the <code>foo()</code> autovalue accessor of the
-local variable <code>x</code> is represented by {base = Some x, fields = "foo" :: "foo()" :: nil}</div>
+strings, with a &quot;()&quot; appended to accessor names to distinguish them from fields of the same name</p>
+<p>For example:</p>
+<p><code>x.f.g</code>, the <code>g</code> field of the <code>f</code> field of the local variable <code>x</code> is represented by {base = Some
+x, fields = &quot;g&quot; :: &quot;f&quot; :: nil}</p>
+<p><code>foo.bar</code>, the <code>bar</code> field of the <code>foo</code> field of the implicit <code>this</code> is represented by {base =
+None, fields = &quot;bar&quot; :: &quot;foo&quot; :: nil}</p>
+<p><code>x.foo().foo</code>, the <code>foo</code> field of the <code>foo()</code> autovalue accessor of the local variable <code>x</code> is
+represented by {base = Some x, fields = &quot;foo&quot; :: &quot;foo()&quot; :: nil}</p>
+</div>
 <dl class="notes">
 <dt>Author:</dt>
 <dd>bennostein@google.com (Benno Stein)</dd>
@@ -169,8 +166,8 @@ non-AutoValue method call.</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static @Nullable <a href="AccessPath.html" title="class in com.google.errorprone.dataflow">AccessPath</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#fromNodeIfTrackable(org.checkerframework.errorprone.dataflow.cfg.node.Node)" class="member-name-link">fromNodeIfTrackable</a><wbr>(org.checkerframework.errorprone.dataflow.cfg.node.Node&nbsp;node)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Returns an AccessPath representing <code>node</code> if <code>node</code> is representable as an access
-path and null otherwise</div>
+<div class="block">Returns an AccessPath representing <code>node</code> if <code>node</code> is representable as an access path and
+null otherwise</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="AccessPath.html" title="class in com.google.errorprone.dataflow">AccessPath</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#fromVariableDecl(org.checkerframework.errorprone.dataflow.cfg.node.VariableDeclarationNode)" class="member-name-link">fromVariableDecl</a><wbr>(org.checkerframework.errorprone.dataflow.cfg.node.VariableDeclarationNode&nbsp;node)</code></div>
@@ -240,16 +237,15 @@ path and null otherwise</div>
 <h3>isAutoValueAccessor</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isAutoValueAccessor</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;tree)</span></div>
-<div class="block">Check whether <code>tree</code> is an AutoValue accessor. A tree is an AutoValue accessor iff:
-
+<div class="block"><p>Check whether <code>tree</code> is an AutoValue accessor. A tree is an AutoValue accessor iff:</p>
 <ul>
-  <li>it is a method invocation
-  <li>of an abstract method
-  <li>with 0 arguments
-  <li>defined on a class annotated @AutoValue
+<li>it is a method invocation</li>
+<li>of an abstract method</li>
+<li>with 0 arguments</li>
+<li>defined on a class annotated @AutoValue</li>
 </ul>
-
-<p>Public visibility for use in NullnessPropagationTransfer#returnValueNullness</div>
+<p>Public visibility for use in NullnessPropagationTransfer#returnValueNullness</p>
+</div>
 </div>
 </section>
 </li>
@@ -285,8 +281,8 @@ non-AutoValue method call.</div>
 <h3>fromNodeIfTrackable</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">@Nullable <a href="AccessPath.html" title="class in com.google.errorprone.dataflow">AccessPath</a></span>&nbsp;<span class="element-name">fromNodeIfTrackable</span><wbr><span class="parameters">(org.checkerframework.errorprone.dataflow.cfg.node.Node&nbsp;node)</span></div>
-<div class="block">Returns an AccessPath representing <code>node</code> if <code>node</code> is representable as an access
-path and null otherwise</div>
+<div class="block">Returns an AccessPath representing <code>node</code> if <code>node</code> is representable as an access path and
+null otherwise</div>
 </div>
 </section>
 </li>

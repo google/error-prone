@@ -92,9 +92,9 @@ loadScripts(document, 'script');</script>
 <div class="type-signature"><span class="annotations"><a href="annotations/CheckReturnValue.html" title="annotation interface in com.google.errorprone.annotations">@CheckReturnValue</a>
 </span><span class="modifiers">public final class </span><span class="element-name type-name-label">BugCheckerRefactoringTestHelper</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
-<div class="block">Compare a file transformed as suggested by <a href="bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a> to an expected source.
-
-<p>Inputs are a <a href="bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a> instance, input file and expected file.</div>
+<div class="block"><p>Compare a file transformed as suggested by <a href="bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a> to an expected source.</p>
+<p>Inputs are a <a href="bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a> instance, input file and expected file.</p>
+</div>
 <dl class="notes">
 <dt>Author:</dt>
 <dd>kurs@google.com (Jan Kurs)</dd>
@@ -279,8 +279,8 @@ test.</div>
 <div class="member-signature"><span class="annotations"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Deprecated.html" title="class or interface in java.lang" class="external-link">@Deprecated</a>
 </span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="BugCheckerRefactoringTestHelper.ExpectOutput.html" title="class in com.google.errorprone">BugCheckerRefactoringTestHelper.ExpectOutput</a></span>&nbsp;<span class="element-name">addInput</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;inputFilename)</span></div>
 <div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
-<div class="deprecation-comment">prefer <a href="#addInputLines(java.lang.String,java.lang.String...)"><code>addInputLines(String, String...)</code></a>. Declaring tests in the same file using text blocks
-    is more readable, as it encourages writing small, focussed tests.</div>
+<div class="deprecation-comment">prefer <a href="#addInputLines(java.lang.String,java.lang.String...)"><code>addInputLines(String, String...)</code></a>. Declaring tests in the same file using text blocks is
+more readable, as it encourages writing small, focussed tests.</div>
 </div>
 <div class="block">Adds an input file.</div>
 </div>
@@ -375,9 +375,9 @@ test.</div>
 <h3>doTest</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">doTest</span>()</div>
-<div class="block">Runs the test.
-
-<p>By default outputs are compared with <a href="BugCheckerRefactoringTestHelper.TestMode.html#TEXT_MATCH"><code>BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH</code></a>.</div>
+<div class="block"><p>Runs the test.</p>
+<p>By default outputs are compared with <a href="BugCheckerRefactoringTestHelper.TestMode.html#TEXT_MATCH"><code>BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH</code></a>.</p>
+</div>
 </div>
 </section>
 </li>
@@ -388,14 +388,16 @@ test.</div>
 <div class="member-signature"><span class="annotations"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Deprecated.html" title="class or interface in java.lang" class="external-link">@Deprecated</a>
 </span><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">doTest</span><wbr><span class="parameters">(<a href="BugCheckerRefactoringTestHelper.TestMode.html" title="enum class in com.google.errorprone">BugCheckerRefactoringTestHelper.TestMode</a>&nbsp;testMode)</span></div>
 <div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
-<div class="deprecation-comment">prefer <a href="#doTest()"><code>doTest()</code></a>, which is equivalent to <code>doTest(TEXT_MATCH)</code>. <a href="BugCheckerRefactoringTestHelper.TestMode.html#TEXT_MATCH"><code>BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH</code></a> formats the actual and expected output to be lenient of whitespace
-    differences. <a href="BugCheckerRefactoringTestHelper.TestMode.html#AST_MATCH"><code>BugCheckerRefactoringTestHelper.TestMode.AST_MATCH</code></a> will ignore differences in comments, and may miss
-    other differences that aren't detectable in the AST.</div>
+<div class="deprecation-comment">prefer <a href="#doTest()"><code>doTest()</code></a>, which is equivalent to <code>doTest(TEXT_MATCH)</code>.
+<a href="BugCheckerRefactoringTestHelper.TestMode.html#TEXT_MATCH"><code>BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH</code></a> formats the actual and expected output to be lenient of whitespace
+differences. <a href="BugCheckerRefactoringTestHelper.TestMode.html#AST_MATCH"><code>BugCheckerRefactoringTestHelper.TestMode.AST_MATCH</code></a> will ignore differences in comments, and may miss other
+differences that aren't detectable in the AST.</div>
 </div>
 <div class="block">Runs the test.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>testMode</code> - the comparison to use to for the test outputs. The default is <a href="BugCheckerRefactoringTestHelper.TestMode.html#TEXT_MATCH"><code>BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH</code></a>.</dd>
+<dd><code>testMode</code> - the comparison to use to for the test outputs. The default is
+<a href="BugCheckerRefactoringTestHelper.TestMode.html#TEXT_MATCH"><code>BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH</code></a>.</dd>
 </dl>
 </div>
 </section>

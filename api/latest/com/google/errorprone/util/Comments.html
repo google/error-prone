@@ -143,15 +143,13 @@ loadScripts(document, 'script');</script>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">com.google.common.collect.ImmutableList&lt;<a href="Commented.html" title="class in com.google.errorprone.util">Commented</a>&gt;</span>&nbsp;<span class="element-name">findCommentsForArguments</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/NewClassTree.html" title="class or interface in com.sun.source.tree" class="external-link">NewClassTree</a>&nbsp;newClassTree,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
-<div class="block">Attach comments to nodes on arguments of constructor calls. Calls such as <code>new Test(
-param1 /* c1 *&amp;#47;, /* c2 *&amp;#47; param2)</code> will attach the comment c1 to <code>param1</code> and the
-comment c2 to <code>param2</code>.
-
-<p>Warning: this is expensive to compute as it involves re-tokenizing the source for this node.
-
+<div class="block"><p>Attach comments to nodes on arguments of constructor calls. Calls such as <code>new Test(param1 /* c1 */, /* c2 */ param2)</code> will attach the comment c1 to <code>param1</code> and the comment c2 to
+<code>param2</code>.</p>
+<p>Warning: this is expensive to compute as it involves re-tokenizing the source for this node.</p>
 <p>Currently this method will only tokenize the source code of the method call itself. However,
-the source positions in the returned <code>Comment</code> objects are adjusted so that they are
-relative to the whole file.</div>
+the source positions in the returned <code>Comment</code> objects are adjusted so that they are relative
+to the whole file.</p>
+</div>
 </div>
 </section>
 </li>
@@ -161,15 +159,12 @@ relative to the whole file.</div>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">com.google.common.collect.ImmutableList&lt;<a href="Commented.html" title="class in com.google.errorprone.util">Commented</a>&gt;</span>&nbsp;<span class="element-name">findCommentsForArguments</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/MethodInvocationTree.html" title="class or interface in com.sun.source.tree" class="external-link">MethodInvocationTree</a>&nbsp;methodInvocationTree,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
-<div class="block">Attach comments to nodes on arguments of method calls. Calls such as <code>test(param1 /* c1
-*&amp;#47;, /* c2 *&amp;#47; param2)</code> will attach the comment c1 to <code>param1</code> and the comment c2
-to <code>param2</code>.
-
-<p>Warning: this is expensive to compute as it involves re-tokenizing the source for this node
-
+<div class="block"><p>Attach comments to nodes on arguments of method calls. Calls such as <code>test(param1 /* c1 */, /* c2 */ param2)</code> will attach the comment c1 to <code>param1</code> and the comment c2 to <code>param2</code>.</p>
+<p>Warning: this is expensive to compute as it involves re-tokenizing the source for this node</p>
 <p>Currently this method will only tokenize the source code of the method call itself. However,
-the source positions in the returned <code>Comment</code> objects are adjusted so that they are
-relative to the whole file.</div>
+the source positions in the returned <code>Comment</code> objects are adjusted so that they are relative
+to the whole file.</p>
+</div>
 </div>
 </section>
 </li>
@@ -187,12 +182,11 @@ relative to the whole file.</div>
 <h3>getTextFromComment</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">getTextFromComment</span><wbr><span class="parameters">(<a href="ErrorProneComment.html" title="class in com.google.errorprone.util">ErrorProneComment</a>&nbsp;comment)</span></div>
-<div class="block">Extract the text body from a comment.
-
-<p>This currently includes asterisks that start lines in the body of block comments. Do not
-rely on this behaviour.
-
-<p>TODO(andrewrice) Update this method to handle block comments properly if we find the need</div>
+<div class="block"><p>Extract the text body from a comment.</p>
+<p>This currently includes asterisks that start lines in the body of block comments. Do not rely
+on this behaviour.</p>
+<p>TODO(andrewrice) Update this method to handle block comments properly if we find the need</p>
+</div>
 </div>
 </section>
 </li>

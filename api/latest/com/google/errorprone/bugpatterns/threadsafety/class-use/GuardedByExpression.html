@@ -100,7 +100,7 @@ loadScripts(document, 'script');</script>
 <div class="col-first odd-row-color"><code>static class&nbsp;</code></div>
 <div class="col-second odd-row-color"><code><a href="../GuardedByExpression.TypeLiteral.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByExpression.TypeLiteral</a></code></div>
 <div class="col-last odd-row-color">
-<div class="block">The base expression for a static member select on a class literal (e.g.</div>
+<div class="block">The base expression for a static member select on a class literal (e.g. ClassName.fieldName).</div>
 </div>
 </div>
 <div class="caption"><span>Methods in <a href="../package-summary.html">com.google.errorprone.bugpatterns.threadsafety</a> that return <a href="../GuardedByExpression.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByExpression</a></span></div>
@@ -126,8 +126,8 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color"><span class="type-name-label">GuardedByBinder.</span><code><a href="../GuardedByBinder.html#bindExpression(com.sun.tools.javac.tree.JCTree.JCExpression,com.google.errorprone.VisitorState)" class="member-name-link">bindExpression</a><wbr>(com.sun.tools.javac.tree.JCTree.JCExpression&nbsp;exp,
  <a href="../../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;visitorState)</code></div>
 <div class="col-last even-row-color">
-<div class="block">Creates a <a href="../GuardedByExpression.html" title="class in com.google.errorprone.bugpatterns.threadsafety"><code>GuardedByExpression</code></a> from a bound AST node, or returns <code>
-Optional.empty()</code> if the AST node doesn't correspond to a 'simple' lock expression.</div>
+<div class="block">Creates a <a href="../GuardedByExpression.html" title="class in com.google.errorprone.bugpatterns.threadsafety"><code>GuardedByExpression</code></a> from a bound AST node, or returns <code>Optional.empty()</code> if the
+AST node doesn't correspond to a 'simple' lock expression.</div>
 </div>
 <div class="col-first odd-row-color"><code>static <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a><wbr>&lt;<a href="../GuardedByExpression.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByExpression</a>&gt;</code></div>
 <div class="col-second odd-row-color"><span class="type-name-label">GuardedByBinder.</span><code><a href="../GuardedByBinder.html#bindString(java.lang.String,com.google.errorprone.bugpatterns.threadsafety.GuardedBySymbolResolver)" class="member-name-link">bindString</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;string,
@@ -140,7 +140,8 @@ Optional.empty()</code> if the AST node doesn't correspond to a 'simple' lock ex
  <a href="../GuardedByExpression.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByExpression</a>&nbsp;guard,
  <a href="../../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last even-row-color">
-<div class="block">Determine the lock expression that needs to be held when accessing a specific guarded member.</div>
+<div class="block">Determine the lock expression that needs to be held when accessing a specific guarded
+member.</div>
 </div>
 </div>
 <div class="caption"><span>Methods in <a href="../package-summary.html">com.google.errorprone.bugpatterns.threadsafety</a> with parameters of type <a href="../GuardedByExpression.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByExpression</a></span></div>
@@ -164,7 +165,8 @@ Optional.empty()</code> if the AST node doesn't correspond to a 'simple' lock ex
  <a href="../GuardedByExpression.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByExpression</a>&nbsp;guard,
  <a href="../../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last even-row-color">
-<div class="block">Determine the lock expression that needs to be held when accessing a specific guarded member.</div>
+<div class="block">Determine the lock expression that needs to be held when accessing a specific guarded
+member.</div>
 </div>
 <div class="col-first odd-row-color"><code>void</code></div>
 <div class="col-second odd-row-color"><span class="type-name-label">HeldLockAnalyzer.LockEventListener.</span><code><a href="../HeldLockAnalyzer.LockEventListener.html#handleGuardedAccess(com.sun.source.tree.ExpressionTree,com.google.errorprone.bugpatterns.threadsafety.GuardedByExpression,com.google.errorprone.bugpatterns.threadsafety.HeldLockSet)" class="member-name-link">handleGuardedAccess</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&nbsp;tree,

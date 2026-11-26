@@ -117,10 +117,10 @@ loadScripts(document, 'script');</script>
 <div class="type-signature"><span class="modifiers">public abstract class </span><span class="element-name type-name-label">BugChecker</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>
 implements <a href="../matchers/Suppressible.html" title="interface in com.google.errorprone.matchers">Suppressible</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/io/Serializable.html" title="class or interface in java.io" class="external-link">Serializable</a></span></div>
-<div class="block">A base class for implementing bug checkers. The <code>BugChecker</code> supplies a Scanner
-implementation for this checker, making it easy to use a single checker. Subclasses should also
-implement one or more of the <code>*Matcher</code> interfaces in this class to declare which tree node
-types to match against.</div>
+<div class="block">A base class for implementing bug checkers. The <code>BugChecker</code> supplies a Scanner implementation
+for this checker, making it easy to use a single checker. Subclasses should also implement one
+or more of the <code>*Matcher</code> interfaces in this class to declare which tree node types to match
+against.</div>
 <dl class="notes">
 <dt>Author:</dt>
 <dd>Colin Decker, Eddie Aftandilian (eaftan@google.com)</dd>
@@ -471,15 +471,15 @@ message or multiple fixes.</div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isSuppressed(com.sun.source.tree.Tree,com.google.errorprone.VisitorState)" class="member-name-link">isSuppressed</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;tree,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Returns true if the given tree is annotated with a <code>@SuppressWarnings</code> that disables this
-bug checker.</div>
+<div class="block">Returns true if the given tree is annotated with a <code>@SuppressWarnings</code> that disables this bug
+checker.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isSuppressed(com.sun.tools.javac.code.Symbol,com.google.errorprone.VisitorState)" class="member-name-link">isSuppressed</a><wbr>(com.sun.tools.javac.code.Symbol&nbsp;sym,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Returns true if the given symbol is annotated with a <code>@SuppressWarnings</code> or other
-annotation that disables this bug checker.</div>
+<div class="block">Returns true if the given symbol is annotated with a <code>@SuppressWarnings</code> or other annotation
+that disables this bug checker.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#linkUrl()" class="member-name-link">linkUrl</a>()</code></div>
@@ -770,8 +770,8 @@ message or multiple fixes.</div>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isSuppressed</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;tree,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
-<div class="block">Returns true if the given tree is annotated with a <code>@SuppressWarnings</code> that disables this
-bug checker.</div>
+<div class="block">Returns true if the given tree is annotated with a <code>@SuppressWarnings</code> that disables this bug
+checker.</div>
 </div>
 </section>
 </li>
@@ -781,8 +781,8 @@ bug checker.</div>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isSuppressed</span><wbr><span class="parameters">(com.sun.tools.javac.code.Symbol&nbsp;sym,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
-<div class="block">Returns true if the given symbol is annotated with a <code>@SuppressWarnings</code> or other
-annotation that disables this bug checker.</div>
+<div class="block">Returns true if the given symbol is annotated with a <code>@SuppressWarnings</code> or other annotation
+that disables this bug checker.</div>
 </div>
 </section>
 </li>

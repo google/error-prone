@@ -74,12 +74,9 @@ loadScripts(document, 'script');</script>
 <div class="type-signature"><span class="annotations"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/annotation/Target.html" title="class or interface in java.lang.annotation" class="external-link">@Target</a>({<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/annotation/ElementType.html#PARAMETER" title="class or interface in java.lang.annotation" class="external-link">PARAMETER</a>,<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/annotation/ElementType.html#METHOD" title="class or interface in java.lang.annotation" class="external-link">METHOD</a>})
 <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/annotation/Retention.html" title="class or interface in java.lang.annotation" class="external-link">@Retention</a>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/annotation/RetentionPolicy.html#SOURCE" title="class or interface in java.lang.annotation" class="external-link">SOURCE</a>)
 </span><span class="modifiers">public @interface </span><span class="element-name type-name-label">Matches</span></div>
-<div class="block">Specify an error-prone <a href="../../matchers/Matcher.html" title="interface in com.google.errorprone.matchers"><code>Matcher</code></a> to further restrict what expressions are matched by the
-annotated parameter.
-
-<p><b>Note:</b> The <code>@Matches</code> annotation should <b>only</b> go on the
-<code>@BeforeTemplate</code>. For example:
-
+<div class="block"><p>Specify an error-prone <a href="../../matchers/Matcher.html" title="interface in com.google.errorprone.matchers"><code>Matcher</code></a> to further restrict what expressions are matched by the
+annotated parameter.</p>
+<p><strong>Note:</strong> The <code>@Matches</code> annotation should <strong>only</strong> go on the <code>@BeforeTemplate</code>. For example:</p>
 <pre><code>class SingletonList {
   @BeforeTemplate
   public &lt;E&gt; List&lt;E&gt; before(@Matches(IsNonNullMatcher.class) E e) {
@@ -91,7 +88,8 @@ annotated parameter.
     return ImmutableList.of(e);
   }
 }
-</code></pre></div>
+</code></pre>
+</div>
 </div>
 </section>
 <section class="summary">

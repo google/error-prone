@@ -153,15 +153,15 @@ based on its context.</div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isAllowed(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)" class="member-name-link">isAllowed</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&nbsp;tree,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Returns <code>true</code> if the given expression is allowed to have an unused return value based on
-its context.</div>
+<div class="block">Returns <code>true</code> if the given expression is allowed to have an unused return value based on its
+context.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#isReturnValueUnused(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)" class="member-name-link">isReturnValueUnused</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&nbsp;tree,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Returns <code>true</code> if and only if the given <code>tree</code> is an invocation of or reference to
-a constructor or non-<code>void</code> method for which the return value is considered unused.</div>
+<div class="block">Returns <code>true</code> if and only if the given <code>tree</code> is an invocation of or reference to a
+constructor or non-<code>void</code> method for which the return value is considered unused.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#matches(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)" class="member-name-link">matches</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&nbsp;tree,
@@ -171,8 +171,7 @@ a constructor or non-<code>void</code> method for which the return value is cons
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#mockitoInvocation(com.sun.source.tree.Tree,com.google.errorprone.VisitorState)" class="member-name-link">mockitoInvocation</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;tree,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Don't match the method that is invoked through <code>Mockito.verify(t)</code> or <code>
-doReturn(val).when(t)</code>.</div>
+<div class="block">Don't match the method that is invoked through <code>Mockito.verify(t)</code> or <code>doReturn(val).when(t)</code>.</div>
 </div>
 </div>
 </div>
@@ -219,8 +218,8 @@ doReturn(val).when(t)</code>.</div>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isReturnValueUnused</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&nbsp;tree,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
-<div class="block">Returns <code>true</code> if and only if the given <code>tree</code> is an invocation of or reference to
-a constructor or non-<code>void</code> method for which the return value is considered unused.</div>
+<div class="block">Returns <code>true</code> if and only if the given <code>tree</code> is an invocation of or reference to a
+constructor or non-<code>void</code> method for which the return value is considered unused.</div>
 </div>
 </section>
 </li>
@@ -230,8 +229,8 @@ a constructor or non-<code>void</code> method for which the return value is cons
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isAllowed</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&nbsp;tree,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
-<div class="block">Returns <code>true</code> if the given expression is allowed to have an unused return value based on
-its context.</div>
+<div class="block">Returns <code>true</code> if the given expression is allowed to have an unused return value based on its
+context.</div>
 </div>
 </section>
 </li>
@@ -261,8 +260,7 @@ based on its context.</div>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">mockitoInvocation</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;tree,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
-<div class="block">Don't match the method that is invoked through <code>Mockito.verify(t)</code> or <code>
-doReturn(val).when(t)</code>.</div>
+<div class="block">Don't match the method that is invoked through <code>Mockito.verify(t)</code> or <code>doReturn(val).when(t)</code>.</div>
 </div>
 </section>
 </li>

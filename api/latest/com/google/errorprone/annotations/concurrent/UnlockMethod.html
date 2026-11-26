@@ -78,25 +78,20 @@ loadScripts(document, 'script');</script>
 <div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
 <div class="deprecation-comment">the correctness of this annotation is not enforced; it will soon be removed.</div>
 </div>
-<div class="block">The method to which this annotation is applied releases one or more locks. The caller must hold
-the locks when the function is entered, and will not hold them when it completes.
-
+<div class="block"><p>The method to which this annotation is applied releases one or more locks. The caller must hold
+the locks when the function is entered, and will not hold them when it completes.</p>
 <p>This annotation does not apply to built-in (synchronization) locks, which cannot be released
-without being acquired in the same method.
-
-<p>The arguments determine which locks the annotated method releases:
-
+without being acquired in the same method.</p>
+<p>The arguments determine which locks the annotated method releases:</p>
 <ul>
-  <li><code>field-name</code>: The lock is referenced by the final instance field specified by
-      <em>field-name</em>.
-  <li><code>class-name.this.field-name</code>: For inner classes, it may be necessary to
-      disambiguate 'this'; the <em>class-name.this</em> designation allows you to specify which
-      'this' reference is intended.
-  <li><code>class-name.field-name</code>: The lock is referenced by the static final field
-      specified by <em>class-name.field-name</em>.
-  <li><code>method-name()</code>: The lock object is returned by calling the named nullary
-      method.
-</ul></div>
+<li><code>field-name</code>: The lock is referenced by the final instance field specified by <em>field-name</em>.</li>
+<li><code>class-name.this.field-name</code>: For inner classes, it may be necessary to disambiguate 'this';
+the <em>class-name.this</em> designation allows you to specify which 'this' reference is intended.</li>
+<li><code>class-name.field-name</code>: The lock is referenced by the static final field specified by
+<em>class-name.field-name</em>.</li>
+<li><code>method-name()</code>: The lock object is returned by calling the named nullary method.</li>
+</ul>
+</div>
 </div>
 </section>
 <section class="summary">

@@ -157,10 +157,10 @@ matched methods.</div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#matchMethod(com.sun.source.tree.MethodTree,com.google.errorprone.VisitorState)" class="member-name-link">matchMethod</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/MethodTree.html" title="class or interface in com.sun.source.tree" class="external-link">MethodTree</a>&nbsp;methodTree,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Matches if all of the following conditions are true: 1) The method matches <a href="#methodMatcher()"><code>methodMatcher()</code></a>, (looks like setUp() or tearDown(), and none of the overrides in the
-hierarchy of the method have the appropriate @Before or @After annotations) 2) The method is
-not annotated with @Test 3) The enclosing class has an @RunWith annotation and does not extend
-TestCase.</div>
+<div class="block">Matches if all of the following conditions are true: 1) The method matches <a href="#methodMatcher()"><code>methodMatcher()</code></a>,
+(looks like setUp() or tearDown(), and none of the overrides in the hierarchy of the method
+have the appropriate @Before or @After annotations) 2) The method is not annotated with @Test
+3) The enclosing class has an @RunWith annotation and does not extend TestCase.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected <a href="../matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/MethodTree.html" title="class or interface in com.sun.source.tree" class="external-link">MethodTree</a>&gt;</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#methodMatcher()" class="member-name-link">methodMatcher</a>()</code></div>
@@ -222,11 +222,11 @@ without @Before/@BeforeClass annotation)</div>
 <h3>correctAnnotation</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a></span>&nbsp;<span class="element-name">correctAnnotation</span>()</div>
-<div class="block">Returns the fully qualified class name of the annotation this bugpattern should apply to
-matched methods.
-
+<div class="block"><p>Returns the fully qualified class name of the annotation this bugpattern should apply to
+matched methods.</p>
 <p>If another annotation is on the method that has the same name, the import will be replaced
-with the appropriate one (e.g.: com.example.Before becomes org.junit.Before)</div>
+with the appropriate one (e.g.: com.example.Before becomes org.junit.Before)</p>
+</div>
 </div>
 </section>
 </li>
@@ -235,11 +235,12 @@ with the appropriate one (e.g.: com.example.Before becomes org.junit.Before)</di
 <h3>annotationReplacements</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;com.google.errorprone.bugpatterns.AbstractJUnit4InitMethodNotRun.AnnotationReplacements&gt;</span>&nbsp;<span class="element-name">annotationReplacements</span>()</div>
-<div class="block">Returns a collection of 'before-and-after' pairs of annotations that should be replaced on
-these methods.
-
-<p>If this method matcher finds a method annotated with <code>AbstractJUnit4InitMethodNotRun.AnnotationReplacements.badAnnotation</code>, instead of applying <a href="#correctAnnotation()"><code>correctAnnotation()</code></a>,
-instead replace it with <code>AbstractJUnit4InitMethodNotRun.AnnotationReplacements.goodAnnotation</code></div>
+<div class="block"><p>Returns a collection of 'before-and-after' pairs of annotations that should be replaced on
+these methods.</p>
+<p>If this method matcher finds a method annotated with <code>AbstractJUnit4InitMethodNotRun.AnnotationReplacements.badAnnotation</code>,
+instead of applying <a href="#correctAnnotation()"><code>correctAnnotation()</code></a>, instead replace it with
+<code>AbstractJUnit4InitMethodNotRun.AnnotationReplacements.goodAnnotation</code></p>
+</div>
 </div>
 </section>
 </li>
@@ -249,10 +250,11 @@ instead replace it with <code>AbstractJUnit4InitMethodNotRun.AnnotationReplaceme
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></span>&nbsp;<span class="element-name">matchMethod</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/MethodTree.html" title="class or interface in com.sun.source.tree" class="external-link">MethodTree</a>&nbsp;methodTree,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
-<div class="block">Matches if all of the following conditions are true: 1) The method matches <a href="#methodMatcher()"><code>methodMatcher()</code></a>, (looks like setUp() or tearDown(), and none of the overrides in the
-hierarchy of the method have the appropriate @Before or @After annotations) 2) The method is
-not annotated with @Test 3) The enclosing class has an @RunWith annotation and does not extend
-TestCase. This marks that the test is intended to run with JUnit 4.</div>
+<div class="block">Matches if all of the following conditions are true: 1) The method matches <a href="#methodMatcher()"><code>methodMatcher()</code></a>,
+(looks like setUp() or tearDown(), and none of the overrides in the hierarchy of the method
+have the appropriate @Before or @After annotations) 2) The method is not annotated with @Test
+3) The enclosing class has an @RunWith annotation and does not extend TestCase. This marks
+that the test is intended to run with JUnit 4.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="BugChecker.MethodTreeMatcher.html#matchMethod(com.sun.source.tree.MethodTree,com.google.errorprone.VisitorState)">matchMethod</a></code>&nbsp;in interface&nbsp;<code><a href="BugChecker.MethodTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MethodTreeMatcher</a></code></dd>

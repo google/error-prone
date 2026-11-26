@@ -90,9 +90,8 @@ loadScripts(document, 'script');</script>
 <div class="type-signature"><span class="modifiers">public final class </span><span class="element-name type-name-label">ChainedAssertionLosesContext</span>
 <span class="extends-implements">extends <a href="BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a>
 implements <a href="BugChecker.MethodInvocationTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MethodInvocationTreeMatcher</a></span></div>
-<div class="block">Identifies calls to <code>assertThat</code> and similar methods inside the implementation of a <code>
-Subject</code> assertion method. These calls should instead use <code>check(...)</code>.
-
+<div class="block"><p>Identifies calls to <code>assertThat</code> and similar methods inside the implementation of a <code>Subject</code>
+assertion method. These calls should instead use <code>check(...)</code>.</p>
 <pre><code>// Before:
 public void hasFoo() {
   assertThat(actual().foo()).isEqualTo(expected);
@@ -100,9 +99,10 @@ public void hasFoo() {
 
 // After:
 public void hasFoo() {
-  check("foo()").that(actual().foo()).isEqualTo(expected);
+  check(&quot;foo()&quot;).that(actual().foo()).isEqualTo(expected);
 }
-</code></pre></div>
+</code></pre>
+</div>
 <dl class="notes">
 <dt>See Also:</dt>
 <dd>

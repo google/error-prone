@@ -82,7 +82,8 @@ loadScripts(document, 'script');</script>
 <div class="col-first odd-row-color"><a href="#com.google.errorprone.bugpatterns.inject">com.google.errorprone.bugpatterns.inject</a></div>
 <div class="col-last odd-row-color">
 <div class="block">Bug patterns related to <a href="https://en.wikipedia.org/wiki/Dependency_injection">dependency
-injection</a> and <a href="https://jcp.org/en/jsr/detail?id=330">JSR 330</a>.</div>
+injection</a> and [JSR
+330](https://jcp.org/en/jsr/detail?</div>
 </div>
 <div class="col-first even-row-color"><a href="#com.google.errorprone.bugpatterns.inject.dagger">com.google.errorprone.bugpatterns.inject.dagger</a></div>
 <div class="col-last even-row-color">
@@ -154,8 +155,8 @@ individual AST nodes, a supplier gives contextual information from the traversal
 <div class="col-second odd-row-color"><span class="type-name-label">VisitorState.</span><code><a href="../VisitorState.html#createForCustomFindingCollection(com.sun.tools.javac.util.Context,com.google.errorprone.DescriptionListener)" class="member-name-link">createForCustomFindingCollection</a><wbr>(com.sun.tools.javac.util.Context&nbsp;context,
  <a href="../DescriptionListener.html" title="interface in com.google.errorprone">DescriptionListener</a>&nbsp;listener)</code></div>
 <div class="col-last odd-row-color">
-<div class="block">Return a VisitorState that has no Error Prone configuration, but can report findings to <code>
-listener</code>.</div>
+<div class="block">Return a VisitorState that has no Error Prone configuration, but can report findings to
+<code>listener</code>.</div>
 </div>
 <div class="col-first even-row-color"><code>static <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a></code></div>
 <div class="col-second even-row-color"><span class="type-name-label">VisitorState.</span><code><a href="../VisitorState.html#createForUtilityPurposes(com.sun.tools.javac.util.Context)" class="member-name-link">createForUtilityPurposes</a><wbr>(com.sun.tools.javac.util.Context&nbsp;context)</code></div>
@@ -196,14 +197,14 @@ object.</div>
 <div class="col-first odd-row-color"><code>@Nullable com.sun.tools.javac.code.Symbol.ClassSymbol</code></div>
 <div class="col-second odd-row-color"><span class="type-name-label">ClassName.</span><code><a href="../ClassName.html#symbol(com.google.errorprone.VisitorState)" class="member-name-link">symbol</a><wbr>(<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last odd-row-color">
-<div class="block">Resolves and caches the <code>Symbol.ClassSymbol</code> for this class in the current compilation, or
-returns <code>null</code> if the symbol is not available.</div>
+<div class="block">Resolves and caches the <code>Symbol.ClassSymbol</code> for this class in the current compilation, or returns
+<code>null</code> if the symbol is not available.</div>
 </div>
 <div class="col-first even-row-color"><code>@Nullable com.sun.tools.javac.code.Type</code></div>
 <div class="col-second even-row-color"><span class="type-name-label">ClassName.</span><code><a href="../ClassName.html#type(com.google.errorprone.VisitorState)" class="member-name-link">type</a><wbr>(<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last even-row-color">
-<div class="block">Resolves and caches the <code>Type</code> for this class in the current compilation, or returns
-<code>null</code> if the symbol is not available.</div>
+<div class="block">Resolves and caches the <code>Type</code> for this class in the current compilation, or returns <code>null</code> if
+the symbol is not available.</div>
 </div>
 <div class="col-first odd-row-color"><code><a href="../SuppressionInfo.html" title="class in com.google.errorprone">SuppressionInfo</a></code></div>
 <div class="col-second odd-row-color"><span class="type-name-label">SuppressionInfo.</span><code><a href="../SuppressionInfo.html#withExtendedSuppressions(com.sun.tools.javac.code.Symbol,com.google.errorprone.VisitorState,java.util.Set)" class="member-name-link">withExtendedSuppressions</a><wbr>(com.sun.tools.javac.code.Symbol&nbsp;sym,
@@ -273,10 +274,7 @@ present on <code>sym</code> as well as those already stored in <code>this</code>
  com.google.common.collect.ImmutableSet&lt;com.sun.tools.javac.code.Symbol.MethodSymbol&gt;&nbsp;calledMethods,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last even-row-color">
-<div class="block">Matches iff:
-
-
-  Method's name begins with misspelled variation of "test".</div>
+<div class="block">Matches iff:</div>
 </div>
 <div class="col-first odd-row-color"><code><a href="../bugpatterns/TypeCompatibility.TypeCompatibilityReport.html" title="class in com.google.errorprone.bugpatterns">TypeCompatibility.TypeCompatibilityReport</a></code></div>
 <div class="col-second odd-row-color"><span class="type-name-label">TypeCompatibility.</span><code><a href="../bugpatterns/TypeCompatibility.html#compatibilityOfTypes(com.sun.tools.javac.code.Type,com.sun.tools.javac.code.Type,com.google.errorprone.VisitorState)" class="member-name-link">compatibilityOfTypes</a><wbr>(com.sun.tools.javac.code.Type&nbsp;receiverType,
@@ -291,8 +289,8 @@ present on <code>sym</code> as well as those already stored in <code>this</code>
 <div class="col-second odd-row-color"><span class="type-name-label">SelfAssignment.</span><code><a href="../bugpatterns/SelfAssignment.html#describeForAssignment(com.sun.source.tree.AssignmentTree,com.google.errorprone.VisitorState)" class="member-name-link">describeForAssignment</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/AssignmentTree.html" title="class or interface in com.sun.source.tree" class="external-link">AssignmentTree</a>&nbsp;assignmentTree,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last odd-row-color">
-<div class="block">We expect that the lhs is a field and the rhs is an identifier, specifically a parameter to the
-method.</div>
+<div class="block">We expect that the lhs is a field and the rhs is an identifier, specifically a parameter to
+the method.</div>
 </div>
 <div class="col-first even-row-color"><code><a href="../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></div>
 <div class="col-second even-row-color"><span class="type-name-label">SelfAssignment.</span><code><a href="../bugpatterns/SelfAssignment.html#describeForVarDecl(com.sun.source.tree.VariableTree,com.google.errorprone.VisitorState)" class="member-name-link">describeForVarDecl</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/VariableTree.html" title="class or interface in com.sun.source.tree" class="external-link">VariableTree</a>&nbsp;tree,
@@ -511,15 +509,15 @@ an argument to <code>println</code> or <code>StringBuilder.append</code>.</div>
 <div class="col-second even-row-color"><span class="type-name-label">BugChecker.</span><code><a href="../bugpatterns/BugChecker.html#isSuppressed(com.sun.source.tree.Tree,com.google.errorprone.VisitorState)" class="member-name-link">isSuppressed</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;tree,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last even-row-color">
-<div class="block">Returns true if the given tree is annotated with a <code>@SuppressWarnings</code> that disables this
-bug checker.</div>
+<div class="block">Returns true if the given tree is annotated with a <code>@SuppressWarnings</code> that disables this bug
+checker.</div>
 </div>
 <div class="col-first odd-row-color"><code>boolean</code></div>
 <div class="col-second odd-row-color"><span class="type-name-label">BugChecker.</span><code><a href="../bugpatterns/BugChecker.html#isSuppressed(com.sun.tools.javac.code.Symbol,com.google.errorprone.VisitorState)" class="member-name-link">isSuppressed</a><wbr>(com.sun.tools.javac.code.Symbol&nbsp;sym,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last odd-row-color">
-<div class="block">Returns true if the given symbol is annotated with a <code>@SuppressWarnings</code> or other
-annotation that disables this bug checker.</div>
+<div class="block">Returns true if the given symbol is annotated with a <code>@SuppressWarnings</code> or other annotation
+that disables this bug checker.</div>
 </div>
 <div class="col-first even-row-color"><code>protected <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a><wbr>&lt;com.sun.tools.javac.code.Type&gt;</code></div>
 <div class="col-second even-row-color"><span class="type-name-label">AbstractReturnValueIgnored.</span><code><a href="../bugpatterns/AbstractReturnValueIgnored.html#lostType(com.google.errorprone.VisitorState)" class="member-name-link">lostType</a><wbr>(<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
@@ -559,8 +557,8 @@ annotation that disables this bug checker.</div>
 <div class="col-second even-row-color"><span class="type-name-label">OutlineNone.</span><code><a href="../bugpatterns/OutlineNone.html#matchAnnotation(com.sun.source.tree.AnnotationTree,com.google.errorprone.VisitorState)" class="member-name-link">matchAnnotation</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/AnnotationTree.html" title="class or interface in com.sun.source.tree" class="external-link">AnnotationTree</a>&nbsp;tree,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last even-row-color">
-<div class="block">Matches on <code>@Template</code> annotations whose value contains "outline:none" or equivalent
-outline style.</div>
+<div class="block">Matches on <code>@Template</code> annotations whose value contains &quot;outline:none&quot; or equivalent outline
+style.</div>
 </div>
 <div class="col-first odd-row-color"><code><a href="../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></div>
 <div class="col-second odd-row-color"><span class="type-name-label">RequiredModifiersChecker.</span><code><a href="../bugpatterns/RequiredModifiersChecker.html#matchAnnotation(com.sun.source.tree.AnnotationTree,com.google.errorprone.VisitorState)" class="member-name-link">matchAnnotation</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/AnnotationTree.html" title="class or interface in com.sun.source.tree" class="external-link">AnnotationTree</a>&nbsp;tree,
@@ -852,8 +850,8 @@ outline style.</div>
 <div class="col-second even-row-color"><span class="type-name-label">CheckReturnValue.</span><code><a href="../bugpatterns/CheckReturnValue.html#matchClass(com.sun.source.tree.ClassTree,com.google.errorprone.VisitorState)" class="member-name-link">matchClass</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ClassTree.html" title="class or interface in com.sun.source.tree" class="external-link">ClassTree</a>&nbsp;tree,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last even-row-color">
-<div class="block">Validate that at most one of <code>CheckReturnValue</code> and <code>CanIgnoreReturnValue</code> are
-applied to a class (or interface or enum).</div>
+<div class="block">Validate that at most one of <code>CheckReturnValue</code> and <code>CanIgnoreReturnValue</code> are applied to a
+class (or interface or enum).</div>
 </div>
 <div class="col-first odd-row-color"><code><a href="../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></div>
 <div class="col-second odd-row-color"><span class="type-name-label">ClassCanBeStatic.</span><code><a href="../bugpatterns/ClassCanBeStatic.html#matchClass(com.sun.source.tree.ClassTree,com.google.errorprone.VisitorState)" class="member-name-link">matchClass</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ClassTree.html" title="class or interface in com.sun.source.tree" class="external-link">ClassTree</a>&nbsp;tree,
@@ -1751,8 +1749,8 @@ empty statement, and - The else part of the parent if does not exist</div>
 <div class="col-second even-row-color"><span class="type-name-label">MissingSuperCall.</span><code><a href="../bugpatterns/MissingSuperCall.html#matchMethod(com.sun.source.tree.MethodTree,com.google.errorprone.VisitorState)" class="member-name-link">matchMethod</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/MethodTree.html" title="class or interface in com.sun.source.tree" class="external-link">MethodTree</a>&nbsp;tree,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last even-row-color">
-<div class="block">Matches a method that overrides a method that has been annotated with <code>@CallSuper</code> et
-al., but does not call the super method.</div>
+<div class="block">Matches a method that overrides a method that has been annotated with <code>@CallSuper</code> et al., but
+does not call the super method.</div>
 </div>
 <div class="col-first odd-row-color"><code><a href="../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></div>
 <div class="col-second odd-row-color"><span class="type-name-label">MissingTestCall.</span><code><a href="../bugpatterns/MissingTestCall.html#matchMethod(com.sun.source.tree.MethodTree,com.google.errorprone.VisitorState)" class="member-name-link">matchMethod</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/MethodTree.html" title="class or interface in com.sun.source.tree" class="external-link">MethodTree</a>&nbsp;tree,
@@ -1766,8 +1764,8 @@ al., but does not call the super method.</div>
 <div class="col-second odd-row-color"><span class="type-name-label">MustBeClosedChecker.</span><code><a href="../bugpatterns/MustBeClosedChecker.html#matchMethod(com.sun.source.tree.MethodTree,com.google.errorprone.VisitorState)" class="member-name-link">matchMethod</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/MethodTree.html" title="class or interface in com.sun.source.tree" class="external-link">MethodTree</a>&nbsp;tree,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last odd-row-color">
-<div class="block">Check that the <code>MustBeClosed</code> annotation is only used for constructors of AutoCloseables
-and methods that return an AutoCloseable.</div>
+<div class="block">Check that the <code>MustBeClosed</code> annotation is only used for constructors of AutoCloseables and
+methods that return an AutoCloseable.</div>
 </div>
 <div class="col-first even-row-color"><code><a href="../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></div>
 <div class="col-second even-row-color"><span class="type-name-label">NamedLikeContextualKeyword.</span><code><a href="../bugpatterns/NamedLikeContextualKeyword.html#matchMethod(com.sun.source.tree.MethodTree,com.google.errorprone.VisitorState)" class="member-name-link">matchMethod</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/MethodTree.html" title="class or interface in com.sun.source.tree" class="external-link">MethodTree</a>&nbsp;tree,
@@ -1947,9 +1945,8 @@ and methods that return an AutoCloseable.</div>
 <div class="col-second odd-row-color"><span class="type-name-label">ArrayHashCode.</span><code><a href="../bugpatterns/ArrayHashCode.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.VisitorState)" class="member-name-link">matchMethodInvocation</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/MethodInvocationTree.html" title="class or interface in com.sun.source.tree" class="external-link">MethodInvocationTree</a>&nbsp;tree,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last odd-row-color">
-<div class="block">Wraps identity hashcode computations in calls to <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Arrays.html#hashCode(long%5B%5D)" title="class or interface in java.util" class="external-link"><code>Arrays.hashCode(long[])</code></a> if the array
-is single dimensional or <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Arrays.html#deepHashCode(java.lang.Object%5B%5D)" title="class or interface in java.util" class="external-link"><code>Arrays.deepHashCode(Object[])</code></a> if the array is
-multidimensional.</div>
+<div class="block">Wraps identity hashcode computations in calls to <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Arrays.html#hashCode(long%5B%5D)" title="class or interface in java.util" class="external-link"><code>Arrays.hashCode(long[])</code></a> if the array is
+single dimensional or <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Arrays.html#deepHashCode(java.lang.Object%5B%5D)" title="class or interface in java.util" class="external-link"><code>Arrays.deepHashCode(Object[])</code></a> if the array is multidimensional.</div>
 </div>
 <div class="col-first even-row-color"><code><a href="../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></div>
 <div class="col-second even-row-color"><span class="type-name-label">ArraysAsListPrimitiveArray.</span><code><a href="../bugpatterns/ArraysAsListPrimitiveArray.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.VisitorState)" class="member-name-link">matchMethodInvocation</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/MethodInvocationTree.html" title="class or interface in com.sun.source.tree" class="external-link">MethodInvocationTree</a>&nbsp;tree,
@@ -2353,7 +2350,7 @@ multidimensional.</div>
 <div class="col-second even-row-color"><span class="type-name-label">OutlineNone.</span><code><a href="../bugpatterns/OutlineNone.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.VisitorState)" class="member-name-link">matchMethodInvocation</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/MethodInvocationTree.html" title="class or interface in com.sun.source.tree" class="external-link">MethodInvocationTree</a>&nbsp;tree,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last even-row-color">
-<div class="block">Matches on <code>setProperty("outline", "none")</code> and equivalent method calls.</div>
+<div class="block">Matches on <code>setProperty(&quot;outline&quot;, &quot;none&quot;)</code> and equivalent method calls.</div>
 </div>
 <div class="col-first odd-row-color"><code><a href="../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></div>
 <div class="col-second odd-row-color"><span class="type-name-label">ParameterComment.</span><code><a href="../bugpatterns/ParameterComment.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.VisitorState)" class="member-name-link">matchMethodInvocation</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/MethodInvocationTree.html" title="class or interface in com.sun.source.tree" class="external-link">MethodInvocationTree</a>&nbsp;tree,
@@ -3288,8 +3285,8 @@ references matching <code>matcher</code>, emitting them as a single fix.</div>
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&nbsp;stringifiedExpr,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last odd-row-color">
-<div class="block">Constructs a fix for an explicit toString call, e.g. from <code>Object.toString()</code> or <code>
-String.valueOf()</code>.</div>
+<div class="block">Constructs a fix for an explicit toString call, e.g. from <code>Object.toString()</code> or
+<code>String.valueOf()</code>.</div>
 </div>
 <div class="col-first even-row-color"><code>protected <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a><wbr>&lt;<a href="../fixes/Fix.html" title="interface in com.google.errorprone.fixes">Fix</a>&gt;</code></div>
 <div class="col-second even-row-color"><span class="type-name-label">AnnotationMirrorToString.</span><code><a href="../bugpatterns/AnnotationMirrorToString.html#toStringFix(com.sun.source.tree.Tree,com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)" class="member-name-link">toStringFix</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;toStringCall,
@@ -3352,9 +3349,9 @@ String.valueOf()</code>.</div>
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
  <a href="../fixes/SuggestedFixes.VariableNamer.html" title="class in com.google.errorprone.fixes">SuggestedFixes.VariableNamer</a>&nbsp;namer)</code></div>
 <div class="col-last odd-row-color">
-<div class="block">Transforms a try-catch block in the try-fail pattern into a call to JUnit's <code>
-assertThrows</code>, inserting the behavior of the <code>try</code> block into a lambda parameter, and
-assigning the thrown exception to a variable, if it is used within the <code>catch</code> block.</div>
+<div class="block">Transforms a try-catch block in the try-fail pattern into a call to JUnit's <code>assertThrows</code>,
+inserting the behavior of the <code>try</code> block into a lambda parameter, and assigning the thrown
+exception to a variable, if it is used within the <code>catch</code> block.</div>
 </div>
 </div>
 <div class="caption"><span>Constructors in <a href="../bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a> with parameters of type <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a></span></div>
@@ -3544,16 +3541,15 @@ constructors.</div>
 <div class="col-second odd-row-color"><span class="type-name-label">Rules.</span><code><a href="../bugpatterns/checkreturnvalue/Rules.html#mapAnnotationSimpleName(java.lang.String,com.google.errorprone.bugpatterns.checkreturnvalue.ResultUsePolicy)" class="member-name-link">mapAnnotationSimpleName</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;simpleName,
  <a href="../bugpatterns/checkreturnvalue/ResultUsePolicy.html" title="enum class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUsePolicy</a>&nbsp;policy)</code></div>
 <div class="col-last odd-row-color">
-<div class="block">Returns a <a href="../bugpatterns/checkreturnvalue/ResultUseRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue"><code>ResultUseRule</code></a> that maps annotations with the given <code>simpleName</code> to the
-given <code>policy</code>.</div>
+<div class="block">Returns a <a href="../bugpatterns/checkreturnvalue/ResultUseRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue"><code>ResultUseRule</code></a> that maps annotations with the given <code>simpleName</code> to the given
+<code>policy</code>.</div>
 </div>
 <div class="col-first even-row-color"><code>static <a href="../bugpatterns/checkreturnvalue/ResultUseRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule</a><wbr>&lt;<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>, com.sun.tools.javac.code.Symbol&gt;</code></div>
 <div class="col-second even-row-color"><span class="type-name-label">Rules.</span><code><a href="../bugpatterns/checkreturnvalue/Rules.html#mapInheritedAnnotationSimpleName(java.lang.String,com.google.errorprone.bugpatterns.checkreturnvalue.ResultUsePolicy)" class="member-name-link">mapInheritedAnnotationSimpleName</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;simpleName,
  <a href="../bugpatterns/checkreturnvalue/ResultUsePolicy.html" title="enum class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUsePolicy</a>&nbsp;policy)</code></div>
 <div class="col-last even-row-color">
-<div class="block">Returns a <a href="../bugpatterns/checkreturnvalue/ResultUseRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue"><code>ResultUseRule</code></a> that maps annotations on the current symbol, or on super
-methods if the symbol is a method symbol, with the given <code>simpleName</code> to the given <code>
-policy</code>.</div>
+<div class="block">Returns a <a href="../bugpatterns/checkreturnvalue/ResultUseRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue"><code>ResultUseRule</code></a> that maps annotations on the current symbol, or on super methods if
+the symbol is a method symbol, with the given <code>simpleName</code> to the given <code>policy</code>.</div>
 </div>
 <div class="col-first odd-row-color"><code>static <a href="../bugpatterns/checkreturnvalue/ResultUseRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule</a><wbr>&lt;<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>, com.sun.tools.javac.code.Symbol&gt;</code></div>
 <div class="col-second odd-row-color"><span class="type-name-label">ProtoRules.</span><code><a href="../bugpatterns/checkreturnvalue/ProtoRules.html#mutableProtos()" class="member-name-link">mutableProtos</a>()</code></div>
@@ -3570,8 +3566,8 @@ their fluent setter methods' results ignorable.</div>
 <div class="col-first odd-row-color"><code>static <a href="../bugpatterns/checkreturnvalue/ResultUseRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule</a><wbr>&lt;<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>, com.sun.tools.javac.code.Symbol&gt;</code></div>
 <div class="col-second odd-row-color"><span class="type-name-label">DaggerRules.</span><code><a href="../bugpatterns/checkreturnvalue/DaggerRules.html#productionSubcomponentBuilders()" class="member-name-link">productionSubcomponentBuilders</a>()</code></div>
 <div class="col-last odd-row-color">
-<div class="block">Returns a rule that handles <code>@dagger.producers.ProductionSubcomponent.Builder</code> types,
-making their fluent setter methods' results ignorable.</div>
+<div class="block">Returns a rule that handles <code>@dagger.producers.ProductionSubcomponent.Builder</code> types, making
+their fluent setter methods' results ignorable.</div>
 </div>
 <div class="col-first even-row-color"><code>static <a href="../bugpatterns/checkreturnvalue/ResultUseRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule</a><wbr>&lt;<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>, com.sun.tools.javac.code.Symbol&gt;</code></div>
 <div class="col-second even-row-color"><span class="type-name-label">ProtoRules.</span><code><a href="../bugpatterns/checkreturnvalue/ProtoRules.html#protoBuilders()" class="member-name-link">protoBuilders</a>()</code></div>
@@ -3582,8 +3578,8 @@ ignorable.</div>
 <div class="col-first odd-row-color"><code>static <a href="../bugpatterns/checkreturnvalue/ResultUseRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule</a><wbr>&lt;<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>, com.sun.tools.javac.code.Symbol&gt;</code></div>
 <div class="col-second odd-row-color"><span class="type-name-label">DaggerRules.</span><code><a href="../bugpatterns/checkreturnvalue/DaggerRules.html#subcomponentBuilders()" class="member-name-link">subcomponentBuilders</a>()</code></div>
 <div class="col-last odd-row-color">
-<div class="block">Returns a rule that handles <code>@dagger.Subcomponent.Builder</code> types, making their fluent
-setter methods' results ignorable.</div>
+<div class="block">Returns a rule that handles <code>@dagger.Subcomponent.Builder</code> types, making their fluent setter
+methods' results ignorable.</div>
 </div>
 </div>
 <div class="caption"><span>Methods in <a href="../bugpatterns/checkreturnvalue/package-summary.html">com.google.errorprone.bugpatterns.checkreturnvalue</a> with parameters of type <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a></span></div>
@@ -3782,8 +3778,7 @@ setter methods' results ignorable.</div>
 <div class="col-second odd-row-color"><span class="type-name-label">LenientFormatStringUtils.</span><code><a href="../bugpatterns/formatstring/LenientFormatStringUtils.html#getLenientFormatStringPosition(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)" class="member-name-link">getLenientFormatStringPosition</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&nbsp;tree,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last odd-row-color">
-<div class="block">Returns the index of the lenient format string parameter in <code>tree</code>, or <code>-1</code> if
-there is none.</div>
+<div class="block">Returns the index of the lenient format string parameter in <code>tree</code>, or <code>-1</code> if there is none.</div>
 </div>
 <div class="col-first even-row-color"><code><a href="../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></div>
 <div class="col-second even-row-color"><span class="type-name-label">InlineFormatString.</span><code><a href="../bugpatterns/formatstring/InlineFormatString.html#matchCompilationUnit(com.sun.source.tree.CompilationUnitTree,com.google.errorprone.VisitorState)" class="member-name-link">matchCompilationUnit</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/CompilationUnitTree.html" title="class or interface in com.sun.source.tree" class="external-link">CompilationUnitTree</a>&nbsp;tree,
@@ -3963,7 +3958,7 @@ there is none.</div>
 <div class="col-second even-row-color"><span class="type-name-label">ProvidesNull.</span><code><a href="../bugpatterns/inject/dagger/ProvidesNull.html#matchReturn(com.sun.source.tree.ReturnTree,com.google.errorprone.VisitorState)" class="member-name-link">matchReturn</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ReturnTree.html" title="class or interface in com.sun.source.tree" class="external-link">ReturnTree</a>&nbsp;returnTree,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last even-row-color">
-<div class="block">Matches explicit "return null" statements in methods annotated with <code>@Provides</code> but not
+<div class="block">Matches explicit &quot;return null&quot; statements in methods annotated with <code>@Provides</code> but not
 <code>@Nullable</code>.</div>
 </div>
 </div>
@@ -4268,10 +4263,9 @@ there is none.</div>
  com.google.common.collect.ImmutableSet&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.compiler/javax/lang/model/element/Name.html" title="class or interface in javax.lang.model.element" class="external-link">Name</a>&gt;&nbsp;varsProvenNullByParentIf,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;stateForCompilationUnit)</code></div>
 <div class="col-last even-row-color">
-<div class="block">Returns <code>true</code> if the given expression can definitely evaluate to <code>null</code> along at
-least one execution branch (for example, explicit <code>null</code> literals, conditional/ternary
-branches returning <code>null</code>, known-null variables, or calls to methods like <code>
-Optional.orNull()</code>).</div>
+<div class="block">Returns <code>true</code> if the given expression can definitely evaluate to <code>null</code> along at least one
+execution branch (for example, explicit <code>null</code> literals, conditional/ternary branches
+returning <code>null</code>, known-null variables, or calls to methods like <code>Optional.orNull()</code>).</div>
 </div>
 <div class="col-first odd-row-color"><code><a href="../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></div>
 <div class="col-second odd-row-color"><span class="type-name-label">MultipleNullnessAnnotations.</span><code><a href="../bugpatterns/nullness/MultipleNullnessAnnotations.html#matchAnnotatedType(com.sun.source.tree.AnnotatedTypeTree,com.google.errorprone.VisitorState)" class="member-name-link">matchAnnotatedType</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/AnnotatedTypeTree.html" title="class or interface in com.sun.source.tree" class="external-link">AnnotatedTypeTree</a>&nbsp;tree,
@@ -4552,8 +4546,8 @@ members.</div>
 <div class="col-second odd-row-color"><span class="type-name-label">GuardedByBinder.</span><code><a href="../bugpatterns/threadsafety/GuardedByBinder.html#bindExpression(com.sun.tools.javac.tree.JCTree.JCExpression,com.google.errorprone.VisitorState)" class="member-name-link">bindExpression</a><wbr>(com.sun.tools.javac.tree.JCTree.JCExpression&nbsp;exp,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;visitorState)</code></div>
 <div class="col-last odd-row-color">
-<div class="block">Creates a <a href="../bugpatterns/threadsafety/GuardedByExpression.html" title="class in com.google.errorprone.bugpatterns.threadsafety"><code>GuardedByExpression</code></a> from a bound AST node, or returns <code>
-Optional.empty()</code> if the AST node doesn't correspond to a 'simple' lock expression.</div>
+<div class="block">Creates a <a href="../bugpatterns/threadsafety/GuardedByExpression.html" title="class in com.google.errorprone.bugpatterns.threadsafety"><code>GuardedByExpression</code></a> from a bound AST node, or returns <code>Optional.empty()</code> if the
+AST node doesn't correspond to a 'simple' lock expression.</div>
 </div>
 <div class="col-first even-row-color"><code>static @Nullable com.sun.tools.javac.code.Symbol</code></div>
 <div class="col-second even-row-color"><span class="type-name-label">GuardedByUtils.</span><code><a href="../bugpatterns/threadsafety/GuardedByUtils.html#bindGuardedByString(com.sun.source.tree.Tree,java.lang.String,com.google.errorprone.VisitorState)" class="member-name-link">bindGuardedByString</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;tree,
@@ -4599,7 +4593,8 @@ Optional.empty()</code> if the AST node doesn't correspond to a 'simple' lock ex
  <a href="../bugpatterns/threadsafety/GuardedByExpression.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByExpression</a>&nbsp;guard,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last even-row-color">
-<div class="block">Determine the lock expression that needs to be held when accessing a specific guarded member.</div>
+<div class="block">Determine the lock expression that needs to be held when accessing a specific guarded
+member.</div>
 </div>
 <div class="col-first odd-row-color"><code><a href="../bugpatterns/threadsafety/AnnotationInfo.html" title="class in com.google.errorprone.bugpatterns.threadsafety">AnnotationInfo</a></code></div>
 <div class="col-second odd-row-color"><span class="type-name-label">ThreadSafety.</span><code><a href="../bugpatterns/threadsafety/ThreadSafety.html#getInheritedAnnotation(com.sun.tools.javac.code.Symbol,com.google.errorprone.VisitorState)" class="member-name-link">getInheritedAnnotation</a><wbr>(com.sun.tools.javac.code.Symbol&nbsp;sym,
@@ -4612,8 +4607,8 @@ containerOf spec's from super-classes.</div>
 <div class="col-second even-row-color"><span class="type-name-label">ThreadSafety.</span><code><a href="../bugpatterns/threadsafety/ThreadSafety.html#getMarkerOrAcceptedAnnotation(com.sun.tools.javac.code.Symbol,com.google.errorprone.VisitorState)" class="member-name-link">getMarkerOrAcceptedAnnotation</a><wbr>(com.sun.tools.javac.code.Symbol&nbsp;sym,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last even-row-color">
-<div class="block">Gets the <code>Symbol</code>'s annotation info, either from a marker annotation on the symbol, from
-an accepted annotation on the symbol, or from the list of well-known types.</div>
+<div class="block">Gets the <code>Symbol</code>'s annotation info, either from a marker annotation on the symbol, from an
+accepted annotation on the symbol, or from the list of well-known types.</div>
 </div>
 <div class="col-first odd-row-color"><code>static boolean</code></div>
 <div class="col-second odd-row-color"><span class="type-name-label">WellKnownMutability.</span><code><a href="../bugpatterns/threadsafety/WellKnownMutability.html#isAnnotation(com.google.errorprone.VisitorState,com.sun.tools.javac.code.Type)" class="member-name-link">isAnnotation</a><wbr>(<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
@@ -4635,8 +4630,8 @@ an accepted annotation on the symbol, or from the list of well-known types.</div
 <div class="col-second even-row-color"><span class="type-name-label">WellKnownMutability.</span><code><a href="../bugpatterns/threadsafety/WellKnownMutability.html#isProto2MutableMessageClass(com.google.errorprone.VisitorState,com.sun.tools.javac.code.Type)" class="member-name-link">isProto2MutableMessageClass</a><wbr>(<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
  com.sun.tools.javac.code.Type&nbsp;type)</code></div>
 <div class="col-last even-row-color">
-<div class="block">Compile-time equivalent of <code>
-com.google.io.protocol.ProtocolSupport#isProto2MutableMessageClass</code>.</div>
+<div class="block">Compile-time equivalent of
+<code>com.google.io.protocol.ProtocolSupport#isProto2MutableMessageClass</code>.</div>
 </div>
 <div class="col-first odd-row-color"><code>static boolean</code></div>
 <div class="col-second odd-row-color"><span class="type-name-label">WellKnownMutability.</span><code><a href="../bugpatterns/threadsafety/WellKnownMutability.html#isProtoEnum(com.google.errorprone.VisitorState,com.sun.tools.javac.code.Type)" class="member-name-link">isProtoEnum</a><wbr>(<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
@@ -4749,8 +4744,8 @@ variable if needed.</div>
  boolean&nbsp;not,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last even-row-color">
-<div class="block">Scans an <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link"><code>ExpressionTree</code></a> to find anything guaranteed to be false or true if this
-expression is true.</div>
+<div class="block">Scans an <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link"><code>ExpressionTree</code></a> to find anything guaranteed to be false or true if this expression
+is true.</div>
 </div>
 </div>
 <div class="caption"><span>Method parameters in <a href="../bugpatterns/threadsafety/package-summary.html">com.google.errorprone.bugpatterns.threadsafety</a> with type arguments of type <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a></span></div>
@@ -4991,8 +4986,7 @@ expression is true.</div>
  <a href="../fixes/SuggestedFixes.AdditionPosition.html" title="enum class in com.google.errorprone.fixes">SuggestedFixes.AdditionPosition</a>&nbsp;where,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;members)</code></div>
 <div class="col-last even-row-color">
-<div class="block">Returns a <a href="../fixes/Fix.html" title="interface in com.google.errorprone.fixes"><code>Fix</code></a> that adds members defined by <code>members</code> to the class referenced by
-<code>classTree</code>.</div>
+<div class="block">Returns a <a href="../fixes/Fix.html" title="interface in com.google.errorprone.fixes"><code>Fix</code></a> that adds members defined by <code>members</code> to the class referenced by <code>classTree</code>.</div>
 </div>
 <div class="col-first odd-row-color"><code>static <a href="../fixes/SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a></code></div>
 <div class="col-second odd-row-color"><span class="type-name-label">SuggestedFixes.</span><code><a href="../fixes/SuggestedFixes.html#addMembers(com.sun.source.tree.ClassTree,com.google.errorprone.VisitorState,com.google.errorprone.fixes.SuggestedFixes.AdditionPosition,java.lang.String,java.lang.String...)" class="member-name-link">addMembers</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ClassTree.html" title="class or interface in com.sun.source.tree" class="external-link">ClassTree</a>&nbsp;classTree,
@@ -5001,8 +4995,8 @@ expression is true.</div>
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;firstMember,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>...&nbsp;otherMembers)</code></div>
 <div class="col-last odd-row-color">
-<div class="block">Returns a <a href="../fixes/Fix.html" title="interface in com.google.errorprone.fixes"><code>Fix</code></a> that adds members defined by <code>firstMember</code> (and optionally <code>
-otherMembers</code>) to the class referenced by <code>classTree</code>.</div>
+<div class="block">Returns a <a href="../fixes/Fix.html" title="interface in com.google.errorprone.fixes"><code>Fix</code></a> that adds members defined by <code>firstMember</code> (and optionally <code>otherMembers</code>) to
+the class referenced by <code>classTree</code>.</div>
 </div>
 <div class="col-first even-row-color"><code>static <a href="../fixes/SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a></code></div>
 <div class="col-second even-row-color"><span class="type-name-label">SuggestedFixes.</span><code><a href="../fixes/SuggestedFixes.html#addMembers(com.sun.source.tree.ClassTree,com.google.errorprone.VisitorState,java.lang.String,java.lang.String...)" class="member-name-link">addMembers</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ClassTree.html" title="class or interface in com.sun.source.tree" class="external-link">ClassTree</a>&nbsp;classTree,
@@ -5010,8 +5004,8 @@ otherMembers</code>) to the class referenced by <code>classTree</code>.</div>
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;firstMember,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>...&nbsp;otherMembers)</code></div>
 <div class="col-last even-row-color">
-<div class="block">Returns a <a href="../fixes/Fix.html" title="interface in com.google.errorprone.fixes"><code>Fix</code></a> that adds members defined by <code>firstMember</code> (and optionally <code>
-otherMembers</code>) to the end of the class referenced by <code>classTree</code>.</div>
+<div class="block">Returns a <a href="../fixes/Fix.html" title="interface in com.google.errorprone.fixes"><code>Fix</code></a> that adds members defined by <code>firstMember</code> (and optionally <code>otherMembers</code>) to
+the end of the class referenced by <code>classTree</code>.</div>
 </div>
 <div class="col-first odd-row-color"><code>static <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a><wbr>&lt;<a href="../fixes/SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a>&gt;</code></div>
 <div class="col-second odd-row-color"><span class="type-name-label">SuggestedFixes.</span><code><a href="../fixes/SuggestedFixes.html#addModifiers(com.sun.source.tree.Tree,com.google.errorprone.VisitorState,javax.lang.model.element.Modifier...)" class="member-name-link">addModifiers</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;tree,
@@ -5033,8 +5027,8 @@ otherMembers</code>) to the end of the class referenced by <code>classTree</code
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;warningToSuppress)</code></div>
 <div class="col-last odd-row-color">
-<div class="block">Modifies <code>fixBuilder</code> to either create a new <code>@SuppressWarnings</code> element on the
-closest suppressible node, or add <code>warningToSuppress</code> to that node if there's already a
+<div class="block">Modifies <code>fixBuilder</code> to either create a new <code>@SuppressWarnings</code> element on the closest
+suppressible node, or add <code>warningToSuppress</code> to that node if there's already a
 <code>SuppressWarnings</code> annotation there.</div>
 </div>
 <div class="col-first even-row-color"><code>static void</code></div>
@@ -5043,8 +5037,8 @@ closest suppressible node, or add <code>warningToSuppress</code> to that node if
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;warningToSuppress,
  @Nullable <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;lineComment)</code></div>
 <div class="col-last even-row-color">
-<div class="block">Modifies <code>fixBuilder</code> to either create a new <code>@SuppressWarnings</code> element on the
-closest suppressible node, or add <code>warningToSuppress</code> to that node if there's already a
+<div class="block">Modifies <code>fixBuilder</code> to either create a new <code>@SuppressWarnings</code> element on the closest
+suppressible node, or add <code>warningToSuppress</code> to that node if there's already a
 <code>SuppressWarnings</code> annotation there.</div>
 </div>
 <div class="col-first odd-row-color"><code>static void</code></div>
@@ -5054,25 +5048,25 @@ closest suppressible node, or add <code>warningToSuppress</code> to that node if
  @Nullable <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;lineComment,
  boolean&nbsp;commentOnNewLine)</code></div>
 <div class="col-last odd-row-color">
-<div class="block">Modifies <code>fixBuilder</code> to either create a new <code>@SuppressWarnings</code> element on the
-closest suppressible node, or add <code>warningToSuppress</code> to that node if there's already a
+<div class="block">Modifies <code>fixBuilder</code> to either create a new <code>@SuppressWarnings</code> element on the closest
+suppressible node, or add <code>warningToSuppress</code> to that node if there's already a
 <code>SuppressWarnings</code> annotation there.</div>
 </div>
 <div class="col-first even-row-color"><code>static <a href="../fixes/SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a></code></div>
 <div class="col-second even-row-color"><span class="type-name-label">SuggestedFixes.</span><code><a href="../fixes/SuggestedFixes.html#addSuppressWarnings(com.google.errorprone.VisitorState,java.lang.String)" class="member-name-link">addSuppressWarnings</a><wbr>(<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;warningToSuppress)</code></div>
 <div class="col-last even-row-color">
-<div class="block">Returns a fix that adds a <code>@SuppressWarnings(warningToSuppress)</code> to the closest
-suppressible element to the node pointed at by <code>state.getPath()</code>.</div>
+<div class="block">Returns a fix that adds a <code>@SuppressWarnings(warningToSuppress)</code> to the closest suppressible
+element to the node pointed at by <code>state.getPath()</code>.</div>
 </div>
 <div class="col-first odd-row-color"><code>static <a href="../fixes/SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a></code></div>
 <div class="col-second odd-row-color"><span class="type-name-label">SuggestedFixes.</span><code><a href="../fixes/SuggestedFixes.html#addSuppressWarnings(com.google.errorprone.VisitorState,java.lang.String,java.lang.String)" class="member-name-link">addSuppressWarnings</a><wbr>(<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;warningToSuppress,
  @Nullable <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;lineComment)</code></div>
 <div class="col-last odd-row-color">
-<div class="block">Returns a fix that adds a <code>@SuppressWarnings(warningToSuppress)</code> to the closest
-suppressible element to the node pointed at by <code>state.getPath()</code>, optionally suffixing
-the suppression with a comment suffix (e.g. a reason for the suppression).</div>
+<div class="block">Returns a fix that adds a <code>@SuppressWarnings(warningToSuppress)</code> to the closest suppressible
+element to the node pointed at by <code>state.getPath()</code>, optionally suffixing the suppression with
+a comment suffix (e.g. a reason for the suppression).</div>
 </div>
 <div class="col-first even-row-color"><code>static <a href="../fixes/SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a></code></div>
 <div class="col-second even-row-color"><span class="type-name-label">SuggestedFixes.</span><code><a href="../fixes/SuggestedFixes.html#addValuesToAnnotationArgument(com.sun.source.tree.AnnotationTree,java.lang.String,java.util.Collection,com.google.errorprone.VisitorState)" class="member-name-link">addValuesToAnnotationArgument</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/AnnotationTree.html" title="class or interface in com.sun.source.tree" class="external-link">AnnotationTree</a>&nbsp;annotation,
@@ -5080,8 +5074,8 @@ the suppression with a comment suffix (e.g. a reason for the suppression).</div>
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;newValues,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last even-row-color">
-<div class="block">Returns a fix that appends <code>newValues</code> to the <code>parameterName</code> argument for <code>
-annotation</code>, regardless of whether there is already an argument.</div>
+<div class="block">Returns a fix that appends <code>newValues</code> to the <code>parameterName</code> argument for <code>annotation</code>,
+regardless of whether there is already an argument.</div>
 </div>
 <div class="col-first odd-row-color"><code>static <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second odd-row-color"><span class="type-name-label">SuggestedFixes.</span><code><a href="../fixes/SuggestedFixes.html#castTree(com.sun.source.tree.ExpressionTree,java.lang.String,com.google.errorprone.VisitorState)" class="member-name-link">castTree</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&nbsp;expressionTree,
@@ -5125,22 +5119,22 @@ the compilation unit in which the fix is applied.</div>
  @Nullable <a href="../fixes/SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a>&nbsp;existingFix,
  com.sun.tools.javac.code.Type&nbsp;type)</code></div>
 <div class="col-last odd-row-color">
-<div class="block">Pretty-prints a Type for use in fixes, qualifying any enclosed type names using <a href="../fixes/SuggestedFixes.html#qualifyType(com.google.errorprone.VisitorState,com.google.errorprone.fixes.SuggestedFix.Builder,com.sun.tools.javac.code.Symbol)"><code>SuggestedFixes.qualifyType(VisitorState, SuggestedFix.Builder, Symbol)</code></a>}.</div>
+<div class="block">Pretty-prints a Type for use in fixes, qualifying any enclosed type names using
+<a href="../fixes/SuggestedFixes.html#qualifyType(com.google.errorprone.VisitorState,com.google.errorprone.fixes.SuggestedFix.Builder,com.sun.tools.javac.code.Symbol)"><code>SuggestedFixes.qualifyType(VisitorState, SuggestedFix.Builder, Symbol)</code></a>.</div>
 </div>
 <div class="col-first even-row-color"><code>static <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second even-row-color"><span class="type-name-label">SuggestedFixes.</span><code><a href="../fixes/SuggestedFixes.html#prettyType(com.sun.tools.javac.code.Type,com.google.errorprone.VisitorState)" class="member-name-link">prettyType</a><wbr>(com.sun.tools.javac.code.Type&nbsp;type,
  @Nullable <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last even-row-color">
 <div class="block">Pretty-prints a Type for use in diagnostic messages, qualifying any enclosed type names using
-<a href="../fixes/SuggestedFixes.html#qualifyType(com.google.errorprone.VisitorState,com.google.errorprone.fixes.SuggestedFix.Builder,com.sun.tools.javac.code.Symbol)"><code>SuggestedFixes.qualifyType(VisitorState, SuggestedFix.Builder, Symbol)</code></a>}.</div>
+<a href="../fixes/SuggestedFixes.html#qualifyType(com.google.errorprone.VisitorState,com.google.errorprone.fixes.SuggestedFix.Builder,com.sun.tools.javac.code.Symbol)"><code>SuggestedFixes.qualifyType(VisitorState, SuggestedFix.Builder, Symbol)</code></a>.</div>
 </div>
 <div class="col-first odd-row-color"><code>static void</code></div>
 <div class="col-second odd-row-color"><span class="type-name-label">SuggestedFixes.</span><code><a href="../fixes/SuggestedFixes.html#qualifyDocReference(com.google.errorprone.fixes.SuggestedFix.Builder,com.sun.source.util.DocTreePath,com.google.errorprone.VisitorState)" class="member-name-link">qualifyDocReference</a><wbr>(<a href="../fixes/SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a>&nbsp;fix,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/util/DocTreePath.html" title="class or interface in com.sun.source.util" class="external-link">DocTreePath</a>&nbsp;docPath,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last odd-row-color">
-<div class="block">Fully qualifies a javadoc reference, e.g. for replacing <code>{&#64;link List}</code> with
-<code>{&#64;link java.util.List}</code>.</div>
+<div class="block">Fully qualifies a javadoc reference, e.g. for replacing <code>{@link List}</code> with <code>{@link java.util.List}</code>.</div>
 </div>
 <div class="col-first even-row-color"><code>static <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second even-row-color"><span class="type-name-label">SuggestedFixes.</span><code><a href="../fixes/SuggestedFixes.html#qualifyStaticImport(com.google.errorprone.ClassName,java.lang.String,com.google.errorprone.fixes.SuggestedFix.Builder,com.google.errorprone.VisitorState)" class="member-name-link">qualifyStaticImport</a><wbr>(<a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a>&nbsp;className,
@@ -5148,16 +5142,16 @@ the compilation unit in which the fix is applied.</div>
  <a href="../fixes/SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a>&nbsp;fix,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last even-row-color">
-<div class="block">Provides a name to use for the static member <code>memberName</code> on <code>className</code>, trying to
-static import it if possible.</div>
+<div class="block">Provides a name to use for the static member <code>memberName</code> on <code>className</code>, trying to static
+import it if possible.</div>
 </div>
 <div class="col-first odd-row-color"><code>static <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second odd-row-color"><span class="type-name-label">SuggestedFixes.</span><code><a href="../fixes/SuggestedFixes.html#qualifyStaticImport(java.lang.String,com.google.errorprone.fixes.SuggestedFix.Builder,com.google.errorprone.VisitorState)" class="member-name-link">qualifyStaticImport</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;qualifiedName,
  <a href="../fixes/SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a>&nbsp;fix,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last odd-row-color">
-<div class="block">Provides a name to use for the (fully qualified) method provided in <code>qualifiedName</code>,
-trying to static import it if possible.</div>
+<div class="block">Provides a name to use for the (fully qualified) method provided in <code>qualifiedName</code>, trying to
+static import it if possible.</div>
 </div>
 <div class="col-first even-row-color"><code>static <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second even-row-color"><span class="type-name-label">SuggestedFixes.</span><code><a href="../fixes/SuggestedFixes.html#qualifyType(com.google.errorprone.VisitorState,com.google.errorprone.fixes.SuggestedFix.Builder,com.google.errorprone.ClassName)" class="member-name-link">qualifyType</a><wbr>(<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
@@ -5196,8 +5190,8 @@ trying to static import it if possible.</div>
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;? extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;&nbsp;trees,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last odd-row-color">
-<div class="block">Removes <code>tree</code> from <code>trees</code>, assuming that <code>trees</code> represents a
-comma-separated list of expressions containing <code>tree</code>.</div>
+<div class="block">Removes <code>tree</code> from <code>trees</code>, assuming that <code>trees</code> represents a comma-separated list of
+expressions containing <code>tree</code>.</div>
 </div>
 <div class="col-first even-row-color"><code>static <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a><wbr>&lt;<a href="../fixes/SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a>&gt;</code></div>
 <div class="col-second even-row-color"><span class="type-name-label">SuggestedFixes.</span><code><a href="../fixes/SuggestedFixes.html#removeModifiers(com.sun.source.tree.ModifiersTree,com.google.errorprone.VisitorState,java.util.Set)" class="member-name-link">removeModifiers</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ModifiersTree.html" title="class or interface in com.sun.source.tree" class="external-link">ModifiersTree</a>&nbsp;originalModifiers,
@@ -5219,8 +5213,8 @@ comma-separated list of expressions containing <code>tree</code>.</div>
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;warningToRemove)</code></div>
 <div class="col-last even-row-color">
 <div class="block">Modifies <code>fixBuilder</code> to either remove a <code>warningToRemove</code> warning from the closest
-<code>SuppressWarning</code> node or remove the entire <code>SuppressWarning</code> node if <code>
-warningToRemove</code> is the only warning in that node.</div>
+<code>SuppressWarning</code> node or remove the entire <code>SuppressWarning</code> node if <code>warningToRemove</code> is the
+only warning in that node.</div>
 </div>
 <div class="col-first odd-row-color"><code>static <a href="../fixes/SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a></code></div>
 <div class="col-second odd-row-color"><span class="type-name-label">SuggestedFixes.</span><code><a href="../fixes/SuggestedFixes.html#renameClassWithUses(com.sun.source.tree.ClassTree,java.lang.String,com.google.errorprone.VisitorState)" class="member-name-link">renameClassWithUses</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ClassTree.html" title="class or interface in com.sun.source.tree" class="external-link">ClassTree</a>&nbsp;tree,
@@ -5248,8 +5242,8 @@ warningToRemove</code> is the only warning in that node.</div>
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;replacement,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last even-row-color">
-<div class="block">Renames the given <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/MethodTree.html" title="class or interface in com.sun.source.tree" class="external-link"><code>MethodTree</code></a> and its usages in the current compilation unit to <code>
-replacement</code>.</div>
+<div class="block">Renames the given <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/MethodTree.html" title="class or interface in com.sun.source.tree" class="external-link"><code>MethodTree</code></a> and its usages in the current compilation unit to
+<code>replacement</code>.</div>
 </div>
 <div class="col-first odd-row-color"><code>static <a href="../fixes/SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a></code></div>
 <div class="col-second odd-row-color"><span class="type-name-label">SuggestedFixes.</span><code><a href="../fixes/SuggestedFixes.html#renameTypeParameter(com.sun.source.tree.TypeParameterTree,com.sun.source.tree.Tree,java.lang.String,com.google.errorprone.VisitorState)" class="member-name-link">renameTypeParameter</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/TypeParameterTree.html" title="class or interface in com.sun.source.tree" class="external-link">TypeParameterTree</a>&nbsp;typeParameter,
@@ -5257,24 +5251,22 @@ replacement</code>.</div>
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;typeVarReplacement,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last odd-row-color">
-<div class="block">Renames a type parameter <code>typeParameter</code> owned by <code>owningTree</code> to <code>
-typeVarReplacement</code>.</div>
+<div class="block">Renames a type parameter <code>typeParameter</code> owned by <code>owningTree</code> to <code>typeVarReplacement</code>.</div>
 </div>
 <div class="col-first even-row-color"><code>static <a href="../fixes/SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a></code></div>
 <div class="col-second even-row-color"><span class="type-name-label">SuggestedFixes.</span><code><a href="../fixes/SuggestedFixes.html#renameVariable(com.sun.source.tree.VariableTree,java.lang.String,com.google.errorprone.VisitorState)" class="member-name-link">renameVariable</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/VariableTree.html" title="class or interface in com.sun.source.tree" class="external-link">VariableTree</a>&nbsp;tree,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;replacement,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last even-row-color">
-<div class="block">Renames the given <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/VariableTree.html" title="class or interface in com.sun.source.tree" class="external-link"><code>VariableTree</code></a> and its usages in the current compilation unit to <code>
-replacement</code>.</div>
+<div class="block">Renames the given <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/VariableTree.html" title="class or interface in com.sun.source.tree" class="external-link"><code>VariableTree</code></a> and its usages in the current compilation unit to
+<code>replacement</code>.</div>
 </div>
 <div class="col-first odd-row-color"><code>static <a href="../fixes/SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a></code></div>
 <div class="col-second odd-row-color"><span class="type-name-label">SuggestedFixes.</span><code><a href="../fixes/SuggestedFixes.html#renameVariableUsages(com.sun.source.tree.VariableTree,java.lang.String,com.google.errorprone.VisitorState)" class="member-name-link">renameVariableUsages</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/VariableTree.html" title="class or interface in com.sun.source.tree" class="external-link">VariableTree</a>&nbsp;tree,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;replacement,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last odd-row-color">
-<div class="block">Renames usage of the given <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/VariableTree.html" title="class or interface in com.sun.source.tree" class="external-link"><code>VariableTree</code></a> in the current compilation unit to <code>
-replacement</code>.</div>
+<div class="block">Renames usage of the given <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/VariableTree.html" title="class or interface in com.sun.source.tree" class="external-link"><code>VariableTree</code></a> in the current compilation unit to <code>replacement</code>.</div>
 </div>
 <div class="col-first even-row-color"><code>static <a href="../fixes/SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a></code></div>
 <div class="col-second even-row-color"><span class="type-name-label">SuggestedFixes.</span><code><a href="../fixes/SuggestedFixes.html#replaceIncludingComments(com.sun.source.util.TreePath,java.lang.String,com.google.errorprone.VisitorState)" class="member-name-link">replaceIncludingComments</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/util/TreePath.html" title="class or interface in com.sun.source.util" class="external-link">TreePath</a>&nbsp;path,
@@ -5322,22 +5314,21 @@ replacement</code>.</div>
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;parameterName,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;newValues)</code></div>
 <div class="col-last even-row-color">
-<div class="block">Returns a fix that updates <code>newValues</code> to the <code>parameterName</code> argument for <code>
-annotation</code>, regardless of whether there is already an argument.</div>
+<div class="block">Returns a fix that updates <code>newValues</code> to the <code>parameterName</code> argument for <code>annotation</code>,
+regardless of whether there is already an argument.</div>
 </div>
 <div class="col-first odd-row-color"><code>static <a href="../fixes/SuggestedFixes.VariableNamer.html" title="class in com.google.errorprone.fixes">SuggestedFixes.VariableNamer</a></code></div>
 <div class="col-second odd-row-color"><span class="type-name-label">SuggestedFixes.</span><code><a href="../fixes/SuggestedFixes.html#variableNamer(com.google.errorprone.VisitorState)" class="member-name-link">variableNamer</a><wbr>(<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last odd-row-color">
-<div class="block">Returns a <a href="../fixes/SuggestedFixes.VariableNamer.html" title="class in com.google.errorprone.fixes"><code>SuggestedFixes.VariableNamer</code></a> that avoids shadowing any variables or identifiers in scope at
-the current <code>state</code> location.</div>
+<div class="block">Returns a <a href="../fixes/SuggestedFixes.VariableNamer.html" title="class in com.google.errorprone.fixes"><code>SuggestedFixes.VariableNamer</code></a> that avoids shadowing any variables or identifiers in scope at the
+current <code>state</code> location.</div>
 </div>
 <div class="col-first even-row-color"><code>static <a href="../fixes/SuggestedFixes.VariableNamer.html" title="class in com.google.errorprone.fixes">SuggestedFixes.VariableNamer</a></code></div>
 <div class="col-second even-row-color"><span class="type-name-label">SuggestedFixes.</span><code><a href="../fixes/SuggestedFixes.html#variableNamer(com.google.errorprone.VisitorState,java.lang.Iterable)" class="member-name-link">variableNamer</a><wbr>(<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;? extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;&nbsp;extraScope)</code></div>
 <div class="col-last even-row-color">
-<div class="block">Returns a <a href="../fixes/SuggestedFixes.VariableNamer.html" title="class in com.google.errorprone.fixes"><code>SuggestedFixes.VariableNamer</code></a> that avoids shadowing any variables or identifiers in scope at
-the current <code>state</code> location, as well as declarations within the given <code>extraScope</code>
-trees.</div>
+<div class="block">Returns a <a href="../fixes/SuggestedFixes.VariableNamer.html" title="class in com.google.errorprone.fixes"><code>SuggestedFixes.VariableNamer</code></a> that avoids shadowing any variables or identifiers in scope at the
+current <code>state</code> location, as well as declarations within the given <code>extraScope</code> trees.</div>
 </div>
 </div>
 </section>
@@ -5406,15 +5397,15 @@ org.testng package.</div>
 <div class="col-second even-row-color"><span class="type-name-label">UnusedReturnValueMatcher.</span><code><a href="../matchers/UnusedReturnValueMatcher.html#isAllowed(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)" class="member-name-link">isAllowed</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&nbsp;tree,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last even-row-color">
-<div class="block">Returns <code>true</code> if the given expression is allowed to have an unused return value based on
-its context.</div>
+<div class="block">Returns <code>true</code> if the given expression is allowed to have an unused return value based on its
+context.</div>
 </div>
 <div class="col-first odd-row-color"><code>static boolean</code></div>
 <div class="col-second odd-row-color"><span class="type-name-label">UnusedReturnValueMatcher.</span><code><a href="../matchers/UnusedReturnValueMatcher.html#isReturnValueUnused(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)" class="member-name-link">isReturnValueUnused</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&nbsp;tree,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last odd-row-color">
-<div class="block">Returns <code>true</code> if and only if the given <code>tree</code> is an invocation of or reference to
-a constructor or non-<code>void</code> method for which the return value is considered unused.</div>
+<div class="block">Returns <code>true</code> if and only if the given <code>tree</code> is an invocation of or reference to a
+constructor or non-<code>void</code> method for which the return value is considered unused.</div>
 </div>
 <div class="col-first even-row-color"><code>static boolean</code></div>
 <div class="col-second even-row-color"><span class="type-name-label">Matchers.</span><code><a href="../matchers/Matchers.html#isThrowingFunctionalInterface(com.sun.tools.javac.code.Type,com.google.errorprone.VisitorState)" class="member-name-link">isThrowingFunctionalInterface</a><wbr>(com.sun.tools.javac.code.Type&nbsp;clazzType,
@@ -5507,8 +5498,7 @@ a constructor or non-<code>void</code> method for which the return value is cons
 <div class="col-second even-row-color"><span class="type-name-label">UnusedReturnValueMatcher.</span><code><a href="../matchers/UnusedReturnValueMatcher.html#mockitoInvocation(com.sun.source.tree.Tree,com.google.errorprone.VisitorState)" class="member-name-link">mockitoInvocation</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;tree,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last even-row-color">
-<div class="block">Don't match the method that is invoked through <code>Mockito.verify(t)</code> or <code>
-doReturn(val).when(t)</code>.</div>
+<div class="block">Don't match the method that is invoked through <code>Mockito.verify(t)</code> or <code>doReturn(val).when(t)</code>.</div>
 </div>
 <div class="col-first odd-row-color"><code><a href="../matchers/MultiMatcher.MultiMatchResult.html" title="class in com.google.errorprone.matchers">MultiMatcher.MultiMatchResult</a><wbr>&lt;<a href="../matchers/ChildMultiMatcher.html#type-param-N" title="type parameter in ChildMultiMatcher">N</a>&gt;</code></div>
 <div class="col-second odd-row-color"><span class="type-name-label">ChildMultiMatcher.</span><code><a href="../matchers/ChildMultiMatcher.html#multiMatchResult(T,com.google.errorprone.VisitorState)" class="member-name-link">multiMatchResult</a><wbr>(<a href="../matchers/ChildMultiMatcher.html#type-param-T" title="type parameter in ChildMultiMatcher">T</a>&nbsp;tree,
@@ -5580,8 +5570,8 @@ doReturn(val).when(t)</code>.</div>
 <div class="col-first even-row-color"><code>class&nbsp;</code></div>
 <div class="col-second even-row-color"><code><a href="../scanner/Scanner.html" class="type-name-link" title="class in com.google.errorprone.scanner">Scanner</a></code></div>
 <div class="col-last even-row-color">
-<div class="block">TODO(eaftan): I'm worried about this performance of this code, specifically the part that handles
-SuppressWarnings.</div>
+<div class="block">TODO(eaftan): I'm worried about this performance of this code, specifically the part that
+handles SuppressWarnings.</div>
 </div>
 </div>
 <div class="caption"><span>Methods in <a href="../scanner/package-summary.html">com.google.errorprone.scanner</a> with parameters of type <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a></span></div>
@@ -5595,8 +5585,8 @@ SuppressWarnings.</div>
 <div class="col-first odd-row-color"><code>protected <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a><wbr>&lt;? extends com.sun.tools.javac.util.Name&gt;</code></div>
 <div class="col-second odd-row-color"><span class="type-name-label">Scanner.</span><code><a href="../scanner/Scanner.html#getCustomSuppressionAnnotations(com.google.errorprone.VisitorState)" class="member-name-link">getCustomSuppressionAnnotations</a><wbr>(<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last odd-row-color">
-<div class="block">Returns a set of all the custom suppression annotation types used by the <code>BugChecker</code>s in
-this<code>Scanner</code>.</div>
+<div class="block">Returns a set of all the custom suppression annotation types used by the <code>BugChecker</code>s in this
+<code>Scanner</code>.</div>
 </div>
 <div class="col-first even-row-color"><code>protected <a href="../SuppressionInfo.SuppressedState.html" title="enum class in com.google.errorprone">SuppressionInfo.SuppressedState</a></code></div>
 <div class="col-second even-row-color"><span class="type-name-label">Scanner.</span><code><a href="../scanner/Scanner.html#isSuppressed(com.google.errorprone.matchers.Suppressible,com.google.errorprone.ErrorProneOptions,com.google.errorprone.VisitorState)" class="member-name-link">isSuppressed</a><wbr>(<a href="../matchers/Suppressible.html" title="interface in com.google.errorprone.matchers">Suppressible</a>&nbsp;suppressible,
@@ -5917,22 +5907,22 @@ this<code>Scanner</code>.</div>
 <div class="col-second odd-row-color"><span class="type-name-label">ASTHelpers.</span><code><a href="../util/ASTHelpers.html#boxedClass(com.sun.tools.javac.code.Type,com.google.errorprone.VisitorState)" class="member-name-link">boxedClass</a><wbr>(@Nullable com.sun.tools.javac.code.Type&nbsp;type,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last odd-row-color">
-<div class="block">Returns the <code>Symbol.ClassSymbol</code> of the boxed wrapper class for a primitive <code>type</code>, or
-<code>null</code> if <code>type</code> is null or not a primitive type.</div>
+<div class="block">Returns the <code>Symbol.ClassSymbol</code> of the boxed wrapper class for a primitive <code>type</code>, or <code>null</code> if
+<code>type</code> is null or not a primitive type.</div>
 </div>
 <div class="col-first even-row-color"><code>static <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a><wbr>&lt;com.sun.tools.javac.code.Type&gt;</code></div>
 <div class="col-second even-row-color"><span class="type-name-label">ASTHelpers.</span><code><a href="../util/ASTHelpers.html#boxedType(com.sun.tools.javac.code.Type,com.google.errorprone.VisitorState)" class="member-name-link">boxedType</a><wbr>(@Nullable com.sun.tools.javac.code.Type&nbsp;type,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last even-row-color">
-<div class="block">Returns the boxed wrapper type if <code>type</code> is a primitive type, or <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html#empty()" title="class or interface in java.util" class="external-link"><code>Optional.empty()</code></a>
-if it is not a primitive type.</div>
+<div class="block">Returns the boxed wrapper type if <code>type</code> is a primitive type, or <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html#empty()" title="class or interface in java.util" class="external-link"><code>Optional.empty()</code></a> if it is
+not a primitive type.</div>
 </div>
 <div class="col-first odd-row-color"><code>static @Nullable com.sun.tools.javac.code.Type</code></div>
 <div class="col-second odd-row-color"><span class="type-name-label">ASTHelpers.</span><code><a href="../util/ASTHelpers.html#boxedTypeOrType(com.sun.tools.javac.code.Type,com.google.errorprone.VisitorState)" class="member-name-link">boxedTypeOrType</a><wbr>(@Nullable com.sun.tools.javac.code.Type&nbsp;type,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last odd-row-color">
-<div class="block">Returns the boxed wrapper type if <code>type</code> is a primitive type, <code>null</code> if <code>
-type</code> is null, or <code>type</code> itself if it is already a reference type.</div>
+<div class="block">Returns the boxed wrapper type if <code>type</code> is a primitive type, <code>null</code> if <code>type</code> is null, or
+<code>type</code> itself if it is already a reference type.</div>
 </div>
 <div class="col-first even-row-color"><code>static boolean</code></div>
 <div class="col-second even-row-color"><span class="type-name-label">ASTHelpers.</span><code><a href="../util/ASTHelpers.html#canBeRemoved(com.sun.tools.javac.code.Symbol,com.google.errorprone.VisitorState)" class="member-name-link">canBeRemoved</a><wbr>(com.sun.tools.javac.code.Symbol&nbsp;symbol,
@@ -6042,8 +6032,8 @@ used further on).</div>
  @Nullable com.sun.tools.javac.code.Symbol&nbsp;target,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last odd-row-color">
-<div class="block">Returns whether <code>anno</code> corresponds to a type annotation, or <code>null</code> if it could not
-be determined.</div>
+<div class="block">Returns whether <code>anno</code> corresponds to a type annotation, or <code>null</code> if it could not be
+determined.</div>
 </div>
 <div class="col-first even-row-color"><code>static com.google.common.collect.ImmutableSet<wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
 <div class="col-second even-row-color"><span class="type-name-label">ASTHelpers.</span><code><a href="../util/ASTHelpers.html#getGeneratedBy(com.google.errorprone.VisitorState)" class="member-name-link">getGeneratedBy</a><wbr>(<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
@@ -6069,7 +6059,8 @@ be determined.</div>
 <div class="col-second odd-row-color"><span class="type-name-label">ASTHelpers.</span><code><a href="../util/ASTHelpers.html#getSourcePath(com.google.errorprone.VisitorState)" class="member-name-link">getSourcePath</a><wbr>(<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last odd-row-color">
 <div class="block">Extract a canonical repository/workspace-relative filename from the <a href="../VisitorState.html" title="class in com.google.errorprone"><code>VisitorState</code></a>'s
-compilation unit, normalizing away workspace roots (e.g.</div>
+compilation unit, normalizing away workspace roots (e.g. <code>/execroot/&lt;workspace&gt;/</code>) and build
+output directories (e.g. <code>blaze-out/.../(bin|genfiles)/</code> or `bazel-out/...</div>
 </div>
 <div class="col-first even-row-color"><code>static com.google.common.collect.ImmutableSet<wbr>&lt;com.sun.tools.javac.code.Type&gt;</code></div>
 <div class="col-second even-row-color"><span class="type-name-label">ASTHelpers.</span><code><a href="../util/ASTHelpers.html#getThrownExceptions(com.sun.source.tree.Tree,com.google.errorprone.VisitorState)" class="member-name-link">getThrownExceptions</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;tree,
@@ -6090,9 +6081,9 @@ compilation unit, normalizing away workspace roots (e.g.</div>
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last even-row-color">
 <div class="block"><span class="deprecated-label">Deprecated.</span>
-<div class="deprecation-comment">prefer <a href="../util/ASTHelpers.html#hasAnnotation(com.sun.source.tree.Tree,com.google.errorprone.ClassName,com.google.errorprone.VisitorState)"><code>ASTHelpers.hasAnnotation(Tree, ClassName, VisitorState)</code></a> to avoid needing a
-    runtime dependency on the annotation class, and to prevent issues if there is skew between
-    the definition of the annotation on the runtime and compile-time classpaths</div>
+<div class="deprecation-comment">prefer <a href="../util/ASTHelpers.html#hasAnnotation(com.sun.source.tree.Tree,com.google.errorprone.ClassName,com.google.errorprone.VisitorState)"><code>ASTHelpers.hasAnnotation(Tree, ClassName, VisitorState)</code></a> to avoid needing a runtime
+dependency on the annotation class, and to prevent issues if there is skew between the
+definition of the annotation on the runtime and compile-time classpaths</div>
 </div>
 </div>
 <div class="col-first odd-row-color"><code>static boolean</code></div>
@@ -6123,8 +6114,8 @@ compilation unit, normalizing away workspace roots (e.g.</div>
 <div class="col-last even-row-color">
 <div class="block"><span class="deprecated-label">Deprecated.</span>
 <div class="deprecation-comment">prefer <a href="../util/ASTHelpers.html#hasAnnotation(com.sun.tools.javac.code.Symbol,com.google.errorprone.ClassName,com.google.errorprone.VisitorState)"><code>ASTHelpers.hasAnnotation(Symbol, ClassName, VisitorState)</code></a> to avoid needing a
-    runtime dependency on the annotation class, and to prevent issues if there is skew between
-    the definition of the annotation on the runtime and compile-time classpaths</div>
+runtime dependency on the annotation class, and to prevent issues if there is skew between
+the definition of the annotation on the runtime and compile-time classpaths</div>
 </div>
 </div>
 <div class="col-first odd-row-color"><code>static boolean</code></div>
@@ -6152,7 +6143,7 @@ compilation unit, normalizing away workspace roots (e.g.</div>
  com.sun.tools.javac.code.Type&nbsp;onlyParameterType,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last even-row-color">
-<div class="block">Returns whether <code>existingMethod</code> has an overload (or "nearly" an overload) with the given
+<div class="block">Returns whether <code>existingMethod</code> has an overload (or &quot;nearly&quot; an overload) with the given
 <code>targetMethodName</code>, and only a single parameter of type <code>onlyParameterType</code>.</div>
 </div>
 <div class="col-first odd-row-color"><code>static boolean</code></div>
@@ -6196,8 +6187,7 @@ Character, Short, Integer, Long, Float, Double).</div>
 <div class="col-second odd-row-color"><span class="type-name-label">ASTHelpers.</span><code><a href="../util/ASTHelpers.html#isCheckedExceptionType(com.sun.tools.javac.code.Type,com.google.errorprone.VisitorState)" class="member-name-link">isCheckedExceptionType</a><wbr>(com.sun.tools.javac.code.Type&nbsp;t,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last odd-row-color">
-<div class="block">Returns true if <code>t</code> is a subtype of Throwable but not a subtype of RuntimeException or
-Error.</div>
+<div class="block">Returns true if <code>t</code> is a subtype of Throwable but not a subtype of RuntimeException or Error.</div>
 </div>
 <div class="col-first even-row-color"><code>static boolean</code></div>
 <div class="col-second even-row-color"><span class="type-name-label">ASTHelpers.</span><code><a href="../util/ASTHelpers.html#isInStaticInitializer(com.google.errorprone.VisitorState)" class="member-name-link">isInStaticInitializer</a><wbr>(<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
@@ -6209,8 +6199,8 @@ which is ultimately assigned to a static field.</div>
 <div class="col-first odd-row-color"><code>static boolean</code></div>
 <div class="col-second odd-row-color"><span class="type-name-label">ASTHelpers.</span><code><a href="../util/ASTHelpers.html#isJUnitTestCode(com.google.errorprone.VisitorState)" class="member-name-link">isJUnitTestCode</a><wbr>(<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last odd-row-color">
-<div class="block">Returns true if the leaf node in the <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/util/TreePath.html" title="class or interface in com.sun.source.util" class="external-link"><code>TreePath</code></a> from <code>state</code> sits somewhere
-underneath a class or method that is marked as JUnit 3 or 4 test code.</div>
+<div class="block">Returns true if the leaf node in the <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/util/TreePath.html" title="class or interface in com.sun.source.util" class="external-link"><code>TreePath</code></a> from <code>state</code> sits somewhere underneath a class
+or method that is marked as JUnit 3 or 4 test code.</div>
 </div>
 <div class="col-first even-row-color"><code>static boolean</code></div>
 <div class="col-second even-row-color"><span class="type-name-label">ASTHelpers.</span><code><a href="../util/ASTHelpers.html#isKotlin(com.sun.tools.javac.code.Symbol,com.google.errorprone.VisitorState)" class="member-name-link">isKotlin</a><wbr>(com.sun.tools.javac.code.Symbol&nbsp;symbol,
@@ -6249,8 +6239,8 @@ underneath a class or method that is marked as JUnit 3 or 4 test code.</div>
 <div class="col-first odd-row-color"><code>static boolean</code></div>
 <div class="col-second odd-row-color"><span class="type-name-label">ASTHelpers.</span><code><a href="../util/ASTHelpers.html#isTestNgTestCode(com.google.errorprone.VisitorState)" class="member-name-link">isTestNgTestCode</a><wbr>(<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last odd-row-color">
-<div class="block">Returns true if the leaf node in the <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/util/TreePath.html" title="class or interface in com.sun.source.util" class="external-link"><code>TreePath</code></a> from <code>state</code> sits somewhere
-underneath a class or method that is marked as TestNG test code.</div>
+<div class="block">Returns true if the leaf node in the <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/util/TreePath.html" title="class or interface in com.sun.source.util" class="external-link"><code>TreePath</code></a> from <code>state</code> sits somewhere underneath a class
+or method that is marked as TestNG test code.</div>
 </div>
 <div class="col-first even-row-color"><code>static boolean</code></div>
 <div class="col-second even-row-color"><span class="type-name-label">ASTHelpers.</span><code><a href="../util/ASTHelpers.html#isVoidType(com.sun.tools.javac.code.Type,com.google.errorprone.VisitorState)" class="member-name-link">isVoidType</a><wbr>(com.sun.tools.javac.code.Type&nbsp;type,
@@ -6275,21 +6265,22 @@ operands in both orders.</div>
 <div class="col-second odd-row-color"><span class="type-name-label">ASTHelpers.</span><code><a href="../util/ASTHelpers.html#methodIsPublicAndNotAnOverride(com.sun.tools.javac.code.Symbol.MethodSymbol,com.google.errorprone.VisitorState)" class="member-name-link">methodIsPublicAndNotAnOverride</a><wbr>(com.sun.tools.javac.code.Symbol.MethodSymbol&nbsp;method,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last odd-row-color">
-<div class="block">Returns true if the given method symbol is public (both the method and the enclosing class) and
-does <i>not</i> have a super-method (i.e., it is not an <code>@Override</code>).</div>
+<div class="block">Returns true if the given method symbol is public (both the method and the enclosing class)
+and does <em>not</em> have a super-method (i.e., it is not an <code>@Override</code>).</div>
 </div>
 <div class="col-first even-row-color"><code>static boolean</code></div>
 <div class="col-second even-row-color"><span class="type-name-label">ASTHelpers.</span><code><a href="../util/ASTHelpers.html#overridesObjectEquals(com.sun.tools.javac.code.Symbol.TypeSymbol,com.google.errorprone.VisitorState)" class="member-name-link">overridesObjectEquals</a><wbr>(com.sun.tools.javac.code.Symbol.TypeSymbol&nbsp;symbol,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last even-row-color">
-<div class="block">Returns whether <code>symbol</code> declares or inherits an implementation of <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#equals(java.lang.Object)" title="class or interface in java.lang" class="external-link"><code>Object.equals(Object)</code></a>
-other than the default implementation in <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link"><code>Object</code></a>.</div>
+<div class="block">Returns whether <code>symbol</code> declares or inherits an implementation of <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#equals(java.lang.Object)" title="class or interface in java.lang" class="external-link"><code>Object.equals(Object)</code></a> other than
+the default implementation in <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link"><code>Object</code></a>.</div>
 </div>
 <div class="col-first odd-row-color"><code>static boolean</code></div>
 <div class="col-second odd-row-color"><span class="type-name-label">ASTHelpers.</span><code><a href="../util/ASTHelpers.html#overridesObjectHashCode(com.sun.tools.javac.code.Symbol.TypeSymbol,com.google.errorprone.VisitorState)" class="member-name-link">overridesObjectHashCode</a><wbr>(com.sun.tools.javac.code.Symbol.TypeSymbol&nbsp;symbol,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last odd-row-color">
-<div class="block">Returns whether <code>symbol</code> declares or inherits an implementation of <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#hashCode()" title="class or interface in java.lang" class="external-link"><code>Object.hashCode()</code></a> other than the default implementation in <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link"><code>Object</code></a>.</div>
+<div class="block">Returns whether <code>symbol</code> declares or inherits an implementation of <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#hashCode()" title="class or interface in java.lang" class="external-link"><code>Object.hashCode()</code></a> other
+than the default implementation in <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link"><code>Object</code></a>.</div>
 </div>
 <div class="col-first even-row-color"><code>static boolean</code></div>
 <div class="col-second even-row-color"><span class="type-name-label">ASTHelpers.</span><code><a href="../util/ASTHelpers.html#requiresParentheses(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)" class="member-name-link">requiresParentheses</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&nbsp;expression,
@@ -6304,22 +6295,20 @@ other than the default implementation in <a href="https://docs.oracle.com/en/jav
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;com.sun.tools.javac.code.Type&gt;&nbsp;argTypes,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;com.sun.tools.javac.code.Type&gt;&nbsp;tyargTypes)</code></div>
 <div class="col-last odd-row-color">
-<div class="block">Given a Type (<code>base</code>), find the method named <code>name</code>, with the appropriate <code>
-argTypes</code> and <code>tyargTypes</code> and return its MethodSymbol.</div>
+<div class="block">Given a Type (<code>base</code>), find the method named <code>name</code>, with the appropriate <code>argTypes</code> and
+<code>tyargTypes</code> and return its MethodSymbol.</div>
 </div>
 <div class="col-first even-row-color"><code>abstract boolean</code></div>
 <div class="col-second even-row-color"><span class="type-name-label">Visibility.</span><code><a href="../util/Visibility.html#shouldBeVisible(com.sun.source.tree.Tree,com.google.errorprone.VisitorState)" class="member-name-link">shouldBeVisible</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;tree,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last even-row-color">
-<div class="block">Whether <code>tree</code> should be visible from the path in <code>state</code> assuming we're in prod
-code.</div>
+<div class="block">Whether <code>tree</code> should be visible from the path in <code>state</code> assuming we're in prod code.</div>
 </div>
 <div class="col-first odd-row-color"><code>abstract boolean</code></div>
 <div class="col-second odd-row-color"><span class="type-name-label">Visibility.</span><code><a href="../util/Visibility.html#shouldBeVisible(com.sun.tools.javac.code.Symbol,com.google.errorprone.VisitorState)" class="member-name-link">shouldBeVisible</a><wbr>(com.sun.tools.javac.code.Symbol&nbsp;symbol,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last odd-row-color">
-<div class="block">Whether <code>symbol</code> should be visible from the path in <code>state</code> assuming we're in prod
-code.</div>
+<div class="block">Whether <code>symbol</code> should be visible from the path in <code>state</code> assuming we're in prod code.</div>
 </div>
 <div class="col-first even-row-color"><code>static @Nullable <a href="../util/TargetType.html" title="class in com.google.errorprone.util">TargetType</a></code></div>
 <div class="col-second even-row-color"><span class="type-name-label">ASTHelpers.</span><code><a href="../util/ASTHelpers.html#targetType(com.google.errorprone.VisitorState)" class="member-name-link">targetType</a><wbr>(<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
@@ -6331,21 +6320,21 @@ code.</div>
 <div class="col-first odd-row-color"><code>static @Nullable <a href="../util/TargetType.html" title="class in com.google.errorprone.util">TargetType</a></code></div>
 <div class="col-second odd-row-color"><span class="type-name-label">TargetType.</span><code><a href="../util/TargetType.html#targetType(com.google.errorprone.VisitorState)" class="member-name-link">targetType</a><wbr>(<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last odd-row-color">
-<div class="block">Returns the target type of the tree at the given <a href="../VisitorState.html" title="class in com.google.errorprone"><code>VisitorState</code></a>'s path, or else <code>
-null</code>.</div>
+<div class="block">Returns the target type of the tree at the given <a href="../VisitorState.html" title="class in com.google.errorprone"><code>VisitorState</code></a>'s path, or else <code>null</code>.</div>
 </div>
 <div class="col-first even-row-color"><code>static <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a><wbr>&lt;com.sun.tools.javac.code.Type&gt;</code></div>
 <div class="col-second even-row-color"><span class="type-name-label">ASTHelpers.</span><code><a href="../util/ASTHelpers.html#unboxedType(com.sun.tools.javac.code.Type,com.google.errorprone.VisitorState)" class="member-name-link">unboxedType</a><wbr>(@Nullable com.sun.tools.javac.code.Type&nbsp;type,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last even-row-color">
-<div class="block">Returns the unboxed primitive type if <code>type</code> is a boxed primitive, or <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html#empty()" title="class or interface in java.util" class="external-link"><code>Optional.empty()</code></a> if it cannot be unboxed.</div>
+<div class="block">Returns the unboxed primitive type if <code>type</code> is a boxed primitive, or <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html#empty()" title="class or interface in java.util" class="external-link"><code>Optional.empty()</code></a> if it
+cannot be unboxed.</div>
 </div>
 <div class="col-first odd-row-color"><code>static @Nullable com.sun.tools.javac.code.Type</code></div>
 <div class="col-second odd-row-color"><span class="type-name-label">ASTHelpers.</span><code><a href="../util/ASTHelpers.html#unboxedTypeOrType(com.sun.tools.javac.code.Type,com.google.errorprone.VisitorState)" class="member-name-link">unboxedTypeOrType</a><wbr>(@Nullable com.sun.tools.javac.code.Type&nbsp;type,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last odd-row-color">
-<div class="block">Returns the unboxed primitive type if <code>type</code> is a boxed primitive, <code>null</code> if <code>
-type</code> is null, or <code>type</code> itself if it cannot be unboxed.</div>
+<div class="block">Returns the unboxed primitive type if <code>type</code> is a boxed primitive, <code>null</code> if <code>type</code> is null,
+or <code>type</code> itself if it cannot be unboxed.</div>
 </div>
 </div>
 <div class="caption"><span>Constructors in <a href="../util/package-summary.html">com.google.errorprone.util</a> with parameters of type <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a></span></div>

@@ -100,16 +100,13 @@ loadScripts(document, 'script');</script>
 <div class="type-signature"><span class="modifiers">public final class </span><span class="element-name type-name-label">ErrorProneFlags</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>
 implements <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/io/Serializable.html" title="class or interface in java.io" class="external-link">Serializable</a></span></div>
-<div class="block">Represents an immutable map of Error Prone flags to their set values.
-
-<p>All get* methods return an <code>Optional&lt;*&gt;</code> containing the value for the given key, or
-empty if the flag is unset.
-
-<p>To access ErrorProneFlags from a BugChecker class, add a constructor to the class that takes
-one parameter of type ErrorProneFlags.
-
-<p>See <a href="https://errorprone.info/docs/flags">documentation</a> for full syntax
-description.</div>
+<div class="block"><p>Represents an immutable map of Error Prone flags to their set values.</p>
+<p>All get* methods return an <code>Optional&lt;*&gt;</code> containing the value for the given key, or empty if
+the flag is unset.</p>
+<p>To access ErrorProneFlags from a BugChecker class, add a constructor to the class that takes one
+parameter of type ErrorProneFlags.</p>
+<p>See <a href="https://errorprone.info/docs/flags">documentation</a> for full syntax description.</p>
+</div>
 <dl class="notes">
 <dt>See Also:</dt>
 <dd>
@@ -177,27 +174,28 @@ description.</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#get(java.lang.String)" class="member-name-link">get</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;key)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Gets flag value for the given key as a String, wrapped in an <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link"><code>Optional</code></a>, which is empty
-if the flag is unset.</div>
+<div class="block">Gets flag value for the given key as a String, wrapped in an <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link"><code>Optional</code></a>, which is empty if the
+flag is unset.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Boolean.html" title="class or interface in java.lang" class="external-link">Boolean</a>&gt;</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getBoolean(java.lang.String)" class="member-name-link">getBoolean</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;key)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Gets the flag value for the given key as a Boolean, wrapped in an <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link"><code>Optional</code></a>, which is
-empty if the flag is unset.</div>
+<div class="block">Gets the flag value for the given key as a Boolean, wrapped in an <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link"><code>Optional</code></a>, which is empty
+if the flag is unset.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>&lt;T extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Enum.html" title="class or interface in java.lang" class="external-link">Enum</a>&lt;T&gt;&gt;<br><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a><wbr>&lt;T&gt;</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getEnum(java.lang.String,java.lang.Class)" class="member-name-link">getEnum</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;key,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;T&gt;&nbsp;clazz)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Gets the flag value for an enum of the given type, wrapped in an <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link"><code>Optional</code></a>, which is
-empty if the flag is unset.</div>
+<div class="block">Gets the flag value for an enum of the given type, wrapped in an <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link"><code>Optional</code></a>, which is empty if
+the flag is unset.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>&lt;T extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Enum.html" title="class or interface in java.lang" class="external-link">Enum</a>&lt;T&gt;&gt;<br><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a><wbr>&lt;com.google.common.collect.ImmutableSet&lt;T&gt;&gt;</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getEnumSet(java.lang.String,java.lang.Class)" class="member-name-link">getEnumSet</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;key,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;T&gt;&nbsp;clazz)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Gets the flag value for a comma-separated set of enums of the given type, wrapped in an <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link"><code>Optional</code></a>, which is empty if the flag is unset.</div>
+<div class="block">Gets the flag value for a comma-separated set of enums of the given type, wrapped in an
+<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link"><code>Optional</code></a>, which is empty if the flag is unset.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.google.common.collect.ImmutableMap<wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getFlagsMap()" class="member-name-link">getFlagsMap</a>()</code></div>
@@ -205,20 +203,20 @@ empty if the flag is unset.</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&gt;</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getInteger(java.lang.String)" class="member-name-link">getInteger</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;key)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Gets the flag value for the given key as an Integer, wrapped in an <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link"><code>Optional</code></a>, which is
-empty if the flag is unset.</div>
+<div class="block">Gets the flag value for the given key as an Integer, wrapped in an <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link"><code>Optional</code></a>, which is empty
+if the flag is unset.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.google.common.collect.ImmutableList<wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getListOrEmpty(java.lang.String)" class="member-name-link">getListOrEmpty</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;key)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Gets the flag value for the given key as a comma-separated <code>ImmutableList</code> of Strings, or
-an empty list if the flag is unset.</div>
+<div class="block">Gets the flag value for the given key as a comma-separated <code>ImmutableList</code> of Strings, or an
+empty list if the flag is unset.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.google.common.collect.ImmutableSet<wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getSetOrEmpty(java.lang.String)" class="member-name-link">getSetOrEmpty</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;key)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Gets the flag value for the given key as a comma-separated <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Set.html" title="class or interface in java.util" class="external-link"><code>Set</code></a> of Strings, or an empty
-set if unset.</div>
+<div class="block">Gets the flag value for the given key as a comma-separated <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Set.html" title="class or interface in java.util" class="external-link"><code>Set</code></a> of Strings, or an empty set
+if unset.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isEmpty()" class="member-name-link">isEmpty</a>()</code></div>
@@ -301,8 +299,8 @@ together.</div>
 <h3>get</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</span>&nbsp;<span class="element-name">get</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;key)</span></div>
-<div class="block">Gets flag value for the given key as a String, wrapped in an <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link"><code>Optional</code></a>, which is empty
-if the flag is unset.</div>
+<div class="block">Gets flag value for the given key as a String, wrapped in an <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link"><code>Optional</code></a>, which is empty if the
+flag is unset.</div>
 </div>
 </section>
 </li>
@@ -311,14 +309,13 @@ if the flag is unset.</div>
 <h3>getBoolean</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Boolean.html" title="class or interface in java.lang" class="external-link">Boolean</a>&gt;</span>&nbsp;<span class="element-name">getBoolean</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;key)</span></div>
-<div class="block">Gets the flag value for the given key as a Boolean, wrapped in an <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link"><code>Optional</code></a>, which is
-empty if the flag is unset.
-
-<p>The value within the <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link"><code>Optional</code></a> will be <code>true</code> if the flag's value is "true",
-<code>false</code> for "false", both case insensitive. If the value is neither "true" nor "false",
-throws an <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/IllegalArgumentException.html" title="class or interface in java.lang" class="external-link"><code>IllegalArgumentException</code></a>.
-
-<p>Note that any flag set without a value, e.g. <code>-XepOpt:FlagValue</code>, will be "true".</div>
+<div class="block"><p>Gets the flag value for the given key as a Boolean, wrapped in an <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link"><code>Optional</code></a>, which is empty
+if the flag is unset.</p>
+<p>The value within the <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link"><code>Optional</code></a> will be <code>true</code> if the flag's value is &quot;true&quot;, <code>false</code> for
+&quot;false&quot;, both case insensitive. If the value is neither &quot;true&quot; nor &quot;false&quot;, throws an
+<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/IllegalArgumentException.html" title="class or interface in java.lang" class="external-link"><code>IllegalArgumentException</code></a>.</p>
+<p>Note that any flag set without a value, e.g. <code>-XepOpt:FlagValue</code>, will be &quot;true&quot;.</p>
+</div>
 </div>
 </section>
 </li>
@@ -328,8 +325,8 @@ throws an <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="type-parameters">&lt;T extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Enum.html" title="class or interface in java.lang" class="external-link">Enum</a>&lt;T&gt;&gt;</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;T&gt;</span>&nbsp;<span class="element-name">getEnum</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;key,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;T&gt;&nbsp;clazz)</span></div>
-<div class="block">Gets the flag value for an enum of the given type, wrapped in an <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link"><code>Optional</code></a>, which is
-empty if the flag is unset.</div>
+<div class="block">Gets the flag value for an enum of the given type, wrapped in an <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link"><code>Optional</code></a>, which is empty if
+the flag is unset.</div>
 </div>
 </section>
 </li>
@@ -340,7 +337,8 @@ empty if the flag is unset.</div>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="type-parameters">&lt;T extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Enum.html" title="class or interface in java.lang" class="external-link">Enum</a>&lt;T&gt;&gt;</span>
 <span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;com.google.common.collect.ImmutableSet&lt;T&gt;&gt;</span>&nbsp;<span class="element-name">getEnumSet</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;key,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;T&gt;&nbsp;clazz)</span></div>
-<div class="block">Gets the flag value for a comma-separated set of enums of the given type, wrapped in an <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link"><code>Optional</code></a>, which is empty if the flag is unset. If the flag is explicitly set to empty, an
+<div class="block">Gets the flag value for a comma-separated set of enums of the given type, wrapped in an
+<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link"><code>Optional</code></a>, which is empty if the flag is unset. If the flag is explicitly set to empty, an
 empty set will be returned.</div>
 </div>
 </section>
@@ -350,11 +348,11 @@ empty set will be returned.</div>
 <h3>getInteger</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&gt;</span>&nbsp;<span class="element-name">getInteger</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;key)</span></div>
-<div class="block">Gets the flag value for the given key as an Integer, wrapped in an <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link"><code>Optional</code></a>, which is
-empty if the flag is unset.
-
-<p>If the flag's value cannot be interpreted as an Integer, throws a <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/NumberFormatException.html" title="class or interface in java.lang" class="external-link"><code>NumberFormatException</code></a> (note: float values will *not* be interpreted as integers and will throw
-an exception!)</div>
+<div class="block"><p>Gets the flag value for the given key as an Integer, wrapped in an <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link"><code>Optional</code></a>, which is empty
+if the flag is unset.</p>
+<p>If the flag's value cannot be interpreted as an Integer, throws a <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/NumberFormatException.html" title="class or interface in java.lang" class="external-link"><code>NumberFormatException</code></a>
+(note: float values will *not* be interpreted as integers and will throw an exception!)</p>
+</div>
 </div>
 </section>
 </li>
@@ -363,10 +361,10 @@ an exception!)</div>
 <h3>getListOrEmpty</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">com.google.common.collect.ImmutableList&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</span>&nbsp;<span class="element-name">getListOrEmpty</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;key)</span></div>
-<div class="block">Gets the flag value for the given key as a comma-separated <code>ImmutableList</code> of Strings, or
-an empty list if the flag is unset.
-
-<p>(note: empty strings included, e.g. <code>"-XepOpt:List=,1,,2," =&gt; ["","1","","2",""]</code>)</div>
+<div class="block"><p>Gets the flag value for the given key as a comma-separated <code>ImmutableList</code> of Strings, or an
+empty list if the flag is unset.</p>
+<p>(note: empty strings included, e.g. <code>&quot;-XepOpt:List=,1,,2,&quot; =&gt; [&quot;&quot;,&quot;1&quot;,&quot;&quot;,&quot;2&quot;,&quot;&quot;]</code>)</p>
+</div>
 </div>
 </section>
 </li>
@@ -375,10 +373,10 @@ an empty list if the flag is unset.
 <h3>getSetOrEmpty</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">com.google.common.collect.ImmutableSet&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</span>&nbsp;<span class="element-name">getSetOrEmpty</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;key)</span></div>
-<div class="block">Gets the flag value for the given key as a comma-separated <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Set.html" title="class or interface in java.util" class="external-link"><code>Set</code></a> of Strings, or an empty
-set if unset.
-
-<p>(note: empty strings included, e.g. <code>"-XepOpt:Set=,1,,1,2," =&gt; ["","1","2"]</code>)</div>
+<div class="block"><p>Gets the flag value for the given key as a comma-separated <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Set.html" title="class or interface in java.util" class="external-link"><code>Set</code></a> of Strings, or an empty set
+if unset.</p>
+<p>(note: empty strings included, e.g. <code>&quot;-XepOpt:Set=,1,,1,2,&quot; =&gt; [&quot;&quot;,&quot;1&quot;,&quot;2&quot;]</code>)</p>
+</div>
 </div>
 </section>
 </li>
@@ -398,8 +396,7 @@ set if unset.
 <div class="member-signature"><span class="annotations"><a href="annotations/CheckReturnValue.html" title="annotation interface in com.google.errorprone.annotations">@CheckReturnValue</a>
 </span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="ErrorProneFlags.html" title="class in com.google.errorprone">ErrorProneFlags</a></span>&nbsp;<span class="element-name">plus</span><wbr><span class="parameters">(<a href="ErrorProneFlags.html" title="class in com.google.errorprone">ErrorProneFlags</a>&nbsp;other)</span></div>
 <div class="block">Returns a new ErrorProneFlags object with the values of two ErrorProneFlags objects added
-together. For flags that appear in both instances, the values in <code>other</code> override <code>
-this</code>.</div>
+together. For flags that appear in both instances, the values in <code>other</code> override <code>this</code>.</div>
 </div>
 </section>
 </li>

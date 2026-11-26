@@ -169,15 +169,14 @@ variables.</div>
 <h3 id="asVarargs(java.lang.Object)">asVarargs</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="type-parameters">&lt;T&gt;</span>&nbsp;<span class="return-type">T[]</span>&nbsp;<span class="element-name">asVarargs</span><wbr><span class="parameters">(T&nbsp;arg)</span></div>
-<div class="block">Indicates that Refaster should treat this <code>@Repeated</code> argument specifically as a varargs
-argument.
-
-<p>For example, you might write
-
+<div class="block"><p>Indicates that Refaster should treat this <code>@Repeated</code> argument specifically as a varargs
+argument.</p>
+<p>For example, you might write</p>
 <pre><code>@BeforeTemplate void something(@Repeated T arg) {
  Stream.of(asVarargs(arg)); // doesn't use the Stream.of(T) overload, but Stream.of(T...)
 }
-</code></pre></div>
+</code></pre>
+</div>
 </div>
 </section>
 </li>
@@ -188,13 +187,10 @@ argument.
 <div class="member-signature"><span class="annotations"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/SafeVarargs.html" title="class or interface in java.lang" class="external-link">@SafeVarargs</a>
 <a href="../annotations/CanIgnoreReturnValue.html" title="annotation interface in com.google.errorprone.annotations">@CanIgnoreReturnValue</a>
 </span><span class="modifiers">public static</span>&nbsp;<span class="type-parameters">&lt;T&gt;</span>&nbsp;<span class="return-type">T</span>&nbsp;<span class="element-name">anyOf</span><wbr><span class="parameters">(T...&nbsp;expressions)</span></div>
-<div class="block">Indicates that Refaster should attempt to match a target expression against each of the
-specified template expressions, in order, and succeed at the first match.
-
-<p>This method should only be used in Refaster templates, but should never actually be run.
-
-<p>For example, instead of writing
-
+<div class="block"><p>Indicates that Refaster should attempt to match a target expression against each of the
+specified template expressions, in order, and succeed at the first match.</p>
+<p>This method should only be used in Refaster templates, but should never actually be run.</p>
+<p>For example, instead of writing</p>
 <pre><code>@BeforeTemplate &lt;E&gt; List&lt;E&gt; copyOfSingleton(E element) {
   return ImmutableList.copyOf(Collections.singletonList(element));
 }
@@ -202,15 +198,14 @@ specified template expressions, in order, and succeed at the first match.
   return ImmutableList.copyOf(Lists.newArrayList(element));
 }
 </code></pre>
-
-<p>one could alternately write
-
+<p>one could alternately write</p>
 <pre><code>@BeforeTemplate &lt;E&gt; List&lt;E&gt; singleton(E element) {
   return ImmutableList.copyOf(Refaster.anyOf(
     Collections.singletonList(element),
     Lists.newArrayList(element)));
 }
-</code></pre></div>
+</code></pre>
+</div>
 </div>
 </section>
 </li>
@@ -219,23 +214,20 @@ specified template expressions, in order, and succeed at the first match.
 <h3>isInstance</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="type-parameters">&lt;T&gt;</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isInstance</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;o)</span></div>
-<div class="block">This is a placeholder for the Java instanceof operator that can be used with Refaster type
-variables. The type argument must always be specified explicitly, e.g. <code>
-Refaster.&lt;String&gt;isInstance(o)</code>.
-
-<p>For example, instead of writing the broken
-
+<div class="block"><p>This is a placeholder for the Java instanceof operator that can be used with Refaster type
+variables. The type argument must always be specified explicitly, e.g.
+<code>Refaster.&lt;String&gt;isInstance(o)</code>.</p>
+<p>For example, instead of writing the broken</p>
 <pre><code>@AfterTemplate &lt;T&gt; boolean instanceOf(Object o) {
   return o instanceof T; // you want to match this, but it won't compile
 }
 </code></pre>
-
-<p>you would instead write
-
+<p>you would instead write</p>
 <pre><code>@AfterTemplate &lt;T&gt; boolean instanceOf(Object o) {
-  return Refaster.&lt;T&gt;isInstance(o); // generates the replacement "o instanceof T"
+  return Refaster.&lt;T&gt;isInstance(o); // generates the replacement &quot;o instanceof T&quot;
 }
-</code></pre></div>
+</code></pre>
+</div>
 <dl class="notes">
 <dt>Throws:</dt>
 <dd><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/IllegalArgumentException.html" title="class or interface in java.lang" class="external-link">IllegalArgumentException</a></code> - if T is not specified explicitly.</dd>
@@ -248,22 +240,19 @@ Refaster.&lt;String&gt;isInstance(o)</code>.
 <h3>newArray</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="type-parameters">&lt;T&gt;</span>&nbsp;<span class="return-type">T[]</span>&nbsp;<span class="element-name">newArray</span><wbr><span class="parameters">(int&nbsp;size)</span></div>
-<div class="block">This is a placeholder for <code>new T[size]</code>. The type argument must always be specified
-explicitly, e.g. <code>Refaster.&lt;String&gt;newArray(10)</code>.
-
-<p>For example, instead of writing the broken
-
+<div class="block"><p>This is a placeholder for <code>new T[size]</code>. The type argument must always be specified
+explicitly, e.g. <code>Refaster.&lt;String&gt;newArray(10)</code>.</p>
+<p>For example, instead of writing the broken</p>
 <pre><code>@AfterTemplate &lt;T&gt; T[] newTArray(int size) {
   return new T[size]; // you want to generate this code, but it won't compile
 }
 </code></pre>
-
-<p>you would instead write
-
+<p>you would instead write</p>
 <pre><code>@AfterTemplate &lt;T&gt; T[] newTArray(int size) {
   return Refaster.&lt;T&gt;newArray(size);
 }
-</code></pre></div>
+</code></pre>
+</div>
 <dl class="notes">
 <dt>Throws:</dt>
 <dd><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/IllegalArgumentException.html" title="class or interface in java.lang" class="external-link">IllegalArgumentException</a></code> - if T is not specified explicitly.</dd>
@@ -276,22 +265,19 @@ explicitly, e.g. <code>Refaster.&lt;String&gt;newArray(10)</code>.
 <h3>clazz</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="type-parameters">&lt;T&gt;</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;T&gt;</span>&nbsp;<span class="element-name">clazz</span>()</div>
-<div class="block">This is a placeholder for the expression T.class. The type argument must always be specified
-explicitly, e.g. <code>Refaster.&lt;String&gt;clazz()</code>.
-
-<p>For example, instead of writing the broken
-
+<div class="block"><p>This is a placeholder for the expression T.class. The type argument must always be specified
+explicitly, e.g. <code>Refaster.&lt;String&gt;clazz()</code>.</p>
+<p>For example, instead of writing the broken</p>
 <pre><code>@AfterTemplate &lt;T&gt; T[] getEnumConstants() {
   return T.class.getEnumConstants(); // you want to inline this, but it won't compile
 }
 </code></pre>
-
-you would instead write
-
+<p>you would instead write</p>
 <pre><code>@AfterTemplate &lt;T&gt; T[] getEnumConstants() {
   return Refaster.&lt;T&gt;clazz().getEnumConstants();
 }
-</code></pre></div>
+</code></pre>
+</div>
 <dl class="notes">
 <dt>Throws:</dt>
 <dd><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/IllegalArgumentException.html" title="class or interface in java.lang" class="external-link">IllegalArgumentException</a></code> - if T is not specified explicitly.</dd>
@@ -304,22 +290,19 @@ you would instead write
 <h3>enumValueOf</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="type-parameters">&lt;E extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Enum.html" title="class or interface in java.lang" class="external-link">Enum</a>&lt;E&gt;&gt;</span>&nbsp;<span class="return-type">E</span>&nbsp;<span class="element-name">enumValueOf</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;string)</span></div>
-<div class="block">This is a placeholder for the expression E.valueOf(string). The type argument must always be
-specified explicitly, e.g. <code>Refaster.&lt;RoundingMode&gt;valueOf(string)</code>.
-
-<p>For example, instead of writing the broken
-
+<div class="block"><p>This is a placeholder for the expression E.valueOf(string). The type argument must always be
+specified explicitly, e.g. <code>Refaster.&lt;RoundingMode&gt;valueOf(string)</code>.</p>
+<p>For example, instead of writing the broken</p>
 <pre><code>@BeforeTemplate &lt;E extends Enum&lt;E&gt;&gt; E valueOf(String str) {
   return E.valueOf(str);
 }
 </code></pre>
-
-<p>you would instead write
-
+<p>you would instead write</p>
 <pre><code>@BeforeTemplate &lt;E extends Enum&lt;E&gt;&gt; E valueOf(String str) {
   return Refaster.&lt;E&gt;enumValueOf(str);
 }
-</code></pre></div>
+</code></pre>
+</div>
 <dl class="notes">
 <dt>Throws:</dt>
 <dd><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/IllegalArgumentException.html" title="class or interface in java.lang" class="external-link">IllegalArgumentException</a></code> - if E is not specified explicitly.</dd>
@@ -333,22 +316,19 @@ specified explicitly, e.g. <code>Refaster.&lt;RoundingMode&gt;valueOf(string)</c
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="type-parameters">&lt;T&gt;</span>&nbsp;<span class="return-type">T</span>&nbsp;<span class="element-name">emitCommentBefore</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;literal,
  T&nbsp;expression)</span></div>
-<div class="block">This is a special method to emit a comment before an expression. The comment argument must
-always be a string literal. This method cannot be static imported.
-
-<p>For example, instead of writing
-
+<div class="block"><p>This is a special method to emit a comment before an expression. The comment argument must
+always be a string literal. This method cannot be static imported.</p>
+<p>For example, instead of writing</p>
 <pre><code>@AfterTemplate int lengthWithComment(String str) {
-  return /* comment \*\/ str.length();
+  return /* comment */ str.length();
 }
 </code></pre>
-
-<p>you would instead write
-
+<p>you would instead write</p>
 <pre><code>@AfterTemplate int lengthWithComment(String str) {
-  return Refaster.emitCommentBefore("comment", str.length());
+  return Refaster.emitCommentBefore(&quot;comment&quot;, str.length());
 }
-</code></pre></div>
+</code></pre>
+</div>
 </div>
 </section>
 </li>
@@ -357,24 +337,21 @@ always be a string literal. This method cannot be static imported.
 <h3>emitComment</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">emitComment</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;literal)</span></div>
-<div class="block">This is a special method to emit a one-line comment. The comment argument must always be a
-string literal. This method cannot be static imported.
-
-<p>For example, instead of writing
-
+<div class="block"><p>This is a special method to emit a one-line comment. The comment argument must always be a
+string literal. This method cannot be static imported.</p>
+<p>For example, instead of writing</p>
 <pre><code>@AfterTemplate void printWithComment(String str) {
   // comment
   System.out.println(str);
 }
 </code></pre>
-
-<p>you would instead write
-
+<p>you would instead write</p>
 <pre><code>@AfterTemplate void printWithComment(String str) {
-  Refaster.emitComment("comment");
+  Refaster.emitComment(&quot;comment&quot;);
   System.out.println(str);
 }
-</code></pre></div>
+</code></pre>
+</div>
 </div>
 </section>
 </li>

@@ -80,7 +80,8 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color"><a href="../package-summary.html">com.google.errorprone.bugpatterns.inject</a></div>
 <div class="col-last even-row-color">
 <div class="block">Bug patterns related to <a href="https://en.wikipedia.org/wiki/Dependency_injection">dependency
-injection</a> and <a href="https://jcp.org/en/jsr/detail?id=330">JSR 330</a>.</div>
+injection</a> and [JSR
+330](https://jcp.org/en/jsr/detail?</div>
 </div>
 <div class="col-first odd-row-color"><a href="../dagger/package-summary.html">com.google.errorprone.bugpatterns.inject.dagger</a></div>
 <div class="col-last odd-row-color">
@@ -97,11 +98,11 @@ injection</a> and <a href="https://jcp.org/en/jsr/detail?id=330">JSR 330</a>.</d
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color class-summary class-summary-tab2"><a href="AssistedInjectScoping.html" title="class in com.google.errorprone.bugpatterns.inject.guice">AssistedInjectScoping</a></div>
 <div class="col-last even-row-color class-summary class-summary-tab2">
-<div class="block">This checker matches iff *both* of the following conditions are true: 1) The class is assisted:
-a) If there is a constructor that is annotated with @Inject and that constructor has at least one
-parameter that is annotated with @Assisted. b) If there is no @Inject constructor and at least
-one constructor is annotated with <code>@AssistedInject</code>. 2) There is an annotation on the
-class, and the annotation is itself annotated with <code>@ScopeAnnotation</code>.</div>
+<div class="block">This checker matches iff *both* of the following conditions are true: 1) The class is
+assisted: a) If there is a constructor that is annotated with @Inject and that constructor has
+at least one parameter that is annotated with @Assisted. b) If there is no @Inject constructor
+and at least one constructor is annotated with <code>@AssistedInject</code>. 2) There is an annotation on
+the class, and the annotation is itself annotated with <code>@ScopeAnnotation</code>.</div>
 </div>
 <div class="col-first odd-row-color class-summary class-summary-tab2"><a href="AssistedParameters.html" title="class in com.google.errorprone.bugpatterns.inject.guice">AssistedParameters</a></div>
 <div class="col-last odd-row-color class-summary class-summary-tab2">&nbsp;</div>

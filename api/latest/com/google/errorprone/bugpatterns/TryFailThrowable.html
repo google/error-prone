@@ -90,33 +90,28 @@ loadScripts(document, 'script');</script>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">TryFailThrowable</span>
 <span class="extends-implements">extends <a href="BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a>
 implements <a href="BugChecker.TryTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.TryTreeMatcher</a></span></div>
-<div class="block">A bug checker for the following code pattern:
-
-<pre>
-try {
+<div class="block"><p>A bug checker for the following code pattern:</p>
+<pre><code>try {
   // do something
   Assert.fail(); // or any Assert.assert*
   // maybe do something more
 } catch (Throwable t) {
   // empty or only comments
 }
-</pre>
-
-* Matches all static methods named "fail" and starting with "assert" from the following classes:
-
+</code></pre>
+<p>Matches all static methods named &quot;fail&quot; and starting with &quot;assert&quot; from the following classes:</p>
 <ul>
-  <li><code>org.junit.Assert</code>,
-  <li><code>junit.framework.Assert</code>,
-  <li><code>junit.framework.TestCase</code> - which overrides the methods from Assert in order to
-      deprecate them and
-  <li>every class whose name ends with "MoreAsserts".
+<li><code>org.junit.Assert</code>,</li>
+<li><code>junit.framework.Assert</code>,</li>
+<li><code>junit.framework.TestCase</code> - which overrides the methods from Assert in order to deprecate
+them and</li>
+<li>every class whose name ends with &quot;MoreAsserts&quot;.</li>
 </ul>
-
-Possible improvements/generalizations of this matcher:
-
+<p>Possible improvements/generalizations of this matcher:</p>
 <ul>
-  <li>support multiple catch() blocks
-</ul></div>
+<li>support multiple catch() blocks</li>
+</ul>
+</div>
 <dl class="notes">
 <dt>Author:</dt>
 <dd>adamwos@google.com (Adam Wos)</dd>

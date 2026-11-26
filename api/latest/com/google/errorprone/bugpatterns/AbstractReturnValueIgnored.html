@@ -107,14 +107,13 @@ loadScripts(document, 'script');</script>
 <div class="type-signature"><span class="modifiers">public abstract class </span><span class="element-name type-name-label">AbstractReturnValueIgnored</span>
 <span class="extends-implements">extends <a href="BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a>
 implements <a href="BugChecker.MethodInvocationTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MethodInvocationTreeMatcher</a>, <a href="BugChecker.MemberReferenceTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MemberReferenceTreeMatcher</a>, <a href="BugChecker.ReturnTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.ReturnTreeMatcher</a>, <a href="BugChecker.NewClassTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.NewClassTreeMatcher</a>, <a href="checkreturnvalue/ResultUsePolicyAnalyzer.html" title="interface in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUsePolicyAnalyzer</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>, <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&gt;</span></div>
-<div class="block">An abstract base class to match API usages in which the return value is not used.
-
-<p>In addition to regular contexts in which a return value isn't used (e.g.: the result of <code>
-String.trim()</code> is just ignored), this class has the capacity to determine if the result is cast
-in such a way as to lose important static type information.
-
+<div class="block"><p>An abstract base class to match API usages in which the return value is not used.</p>
+<p>In addition to regular contexts in which a return value isn't used (e.g.: the result of
+<code>String.trim()</code> is just ignored), this class has the capacity to determine if the result is cast
+in such a way as to lose important static type information.</p>
 <p>If an analysis extending this base class chooses to care about this circumstance, they can
-override <a href="#lostType(com.google.errorprone.VisitorState)"><code>lostType(VisitorState)</code></a> to define the type information they wish to keep.</div>
+override <a href="#lostType(com.google.errorprone.VisitorState)"><code>lostType(VisitorState)</code></a> to define the type information they wish to keep.</p>
+</div>
 <dl class="notes">
 <dt>Author:</dt>
 <dd>eaftan@google.com (Eddie Aftandilian)</dd>
@@ -329,8 +328,8 @@ side-effect-free methods, has a @CheckReturnValue annotation, etc.).</div>
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
 <div class="block"><span class="description-from-type-label">Description copied from interface:&nbsp;<code><a href="checkreturnvalue/ResultUsePolicyAnalyzer.html#isCovered(E,C)">ResultUsePolicyAnalyzer</a></code></span></div>
 <div class="block">Returns whether this checker makes any determination about whether the given expression's
-return value should be used or not. Most checkers either determine that an expression is CRV or
-make no determination.</div>
+return value should be used or not. Most checkers either determine that an expression is CRV
+or make no determination.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="checkreturnvalue/ResultUsePolicyAnalyzer.html#isCovered(E,C)">isCovered</a></code>&nbsp;in interface&nbsp;<code><a href="checkreturnvalue/ResultUsePolicyAnalyzer.html" title="interface in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUsePolicyAnalyzer</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>, <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&gt;</code></dd>

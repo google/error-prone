@@ -92,20 +92,19 @@ loadScripts(document, 'script');</script>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">ArgumentSelectionDefectChecker</span>
 <span class="extends-implements">extends <a href="../BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a>
 implements <a href="../BugChecker.DeconstructionPatternTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.DeconstructionPatternTreeMatcher</a>, <a href="../BugChecker.MethodInvocationTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MethodInvocationTreeMatcher</a>, <a href="../BugChecker.NewClassTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.NewClassTreeMatcher</a></span></div>
-<div class="block">Checks the lexical distance between method parameter names and the argument names at call sites.
+<div class="block"><p>Checks the lexical distance between method parameter names and the argument names at call sites.
 If another permutation of the arguments produces a lower distance then it is possible that the
-programmer has accidentally reordered them.
-
-<p>Rice, Andrew, et al. <a href="https://ai.google/research/pubs/pub46317">"Detecting argument
-selection defects"</a>. Proceedings of the ACM on Programming Languages OOPSLA (2017).
-
-<p>Terminology:
-
+programmer has accidentally reordered them.</p>
+<p>Rice, Andrew, et al. <a href="https://ai.google/research/pubs/pub46317">&quot;Detecting argument selection
+defects&quot;</a>. Proceedings of the ACM on Programming
+Languages OOPSLA (2017).</p>
+<p>Terminology:</p>
 <ul>
-  <li>Formal parameter - as given in the definition of the method
-  <li>Actual parameter - as used in the invocation of the method
-  <li>Parameter - either a formal or actual parameter
-</ul></div>
+<li>Formal parameter - as given in the definition of the method</li>
+<li>Actual parameter - as used in the invocation of the method</li>
+<li>Parameter - either a formal or actual parameter</li>
+</ul>
+</div>
 <dl class="notes">
 <dt>Author:</dt>
 <dd>andrewrice@google.com (Andrew Rice)</dd>

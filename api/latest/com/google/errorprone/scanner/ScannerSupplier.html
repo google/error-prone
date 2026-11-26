@@ -99,8 +99,8 @@ loadScripts(document, 'script');</script>
 <div class="type-signature"><span class="modifiers">public abstract class </span><span class="element-name type-name-label">ScannerSupplier</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>
 implements com.google.common.base.Supplier&lt;<a href="Scanner.html" title="class in com.google.errorprone.scanner">Scanner</a>&gt;</span></div>
-<div class="block">Supplies <a href="Scanner.html" title="class in com.google.errorprone.scanner"><code>Scanner</code></a>s and provides access to the backing sets of all <a href="../bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>s and
-enabled <a href="../bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>s.</div>
+<div class="block">Supplies <a href="Scanner.html" title="class in com.google.errorprone.scanner"><code>Scanner</code></a>s and provides access to the backing sets of all <a href="../bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>s and enabled
+<a href="../bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>s.</div>
 </div>
 </section>
 <section class="summary">
@@ -256,8 +256,8 @@ enabled <a href="../bugpatterns/BugChecker.html" title="class in com.google.erro
 <h3>fromScanner</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="ScannerSupplier.html" title="class in com.google.errorprone.scanner">ScannerSupplier</a></span>&nbsp;<span class="element-name">fromScanner</span><wbr><span class="parameters">(<a href="Scanner.html" title="class in com.google.errorprone.scanner">Scanner</a>&nbsp;scanner)</span></div>
-<div class="block">Returns a <a href="ScannerSupplier.html" title="class in com.google.errorprone.scanner"><code>ScannerSupplier</code></a> that just returns the <a href="Scanner.html" title="class in com.google.errorprone.scanner"><code>Scanner</code></a> that was passed in.
-Used mostly for testing. Does not implement any method other than <code>Supplier.get()</code>.</div>
+<div class="block">Returns a <a href="ScannerSupplier.html" title="class in com.google.errorprone.scanner"><code>ScannerSupplier</code></a> that just returns the <a href="Scanner.html" title="class in com.google.errorprone.scanner"><code>Scanner</code></a> that was passed in. Used mostly
+for testing. Does not implement any method other than <code>Supplier.get()</code>.</div>
 </div>
 </section>
 </li>
@@ -318,23 +318,22 @@ Used mostly for testing. Does not implement any method other than <code>Supplier
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="annotations"><a href="../annotations/CheckReturnValue.html" title="annotation interface in com.google.errorprone.annotations">@CheckReturnValue</a>
 </span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="ScannerSupplier.html" title="class in com.google.errorprone.scanner">ScannerSupplier</a></span>&nbsp;<span class="element-name">applyOverrides</span><wbr><span class="parameters">(<a href="../ErrorProneOptions.html" title="class in com.google.errorprone">ErrorProneOptions</a>&nbsp;errorProneOptions)</span></div>
-<div class="block">Applies options to this <a href="ScannerSupplier.html" title="class in com.google.errorprone.scanner"><code>ScannerSupplier</code></a>.
-
-<p>Command-line options to override check severities may do any of the following:
-
+<div class="block"><p>Applies options to this <a href="ScannerSupplier.html" title="class in com.google.errorprone.scanner"><code>ScannerSupplier</code></a>.</p>
+<p>Command-line options to override check severities may do any of the following:</p>
 <ul>
-  <li>Enable a check that is currently off
-  <li>Disable a check that is currently on
-  <li>Change the severity of a check that is on, promoting a warning to an error or demoting an
-      error to a warning
-</ul></div>
+<li>Enable a check that is currently off</li>
+<li>Disable a check that is currently on</li>
+<li>Change the severity of a check that is on, promoting a warning to an error or demoting an
+error to a warning</li>
+</ul>
+</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>errorProneOptions</code> - an <a href="../ErrorProneOptions.html" title="class in com.google.errorprone"><code>ErrorProneOptions</code></a> object that encapsulates the overrides
-    for this compilation</dd>
+<dd><code>errorProneOptions</code> - an <a href="../ErrorProneOptions.html" title="class in com.google.errorprone"><code>ErrorProneOptions</code></a> object that encapsulates the overrides for
+this compilation</dd>
 <dt>Throws:</dt>
 <dd><code><a href="../InvalidCommandLineOptionException.html" title="class in com.google.errorprone">InvalidCommandLineOptionException</a></code> - if the override map attempts to disable a check that
-    may not be disabled</dd>
+may not be disabled</dd>
 </dl>
 </div>
 </section>
@@ -345,9 +344,8 @@ Used mostly for testing. Does not implement any method other than <code>Supplier
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="annotations"><a href="../annotations/CheckReturnValue.html" title="annotation interface in com.google.errorprone.annotations">@CheckReturnValue</a>
 </span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="ScannerSupplier.html" title="class in com.google.errorprone.scanner">ScannerSupplier</a></span>&nbsp;<span class="element-name">plus</span><wbr><span class="parameters">(<a href="ScannerSupplier.html" title="class in com.google.errorprone.scanner">ScannerSupplier</a>&nbsp;other)</span></div>
-<div class="block">Composes this <a href="ScannerSupplier.html" title="class in com.google.errorprone.scanner"><code>ScannerSupplier</code></a> with the <code>other</code> <a href="ScannerSupplier.html" title="class in com.google.errorprone.scanner"><code>ScannerSupplier</code></a>. The set
-of checks that are turned on is the intersection of the checks on in <code>this</code> and <code>
-other</code>.</div>
+<div class="block">Composes this <a href="ScannerSupplier.html" title="class in com.google.errorprone.scanner"><code>ScannerSupplier</code></a> with the <code>other</code> <a href="ScannerSupplier.html" title="class in com.google.errorprone.scanner"><code>ScannerSupplier</code></a>. The set of checks that are
+turned on is the intersection of the checks on in <code>this</code> and <code>other</code>.</div>
 </div>
 </section>
 </li>
@@ -357,7 +355,8 @@ other</code>.</div>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="annotations"><a href="../annotations/CheckReturnValue.html" title="annotation interface in com.google.errorprone.annotations">@CheckReturnValue</a>
 </span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="ScannerSupplier.html" title="class in com.google.errorprone.scanner">ScannerSupplier</a></span>&nbsp;<span class="element-name">filter</span><wbr><span class="parameters">(com.google.common.base.Predicate&lt;? super <a href="../BugCheckerInfo.html" title="class in com.google.errorprone">BugCheckerInfo</a>&gt;&nbsp;predicate)</span></div>
-<div class="block">Filters this <a href="ScannerSupplier.html" title="class in com.google.errorprone.scanner"><code>ScannerSupplier</code></a> based on the provided predicate. Returns a <a href="ScannerSupplier.html" title="class in com.google.errorprone.scanner"><code>ScannerSupplier</code></a> with only the checks enabled that satisfy the predicate.</div>
+<div class="block">Filters this <a href="ScannerSupplier.html" title="class in com.google.errorprone.scanner"><code>ScannerSupplier</code></a> based on the provided predicate. Returns a <a href="ScannerSupplier.html" title="class in com.google.errorprone.scanner"><code>ScannerSupplier</code></a>
+with only the checks enabled that satisfy the predicate.</div>
 </div>
 </section>
 </li>

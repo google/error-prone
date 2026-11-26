@@ -99,9 +99,9 @@ loadScripts(document, 'script');</script>
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
  <a href="../fixes/SuggestedFixes.VariableNamer.html" title="class in com.google.errorprone.fixes">SuggestedFixes.VariableNamer</a>&nbsp;namer)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Transforms a try-catch block in the try-fail pattern into a call to JUnit's <code>
-assertThrows</code>, inserting the behavior of the <code>try</code> block into a lambda parameter, and
-assigning the thrown exception to a variable, if it is used within the <code>catch</code> block.</div>
+<div class="block">Transforms a try-catch block in the try-fail pattern into a call to JUnit's <code>assertThrows</code>,
+inserting the behavior of the <code>try</code> block into a lambda parameter, and assigning the thrown
+exception to a variable, if it is used within the <code>catch</code> block.</div>
 </div>
 </div>
 </div>
@@ -128,36 +128,31 @@ assigning the thrown exception to a variable, if it is used within the <code>cat
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;? extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/StatementTree.html" title="class or interface in com.sun.source.tree" class="external-link">StatementTree</a>&gt;&nbsp;throwingStatements,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
  <a href="../fixes/SuggestedFixes.VariableNamer.html" title="class in com.google.errorprone.fixes">SuggestedFixes.VariableNamer</a>&nbsp;namer)</span></div>
-<div class="block">Transforms a try-catch block in the try-fail pattern into a call to JUnit's <code>
-assertThrows</code>, inserting the behavior of the <code>try</code> block into a lambda parameter, and
-assigning the thrown exception to a variable, if it is used within the <code>catch</code> block. For
-example:
-
-<pre>
-try {
+<div class="block"><p>Transforms a try-catch block in the try-fail pattern into a call to JUnit's <code>assertThrows</code>,
+inserting the behavior of the <code>try</code> block into a lambda parameter, and assigning the thrown
+exception to a variable, if it is used within the <code>catch</code> block. For example:</p>
+<pre><code>try {
   foo();
   fail();
 } catch (MyException thrown) {
   assertThat(thrown).isEqualTo(other);
 }
-</pre>
-
-becomes
-
-<pre>
-<code>MyException thrown = assertThrows(MyException.class, () -&gt; foo());</code>
+</code></pre>
+<p>becomes</p>
+<pre><code>MyException thrown = assertThrows(MyException.class, () -&gt; foo());
 assertThat(thrown).isEqualTo(other);
-</pre></div>
+</code></pre>
+</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>tryTree</code> - the tree representing the try-catch block to be refactored.</dd>
-<dd><code>throwingStatements</code> - the list of statements in the <code>throw</code> clause, <b>excluding</b>
-    the fail statement.</dd>
+<dd><code>throwingStatements</code> - the list of statements in the <code>throw</code> clause, <strong>excluding</strong> the fail
+statement.</dd>
 <dd><code>state</code> - current visitor state (for source positions).</dd>
 <dt>Returns:</dt>
-<dd>an <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link"><code>Optional</code></a> containing a <a href="../fixes/Fix.html" title="interface in com.google.errorprone.fixes"><code>Fix</code></a> that replaces <code>tryTree</code> with an
-    equivalent <code>assertThrows</code>, if possible. Returns an <code>Optional.empty()</code> if a fix
-    could not be constructed for the given code (e.g. multi-catch).</dd>
+<dd>an <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link"><code>Optional</code></a> containing a <a href="../fixes/Fix.html" title="interface in com.google.errorprone.fixes"><code>Fix</code></a> that replaces <code>tryTree</code> with an equivalent
+<code>assertThrows</code>, if possible. Returns an <code>Optional.empty()</code> if a fix could not be constructed
+for the given code (e.g. multi-catch).</dd>
 </dl>
 </div>
 </section>

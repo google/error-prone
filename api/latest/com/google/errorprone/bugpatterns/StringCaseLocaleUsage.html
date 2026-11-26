@@ -90,7 +90,8 @@ loadScripts(document, 'script');</script>
 <div class="type-signature"><span class="modifiers">public final class </span><span class="element-name type-name-label">StringCaseLocaleUsage</span>
 <span class="extends-implements">extends <a href="BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a>
 implements <a href="BugChecker.MethodInvocationTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MethodInvocationTreeMatcher</a></span></div>
-<div class="block">A <a href="BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a> that flags calls to <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html#toLowerCase()" title="class or interface in java.lang" class="external-link"><code>String.toLowerCase()</code></a> and <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html#toUpperCase()" title="class or interface in java.lang" class="external-link"><code>String.toUpperCase()</code></a>, as these methods implicitly rely on the environment's default locale.</div>
+<div class="block">A <a href="BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a> that flags calls to <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html#toLowerCase()" title="class or interface in java.lang" class="external-link"><code>String.toLowerCase()</code></a> and <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html#toUpperCase()" title="class or interface in java.lang" class="external-link"><code>String.toUpperCase()</code></a>, as these
+methods implicitly rely on the environment's default locale.</div>
 <dl class="notes">
 <dt>See Also:</dt>
 <dd>

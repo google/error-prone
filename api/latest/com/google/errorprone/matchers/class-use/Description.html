@@ -84,7 +84,8 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color"><a href="#com.google.errorprone.bugpatterns.inject">com.google.errorprone.bugpatterns.inject</a></div>
 <div class="col-last even-row-color">
 <div class="block">Bug patterns related to <a href="https://en.wikipedia.org/wiki/Dependency_injection">dependency
-injection</a> and <a href="https://jcp.org/en/jsr/detail?id=330">JSR 330</a>.</div>
+injection</a> and [JSR
+330](https://jcp.org/en/jsr/detail?</div>
 </div>
 <div class="col-first odd-row-color"><a href="#com.google.errorprone.bugpatterns.inject.dagger">com.google.errorprone.bugpatterns.inject.dagger</a></div>
 <div class="col-last odd-row-color">
@@ -173,8 +174,8 @@ injection</a> and <a href="https://jcp.org/en/jsr/detail?id=330">JSR 330</a>.</d
 <div class="col-second odd-row-color"><span class="type-name-label">SelfAssignment.</span><code><a href="../../bugpatterns/SelfAssignment.html#describeForAssignment(com.sun.source.tree.AssignmentTree,com.google.errorprone.VisitorState)" class="member-name-link">describeForAssignment</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/AssignmentTree.html" title="class or interface in com.sun.source.tree" class="external-link">AssignmentTree</a>&nbsp;assignmentTree,
  <a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last odd-row-color">
-<div class="block">We expect that the lhs is a field and the rhs is an identifier, specifically a parameter to the
-method.</div>
+<div class="block">We expect that the lhs is a field and the rhs is an identifier, specifically a parameter to
+the method.</div>
 </div>
 <div class="col-first even-row-color"><code><a href="../Description.html" title="class in com.google.errorprone.matchers">Description</a></code></div>
 <div class="col-second even-row-color"><span class="type-name-label">SelfAssignment.</span><code><a href="../../bugpatterns/SelfAssignment.html#describeForVarDecl(com.sun.source.tree.VariableTree,com.google.errorprone.VisitorState)" class="member-name-link">describeForVarDecl</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/VariableTree.html" title="class or interface in com.sun.source.tree" class="external-link">VariableTree</a>&nbsp;tree,
@@ -289,8 +290,8 @@ method call.</div>
 <div class="col-second even-row-color"><span class="type-name-label">OutlineNone.</span><code><a href="../../bugpatterns/OutlineNone.html#matchAnnotation(com.sun.source.tree.AnnotationTree,com.google.errorprone.VisitorState)" class="member-name-link">matchAnnotation</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/AnnotationTree.html" title="class or interface in com.sun.source.tree" class="external-link">AnnotationTree</a>&nbsp;tree,
  <a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last even-row-color">
-<div class="block">Matches on <code>@Template</code> annotations whose value contains "outline:none" or equivalent
-outline style.</div>
+<div class="block">Matches on <code>@Template</code> annotations whose value contains &quot;outline:none&quot; or equivalent outline
+style.</div>
 </div>
 <div class="col-first odd-row-color"><code><a href="../Description.html" title="class in com.google.errorprone.matchers">Description</a></code></div>
 <div class="col-second odd-row-color"><span class="type-name-label">RequiredModifiersChecker.</span><code><a href="../../bugpatterns/RequiredModifiersChecker.html#matchAnnotation(com.sun.source.tree.AnnotationTree,com.google.errorprone.VisitorState)" class="member-name-link">matchAnnotation</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/AnnotationTree.html" title="class or interface in com.sun.source.tree" class="external-link">AnnotationTree</a>&nbsp;tree,
@@ -562,8 +563,8 @@ outline style.</div>
 <div class="col-second odd-row-color"><span class="type-name-label">CheckReturnValue.</span><code><a href="../../bugpatterns/CheckReturnValue.html#matchClass(com.sun.source.tree.ClassTree,com.google.errorprone.VisitorState)" class="member-name-link">matchClass</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ClassTree.html" title="class or interface in com.sun.source.tree" class="external-link">ClassTree</a>&nbsp;tree,
  <a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last odd-row-color">
-<div class="block">Validate that at most one of <code>CheckReturnValue</code> and <code>CanIgnoreReturnValue</code> are
-applied to a class (or interface or enum).</div>
+<div class="block">Validate that at most one of <code>CheckReturnValue</code> and <code>CanIgnoreReturnValue</code> are applied to a
+class (or interface or enum).</div>
 </div>
 <div class="col-first even-row-color"><code><a href="../Description.html" title="class in com.google.errorprone.matchers">Description</a></code></div>
 <div class="col-second even-row-color"><span class="type-name-label">ClassCanBeStatic.</span><code><a href="../../bugpatterns/ClassCanBeStatic.html#matchClass(com.sun.source.tree.ClassTree,com.google.errorprone.VisitorState)" class="member-name-link">matchClass</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ClassTree.html" title="class or interface in com.sun.source.tree" class="external-link">ClassTree</a>&nbsp;tree,
@@ -1457,8 +1458,8 @@ empty statement, and - The else part of the parent if does not exist</div>
 <div class="col-second even-row-color"><span class="type-name-label">MissingSuperCall.</span><code><a href="../../bugpatterns/MissingSuperCall.html#matchMethod(com.sun.source.tree.MethodTree,com.google.errorprone.VisitorState)" class="member-name-link">matchMethod</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/MethodTree.html" title="class or interface in com.sun.source.tree" class="external-link">MethodTree</a>&nbsp;tree,
  <a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last even-row-color">
-<div class="block">Matches a method that overrides a method that has been annotated with <code>@CallSuper</code> et
-al., but does not call the super method.</div>
+<div class="block">Matches a method that overrides a method that has been annotated with <code>@CallSuper</code> et al., but
+does not call the super method.</div>
 </div>
 <div class="col-first odd-row-color"><code><a href="../Description.html" title="class in com.google.errorprone.matchers">Description</a></code></div>
 <div class="col-second odd-row-color"><span class="type-name-label">MissingTestCall.</span><code><a href="../../bugpatterns/MissingTestCall.html#matchMethod(com.sun.source.tree.MethodTree,com.google.errorprone.VisitorState)" class="member-name-link">matchMethod</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/MethodTree.html" title="class or interface in com.sun.source.tree" class="external-link">MethodTree</a>&nbsp;tree,
@@ -1472,8 +1473,8 @@ al., but does not call the super method.</div>
 <div class="col-second odd-row-color"><span class="type-name-label">MustBeClosedChecker.</span><code><a href="../../bugpatterns/MustBeClosedChecker.html#matchMethod(com.sun.source.tree.MethodTree,com.google.errorprone.VisitorState)" class="member-name-link">matchMethod</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/MethodTree.html" title="class or interface in com.sun.source.tree" class="external-link">MethodTree</a>&nbsp;tree,
  <a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last odd-row-color">
-<div class="block">Check that the <code>MustBeClosed</code> annotation is only used for constructors of AutoCloseables
-and methods that return an AutoCloseable.</div>
+<div class="block">Check that the <code>MustBeClosed</code> annotation is only used for constructors of AutoCloseables and
+methods that return an AutoCloseable.</div>
 </div>
 <div class="col-first even-row-color"><code><a href="../Description.html" title="class in com.google.errorprone.matchers">Description</a></code></div>
 <div class="col-second even-row-color"><span class="type-name-label">NamedLikeContextualKeyword.</span><code><a href="../../bugpatterns/NamedLikeContextualKeyword.html#matchMethod(com.sun.source.tree.MethodTree,com.google.errorprone.VisitorState)" class="member-name-link">matchMethod</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/MethodTree.html" title="class or interface in com.sun.source.tree" class="external-link">MethodTree</a>&nbsp;tree,
@@ -1653,9 +1654,8 @@ and methods that return an AutoCloseable.</div>
 <div class="col-second odd-row-color"><span class="type-name-label">ArrayHashCode.</span><code><a href="../../bugpatterns/ArrayHashCode.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.VisitorState)" class="member-name-link">matchMethodInvocation</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/MethodInvocationTree.html" title="class or interface in com.sun.source.tree" class="external-link">MethodInvocationTree</a>&nbsp;tree,
  <a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last odd-row-color">
-<div class="block">Wraps identity hashcode computations in calls to <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Arrays.html#hashCode(long%5B%5D)" title="class or interface in java.util" class="external-link"><code>Arrays.hashCode(long[])</code></a> if the array
-is single dimensional or <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Arrays.html#deepHashCode(java.lang.Object%5B%5D)" title="class or interface in java.util" class="external-link"><code>Arrays.deepHashCode(Object[])</code></a> if the array is
-multidimensional.</div>
+<div class="block">Wraps identity hashcode computations in calls to <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Arrays.html#hashCode(long%5B%5D)" title="class or interface in java.util" class="external-link"><code>Arrays.hashCode(long[])</code></a> if the array is
+single dimensional or <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Arrays.html#deepHashCode(java.lang.Object%5B%5D)" title="class or interface in java.util" class="external-link"><code>Arrays.deepHashCode(Object[])</code></a> if the array is multidimensional.</div>
 </div>
 <div class="col-first even-row-color"><code><a href="../Description.html" title="class in com.google.errorprone.matchers">Description</a></code></div>
 <div class="col-second even-row-color"><span class="type-name-label">ArraysAsListPrimitiveArray.</span><code><a href="../../bugpatterns/ArraysAsListPrimitiveArray.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.VisitorState)" class="member-name-link">matchMethodInvocation</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/MethodInvocationTree.html" title="class or interface in com.sun.source.tree" class="external-link">MethodInvocationTree</a>&nbsp;tree,
@@ -2059,7 +2059,7 @@ multidimensional.</div>
 <div class="col-second even-row-color"><span class="type-name-label">OutlineNone.</span><code><a href="../../bugpatterns/OutlineNone.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.VisitorState)" class="member-name-link">matchMethodInvocation</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/MethodInvocationTree.html" title="class or interface in com.sun.source.tree" class="external-link">MethodInvocationTree</a>&nbsp;tree,
  <a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last even-row-color">
-<div class="block">Matches on <code>setProperty("outline", "none")</code> and equivalent method calls.</div>
+<div class="block">Matches on <code>setProperty(&quot;outline&quot;, &quot;none&quot;)</code> and equivalent method calls.</div>
 </div>
 <div class="col-first odd-row-color"><code><a href="../Description.html" title="class in com.google.errorprone.matchers">Description</a></code></div>
 <div class="col-second odd-row-color"><span class="type-name-label">ParameterComment.</span><code><a href="../../bugpatterns/ParameterComment.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.VisitorState)" class="member-name-link">matchMethodInvocation</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/MethodInvocationTree.html" title="class or interface in com.sun.source.tree" class="external-link">MethodInvocationTree</a>&nbsp;tree,
@@ -2942,10 +2942,7 @@ references matching <code>matcher</code>, emitting them as a single fix.</div>
  com.google.common.collect.ImmutableSet&lt;com.sun.tools.javac.code.Symbol.MethodSymbol&gt;&nbsp;calledMethods,
  <a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last even-row-color">
-<div class="block">Matches iff:
-
-
-  Method's name begins with misspelled variation of "test".</div>
+<div class="block">Matches iff:</div>
 </div>
 </div>
 </section>
@@ -3392,7 +3389,7 @@ references matching <code>matcher</code>, emitting them as a single fix.</div>
 <div class="col-second even-row-color"><span class="type-name-label">ProvidesNull.</span><code><a href="../../bugpatterns/inject/dagger/ProvidesNull.html#matchReturn(com.sun.source.tree.ReturnTree,com.google.errorprone.VisitorState)" class="member-name-link">matchReturn</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ReturnTree.html" title="class or interface in com.sun.source.tree" class="external-link">ReturnTree</a>&nbsp;returnTree,
  <a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last even-row-color">
-<div class="block">Matches explicit "return null" statements in methods annotated with <code>@Provides</code> but not
+<div class="block">Matches explicit &quot;return null&quot; statements in methods annotated with <code>@Provides</code> but not
 <code>@Nullable</code>.</div>
 </div>
 </div>

@@ -110,8 +110,7 @@ ASTs.</div>
 <div class="col-second odd-row-color"><span class="type-name-label">Choice.</span><code><a href="../Choice.html#condition(boolean,T)" class="member-name-link">condition</a><wbr>(boolean&nbsp;condition,
  T&nbsp;t)</code></div>
 <div class="col-last odd-row-color">
-<div class="block">Returns a <code>Choice</code> with <code>t</code> as an option if <code>condition</code>, and no options
-otherwise.</div>
+<div class="block">Returns a <code>Choice</code> with <code>t</code> as an option if <code>condition</code>, and no options otherwise.</div>
 </div>
 <div class="col-first even-row-color"><code>protected <a href="../Choice.html" title="class in com.google.errorprone.refaster">Choice</a><wbr>&lt;<a href="../Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&gt;</code></div>
 <div class="col-second even-row-color"><span class="type-name-label">UAnyOf.</span><code><a href="../UAnyOf.html#defaultAction(com.sun.source.tree.Tree,com.google.errorprone.refaster.Unifier)" class="member-name-link">defaultAction</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;tree,
@@ -145,8 +144,8 @@ otherwise.</div>
 <div class="col-first odd-row-color"><code>&lt;R&gt;&nbsp;<a href="../Choice.html" title="class in com.google.errorprone.refaster">Choice</a><wbr>&lt;R&gt;</code></div>
 <div class="col-second odd-row-color"><span class="type-name-label">Choice.</span><code><a href="../Choice.html#flatMap(java.util.function.Function)" class="member-name-link">flatMap</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;? super <a href="../Choice.html#type-param-T" title="type parameter in Choice">T</a>, <a href="../Choice.html" title="class in com.google.errorprone.refaster">Choice</a>&lt;R&gt;&gt;&nbsp;function)</code></div>
 <div class="col-last odd-row-color">
-<div class="block">Returns all the choices obtained by choosing from this <code>Choice</code> and then choosing from
-the <code>Choice</code> yielded by this function on the result.</div>
+<div class="block">Returns all the choices obtained by choosing from this <code>Choice</code> and then choosing from the
+<code>Choice</code> yielded by this function on the result.</div>
 </div>
 <div class="col-first even-row-color"><code>static &lt;T&gt;&nbsp;<a href="../Choice.html" title="class in com.google.errorprone.refaster">Choice</a><wbr>&lt;T&gt;</code></div>
 <div class="col-second even-row-color"><span class="type-name-label">Choice.</span><code><a href="../Choice.html#from(java.util.Collection)" class="member-name-link">from</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;T&gt;&nbsp;choices)</code></div>
@@ -205,8 +204,8 @@ the <code>Choice</code> yielded by this function on the result.</div>
  @Nullable <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;U&gt;&nbsp;toUnify,
  @Nullable <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;? extends T&gt;&nbsp;targets)</code></div>
 <div class="col-last odd-row-color">
-<div class="block">Returns all successful unification paths from the specified <code>Unifier</code> unifying the
-specified lists, disallowing varargs.</div>
+<div class="block">Returns all successful unification paths from the specified <code>Unifier</code> unifying the specified
+lists, disallowing varargs.</div>
 </div>
 <div class="col-first even-row-color"><code>static &lt;T, U extends <a href="../Unifiable.html" title="interface in com.google.errorprone.refaster">Unifiable</a>&lt;? super T&gt;&gt;<br><a href="../Choice.html" title="class in com.google.errorprone.refaster">Choice</a><wbr>&lt;<a href="../Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&gt;</code></div>
 <div class="col-second even-row-color"><span class="type-name-label">Unifier.</span><code><a href="../Unifier.html#unifyList(com.google.errorprone.refaster.Unifier,java.util.List,java.util.List,boolean)" class="member-name-link">unifyList</a><wbr>(<a href="../Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&nbsp;unifier,
@@ -214,8 +213,8 @@ specified lists, disallowing varargs.</div>
  @Nullable <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;? extends T&gt;&nbsp;targets,
  boolean&nbsp;allowVarargs)</code></div>
 <div class="col-last even-row-color">
-<div class="block">Returns all successful unification paths from the specified <code>Unifier</code> unifying the
-specified lists, allowing varargs if and only if <code>allowVarargs</code> is true.</div>
+<div class="block">Returns all successful unification paths from the specified <code>Unifier</code> unifying the specified
+lists, allowing varargs if and only if <code>allowVarargs</code> is true.</div>
 </div>
 <div class="col-first odd-row-color"><code>static &lt;T, U extends <a href="../Unifiable.html" title="interface in com.google.errorprone.refaster">Unifiable</a>&lt;? super T&gt;&gt;<br><a href="../Choice.html" title="class in com.google.errorprone.refaster">Choice</a><wbr>&lt;<a href="../Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&gt;</code></div>
 <div class="col-second odd-row-color"><span class="type-name-label">Unifier.</span><code><a href="../Unifier.html#unifyNullable(com.google.errorprone.refaster.Unifier,U,T)" class="member-name-link">unifyNullable</a><wbr>(<a href="../Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&nbsp;unifier,
@@ -313,8 +312,8 @@ specified lists, allowing varargs if and only if <code>allowVarargs</code> is tr
 <div class="col-first even-row-color"><code>&lt;R&gt;&nbsp;<a href="../Choice.html" title="class in com.google.errorprone.refaster">Choice</a><wbr>&lt;R&gt;</code></div>
 <div class="col-second even-row-color"><span class="type-name-label">Choice.</span><code><a href="../Choice.html#flatMap(java.util.function.Function)" class="member-name-link">flatMap</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;? super <a href="../Choice.html#type-param-T" title="type parameter in Choice">T</a>, <a href="../Choice.html" title="class in com.google.errorprone.refaster">Choice</a>&lt;R&gt;&gt;&nbsp;function)</code></div>
 <div class="col-last even-row-color">
-<div class="block">Returns all the choices obtained by choosing from this <code>Choice</code> and then choosing from
-the <code>Choice</code> yielded by this function on the result.</div>
+<div class="block">Returns all the choices obtained by choosing from this <code>Choice</code> and then choosing from the
+<code>Choice</code> yielded by this function on the result.</div>
 </div>
 </div>
 </section>

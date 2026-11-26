@@ -88,11 +88,12 @@ loadScripts(document, 'script');</script>
 <div class="horizontal-scroll">
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">Bindings</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
-<div class="block">A type-safe binding environment mapping <code>Bindings.Key&lt;V&gt;</code> keys to values of type <code>V</code>.
-
-<p>Bindings are represented as a persistent linked chain. Adding a binding creates a new <code>Bindings.Node</code> pointing to the current head as its parent, and lookups traverse parent references towards
-the root, naturally shadowing earlier bindings for the same key. Forking a <code>Bindings</code>
-instance shares the underlying node chain with zero entry copying.</div>
+<div class="block"><p>A type-safe binding environment mapping <code>Bindings.Key&lt;V&gt;</code> keys to values of type <code>V</code>.</p>
+<p>Bindings are represented as a persistent linked chain. Adding a binding creates a new <code>Bindings.Node</code>
+pointing to the current head as its parent, and lookups traverse parent references towards the
+root, naturally shadowing earlier bindings for the same key. Forking a <code>Bindings</code> instance
+shares the underlying node chain with zero entry copying.</p>
+</div>
 <dl class="notes">
 <dt>Author:</dt>
 <dd>Louis Wasserman</dd>

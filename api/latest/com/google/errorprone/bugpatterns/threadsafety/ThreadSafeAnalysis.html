@@ -117,13 +117,7 @@ loadScripts(document, 'script');</script>
  com.google.common.collect.ImmutableSet&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;threadSafeTypeParams,
  com.sun.tools.javac.code.Type.ClassType&nbsp;type)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Check that an <code>@ThreadSafe</code>-annotated class:
-
-
-  does not declare or inherit any fields which are not thread safe,
-  any threadsafe supertypes are instantiated with threadsafe type arguments as required by
-      their containerOf spec, and
-  any enclosing instances are threadsafe.</div>
+<div class="block">Check that an <code>@ThreadSafe</code>-annotated class:</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="ThreadSafety.Violation.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Violation</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#checkInvocation(com.sun.tools.javac.code.Type,com.sun.tools.javac.code.Symbol)" class="member-name-link">checkInvocation</a><wbr>(com.sun.tools.javac.code.Type&nbsp;methodType,
@@ -165,16 +159,15 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="ThreadSafety.Violation.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Violation</a></span>&nbsp;<span class="element-name">checkForThreadSafety</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ClassTree.html" title="class or interface in com.sun.source.tree" class="external-link">ClassTree</a>&gt;&nbsp;tree,
  com.google.common.collect.ImmutableSet&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;threadSafeTypeParams,
  com.sun.tools.javac.code.Type.ClassType&nbsp;type)</span></div>
-<div class="block">Check that an <code>@ThreadSafe</code>-annotated class:
-
+<div class="block"><p>Check that an <code>@ThreadSafe</code>-annotated class:</p>
 <ul>
-  <li>does not declare or inherit any fields which are not thread safe,
-  <li>any threadsafe supertypes are instantiated with threadsafe type arguments as required by
-      their containerOf spec, and
-  <li>any enclosing instances are threadsafe.
+<li>does not declare or inherit any fields which are not thread safe,</li>
+<li>any threadsafe supertypes are instantiated with threadsafe type arguments as required by
+their containerOf spec, and</li>
+<li>any enclosing instances are threadsafe.</li>
 </ul>
-
-requiring supertypes to be annotated threadsafe would be too restrictive.</div>
+<p>requiring supertypes to be annotated threadsafe would be too restrictive.</p>
+</div>
 </div>
 </section>
 </li>

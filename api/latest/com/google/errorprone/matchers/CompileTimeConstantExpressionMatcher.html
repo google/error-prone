@@ -89,37 +89,38 @@ loadScripts(document, 'script');</script>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">CompileTimeConstantExpressionMatcher</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>
 implements <a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;</span></div>
-<div class="block">A matcher for compile-time-constant expressions.
-
-<p>For the purposes of this matcher, a compile-time constant expression is one of the following:
-
+<div class="block"><p>A matcher for compile-time-constant expressions.</p>
+<p>For the purposes of this matcher, a compile-time constant expression is one of the following:</p>
 <ol>
-  <li>Any expression for which the Java compiler can determine a constant value at compile time.
-  <li>The expression consisting of the literal <code>null</code>.
-  <li>An expression consisting of a single identifier, where the identifier has the <a href="../annotations/CompileTimeConstant.html" title="annotation interface in com.google.errorprone.annotations"><code>CompileTimeConstant</code></a> annotation and is either:
-      <ul>
-        <li>A class field that is declared <code>final</code>.
-        <li>A formal parameter of a method or constructor, which is declared <code>final</code> or is
-            effectively final.
-      </ul>
-  <li>A <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link"><code>String</code></a> which is formed from the concatenation of other compile-time-constant
-      <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link"><code>String</code></a>s.
-  <li>A switch expression where all case bodies are compile-time constants.
-  <li>A conditional expression (a ? b : c) where both branches are compile-time constants.
-  <li>The result of an invocation of one of the following immutable collection factory methods,
-      where all arguments are compile-time constants:
-      <ul>
-        <li><code>ImmutableList.of(...)</code>
-        <li><code>ImmutableSet.of(...)</code>
-        <li><code>ImmutableMap.of(...)</code>
-        <li><code>ImmutableMultiset.of(...)</code>
-        <li><code>ImmutableSortedSet.of(...)</code>
-        <li><code>ImmutableSortedMap.of(...)</code>
-        <li><code>List.of(...)</code>
-        <li><code>Set.of(...)</code>
-        <li><code>Map.of(...)</code>
-      </ul>
-</ol></div>
+<li>Any expression for which the Java compiler can determine a constant value at compile time.</li>
+<li>The expression consisting of the literal <code>null</code>.</li>
+<li>An expression consisting of a single identifier, where the identifier has the
+<a href="../annotations/CompileTimeConstant.html" title="annotation interface in com.google.errorprone.annotations"><code>CompileTimeConstant</code></a> annotation and is either:
+<ul>
+<li>A class field that is declared <code>final</code>.</li>
+<li>A formal parameter of a method or constructor, which is declared <code>final</code> or is effectively
+final.</li>
+</ul>
+</li>
+<li>A <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link"><code>String</code></a> which is formed from the concatenation of other compile-time-constant <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link"><code>String</code></a>s.</li>
+<li>A switch expression where all case bodies are compile-time constants.</li>
+<li>A conditional expression (a ? b : c) where both branches are compile-time constants.</li>
+<li>The result of an invocation of one of the following immutable collection factory methods,
+where all arguments are compile-time constants:
+<ul>
+<li><code>ImmutableList.of(...)</code></li>
+<li><code>ImmutableSet.of(...)</code></li>
+<li><code>ImmutableMap.of(...)</code></li>
+<li><code>ImmutableMultiset.of(...)</code></li>
+<li><code>ImmutableSortedSet.of(...)</code></li>
+<li><code>ImmutableSortedMap.of(...)</code></li>
+<li><code>List.of(...)</code></li>
+<li><code>Set.of(...)</code></li>
+<li><code>Map.of(...)</code></li>
+</ul>
+</li>
+</ol>
+</div>
 <dl class="notes">
 <dt>See Also:</dt>
 <dd>

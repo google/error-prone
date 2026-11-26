@@ -96,7 +96,8 @@ loadScripts(document, 'script');</script>
 <div class="horizontal-scroll">
 <div class="type-signature"><span class="modifiers">public static enum </span><span class="element-name type-name-label">Reachability.CanCompleteNormallyPatch</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Enum.html" title="class or interface in java.lang" class="external-link">Enum</a>&lt;<a href="Reachability.CanCompleteNormallyPatch.html" title="enum class in com.google.errorprone.util">Reachability.CanCompleteNormallyPatch</a>&gt;</span></div>
-<div class="block">A replacement for the completion result of one tree, for <a href="Reachability.html#canCompleteNormally(com.sun.source.tree.StatementTree,com.google.common.collect.ImmutableMap)"><code>Reachability.canCompleteNormally(StatementTree, ImmutableMap)</code></a>.</div>
+<div class="block">A replacement for the completion result of one tree, passed to
+<a href="Reachability.html#canCompleteNormally(com.sun.source.tree.StatementTree,com.google.common.collect.ImmutableMap)"><code>Reachability.canCompleteNormally(StatementTree, ImmutableMap)</code></a>.</div>
 </div>
 </section>
 <section class="summary">
@@ -120,13 +121,13 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color"><code><a href="#CANNOT_COMPLETE_NORMALLY_ANALYZE_INSIDE" class="member-name-link">CANNOT_COMPLETE_NORMALLY_ANALYZE_INSIDE</a></code></div>
 <div class="col-last even-row-color">
-<div class="block">The tree cannot complete normally, but is still analyzed, so that the targets of any <code>
-break</code> and <code>continue</code> statements it contains are recorded.</div>
+<div class="block">The tree cannot complete normally, but is still analyzed, so that the targets of any <code>break</code>
+and <code>continue</code> statements it contains are recorded.</div>
 </div>
 <div class="col-first odd-row-color"><code><a href="#CANNOT_COMPLETE_NORMALLY_SKIP_INSIDE" class="member-name-link">CANNOT_COMPLETE_NORMALLY_SKIP_INSIDE</a></code></div>
 <div class="col-last odd-row-color">
-<div class="block">The tree cannot complete normally, and is not analyzed, so the targets of any <code>break</code>
-and <code>continue</code> statements it contains are not recorded.</div>
+<div class="block">The tree cannot complete normally, and is not analyzed, so the targets of any <code>break</code> and
+<code>continue</code> statements it contains are not recorded.</div>
 </div>
 </div>
 </section>
@@ -178,8 +179,8 @@ the order they are declared.</div>
 <h3>CANNOT_COMPLETE_NORMALLY_SKIP_INSIDE</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="Reachability.CanCompleteNormallyPatch.html" title="enum class in com.google.errorprone.util">Reachability.CanCompleteNormallyPatch</a></span>&nbsp;<span class="element-name">CANNOT_COMPLETE_NORMALLY_SKIP_INSIDE</span></div>
-<div class="block">The tree cannot complete normally, and is not analyzed, so the targets of any <code>break</code>
-and <code>continue</code> statements it contains are not recorded.</div>
+<div class="block">The tree cannot complete normally, and is not analyzed, so the targets of any <code>break</code> and
+<code>continue</code> statements it contains are not recorded.</div>
 </div>
 </section>
 </li>
@@ -188,8 +189,8 @@ and <code>continue</code> statements it contains are not recorded.</div>
 <h3>CANNOT_COMPLETE_NORMALLY_ANALYZE_INSIDE</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="Reachability.CanCompleteNormallyPatch.html" title="enum class in com.google.errorprone.util">Reachability.CanCompleteNormallyPatch</a></span>&nbsp;<span class="element-name">CANNOT_COMPLETE_NORMALLY_ANALYZE_INSIDE</span></div>
-<div class="block">The tree cannot complete normally, but is still analyzed, so that the targets of any <code>
-break</code> and <code>continue</code> statements it contains are recorded.</div>
+<div class="block">The tree cannot complete normally, but is still analyzed, so that the targets of any <code>break</code>
+and <code>continue</code> statements it contains are recorded.</div>
 </div>
 </section>
 </li>

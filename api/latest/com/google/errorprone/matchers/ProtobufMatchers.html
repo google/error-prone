@@ -393,7 +393,7 @@ loadScripts(document, 'script');</script>
 <div class="col-first odd-row-color"><code>static final <a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;</code></div>
 <div class="col-second odd-row-color"><code><a href="#PROTO_BUILDER_MUTATOR" class="member-name-link">PROTO_BUILDER_MUTATOR</a></code></div>
 <div class="col-last odd-row-color">
-<div class="block">Matches proto builder mutators (e.g.</div>
+<div class="block">Matches proto builder mutators (e.g. <code>setFoo()</code>, <code>addFoo()</code>, <code>clearFoo()</code>, <code>putFoo()</code>).</div>
 </div>
 <div class="col-first even-row-color"><code>static final <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a></code></div>
 <div class="col-second even-row-color"><code><a href="#PROTO_DURATION" class="member-name-link">PROTO_DURATION</a></code></div>
@@ -426,8 +426,9 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color"><code>static final <a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;</code></div>
 <div class="col-second even-row-color"><code><a href="#PROTO_TIME_STATIC_FACTORIES" class="member-name-link">PROTO_TIME_STATIC_FACTORIES</a></code></div>
 <div class="col-last even-row-color">
-<div class="block">Matches static factory methods on <code>com.google.protobuf.util.Timestamps</code> and <code>
-com.google.protobuf.util.Durations</code> that construct time protos from numeric quantities (e.g.</div>
+<div class="block">Matches static factory methods on <code>com.google.protobuf.util.Timestamps</code> and
+<code>com.google.protobuf.util.Durations</code> that construct time protos from numeric quantities (e.g.
+<code>fromSeconds()</code>, <code>fromMillis()</code>, <code>fromNanos()</code>).</div>
 </div>
 <div class="col-first odd-row-color"><code>static final <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a></code></div>
 <div class="col-second odd-row-color"><code><a href="#PROTO_TIMESTAMP" class="member-name-link">PROTO_TIMESTAMP</a></code></div>
@@ -1498,8 +1499,7 @@ com.google.protobuf.util.Durations</code> that construct time protos from numeri
 <h3>PROTO_BUILDER_MUTATOR</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;</span>&nbsp;<span class="element-name">PROTO_BUILDER_MUTATOR</span></div>
-<div class="block">Matches proto builder mutators (e.g. <code>setFoo()</code>, <code>addFoo()</code>, <code>clearFoo()</code>,
-<code>putFoo()</code>).</div>
+<div class="block">Matches proto builder mutators (e.g. <code>setFoo()</code>, <code>addFoo()</code>, <code>clearFoo()</code>, <code>putFoo()</code>).</div>
 </div>
 </section>
 </li>
@@ -1508,8 +1508,8 @@ com.google.protobuf.util.Durations</code> that construct time protos from numeri
 <h3>PROTO_TIME_STATIC_FACTORIES</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;</span>&nbsp;<span class="element-name">PROTO_TIME_STATIC_FACTORIES</span></div>
-<div class="block">Matches static factory methods on <code>com.google.protobuf.util.Timestamps</code> and <code>
-com.google.protobuf.util.Durations</code> that construct time protos from numeric quantities (e.g.
+<div class="block">Matches static factory methods on <code>com.google.protobuf.util.Timestamps</code> and
+<code>com.google.protobuf.util.Durations</code> that construct time protos from numeric quantities (e.g.
 <code>fromSeconds()</code>, <code>fromMillis()</code>, <code>fromNanos()</code>).</div>
 </div>
 </section>

@@ -121,8 +121,8 @@ fragile, or violates generally-accepted assumptions of behavior.</div>
 <div class="col-second even-row-color"><code><a href="#LIKELY_ERROR" class="member-name-link">LIKELY_ERROR</a></code></div>
 <div class="col-last even-row-color">
 <div class="block">This check, for reasons of backwards compatibility or difficulty in cleaning up, should be
-considered very likely to represent a real error in the vast majority (<code>&gt;99.9%</code>) of
-cases, but couldn't otherwise be turned on as an ERROR.</div>
+considered very likely to represent a real error in the vast majority (<code>&gt;99.9%</code>) of cases,
+but couldn't otherwise be turned on as an ERROR.</div>
 </div>
 <div class="col-first odd-row-color"><code>static final <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second odd-row-color"><code><a href="#PERFORMANCE" class="member-name-link">PERFORMANCE</a></code></div>
@@ -174,13 +174,12 @@ project or ease of understanding by other programmers.</div>
 <h3>LIKELY_ERROR</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">LIKELY_ERROR</span></div>
-<div class="block">This check, for reasons of backwards compatibility or difficulty in cleaning up, should be
-considered very likely to represent a real error in the vast majority (<code>&gt;99.9%</code>) of
-cases, but couldn't otherwise be turned on as an ERROR.
-
-<p>Systems trying to determine the set of likely errors from a collection of BugPatterns
-should act as if any BugPattern with <a href="BugPattern.html#severity()"><code>BugPattern.severity()</code></a> of <a href="BugPattern.SeverityLevel.html#ERROR"><code>BugPattern.SeverityLevel.ERROR</code></a> also
-has this tag.</div>
+<div class="block"><p>This check, for reasons of backwards compatibility or difficulty in cleaning up, should be
+considered very likely to represent a real error in the vast majority (<code>&gt;99.9%</code>) of cases,
+but couldn't otherwise be turned on as an ERROR.</p>
+<p>Systems trying to determine the set of likely errors from a collection of BugPatterns should
+act as if any BugPattern with <a href="BugPattern.html#severity()"><code>BugPattern.severity()</code></a> of <a href="BugPattern.SeverityLevel.html#ERROR"><code>BugPattern.SeverityLevel.ERROR</code></a> also has this tag.</p>
+</div>
 <dl class="notes">
 <dt>See Also:</dt>
 <dd>
@@ -197,14 +196,14 @@ has this tag.</div>
 <h3>STYLE</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">STYLE</span></div>
-<div class="block">This check detects a coding pattern that is valid within the Java language and doesn't
+<div class="block"><p>This check detects a coding pattern that is valid within the Java language and doesn't
 represent a runtime defect, but is otherwise discouraged for reasons of consistency within a
-project or ease of understanding by other programmers.
-
+project or ease of understanding by other programmers.</p>
 <p>Checks using this tag should limit their replacements to those that don't change the
 behavior of the code (for example: adding clarifying parentheses, reordering modifiers in a
-single declaration, removing implicit modifiers like <code>public</code> for members in an <code>
-interface</code>).</div>
+single declaration, removing implicit modifiers like <code>public</code> for members in an
+<code>interface</code>).</p>
+</div>
 <dl class="notes">
 <dt>See Also:</dt>
 <dd>
@@ -239,12 +238,12 @@ for the code being made will always result in a net positive performance improve
 <h3>FRAGILE_CODE</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">FRAGILE_CODE</span></div>
-<div class="block">This check detects code that may technically be working within a limited domain, but is
-fragile, or violates generally-accepted assumptions of behavior.
-
+<div class="block"><p>This check detects code that may technically be working within a limited domain, but is
+fragile, or violates generally-accepted assumptions of behavior.</p>
 <p>Examples: DefaultCharset, where code implicitly uses the JVM default charset, will work in
 circumstances where data being fed to the system happens to be compatible with the Charset,
-but breaks down if fed data outside.</div>
+but breaks down if fed data outside.</p>
+</div>
 <dl class="notes">
 <dt>See Also:</dt>
 <dd>
@@ -261,10 +260,10 @@ but breaks down if fed data outside.</div>
 <h3>CONCURRENCY</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">CONCURRENCY</span></div>
-<div class="block">This check points out potential issues when operating in a concurrent context
-
+<div class="block"><p>This check points out potential issues when operating in a concurrent context</p>
 <p>The code may work fine when accessed by 1 thread at a time, but may have some unintended
-behavior when running in multiple threads.</div>
+behavior when running in multiple threads.</p>
+</div>
 <dl class="notes">
 <dt>See Also:</dt>
 <dd>

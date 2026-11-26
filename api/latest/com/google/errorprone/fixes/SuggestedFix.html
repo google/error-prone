@@ -340,10 +340,10 @@ string.</div>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public abstract</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">getShortDescription</span>()</div>
 <div class="block"><span class="description-from-type-label">Description copied from interface:&nbsp;<code><a href="Fix.html#getShortDescription()">Fix</a></code></span></div>
-<div class="block">A short description which can be attached to the Fix to differentiate multiple fixes provided
-to the user.
-
-<p>Empty string generates the default description.</div>
+<div class="block"><p>A short description which can be attached to the Fix to differentiate multiple fixes provided
+to the user.</p>
+<p>Empty string generates the default description.</p>
+</div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="Fix.html#getShortDescription()">getShortDescription</a></code>&nbsp;in interface&nbsp;<code><a href="Fix.html" title="interface in com.google.errorprone.fixes">Fix</a></code></dd>
@@ -412,13 +412,12 @@ string.</div>
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;replaceWith,
  int&nbsp;startPosAdjustment,
  int&nbsp;endPosAdjustment)</span></div>
-<div class="block">Replace a tree node with a string, but adjust the start and end positions as well. For example,
-if the tree node begins at index 10 and ends at index 30, this call will replace the characters
-at index 15 through 25 with "replacement":
-
-<pre>
-<code>fix.replace(node, "replacement", 5, -5)</code>
-</pre></div>
+<div class="block"><p>Replace a tree node with a string, but adjust the start and end positions as well. For
+example, if the tree node begins at index 10 and ends at index 30, this call will replace the
+characters at index 15 through 25 with &quot;replacement&quot;:</p>
+<pre><code>fix.replace(node, &quot;replacement&quot;, 5, -5)
+</code></pre>
+</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>node</code> - The tree node to replace</dd>

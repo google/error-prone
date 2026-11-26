@@ -69,19 +69,18 @@ loadScripts(document, 'script');</script>
 <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/annotation/Target.html" title="class or interface in java.lang.annotation" class="external-link">@Target</a>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/annotation/ElementType.html#METHOD" title="class or interface in java.lang.annotation" class="external-link">METHOD</a>)
 <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/annotation/Retention.html" title="class or interface in java.lang.annotation" class="external-link">@Retention</a>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/annotation/RetentionPolicy.html#CLASS" title="class or interface in java.lang.annotation" class="external-link">CLASS</a>)
 </span><span class="modifiers">public @interface </span><span class="element-name type-name-label">OverridingMethodsMustInvokeSuper</span></div>
-<div class="block">Indicates that any concrete method that overrides the annotated method, directly or indirectly,
-must invoke <code>super.theAnnotatedMethod(...)</code> at some point. This does not necessarily
-require an <i>unconditional</i> call; any matching call appearing directly within the method body
-(not inside an intervening class or lambda expression) is acceptable.
-
+<div class="block"><p>Indicates that any concrete method that overrides the annotated method, directly or indirectly,
+must invoke <code>super.theAnnotatedMethod(...)</code> at some point. This does not necessarily require an
+<em>unconditional</em> call; any matching call appearing directly within the method body (not inside an
+intervening class or lambda expression) is acceptable.</p>
 <p>If the overriding method is itself overridable, applying this annotation to that method is
-technically redundant, but may be helpful to readers.
-
-<p><b>Preferred:</b> usually, a better solution is to make the method <code>final</code>, and have its
-implementation delegate to a second concrete method which <i>is</i> overridable (or to a function
-object which subclasses can specify). "Mandatory" statements remain in the final method while
-"optional" code moves out. This is the only way to make sure the statements will be executed
-unconditionally.</div>
+technically redundant, but may be helpful to readers.</p>
+<p><strong>Preferred:</strong> usually, a better solution is to make the method <code>final</code>, and have its
+implementation delegate to a second concrete method which <em>is</em> overridable (or to a function
+object which subclasses can specify). &quot;Mandatory&quot; statements remain in the final method while
+&quot;optional&quot; code moves out. This is the only way to make sure the statements will be executed
+unconditionally.</p>
+</div>
 </div>
 </section>
 <section class="details" id="annotation-interface-element-detail"></section>

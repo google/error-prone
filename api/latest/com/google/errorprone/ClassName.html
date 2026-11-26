@@ -84,7 +84,8 @@ loadScripts(document, 'script');</script>
 <div class="type-signature"><span class="annotations"><a href="annotations/Immutable.html" title="annotation interface in com.google.errorprone.annotations">@Immutable</a>
 </span><span class="modifiers">public final class </span><span class="element-name type-name-label">ClassName</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
-<div class="block">Encapsulates a qualified class name and caches its resolved javac <code>Symbol.ClassSymbol</code>, <code>Type</code>, and <code>Name</code> across a compilation.</div>
+<div class="block">Encapsulates a qualified class name and caches its resolved javac <code>Symbol.ClassSymbol</code>, <code>Type</code>, and
+<code>Name</code> across a compilation.</div>
 </div>
 </section>
 <section class="summary">
@@ -119,13 +120,14 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="ClassName.html" title="class in com.google.errorprone">ClassName</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#of(java.lang.String)" class="member-name-link">of</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Constructs a <a href="ClassName.html" title="class in com.google.errorprone"><code>ClassName</code></a> from a qualified canonical or binary class name (e.g.</div>
+<div class="block">Constructs a <a href="ClassName.html" title="class in com.google.errorprone"><code>ClassName</code></a> from a qualified canonical or binary class name (e.g.
+<code>&quot;java.util.List&quot;</code>, <code>&quot;java.util.Map.Entry&quot;</code>, or <code>&quot;java.util.Map$Entry&quot;</code>).</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>@Nullable com.sun.tools.javac.code.Symbol.ClassSymbol</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#symbol(com.google.errorprone.VisitorState)" class="member-name-link">symbol</a><wbr>(<a href="VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Resolves and caches the <code>Symbol.ClassSymbol</code> for this class in the current compilation, or
-returns <code>null</code> if the symbol is not available.</div>
+<div class="block">Resolves and caches the <code>Symbol.ClassSymbol</code> for this class in the current compilation, or returns
+<code>null</code> if the symbol is not available.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#toString()" class="member-name-link">toString</a>()</code></div>
@@ -133,8 +135,8 @@ returns <code>null</code> if the symbol is not available.</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>@Nullable com.sun.tools.javac.code.Type</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#type(com.google.errorprone.VisitorState)" class="member-name-link">type</a><wbr>(<a href="VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Resolves and caches the <code>Type</code> for this class in the current compilation, or returns
-<code>null</code> if the symbol is not available.</div>
+<div class="block">Resolves and caches the <code>Type</code> for this class in the current compilation, or returns <code>null</code> if
+the symbol is not available.</div>
 </div>
 </div>
 </div>
@@ -158,14 +160,13 @@ returns <code>null</code> if the symbol is not available.</div>
 <h3>of</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="ClassName.html" title="class in com.google.errorprone">ClassName</a></span>&nbsp;<span class="element-name">of</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name)</span></div>
-<div class="block">Constructs a <a href="ClassName.html" title="class in com.google.errorprone"><code>ClassName</code></a> from a qualified canonical or binary class name (e.g. <code>
-"java.util.List"</code>, <code>"java.util.Map.Entry"</code>, or <code>"java.util.Map$Entry"</code>).</div>
+<div class="block">Constructs a <a href="ClassName.html" title="class in com.google.errorprone"><code>ClassName</code></a> from a qualified canonical or binary class name (e.g.
+<code>&quot;java.util.List&quot;</code>, <code>&quot;java.util.Map.Entry&quot;</code>, or <code>&quot;java.util.Map$Entry&quot;</code>).</div>
 <dl class="notes">
 <dt>Throws:</dt>
-<dd><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/IllegalArgumentException.html" title="class or interface in java.lang" class="external-link">IllegalArgumentException</a></code> - if <code>name</code> is empty, has a leading/trailing/consecutive
-    <code>'.'</code>, contains invalid characters (<code>'*'</code>, <code>'/'</code>, <code>';'</code>, or
-    whitespace), is primitive/void, is an array type (<code>"[...]"</code>), or is parameterized
-    (<code>"&lt;...&gt;"</code>)</dd>
+<dd><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/IllegalArgumentException.html" title="class or interface in java.lang" class="external-link">IllegalArgumentException</a></code> - if <code>name</code> is empty, has a leading/trailing/consecutive <code>'.'</code>,
+contains invalid characters (<code>'*'</code>, <code>'/'</code>, <code>';'</code>, or whitespace), is primitive/void, is an
+array type (<code>&quot;[...]&quot;</code>), or is parameterized (<code>&quot;&lt;...&gt;&quot;</code>)</dd>
 </dl>
 </div>
 </section>
@@ -184,8 +185,8 @@ returns <code>null</code> if the symbol is not available.</div>
 <h3>symbol</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">@Nullable com.sun.tools.javac.code.Symbol.ClassSymbol</span>&nbsp;<span class="element-name">symbol</span><wbr><span class="parameters">(<a href="VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
-<div class="block">Resolves and caches the <code>Symbol.ClassSymbol</code> for this class in the current compilation, or
-returns <code>null</code> if the symbol is not available.</div>
+<div class="block">Resolves and caches the <code>Symbol.ClassSymbol</code> for this class in the current compilation, or returns
+<code>null</code> if the symbol is not available.</div>
 </div>
 </section>
 </li>
@@ -194,8 +195,8 @@ returns <code>null</code> if the symbol is not available.</div>
 <h3>type</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">@Nullable com.sun.tools.javac.code.Type</span>&nbsp;<span class="element-name">type</span><wbr><span class="parameters">(<a href="VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
-<div class="block">Resolves and caches the <code>Type</code> for this class in the current compilation, or returns
-<code>null</code> if the symbol is not available.</div>
+<div class="block">Resolves and caches the <code>Type</code> for this class in the current compilation, or returns <code>null</code> if
+the symbol is not available.</div>
 </div>
 </section>
 </li>

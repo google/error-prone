@@ -249,7 +249,8 @@ loadScripts(document, 'script');</script>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
 <div class="block">Static factory methods which make the DSL read more fluently. Since matchers are run in a tight
 loop during compilation, performance is important. When assembling a matcher from the DSL, it's
-best to construct it only once, by saving the resulting matcher as a static variable for example.</div>
+best to construct it only once, by saving the resulting matcher as a static variable for
+example.</div>
 <dl class="notes">
 <dt>Author:</dt>
 <dd>alexeagle@google.com (Alex Eagle)</dd>
@@ -343,8 +344,8 @@ given matchers do.</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#assertEqualsInvocation()" class="member-name-link">assertEqualsInvocation</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Matches calls to the method <code>org.junit.Assert#assertEquals</code> and corresponding methods in
-JUnit 3.x.</div>
+<div class="block">Matches calls to the method <code>org.junit.Assert#assertEquals</code> and corresponding methods in JUnit
+3.x.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/AssertTree.html" title="class or interface in com.sun.source.tree" class="external-link">AssertTree</a>&gt;</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#assertionWithCondition(com.google.errorprone.matchers.Matcher)" class="member-name-link">assertionWithCondition</a><wbr>(<a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;&nbsp;conditionMatcher)</code></div>
@@ -354,14 +355,13 @@ JUnit 3.x.</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#assertNotEqualsInvocation()" class="member-name-link">assertNotEqualsInvocation</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Matches calls to the method <code>org.junit.Assert#assertNotEquals</code> and corresponding methods
-in JUnit 3.x.</div>
+<div class="block">Matches calls to the method <code>org.junit.Assert#assertNotEquals</code> and corresponding methods in
+JUnit 3.x.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/StatementTree.html" title="class or interface in com.sun.source.tree" class="external-link">StatementTree</a>&gt;</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#assertStatement(com.google.errorprone.matchers.Matcher)" class="member-name-link">assertStatement</a><wbr>(<a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;&nbsp;conditionMatcher)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Matches an <code>assert</code> statement where the condition is matched by the passed <code>
-conditionMatcher</code>.</div>
+<div class="block">Matches an <code>assert</code> statement where the condition is matched by the passed <code>conditionMatcher</code>.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/AssignmentTree.html" title="class or interface in com.sun.source.tree" class="external-link">AssignmentTree</a>&gt;</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#assignment(com.google.errorprone.matchers.Matcher,com.google.errorprone.matchers.Matcher)" class="member-name-link">assignment</a><wbr>(<a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;&nbsp;variableMatcher,
@@ -378,8 +378,8 @@ conditionMatcher</code>.</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#booleanConstant(boolean)" class="member-name-link">booleanConstant</a><wbr>(boolean&nbsp;value)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Matches the boolean constant (<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Boolean.html#TRUE" title="class or interface in java.lang" class="external-link"><code>Boolean.TRUE</code></a> or <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Boolean.html#FALSE" title="class or interface in java.lang" class="external-link"><code>Boolean.FALSE</code></a>) corresponding to
-the given value.</div>
+<div class="block">Matches the boolean constant (<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Boolean.html#TRUE" title="class or interface in java.lang" class="external-link"><code>Boolean.TRUE</code></a> or <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Boolean.html#FALSE" title="class or interface in java.lang" class="external-link"><code>Boolean.FALSE</code></a>) corresponding to the given
+value.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#booleanLiteral(boolean)" class="member-name-link">booleanLiteral</a><wbr>(boolean&nbsp;value)</code></div>
@@ -592,8 +592,8 @@ meta-annotation.</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#ignoreParens(com.google.errorprone.matchers.Matcher)" class="member-name-link">ignoreParens</a><wbr>(<a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;&nbsp;innerMatcher)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Ignores any number of parenthesis wrapping an expression and then applies the passed matcher to
-that expression.</div>
+<div class="block">Ignores any number of parenthesis wrapping an expression and then applies the passed matcher
+to that expression.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static &lt;T extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;<br><a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;T&gt;</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#inLoop()" class="member-name-link">inLoop</a>()</code></div>
@@ -623,7 +623,8 @@ that expression.</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#inThirdParty()" class="member-name-link">inThirdParty</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Matches if the compilation unit's canonical source path (as defined by <a href="../util/ASTHelpers.html#getSourcePath(com.google.errorprone.VisitorState)"><code>ASTHelpers.getSourcePath(VisitorState)</code></a>) is located within third_party.</div>
+<div class="block">Matches if the compilation unit's canonical source path (as defined by
+<a href="../util/ASTHelpers.html#getSourcePath(com.google.errorprone.VisitorState)"><code>ASTHelpers.getSourcePath(VisitorState)</code></a>) is located within third_party.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#intLiteral(int)" class="member-name-link">intLiteral</a><wbr>(int&nbsp;value)</code></div>
@@ -837,8 +838,7 @@ constant, parameter to a method, etc.</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/BlockTree.html" title="class or interface in com.sun.source.tree" class="external-link">BlockTree</a>&gt;</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#matchSingleStatementBlock(com.google.errorprone.matchers.Matcher)" class="member-name-link">matchSingleStatementBlock</a><wbr>(<a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/StatementTree.html" title="class or interface in com.sun.source.tree" class="external-link">StatementTree</a>&gt;&nbsp;statementMatcher)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Matches a <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/BlockTree.html" title="class or interface in com.sun.source.tree" class="external-link"><code>BlockTree</code></a> if it single statement block with statement matching <code>
-statementMatcher</code>.</div>
+<div class="block">Matches a <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/BlockTree.html" title="class or interface in com.sun.source.tree" class="external-link"><code>BlockTree</code></a> if it single statement block with statement matching <code>statementMatcher</code>.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#methodCallInDeclarationOfThrowingRunnable(com.google.errorprone.VisitorState)" class="member-name-link">methodCallInDeclarationOfThrowingRunnable</a><wbr>(<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
@@ -877,8 +877,8 @@ variableMatchers.</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#methodInvocation(com.google.errorprone.matchers.Matcher)" class="member-name-link">methodInvocation</a><wbr>(<a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;&nbsp;methodSelectMatcher)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Matches an AST node if it is a method invocation and the method select matches <code>
-methodSelectMatcher</code>.</div>
+<div class="block">Matches an AST node if it is a method invocation and the method select matches
+<code>methodSelectMatcher</code>.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#methodInvocation(com.google.errorprone.matchers.Matcher,com.google.errorprone.matchers.ChildMultiMatcher.MatchType,com.google.errorprone.matchers.Matcher)" class="member-name-link">methodInvocation</a><wbr>(<a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;&nbsp;methodSelectMatcher,
@@ -979,8 +979,8 @@ given matcher.</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static &lt;T extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;<br><a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;T&gt;</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#packageStartsWith(java.lang.String)" class="member-name-link">packageStartsWith</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;packageName)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Matches an AST node whose compilation unit's package name equals the given package name or is a
-subpackage of the given package name.</div>
+<div class="block">Matches an AST node whose compilation unit's package name equals the given package name or is
+a subpackage of the given package name.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static &lt;T extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;<br><a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;T&gt;</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#parentNode(com.google.errorprone.matchers.Matcher)" class="member-name-link">parentNode</a><wbr>(<a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;&nbsp;treeMatcher)</code></div>
@@ -990,8 +990,8 @@ subpackage of the given package name.</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static &lt;T extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/StatementTree.html" title="class or interface in com.sun.source.tree" class="external-link">StatementTree</a>&gt;<br><a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;T&gt;</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#previousStatement(com.google.errorprone.matchers.Matcher)" class="member-name-link">previousStatement</a><wbr>(<a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/StatementTree.html" title="class or interface in com.sun.source.tree" class="external-link">StatementTree</a>&gt;&nbsp;matcher)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Matches a statement AST node if the previous statement in the enclosing block matches the given
-matcher.</div>
+<div class="block">Matches a statement AST node if the previous statement in the enclosing block matches the
+given matcher.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/MethodInvocationTree.html" title="class or interface in com.sun.source.tree" class="external-link">MethodInvocationTree</a>&gt;</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#receiverOfInvocation(com.google.errorprone.matchers.Matcher)" class="member-name-link">receiverOfInvocation</a><wbr>(<a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;&nbsp;expressionTreeMatcher)</code></div>
@@ -1012,8 +1012,8 @@ to the method.</div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#sameArgument(int,int)" class="member-name-link">sameArgument</a><wbr>(int&nbsp;index1,
  int&nbsp;index2)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Matches a <a href="MethodInvocation.html" title="class in com.google.errorprone.matchers"><code>MethodInvocation</code></a> when the arguments at the two given indices are both the
-same variable, as determined by <a href="../util/ASTHelpers.html#sameVariable(com.sun.source.tree.ExpressionTree,com.sun.source.tree.ExpressionTree)"><code>ASTHelpers.sameVariable(ExpressionTree, ExpressionTree)</code></a>.</div>
+<div class="block">Matches a <a href="MethodInvocation.html" title="class in com.google.errorprone.matchers"><code>MethodInvocation</code></a> when the arguments at the two given indices are both the same
+variable, as determined by <a href="../util/ASTHelpers.html#sameVariable(com.sun.source.tree.ExpressionTree,com.sun.source.tree.ExpressionTree)"><code>ASTHelpers.sameVariable(ExpressionTree, ExpressionTree)</code></a>.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#sameVariable(com.sun.source.tree.ExpressionTree)" class="member-name-link">sameVariable</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&nbsp;expr)</code></div>
@@ -1023,35 +1023,40 @@ same variable, as determined by <a href="../util/ASTHelpers.html#sameVariable(co
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/MethodTree.html" title="class or interface in com.sun.source.tree" class="external-link">MethodTree</a>&gt;</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#singleStatementReturnMatcher(com.google.errorprone.matchers.Matcher)" class="member-name-link">singleStatementReturnMatcher</a><wbr>(<a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;&nbsp;expressionTreeMatcher)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Returns a matcher for <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/MethodTree.html" title="class or interface in com.sun.source.tree" class="external-link"><code>MethodTree</code></a> whose implementation contains a single return
-statement with expression matching the passed <code>expressionTreeMatcher</code>.</div>
+<div class="block">Returns a matcher for <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/MethodTree.html" title="class or interface in com.sun.source.tree" class="external-link"><code>MethodTree</code></a> whose implementation contains a single return statement
+with expression matching the passed <code>expressionTreeMatcher</code>.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#sourcePathMatches(com.google.errorprone.util.SourcePathMatcher)" class="member-name-link">sourcePathMatches</a><wbr>(<a href="../util/SourcePathMatcher.html" title="class in com.google.errorprone.util">SourcePathMatcher</a>&nbsp;matcher)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Matches if the compilation unit's canonical source path (as defined by <a href="../util/ASTHelpers.html#getSourcePath(com.google.errorprone.VisitorState)"><code>ASTHelpers.getSourcePath(VisitorState)</code></a>) matches the given <a href="../util/SourcePathMatcher.html" title="class in com.google.errorprone.util"><code>SourcePathMatcher</code></a>.</div>
+<div class="block">Matches if the compilation unit's canonical source path (as defined by
+<a href="../util/ASTHelpers.html#getSourcePath(com.google.errorprone.VisitorState)"><code>ASTHelpers.getSourcePath(VisitorState)</code></a>) matches the given <a href="../util/SourcePathMatcher.html" title="class in com.google.errorprone.util"><code>SourcePathMatcher</code></a>.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#sourcePathMatches(java.lang.String)" class="member-name-link">sourcePathMatches</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;pattern)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Matches if the compilation unit's canonical source path (as defined by <a href="../util/ASTHelpers.html#getSourcePath(com.google.errorprone.VisitorState)"><code>ASTHelpers.getSourcePath(VisitorState)</code></a>) matches the given path pattern (exact path ending with
-<code>.java</code>, or directory prefix ending with <code>/</code>).</div>
+<div class="block">Matches if the compilation unit's canonical source path (as defined by
+<a href="../util/ASTHelpers.html#getSourcePath(com.google.errorprone.VisitorState)"><code>ASTHelpers.getSourcePath(VisitorState)</code></a>) matches the given path pattern (exact path ending
+with <code>.java</code>, or directory prefix ending with <code>/</code>).</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#sourcePathStartsWith(java.lang.Iterable)" class="member-name-link">sourcePathStartsWith</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;prefixes)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Matches if the compilation unit's canonical source path (as defined by <a href="../util/ASTHelpers.html#getSourcePath(com.google.errorprone.VisitorState)"><code>ASTHelpers.getSourcePath(VisitorState)</code></a>) starts with any of the given directory prefixes.</div>
+<div class="block">Matches if the compilation unit's canonical source path (as defined by
+<a href="../util/ASTHelpers.html#getSourcePath(com.google.errorprone.VisitorState)"><code>ASTHelpers.getSourcePath(VisitorState)</code></a>) starts with any of the given directory prefixes.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#sourcePathStartsWith(java.lang.String,java.lang.String...)" class="member-name-link">sourcePathStartsWith</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;prefix,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>...&nbsp;morePrefixes)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Matches if the compilation unit's canonical source path (as defined by <a href="../util/ASTHelpers.html#getSourcePath(com.google.errorprone.VisitorState)"><code>ASTHelpers.getSourcePath(VisitorState)</code></a>) starts with any of the given directory prefixes.</div>
+<div class="block">Matches if the compilation unit's canonical source path (as defined by
+<a href="../util/ASTHelpers.html#getSourcePath(com.google.errorprone.VisitorState)"><code>ASTHelpers.getSourcePath(VisitorState)</code></a>) starts with any of the given directory prefixes.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static &lt;T extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;<br><a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;T&gt;</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#staticEqualsInvocation()" class="member-name-link">staticEqualsInvocation</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Matches an invocation of a recognized static object equality method such as <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Objects.html#equals(java.lang.Object,java.lang.Object)" title="class or interface in java.util" class="external-link"><code>Objects.equals(Object, Object)</code></a>.</div>
+<div class="block">Matches an invocation of a recognized static object equality method such as
+<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Objects.html#equals(java.lang.Object,java.lang.Object)" title="class or interface in java.util" class="external-link"><code>Objects.equals(Object, Object)</code></a>.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#staticFieldAccess()" class="member-name-link">staticFieldAccess</a>()</code></div>
@@ -1111,8 +1116,7 @@ statement with expression matching the passed <code>expressionTreeMatcher</code>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/StatementTree.html" title="class or interface in com.sun.source.tree" class="external-link">StatementTree</a>&gt;</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#throwStatement(com.google.errorprone.matchers.Matcher)" class="member-name-link">throwStatement</a><wbr>(<a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;? super <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;&nbsp;thrownMatcher)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Matches a <code>throw</code> statement where the thrown item is matched by the passed <code>
-thrownMatcher</code>.</div>
+<div class="block">Matches a <code>throw</code> statement where the thrown item is matched by the passed <code>thrownMatcher</code>.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/MethodTree.html" title="class or interface in com.sun.source.tree" class="external-link">MethodTree</a>&gt;</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#toStringMethodDeclaration()" class="member-name-link">toStringMethodDeclaration</a>()</code></div>
@@ -1123,8 +1127,8 @@ thrownMatcher</code>.</div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#toType(java.lang.Class,com.google.errorprone.matchers.Matcher)" class="member-name-link">toType</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;S&gt;&nbsp;type,
  <a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;? super S&gt;&nbsp;matcher)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Converts the given matcher to one that can be applied to any tree but is only executed when run
-on a tree of <code>type</code> and returns <code>false</code> for all other tree types.</div>
+<div class="block">Converts the given matcher to one that can be applied to any tree but is only executed when
+run on a tree of <code>type</code> and returns <code>false</code> for all other tree types.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/TypeCastTree.html" title="class or interface in com.sun.source.tree" class="external-link">TypeCastTree</a>&gt;</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#typeCast(com.google.errorprone.matchers.Matcher,com.google.errorprone.matchers.Matcher)" class="member-name-link">typeCast</a><wbr>(<a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;&nbsp;typeMatcher,
@@ -1349,10 +1353,9 @@ given matchers do.</div>
 <h3>symbolMatcher</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="type-parameters">&lt;T extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;</span>&nbsp;<span class="return-type"><a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;T&gt;</span>&nbsp;<span class="element-name">symbolMatcher</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/BiPredicate.html" title="class or interface in java.util.function" class="external-link">BiPredicate</a>&lt;com.sun.tools.javac.code.Symbol, <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&gt;&nbsp;pred)</span></div>
-<div class="block">Match a Tree based solely on the Symbol produced by <a href="../util/ASTHelpers.html#getSymbol(com.sun.source.tree.Tree)"><code>ASTHelpers.getSymbol(Tree)</code></a>.
-
-<p>If <code>getSymbol</code> returns <code>null</code>, the matcher returns false instead of calling
-<code>pred</code>.</div>
+<div class="block"><p>Match a Tree based solely on the Symbol produced by <a href="../util/ASTHelpers.html#getSymbol(com.sun.source.tree.Tree)"><code>ASTHelpers.getSymbol(Tree)</code></a>.</p>
+<p>If <code>getSymbol</code> returns <code>null</code>, the matcher returns false instead of calling <code>pred</code>.</p>
+</div>
 </div>
 </section>
 </li>
@@ -1417,7 +1420,7 @@ match compound assignment operators.</div>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;? super <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/MethodInvocationTree.html" title="class or interface in com.sun.source.tree" class="external-link">MethodInvocationTree</a>&gt;</span>&nbsp;<span class="element-name">receiverSameAsArgument</span><wbr><span class="parameters">(int&nbsp;argNum)</span></div>
 <div class="block">Matches when the receiver of an instance method is the same reference as a particular argument
-to the method. For example, receiverSameAsArgument(1) would match <code>obj.method("", obj)</code></div>
+to the method. For example, receiverSameAsArgument(1) would match <code>obj.method(&quot;&quot;, obj)</code></div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>argNum</code> - The number of the argument to compare against (zero-based.</dd>
@@ -1445,7 +1448,7 @@ node.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>matchType</code> - Whether to match if the matchers match any of or all of the annotations on
-    this tree.</dd>
+this tree.</dd>
 <dd><code>annotationMatcher</code> - The annotation matcher to use.</dd>
 </dl>
 </div>
@@ -1502,8 +1505,8 @@ node.</div>
 <h3>methodInvocation</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;</span>&nbsp;<span class="element-name">methodInvocation</span><wbr><span class="parameters">(<a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;&nbsp;methodSelectMatcher)</span></div>
-<div class="block">Matches an AST node if it is a method invocation and the method select matches <code>
-methodSelectMatcher</code>. Ignores any arguments.</div>
+<div class="block">Matches an AST node if it is a method invocation and the method select matches
+<code>methodSelectMatcher</code>. Ignores any arguments.</div>
 </div>
 </section>
 </li>
@@ -1520,9 +1523,8 @@ methodSelectMatcher</code>. Ignores any arguments.</div>
 <h3>parentNode</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="type-parameters">&lt;T extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;</span>&nbsp;<span class="return-type"><a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;T&gt;</span>&nbsp;<span class="element-name">parentNode</span><wbr><span class="parameters">(<a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;&nbsp;treeMatcher)</span></div>
-<div class="block">Matches an AST node if its parent node is matched by the given matcher. For example, <code>
-parentNode(kindIs(Kind.RETURN))</code> would match the <code>this</code> expression in <code>return
-this;</code></div>
+<div class="block">Matches an AST node if its parent node is matched by the given matcher. For example,
+<code>parentNode(kindIs(Kind.RETURN))</code> would match the <code>this</code> expression in <code>return this;</code></div>
 </div>
 </section>
 </li>
@@ -1534,7 +1536,7 @@ this;</code></div>
 <div class="block">Matches an AST node if its type is a subtype of the given type.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>typeStr</code> - a string representation of the type, e.g., "java.util.AbstractList"</dd>
+<dd><code>typeStr</code> - a string representation of the type, e.g., &quot;java.util.AbstractList&quot;</dd>
 </dl>
 </div>
 </section>
@@ -1570,10 +1572,10 @@ this;</code></div>
 <h3>isSubtypeOf</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="type-parameters">&lt;T extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;</span>&nbsp;<span class="return-type"><a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;T&gt;</span>&nbsp;<span class="element-name">isSubtypeOf</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;clazz)</span></div>
-<div class="block">Matches an AST node if its type is a subtype of the given type.
-
-<p>Prefer <a href="#isSubtypeOf(java.lang.String)"><code>isSubtypeOf(String)</code></a> or <a href="#isSubtypeOf(com.google.errorprone.ClassName)"><code>isSubtypeOf(ClassName)</code></a> to avoid a runtime
-dependency on the class.</div>
+<div class="block"><p>Matches an AST node if its type is a subtype of the given type.</p>
+<p>Prefer <a href="#isSubtypeOf(java.lang.String)"><code>isSubtypeOf(String)</code></a> or <a href="#isSubtypeOf(com.google.errorprone.ClassName)"><code>isSubtypeOf(ClassName)</code></a> to avoid a runtime dependency on
+the class.</p>
+</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>clazz</code> - a class representation of the type, e.g., Action.class.</dd>
@@ -1613,10 +1615,10 @@ dependency on the class.</div>
 <h3>isSameType</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="type-parameters">&lt;T extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;</span>&nbsp;<span class="return-type"><a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;T&gt;</span>&nbsp;<span class="element-name">isSameType</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;clazz)</span></div>
-<div class="block">Matches an AST node if it has the same erased type as the given class.
-
-<p>Prefer <a href="#isSameType(java.lang.String)"><code>isSameType(String)</code></a> or <a href="#isSameType(com.google.errorprone.ClassName)"><code>isSameType(ClassName)</code></a> to avoid a runtime
-dependency on the class.</div>
+<div class="block"><p>Matches an AST node if it has the same erased type as the given class.</p>
+<p>Prefer <a href="#isSameType(java.lang.String)"><code>isSameType(String)</code></a> or <a href="#isSameType(com.google.errorprone.ClassName)"><code>isSameType(ClassName)</code></a> to avoid a runtime dependency on the
+class.</p>
+</div>
 </div>
 </section>
 </li>
@@ -1625,10 +1627,9 @@ dependency on the class.</div>
 <h3>typePredicateMatcher</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="type-parameters">&lt;T extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;</span>&nbsp;<span class="return-type"><a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;T&gt;</span>&nbsp;<span class="element-name">typePredicateMatcher</span><wbr><span class="parameters">(<a href="../predicates/TypePredicate.html" title="interface in com.google.errorprone.predicates">TypePredicate</a>&nbsp;pred)</span></div>
-<div class="block">Match a Tree based solely on the type produced by <a href="../util/ASTHelpers.html#getType(com.sun.source.tree.Tree)"><code>ASTHelpers.getType(Tree)</code></a>.
-
-<p>If <code>getType</code> returns <code>null</code>, the matcher returns false instead of calling <code>
-pred</code>.</div>
+<div class="block"><p>Match a Tree based solely on the type produced by <a href="../util/ASTHelpers.html#getType(com.sun.source.tree.Tree)"><code>ASTHelpers.getType(Tree)</code></a>.</p>
+<p>If <code>getType</code> returns <code>null</code>, the matcher returns false instead of calling <code>pred</code>.</p>
+</div>
 </div>
 </section>
 </li>
@@ -1727,9 +1728,9 @@ pred</code>.</div>
 <h3>enclosingNode</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;</span>&nbsp;<span class="element-name">enclosingNode</span><wbr><span class="parameters">(<a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;&nbsp;matcher)</span></div>
-<div class="block">Matches an AST node that is enclosed by some node that matches the given matcher.
-
-<p>TODO(eaftan): This could be used instead of enclosingBlock and enclosingClass.</div>
+<div class="block"><p>Matches an AST node that is enclosed by some node that matches the given matcher.</p>
+<p>TODO(eaftan): This could be used instead of enclosingBlock and enclosingClass.</p>
+</div>
 </div>
 </section>
 </li>
@@ -1748,8 +1749,8 @@ given matcher.</div>
 <h3>previousStatement</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="type-parameters">&lt;T extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/StatementTree.html" title="class or interface in com.sun.source.tree" class="external-link">StatementTree</a>&gt;</span>&nbsp;<span class="return-type"><a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;T&gt;</span>&nbsp;<span class="element-name">previousStatement</span><wbr><span class="parameters">(<a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/StatementTree.html" title="class or interface in com.sun.source.tree" class="external-link">StatementTree</a>&gt;&nbsp;matcher)</span></div>
-<div class="block">Matches a statement AST node if the previous statement in the enclosing block matches the given
-matcher.</div>
+<div class="block">Matches a statement AST node if the previous statement in the enclosing block matches the
+given matcher.</div>
 </div>
 </section>
 </li>
@@ -1785,8 +1786,8 @@ matcher.</div>
 <h3>stringLiteral</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;</span>&nbsp;<span class="element-name">stringLiteral</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;value)</span></div>
-<div class="block">Matches a Literal AST node if it is a string literal with the given value. For example, <code>
-stringLiteral("thing")</code> matches the literal <code>"thing"</code></div>
+<div class="block">Matches a Literal AST node if it is a string literal with the given value. For example,
+<code>stringLiteral(&quot;thing&quot;)</code> matches the literal <code>&quot;thing&quot;</code></div>
 </div>
 </section>
 </li>
@@ -1837,8 +1838,8 @@ stringLiteral("thing")</code> matches the literal <code>"thing"</code></div>
 <h3>booleanConstant</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;</span>&nbsp;<span class="element-name">booleanConstant</span><wbr><span class="parameters">(boolean&nbsp;value)</span></div>
-<div class="block">Matches the boolean constant (<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Boolean.html#TRUE" title="class or interface in java.lang" class="external-link"><code>Boolean.TRUE</code></a> or <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Boolean.html#FALSE" title="class or interface in java.lang" class="external-link"><code>Boolean.FALSE</code></a>) corresponding to
-the given value.</div>
+<div class="block">Matches the boolean constant (<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Boolean.html#TRUE" title="class or interface in java.lang" class="external-link"><code>Boolean.TRUE</code></a> or <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Boolean.html#FALSE" title="class or interface in java.lang" class="external-link"><code>Boolean.FALSE</code></a>) corresponding to the given
+value.</div>
 </div>
 </section>
 </li>
@@ -1847,9 +1848,9 @@ the given value.</div>
 <h3>ignoreParens</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;</span>&nbsp;<span class="element-name">ignoreParens</span><wbr><span class="parameters">(<a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;&nbsp;innerMatcher)</span></div>
-<div class="block">Ignores any number of parenthesis wrapping an expression and then applies the passed matcher to
-that expression. For example, the passed matcher would be applied to <code>value</code> in <code>
-(((value)))</code>.</div>
+<div class="block">Ignores any number of parenthesis wrapping an expression and then applies the passed matcher
+to that expression. For example, the passed matcher would be applied to <code>value</code> in
+<code>(((value)))</code>.</div>
 </div>
 </section>
 </li>
@@ -1878,9 +1879,7 @@ that expression. For example, the passed matcher would be applied to <code>value
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/AnnotationTree.html" title="class or interface in com.sun.source.tree" class="external-link">AnnotationTree</a>&gt;</span>&nbsp;<span class="element-name">hasArgumentWithValue</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;argumentName,
  <a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;&nbsp;valueMatcher)</span></div>
 <div class="block">Matches an Annotation AST node if the argument to the annotation with the given name has a
-value which matches the given matcher. For example, <code>hasArgumentWithValue("value",
-stringLiteral("one"))</code> matches <code>@Thing("one")</code> or <code>@Thing({"one", "two"})</code> or
-<code>@Thing(value = "one")</code></div>
+value which matches the given matcher. For example, <code>hasArgumentWithValue(&quot;value&quot;, stringLiteral(&quot;one&quot;))</code> matches <code>@Thing(&quot;one&quot;)</code> or <code>@Thing({&quot;one&quot;, &quot;two&quot;})</code> or <code>@Thing(value = &quot;one&quot;)</code></div>
 </div>
 </section>
 </li>
@@ -1937,8 +1936,8 @@ meta-annotation.</div>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;? super <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/MethodInvocationTree.html" title="class or interface in com.sun.source.tree" class="external-link">MethodInvocationTree</a>&gt;</span>&nbsp;<span class="element-name">sameArgument</span><wbr><span class="parameters">(int&nbsp;index1,
  int&nbsp;index2)</span></div>
-<div class="block">Matches a <a href="MethodInvocation.html" title="class in com.google.errorprone.matchers"><code>MethodInvocation</code></a> when the arguments at the two given indices are both the
-same variable, as determined by <a href="../util/ASTHelpers.html#sameVariable(com.sun.source.tree.ExpressionTree,com.sun.source.tree.ExpressionTree)"><code>ASTHelpers.sameVariable(ExpressionTree, ExpressionTree)</code></a>.</div>
+<div class="block">Matches a <a href="MethodInvocation.html" title="class in com.google.errorprone.matchers"><code>MethodInvocation</code></a> when the arguments at the two given indices are both the same
+variable, as determined by <a href="../util/ASTHelpers.html#sameVariable(com.sun.source.tree.ExpressionTree,com.sun.source.tree.ExpressionTree)"><code>ASTHelpers.sameVariable(ExpressionTree, ExpressionTree)</code></a>.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>index1</code> - the index of the first actual parameter to test</dd>
@@ -1958,7 +1957,7 @@ same variable, as determined by <a href="../util/ASTHelpers.html#sameVariable(co
 include annotations inherited from superclasses due to @Inherited.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>simpleName</code> - the simple name of the annotation (e.g. "Nullable")</dd>
+<dd><code>simpleName</code> - the simple name of the annotation (e.g. &quot;Nullable&quot;)</dd>
 </dl>
 </div>
 </section>
@@ -1968,12 +1967,12 @@ include annotations inherited from superclasses due to @Inherited.</div>
 <h3>hasAnnotation</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="type-parameters">&lt;T extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;</span>&nbsp;<span class="return-type"><a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;T&gt;</span>&nbsp;<span class="element-name">hasAnnotation</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;annotationClass)</span></div>
-<div class="block">Determines whether an expression has an annotation of the given type. This includes annotations
-inherited from superclasses due to @Inherited.</div>
+<div class="block">Determines whether an expression has an annotation of the given type. This includes
+annotations inherited from superclasses due to @Inherited.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>annotationClass</code> - the binary class name of the annotation (e.g.
-    "javax.annotation.Nullable", or "some.package.OuterClassName$InnerClassName")</dd>
+&quot;javax.annotation.Nullable&quot;, or &quot;some.package.OuterClassName$InnerClassName&quot;)</dd>
 </dl>
 </div>
 </section>
@@ -1983,8 +1982,8 @@ inherited from superclasses due to @Inherited.</div>
 <h3>hasAnnotation</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="type-parameters">&lt;T extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;</span>&nbsp;<span class="return-type"><a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;T&gt;</span>&nbsp;<span class="element-name">hasAnnotation</span><wbr><span class="parameters">(<a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a>&nbsp;annotationClass)</span></div>
-<div class="block">Determines whether an expression has an annotation of the given type. This includes annotations
-inherited from superclasses due to @Inherited.</div>
+<div class="block">Determines whether an expression has an annotation of the given type. This includes
+annotations inherited from superclasses due to @Inherited.</div>
 </div>
 </section>
 </li>
@@ -2007,11 +2006,11 @@ binary names and annotations inherited due to @Inherited.</div>
 <h3>hasAnnotation</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="type-parameters">&lt;T extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;</span>&nbsp;<span class="return-type"><a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;T&gt;</span>&nbsp;<span class="element-name">hasAnnotation</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;? extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/annotation/Annotation.html" title="class or interface in java.lang.annotation" class="external-link">Annotation</a>&gt;&nbsp;inputClass)</span></div>
-<div class="block">Determines whether an expression has an annotation of the given class. This includes
-annotations inherited from superclasses due to @Inherited.
-
-<p>Prefer <a href="#hasAnnotation(java.lang.String)"><code>hasAnnotation(String)</code></a> or <a href="#hasAnnotation(com.google.errorprone.ClassName)"><code>hasAnnotation(ClassName)</code></a> to avoid a
-runtime dependency on the annotation class.</div>
+<div class="block"><p>Determines whether an expression has an annotation of the given class. This includes
+annotations inherited from superclasses due to @Inherited.</p>
+<p>Prefer <a href="#hasAnnotation(java.lang.String)"><code>hasAnnotation(String)</code></a> or <a href="#hasAnnotation(com.google.errorprone.ClassName)"><code>hasAnnotation(ClassName)</code></a> to avoid a runtime dependency
+on the annotation class.</p>
+</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>inputClass</code> - the class of the annotation to look for (e.g, <code>Produces.class</code>)</dd>
@@ -2029,7 +2028,7 @@ This includes annotations inherited from superclasses due to @Inherited.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>annotationClass</code> - the binary class name of the annotation (e.g.
-    "javax.annotation.Nullable", or "some.package.OuterClassName$InnerClassName")</dd>
+&quot;javax.annotation.Nullable&quot;, or &quot;some.package.OuterClassName$InnerClassName&quot;)</dd>
 </dl>
 </div>
 </section>
@@ -2049,11 +2048,11 @@ This includes annotations inherited from superclasses due to @Inherited.</div>
 <h3>symbolHasAnnotation</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="type-parameters">&lt;T extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;</span>&nbsp;<span class="return-type"><a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;T&gt;</span>&nbsp;<span class="element-name">symbolHasAnnotation</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;? extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/annotation/Annotation.html" title="class or interface in java.lang.annotation" class="external-link">Annotation</a>&gt;&nbsp;inputClass)</span></div>
-<div class="block">Determines whether an expression refers to a symbol that has an annotation of the given type.
-This includes annotations inherited from superclasses due to @Inherited.
-
-<p>Prefer <a href="#symbolHasAnnotation(java.lang.String)"><code>symbolHasAnnotation(String)</code></a> or <a href="#symbolHasAnnotation(com.google.errorprone.ClassName)"><code>symbolHasAnnotation(ClassName)</code></a> to
-avoid a runtime dependency on the annotation class.</div>
+<div class="block"><p>Determines whether an expression refers to a symbol that has an annotation of the given type.
+This includes annotations inherited from superclasses due to @Inherited.</p>
+<p>Prefer <a href="#symbolHasAnnotation(java.lang.String)"><code>symbolHasAnnotation(String)</code></a> or <a href="#symbolHasAnnotation(com.google.errorprone.ClassName)"><code>symbolHasAnnotation(ClassName)</code></a> to avoid a runtime
+dependency on the annotation class.</p>
+</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>inputClass</code> - The class of the annotation to look for (e.g, Produces.class).</dd>
@@ -2071,7 +2070,7 @@ avoid a runtime dependency on the annotation class.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>annotationClass</code> - the binary class name of the annotation (e.g.
-    "javax.annotation.Nullable", or "some.package.OuterClassName$InnerClassName")</dd>
+&quot;javax.annotation.Nullable&quot;, or &quot;some.package.OuterClassName$InnerClassName&quot;)</dd>
 </dl>
 </div>
 </section>
@@ -2138,7 +2137,7 @@ avoid a runtime dependency on the annotation class.</div>
 <div class="block">Match a method declaration with a specific name.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>methodName</code> - The name of the method to match, e.g., "equals"</dd>
+<dd><code>methodName</code> - The name of the method to match, e.g., &quot;equals&quot;</dd>
 </dl>
 </div>
 </section>
@@ -2166,8 +2165,8 @@ avoid a runtime dependency on the annotation class.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>className</code> - The fully-qualified name of the enclosing class, e.g.
-    "com.google.common.base.Preconditions"</dd>
-<dd><code>methodName</code> - The name of the method to match, e.g., "checkNotNull"</dd>
+&quot;com.google.common.base.Preconditions&quot;</dd>
+<dd><code>methodName</code> - The name of the method to match, e.g., &quot;checkNotNull&quot;</dd>
 </dl>
 </div>
 </section>
@@ -2182,7 +2181,7 @@ avoid a runtime dependency on the annotation class.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>className</code> - The enclosing class</dd>
-<dd><code>methodName</code> - The name of the method to match, e.g., "checkNotNull"</dd>
+<dd><code>methodName</code> - The name of the method to match, e.g., &quot;checkNotNull&quot;</dd>
 </dl>
 </div>
 </section>
@@ -2193,12 +2192,12 @@ avoid a runtime dependency on the annotation class.</div>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="annotations"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/SafeVarargs.html" title="class or interface in java.lang" class="external-link">@SafeVarargs</a>
 </span><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/MethodTree.html" title="class or interface in com.sun.source.tree" class="external-link">MethodTree</a>&gt;</span>&nbsp;<span class="element-name">methodHasParameters</span><wbr><span class="parameters">(<a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/VariableTree.html" title="class or interface in com.sun.source.tree" class="external-link">VariableTree</a>&gt;...&nbsp;variableMatcher)</span></div>
-<div class="block">Matches an AST node that represents a method declaration, based on the list of
+<div class="block"><p>Matches an AST node that represents a method declaration, based on the list of
 variableMatchers. Applies the variableMatcher at index n to the parameter at index n and
 returns true iff they all match. Returns false if the number of variableMatchers provided does
-not match the number of parameters.
-
-<p>If you pass no variableMatchers, this will match methods with no parameters.</div>
+not match the number of parameters.</p>
+<p>If you pass no variableMatchers, this will match methods with no parameters.</p>
+</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>variableMatcher</code> - an array of matchers to apply to the parameters of the method</dd>
@@ -2220,12 +2219,12 @@ not match the number of parameters.
 <h3>methodHasParameters</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/MethodTree.html" title="class or interface in com.sun.source.tree" class="external-link">MethodTree</a>&gt;</span>&nbsp;<span class="element-name">methodHasParameters</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/VariableTree.html" title="class or interface in com.sun.source.tree" class="external-link">VariableTree</a>&gt;&gt;&nbsp;variableMatcher)</span></div>
-<div class="block">Matches an AST node that represents a method declaration, based on the list of
+<div class="block"><p>Matches an AST node that represents a method declaration, based on the list of
 variableMatchers. Applies the variableMatcher at index n to the parameter at index n and
 returns true iff they all match. Returns false if the number of variableMatchers provided does
-not match the number of parameters.
-
-<p>If you pass no variableMatchers, this will match methods with no parameters.</div>
+not match the number of parameters.</p>
+<p>If you pass no variableMatchers, this will match methods with no parameters.</p>
+</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>variableMatcher</code> - a list of matchers to apply to the parameters of the method</dd>
@@ -2268,7 +2267,7 @@ not match the number of parameters.
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>className</code> - The fully-qualified name of the enclosing class, e.g.
-    "com.google.common.base.Preconditions"</dd>
+&quot;com.google.common.base.Preconditions&quot;</dd>
 </dl>
 </div>
 </section>
@@ -2386,7 +2385,8 @@ operand or matcher2 matches the left operand and matcher1 matches the right oper
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;</span>&nbsp;<span class="element-name">hasIdentifier</span><wbr><span class="parameters">(<a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/IdentifierTree.html" title="class or interface in com.sun.source.tree" class="external-link">IdentifierTree</a>&gt;&nbsp;nodeMatcher)</span></div>
 <div class="block">Matches any AST that contains an identifier with a certain property. This matcher can be used,
-for instance, to locate identifiers with a certain name or which is defined in a certain class.</div>
+for instance, to locate identifiers with a certain name or which is defined in a certain
+class.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>nodeMatcher</code> - Which identifiers to look for</dd>
@@ -2435,8 +2435,7 @@ for instance, to locate identifiers with a certain name or which is defined in a
 <h3>throwStatement</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/StatementTree.html" title="class or interface in com.sun.source.tree" class="external-link">StatementTree</a>&gt;</span>&nbsp;<span class="element-name">throwStatement</span><wbr><span class="parameters">(<a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;? super <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;&nbsp;thrownMatcher)</span></div>
-<div class="block">Matches a <code>throw</code> statement where the thrown item is matched by the passed <code>
-thrownMatcher</code>.</div>
+<div class="block">Matches a <code>throw</code> statement where the thrown item is matched by the passed <code>thrownMatcher</code>.</div>
 </div>
 </section>
 </li>
@@ -2455,8 +2454,7 @@ thrownMatcher</code>.</div>
 <h3>assertStatement</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/StatementTree.html" title="class or interface in com.sun.source.tree" class="external-link">StatementTree</a>&gt;</span>&nbsp;<span class="element-name">assertStatement</span><wbr><span class="parameters">(<a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;&nbsp;conditionMatcher)</span></div>
-<div class="block">Matches an <code>assert</code> statement where the condition is matched by the passed <code>
-conditionMatcher</code>.</div>
+<div class="block">Matches an <code>assert</code> statement where the condition is matched by the passed <code>conditionMatcher</code>.</div>
 </div>
 </section>
 </li>
@@ -2485,8 +2483,8 @@ conditionMatcher</code>.</div>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="type-parameters">&lt;S extends T, T extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;</span>
 <span class="return-type"><a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;T&gt;</span>&nbsp;<span class="element-name">toType</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;S&gt;&nbsp;type,
  <a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;? super S&gt;&nbsp;matcher)</span></div>
-<div class="block">Converts the given matcher to one that can be applied to any tree but is only executed when run
-on a tree of <code>type</code> and returns <code>false</code> for all other tree types.</div>
+<div class="block">Converts the given matcher to one that can be applied to any tree but is only executed when
+run on a tree of <code>type</code> and returns <code>false</code> for all other tree types.</div>
 </div>
 </section>
 </li>
@@ -2513,10 +2511,10 @@ on a tree of <code>type</code> and returns <code>false</code> for all other tree
 <h3>isNonNullUsingDataflow</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;</span>&nbsp;<span class="element-name">isNonNullUsingDataflow</span>()</div>
-<div class="block">Matches if the expression is provably non-null.
-
+<div class="block"><p>Matches if the expression is provably non-null.</p>
 <p>Uses the Checker Framework dataflow implementation to determine nullness. Be careful about
-using this in performance-critical code.</div>
+using this in performance-critical code.</p>
+</div>
 </div>
 </section>
 </li>
@@ -2537,12 +2535,11 @@ using this in performance-critical code.</div>
 <h3>isNullUsingDataflow</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;</span>&nbsp;<span class="element-name">isNullUsingDataflow</span>()</div>
-<div class="block">Matches if the expression is provably null.
-
+<div class="block"><p>Matches if the expression is provably null.</p>
 <p>Uses the Checker Framework dataflow implementation to determine nullness. Be careful about
-using this in performance-critical code.
-
-<p>Prefer <code>kindIs(NULL_LITERAL)</code> unless you really need dataflow.</div>
+using this in performance-critical code.</p>
+<p>Prefer <code>kindIs(NULL_LITERAL)</code> unless you really need dataflow.</p>
+</div>
 </div>
 </section>
 </li>
@@ -2622,8 +2619,8 @@ using this in performance-critical code.
 <div class="block">Matches an assertion AST node if the given matcher matches its condition.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>conditionMatcher</code> - The matcher to apply to the condition in the assertion, e.g. in "assert
-    false", the "false" part of the statement</dd>
+<dd><code>conditionMatcher</code> - The matcher to apply to the condition in the assertion, e.g. in
+&quot;assert false&quot;, the &quot;false&quot; part of the statement</dd>
 </dl>
 </div>
 </section>
@@ -2677,15 +2674,12 @@ matching descendant node is found.</div>
 <h3>isDirectImplementationOf</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ClassTree.html" title="class or interface in com.sun.source.tree" class="external-link">ClassTree</a>&gt;</span>&nbsp;<span class="element-name">isDirectImplementationOf</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;clazz)</span></div>
-<div class="block">Matches any node that is directly an implementation, but not extension, of the given Class.
-
-<p>E.x. <code>class C implements I</code> will match, but <code>class C extends A</code> will not.
-
-<p>Additionally, this will only match <i>direct</i> implementations of interfaces. E.g. the
-following will not match:
-
-<p><code>interface I1 {} interface I2 extends I1 {} class C implements I2 {} ...
-isDirectImplementationOf(I1).match(\/*class tree for C*\/); // will not match </code></div>
+<div class="block"><p>Matches any node that is directly an implementation, but not extension, of the given Class.</p>
+<p>E.x. <code>class C implements I</code> will match, but <code>class C extends A</code> will not.</p>
+<p>Additionally, this will only match <em>direct</em> implementations of interfaces. E.g. the following
+will not match:</p>
+<p><code>interface I1 {} interface I2 extends I1 {} class C implements I2 {} ... isDirectImplementationOf(I1).match(/*class tree for C*/); // will not match</code></p>
+</div>
 </div>
 </section>
 </li>
@@ -2722,10 +2716,10 @@ isDirectImplementationOf(I1).match(\/*class tree for C*\/); // will not match </
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="annotations"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/SafeVarargs.html" title="class or interface in java.lang" class="external-link">@SafeVarargs</a>
 </span><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;</span>&nbsp;<span class="element-name">hasAnyAnnotation</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;? extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/annotation/Annotation.html" title="class or interface in java.lang.annotation" class="external-link">Annotation</a>&gt;...&nbsp;annotations)</span></div>
-<div class="block">Determines whether a tree has any of the given annotations. This includes annotations inherited
-from superclasses due to <code>@Inherited</code>.
-
-<p>Prefer <a href="#hasAnyAnnotation(com.google.errorprone.ClassName...)"><code>hasAnyAnnotation(ClassName...)</code></a> or <a href="#hasAnyAnnotationOf(java.lang.Iterable)"><code>hasAnyAnnotationOf(Iterable)</code></a>.</div>
+<div class="block"><p>Determines whether a tree has any of the given annotations. This includes annotations
+inherited from superclasses due to <code>@Inherited</code>.</p>
+<p>Prefer <a href="#hasAnyAnnotation(com.google.errorprone.ClassName...)"><code>hasAnyAnnotation(ClassName...)</code></a> or <a href="#hasAnyAnnotationOf(java.lang.Iterable)"><code>hasAnyAnnotationOf(Iterable)</code></a>.</p>
+</div>
 </div>
 </section>
 </li>
@@ -2734,8 +2728,8 @@ from superclasses due to <code>@Inherited</code>.
 <h3>hasAnyAnnotation</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="type-parameters">&lt;T extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;</span>&nbsp;<span class="return-type"><a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;T&gt;</span>&nbsp;<span class="element-name">hasAnyAnnotation</span><wbr><span class="parameters">(<a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a>...&nbsp;annotations)</span></div>
-<div class="block">Determines whether a tree has any of the given annotations. This includes annotations inherited
-from superclasses due to <code>@Inherited</code>.</div>
+<div class="block">Determines whether a tree has any of the given annotations. This includes annotations
+inherited from superclasses due to <code>@Inherited</code>.</div>
 </div>
 </section>
 </li>
@@ -2744,8 +2738,8 @@ from superclasses due to <code>@Inherited</code>.</div>
 <h3>hasAnyAnnotationOf</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="type-parameters">&lt;T extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;</span>&nbsp;<span class="return-type"><a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;T&gt;</span>&nbsp;<span class="element-name">hasAnyAnnotationOf</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;<a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a>&gt;&nbsp;annotations)</span></div>
-<div class="block">Determines whether a tree has any of the given annotations. This includes annotations inherited
-from superclasses due to <code>@Inherited</code>.</div>
+<div class="block">Determines whether a tree has any of the given annotations. This includes annotations
+inherited from superclasses due to <code>@Inherited</code>.</div>
 </div>
 </section>
 </li>
@@ -2780,11 +2774,12 @@ from superclasses due to <code>@Inherited</code>.</div>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;</span>&nbsp;<span class="element-name">sourcePathStartsWith</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;prefix,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>...&nbsp;morePrefixes)</span></div>
-<div class="block">Matches if the compilation unit's canonical source path (as defined by <a href="../util/ASTHelpers.html#getSourcePath(com.google.errorprone.VisitorState)"><code>ASTHelpers.getSourcePath(VisitorState)</code></a>) starts with any of the given directory prefixes.</div>
+<div class="block">Matches if the compilation unit's canonical source path (as defined by
+<a href="../util/ASTHelpers.html#getSourcePath(com.google.errorprone.VisitorState)"><code>ASTHelpers.getSourcePath(VisitorState)</code></a>) starts with any of the given directory prefixes.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>prefix</code> - the directory prefix to match (e.g. "third_party/" or "javatests/"); must not
-    start with a leading <code>/</code></dd>
+<dd><code>prefix</code> - the directory prefix to match (e.g. &quot;third_party/&quot; or &quot;javatests/&quot;); must not
+start with a leading <code>/</code></dd>
 <dt>See Also:</dt>
 <dd>
 <ul class="tag-list-long">
@@ -2800,7 +2795,8 @@ from superclasses due to <code>@Inherited</code>.</div>
 <h3>sourcePathStartsWith</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;</span>&nbsp;<span class="element-name">sourcePathStartsWith</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;prefixes)</span></div>
-<div class="block">Matches if the compilation unit's canonical source path (as defined by <a href="../util/ASTHelpers.html#getSourcePath(com.google.errorprone.VisitorState)"><code>ASTHelpers.getSourcePath(VisitorState)</code></a>) starts with any of the given directory prefixes.</div>
+<div class="block">Matches if the compilation unit's canonical source path (as defined by
+<a href="../util/ASTHelpers.html#getSourcePath(com.google.errorprone.VisitorState)"><code>ASTHelpers.getSourcePath(VisitorState)</code></a>) starts with any of the given directory prefixes.</div>
 <dl class="notes">
 <dt>See Also:</dt>
 <dd>
@@ -2817,7 +2813,8 @@ from superclasses due to <code>@Inherited</code>.</div>
 <h3>inThirdParty</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;</span>&nbsp;<span class="element-name">inThirdParty</span>()</div>
-<div class="block">Matches if the compilation unit's canonical source path (as defined by <a href="../util/ASTHelpers.html#getSourcePath(com.google.errorprone.VisitorState)"><code>ASTHelpers.getSourcePath(VisitorState)</code></a>) is located within third_party.</div>
+<div class="block">Matches if the compilation unit's canonical source path (as defined by
+<a href="../util/ASTHelpers.html#getSourcePath(com.google.errorprone.VisitorState)"><code>ASTHelpers.getSourcePath(VisitorState)</code></a>) is located within third_party.</div>
 <dl class="notes">
 <dt>See Also:</dt>
 <dd>
@@ -2843,8 +2840,9 @@ from superclasses due to <code>@Inherited</code>.</div>
 <h3>sourcePathMatches</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;</span>&nbsp;<span class="element-name">sourcePathMatches</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;pattern)</span></div>
-<div class="block">Matches if the compilation unit's canonical source path (as defined by <a href="../util/ASTHelpers.html#getSourcePath(com.google.errorprone.VisitorState)"><code>ASTHelpers.getSourcePath(VisitorState)</code></a>) matches the given path pattern (exact path ending with
-<code>.java</code>, or directory prefix ending with <code>/</code>).</div>
+<div class="block">Matches if the compilation unit's canonical source path (as defined by
+<a href="../util/ASTHelpers.html#getSourcePath(com.google.errorprone.VisitorState)"><code>ASTHelpers.getSourcePath(VisitorState)</code></a>) matches the given path pattern (exact path ending
+with <code>.java</code>, or directory prefix ending with <code>/</code>).</div>
 <dl class="notes">
 <dt>See Also:</dt>
 <dd>
@@ -2861,7 +2859,8 @@ from superclasses due to <code>@Inherited</code>.</div>
 <h3>sourcePathMatches</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;</span>&nbsp;<span class="element-name">sourcePathMatches</span><wbr><span class="parameters">(<a href="../util/SourcePathMatcher.html" title="class in com.google.errorprone.util">SourcePathMatcher</a>&nbsp;matcher)</span></div>
-<div class="block">Matches if the compilation unit's canonical source path (as defined by <a href="../util/ASTHelpers.html#getSourcePath(com.google.errorprone.VisitorState)"><code>ASTHelpers.getSourcePath(VisitorState)</code></a>) matches the given <a href="../util/SourcePathMatcher.html" title="class in com.google.errorprone.util"><code>SourcePathMatcher</code></a>.</div>
+<div class="block">Matches if the compilation unit's canonical source path (as defined by
+<a href="../util/ASTHelpers.html#getSourcePath(com.google.errorprone.VisitorState)"><code>ASTHelpers.getSourcePath(VisitorState)</code></a>) matches the given <a href="../util/SourcePathMatcher.html" title="class in com.google.errorprone.util"><code>SourcePathMatcher</code></a>.</div>
 <dl class="notes">
 <dt>See Also:</dt>
 <dd>
@@ -2896,18 +2895,16 @@ from superclasses due to <code>@Inherited</code>.</div>
 <h3>packageStartsWith</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="type-parameters">&lt;T extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;</span>&nbsp;<span class="return-type"><a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;T&gt;</span>&nbsp;<span class="element-name">packageStartsWith</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;packageName)</span></div>
-<div class="block">Matches an AST node whose compilation unit's package name equals the given package name or is a
-subpackage of the given package name.
-
-<p>For example, <code>packageStartsWith("com.google")</code> will match:
-
+<div class="block"><p>Matches an AST node whose compilation unit's package name equals the given package name or is
+a subpackage of the given package name.</p>
+<p>For example, <code>packageStartsWith(&quot;com.google&quot;)</code> will match:</p>
 <ul>
-  <li><code>com.google</code>
-  <li><code>com.google.common</code>
-  <li><code>com.google.common.collect</code>
+<li><code>com.google</code></li>
+<li><code>com.google.common</code></li>
+<li><code>com.google.common.collect</code></li>
 </ul>
-
-but it will <b>not</b> match <code>com.googlebutnotreallygoogle</code>.</div>
+<p>but it will <strong>not</strong> match <code>com.googlebutnotreallygoogle</code>.</p>
+</div>
 <dl class="notes">
 <dt>Throws:</dt>
 <dd><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/IllegalArgumentException.html" title="class or interface in java.lang" class="external-link">IllegalArgumentException</a></code> - if <code>packageName</code> is not a valid package name</dd>
@@ -2920,8 +2917,9 @@ but it will <b>not</b> match <code>com.googlebutnotreallygoogle</code>.</div>
 <h3>staticEqualsInvocation</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="type-parameters">&lt;T extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;</span>&nbsp;<span class="return-type"><a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;T&gt;</span>&nbsp;<span class="element-name">staticEqualsInvocation</span>()</div>
-<div class="block">Matches an invocation of a recognized static object equality method such as <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Objects.html#equals(java.lang.Object,java.lang.Object)" title="class or interface in java.util" class="external-link"><code>Objects.equals(Object, Object)</code></a>. These are simple facades to <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#equals(java.lang.Object)" title="class or interface in java.lang" class="external-link"><code>Object.equals(Object)</code></a> that accept null
-for either argument.</div>
+<div class="block">Matches an invocation of a recognized static object equality method such as
+<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Objects.html#equals(java.lang.Object,java.lang.Object)" title="class or interface in java.util" class="external-link"><code>Objects.equals(Object, Object)</code></a>. These are simple facades to <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#equals(java.lang.Object)" title="class or interface in java.lang" class="external-link"><code>Object.equals(Object)</code></a> that accept null for
+either argument.</div>
 </div>
 </section>
 </li>
@@ -2966,8 +2964,8 @@ for either argument.</div>
 <h3>assertEqualsInvocation</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;</span>&nbsp;<span class="element-name">assertEqualsInvocation</span>()</div>
-<div class="block">Matches calls to the method <code>org.junit.Assert#assertEquals</code> and corresponding methods in
-JUnit 3.x.</div>
+<div class="block">Matches calls to the method <code>org.junit.Assert#assertEquals</code> and corresponding methods in JUnit
+3.x.</div>
 </div>
 </section>
 </li>
@@ -2976,8 +2974,8 @@ JUnit 3.x.</div>
 <h3>assertNotEqualsInvocation</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;</span>&nbsp;<span class="element-name">assertNotEqualsInvocation</span>()</div>
-<div class="block">Matches calls to the method <code>org.junit.Assert#assertNotEquals</code> and corresponding methods
-in JUnit 3.x.</div>
+<div class="block">Matches calls to the method <code>org.junit.Assert#assertNotEquals</code> and corresponding methods in
+JUnit 3.x.</div>
 </div>
 </section>
 </li>
@@ -3031,8 +3029,7 @@ in JUnit 3.x.</div>
 <h3>matchSingleStatementBlock</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/BlockTree.html" title="class or interface in com.sun.source.tree" class="external-link">BlockTree</a>&gt;</span>&nbsp;<span class="element-name">matchSingleStatementBlock</span><wbr><span class="parameters">(<a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/StatementTree.html" title="class or interface in com.sun.source.tree" class="external-link">StatementTree</a>&gt;&nbsp;statementMatcher)</span></div>
-<div class="block">Matches a <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/BlockTree.html" title="class or interface in com.sun.source.tree" class="external-link"><code>BlockTree</code></a> if it single statement block with statement matching <code>
-statementMatcher</code>.</div>
+<div class="block">Matches a <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/BlockTree.html" title="class or interface in com.sun.source.tree" class="external-link"><code>BlockTree</code></a> if it single statement block with statement matching <code>statementMatcher</code>.</div>
 </div>
 </section>
 </li>
@@ -3041,8 +3038,8 @@ statementMatcher</code>.</div>
 <h3>singleStatementReturnMatcher</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/MethodTree.html" title="class or interface in com.sun.source.tree" class="external-link">MethodTree</a>&gt;</span>&nbsp;<span class="element-name">singleStatementReturnMatcher</span><wbr><span class="parameters">(<a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;&nbsp;expressionTreeMatcher)</span></div>
-<div class="block">Returns a matcher for <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/MethodTree.html" title="class or interface in com.sun.source.tree" class="external-link"><code>MethodTree</code></a> whose implementation contains a single return
-statement with expression matching the passed <code>expressionTreeMatcher</code>.</div>
+<div class="block">Returns a matcher for <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/MethodTree.html" title="class or interface in com.sun.source.tree" class="external-link"><code>MethodTree</code></a> whose implementation contains a single return statement
+with expression matching the passed <code>expressionTreeMatcher</code>.</div>
 </div>
 </section>
 </li>

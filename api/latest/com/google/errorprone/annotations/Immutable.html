@@ -76,50 +76,41 @@ loadScripts(document, 'script');</script>
 <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/annotation/Retention.html" title="class or interface in java.lang.annotation" class="external-link">@Retention</a>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/annotation/RetentionPolicy.html#RUNTIME" title="class or interface in java.lang.annotation" class="external-link">RUNTIME</a>)
 <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/annotation/Inherited.html" title="class or interface in java.lang.annotation" class="external-link">@Inherited</a>
 </span><span class="modifiers">public @interface </span><span class="element-name type-name-label">Immutable</span></div>
-<div class="block">The class to which this annotation is applied is immutable.
-
+<div class="block"><p>The class to which this annotation is applied is immutable.</p>
 <p>An object is immutable if its state cannot be observed to change after construction. Immutable
-objects are inherently thread-safe.
-
+objects are inherently thread-safe.</p>
 <p>A class is immutable if all instances of that class are immutable. The immutability of a class
 can only be fully guaranteed if the class is final, otherwise one must ensure all subclasses are
-also immutable.
-
-<p>A conservative definition of object immutability is:
-
+also immutable.</p>
+<p>A conservative definition of object immutability is:</p>
 <ul>
-  <li>All fields are final;
-  <li>All reference fields are of immutable type, or null;
-  <li>It is <em>properly constructed</em> (the <code>this</code> reference does not escape the
-      constructor).
+<li>All fields are final;</li>
+<li>All reference fields are of immutable type, or null;</li>
+<li>It is <em>properly constructed</em> (the <code>this</code> reference does not escape the constructor).</li>
 </ul>
-
-<p>The requirement that all reference fields be immutable ensures <em>deep</em> immutability,
-meaning all contained state is also immutable. A weaker property, common with container classes,
-is <em>shallow</em> immutability, which allows some of the object's fields to point to mutable
-objects. One example of shallow immutability is guava's ImmutableList, which may contain mutable
-elements.
-
+<p>The requirement that all reference fields be immutable ensures <em>deep</em> immutability, meaning all
+contained state is also immutable. A weaker property, common with container classes, is
+<em>shallow</em> immutability, which allows some of the object's fields to point to mutable objects.
+One example of shallow immutability is guava's ImmutableList, which may contain mutable
+elements.</p>
 <p>It is possible to implement immutable classes with some internal mutable state, as long as
 callers can never observe changes to that state. For example, some state may be lazily
-initialized to improve performance.
-
+initialized to improve performance.</p>
 <p>It is also technically possible to have an immutable object with non-final fields (see the
-implementation of <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html#hashCode()" title="class or interface in java.lang" class="external-link"><code>String.hashCode()</code></a> for an example), but doing this correctly requires
-subtle reasoning about safe data races and deep knowledge of the Java Memory Model.
-
-<p>Use of this annotation is validated by <a href="https://errorprone.info/bugpattern/Immutable">Error Prone's immutability analysis</a>,
-which ensures that all <code>@Immutable</code>-annotated classes are deeply immutable according to the
-conservative definition above. Non-final classes may be annotated with <code>@Immutable</code>, and
-any code compiled by Error Prone will be checked to ensure that no mutable subtypes of
-<code>@Immutable</code>-annotated classes exist.
-
-<p>For more information about immutability, see:
-
+implementation of <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html#hashCode()" title="class or interface in java.lang" class="external-link"><code>String.hashCode()</code></a> for an example), but doing this correctly requires subtle
+reasoning about safe data races and deep knowledge of the Java Memory Model.</p>
+<p>Use of this annotation is validated by <a href="https://errorprone.info/bugpattern/Immutable">Error Prone's immutability
+analysis</a>, which ensures that all
+<code>@Immutable</code>-annotated classes are deeply immutable according to the conservative definition
+above. Non-final classes may be annotated with <code>@Immutable</code>, and any code compiled by Error
+Prone will be checked to ensure that no mutable subtypes of <code>@Immutable</code>-annotated classes
+exist.</p>
+<p>For more information about immutability, see:</p>
 <ul>
-  <li>Java Concurrency in Practice §3.4
-  <li>Effective Java 3rd Edition §17
-</ul></div>
+<li>Java Concurrency in Practice §3.4</li>
+<li>Effective Java 3rd Edition §17</li>
+</ul>
+</div>
 </div>
 </section>
 <section class="summary">
@@ -136,8 +127,8 @@ any code compiled by Error Prone will be checked to ensure that no mutable subty
 <div class="col-first even-row-color"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>[]</code></div>
 <div class="col-second even-row-color"><code><a href="#containerOf()" class="member-name-link">containerOf</a></code></div>
 <div class="col-last even-row-color">
-<div class="block">When annotating a generic type as immutable, <code>containerOf</code> specifies which type
-parameters must be instantiated with immutable types for the container to be deeply immutable.</div>
+<div class="block">When annotating a generic type as immutable, <code>containerOf</code> specifies which type parameters
+must be instantiated with immutable types for the container to be deeply immutable.</div>
 </div>
 </div>
 </section>
@@ -156,8 +147,8 @@ parameters must be instantiated with immutable types for the container to be dee
 <h3>containerOf</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>[]</span>&nbsp;<span class="element-name">containerOf</span></div>
-<div class="block">When annotating a generic type as immutable, <code>containerOf</code> specifies which type
-parameters must be instantiated with immutable types for the container to be deeply immutable.</div>
+<div class="block">When annotating a generic type as immutable, <code>containerOf</code> specifies which type parameters
+must be instantiated with immutable types for the container to be deeply immutable.</div>
 <dl class="notes">
 <dt>Default:</dt>
 <dd><code>{}</code></dd>

@@ -90,12 +90,12 @@ loadScripts(document, 'script');</script>
 <div class="type-signature"><span class="modifiers">public final class </span><span class="element-name type-name-label">FromTemporalAccessor</span>
 <span class="extends-implements">extends <a href="../BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a>
 implements <a href="../BugChecker.MethodInvocationTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MethodInvocationTreeMatcher</a></span></div>
-<div class="block">Bans calls to <code>javaTimeType.from(temporalAmount)</code> where the call is guaranteed to either:
-
+<div class="block"><p>Bans calls to <code>javaTimeType.from(temporalAmount)</code> where the call is guaranteed to either:</p>
 <ul>
-  <li>throw a <code>DateTimeException</code> at runtime (e.g., <code>LocalDate.from(month)</code>)
-  <li>return the same parameter (e.g., <code>Instant.from(instant)</code>)
-</ul></div>
+<li>throw a <code>DateTimeException</code> at runtime (e.g., <code>LocalDate.from(month)</code>)</li>
+<li>return the same parameter (e.g., <code>Instant.from(instant)</code>)</li>
+</ul>
+</div>
 <dl class="notes">
 <dt>Author:</dt>
 <dd>kak@google.com (Kurt Alfred Kluever)</dd>

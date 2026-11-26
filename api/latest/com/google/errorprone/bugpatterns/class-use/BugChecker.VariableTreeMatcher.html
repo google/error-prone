@@ -71,7 +71,8 @@ loadScripts(document, 'script');</script>
 <div class="col-first odd-row-color"><a href="#com.google.errorprone.bugpatterns.inject">com.google.errorprone.bugpatterns.inject</a></div>
 <div class="col-last odd-row-color">
 <div class="block">Bug patterns related to <a href="https://en.wikipedia.org/wiki/Dependency_injection">dependency
-injection</a> and <a href="https://jcp.org/en/jsr/detail?id=330">JSR 330</a>.</div>
+injection</a> and [JSR
+330](https://jcp.org/en/jsr/detail?</div>
 </div>
 <div class="col-first even-row-color"><a href="#com.google.errorprone.bugpatterns.inject.guice">com.google.errorprone.bugpatterns.inject.guice</a></div>
 <div class="col-last even-row-color">
@@ -236,8 +237,8 @@ if possible.</div>
 <div class="col-first odd-row-color"><code>final class&nbsp;</code></div>
 <div class="col-second odd-row-color"><code><a href="../NullableOptional.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">NullableOptional</a></code></div>
 <div class="col-last odd-row-color">
-<div class="block">A Checker that catches <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link"><code>Optional</code></a>/<code>Optional</code> with
-<code>Nullable</code> annotation.</div>
+<div class="block">A Checker that catches <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link"><code>Optional</code></a>/<code>Optional</code> with <code>Nullable</code>
+annotation.</div>
 </div>
 <div class="col-first even-row-color"><code>class&nbsp;</code></div>
 <div class="col-second even-row-color"><code><a href="../SelfAssignment.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">SelfAssignment</a></code></div>
@@ -365,8 +366,8 @@ if possible.</div>
 <div class="col-first even-row-color"><code>class&nbsp;</code></div>
 <div class="col-second even-row-color"><code><a href="../inject/MisplacedScopeAnnotations.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.inject">MisplacedScopeAnnotations</a></code></div>
 <div class="col-last even-row-color">
-<div class="block">Bug checker for when a scope annotation is used at injection site, which does not have any effect
-on the injected values.</div>
+<div class="block">Bug checker for when a scope annotation is used at injection site, which does not have any
+effect on the injected values.</div>
 </div>
 </div>
 </section>
@@ -396,8 +397,7 @@ on the injected values.</div>
 <div class="col-first even-row-color"><code>final class&nbsp;</code></div>
 <div class="col-second even-row-color"><code><a href="../javadoc/EmptyBlockTag.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.javadoc">EmptyBlockTag</a></code></div>
 <div class="col-last even-row-color">
-<div class="block">Matches block tags (@param, @return, @throws,
-@deprecated) with an empty description.</div>
+<div class="block">Matches block tags (<code>@param</code>, <code>@return</code>, <code>@throws</code>, <code>@deprecated</code>) with an empty description.</div>
 </div>
 <div class="col-first odd-row-color"><code>final class&nbsp;</code></div>
 <div class="col-second odd-row-color"><code><a href="../javadoc/EscapedEntity.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.javadoc">EscapedEntity</a></code></div>
@@ -407,7 +407,7 @@ on the injected values.</div>
 <div class="col-first even-row-color"><code>final class&nbsp;</code></div>
 <div class="col-second even-row-color"><code><a href="../javadoc/InheritDoc.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.javadoc">InheritDoc</a></code></div>
 <div class="col-last even-row-color">
-<div class="block">Matches invalid usage of @inheritDoc.</div>
+<div class="block">Matches invalid usage of <code>{@inheritDoc}</code>.</div>
 </div>
 <div class="col-first odd-row-color"><code>final class&nbsp;</code></div>
 <div class="col-second odd-row-color"><code><a href="../javadoc/InvalidBlockTag.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.javadoc">InvalidBlockTag</a></code></div>
@@ -422,7 +422,7 @@ on the injected values.</div>
 <div class="col-first odd-row-color"><code>final class&nbsp;</code></div>
 <div class="col-second odd-row-color"><code><a href="../javadoc/InvalidLink.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.javadoc">InvalidLink</a></code></div>
 <div class="col-last odd-row-color">
-<div class="block">Finds some common errors in @link tags.</div>
+<div class="block">Finds some common errors in <code>@link</code> tags.</div>
 </div>
 <div class="col-first even-row-color"><code>final class&nbsp;</code></div>
 <div class="col-second even-row-color"><code><a href="../javadoc/InvalidSnippet.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.javadoc">InvalidSnippet</a></code></div>
@@ -432,7 +432,7 @@ on the injected values.</div>
 <div class="col-first odd-row-color"><code>final class&nbsp;</code></div>
 <div class="col-second odd-row-color"><code><a href="../javadoc/MalformedInlineTag.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.javadoc">MalformedInlineTag</a></code></div>
 <div class="col-last odd-row-color">
-<div class="block">Finds malformed inline tags where @{tag is used instead of {@tag.</div>
+<div class="block">Finds malformed inline tags where <code>@{tag</code> is used instead of <code>{@tag</code>.</div>
 </div>
 <div class="col-first even-row-color"><code>final class&nbsp;</code></div>
 <div class="col-second even-row-color"><code><a href="../javadoc/MissingSummary.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.javadoc">MissingSummary</a></code></div>
@@ -457,7 +457,7 @@ on the injected values.</div>
 <div class="col-first even-row-color"><code>final class&nbsp;</code></div>
 <div class="col-second even-row-color"><code><a href="../javadoc/UrlInSee.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.javadoc">UrlInSee</a></code></div>
 <div class="col-last even-row-color">
-<div class="block">Discourages using URLs in @see tags.</div>
+<div class="block">Discourages using URLs in <code>@see</code> tags.</div>
 </div>
 </div>
 </section>

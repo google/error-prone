@@ -102,7 +102,8 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color"><code>static enum&nbsp;</code></div>
 <div class="col-second even-row-color"><code><a href="Reachability.CanCompleteNormallyPatch.html" class="type-name-link" title="enum class in com.google.errorprone.util">Reachability.CanCompleteNormallyPatch</a></code></div>
 <div class="col-last even-row-color">
-<div class="block">A replacement for the completion result of one tree, for <a href="#canCompleteNormally(com.sun.source.tree.StatementTree,com.google.common.collect.ImmutableMap)"><code>canCompleteNormally(StatementTree, ImmutableMap)</code></a>.</div>
+<div class="block">A replacement for the completion result of one tree, passed to
+<a href="#canCompleteNormally(com.sun.source.tree.StatementTree,com.google.common.collect.ImmutableMap)"><code>canCompleteNormally(StatementTree, ImmutableMap)</code></a>.</div>
 </div>
 </div>
 </section>
@@ -140,8 +141,8 @@ loadScripts(document, 'script');</script>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#canCompleteNormally(com.sun.source.tree.StatementTree,com.google.common.collect.ImmutableMap)" class="member-name-link">canCompleteNormally</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/StatementTree.html" title="class or interface in com.sun.source.tree" class="external-link">StatementTree</a>&nbsp;statement,
  com.google.common.collect.ImmutableMap&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>, <a href="Reachability.CanCompleteNormallyPatch.html" title="enum class in com.google.errorprone.util">Reachability.CanCompleteNormallyPatch</a>&gt;&nbsp;patches)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Returns whether the given statement can complete normally, as defined by JLS 14.21, when taking
-into account the given <code>patches</code>.</div>
+<div class="block">Returns whether the given statement can complete normally, as defined by JLS 14.21, when
+taking into account the given <code>patches</code>.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#canFallThrough(com.sun.source.tree.CaseTree)" class="member-name-link">canFallThrough</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/CaseTree.html" title="class or interface in com.sun.source.tree" class="external-link">CaseTree</a>&nbsp;caseTree)</code></div>
@@ -186,9 +187,9 @@ into account the given <code>patches</code>.</div>
 <h3>canCompleteNormally</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">canCompleteNormally</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/StatementTree.html" title="class or interface in com.sun.source.tree" class="external-link">StatementTree</a>&nbsp;statement)</span></div>
-<div class="block">Returns true if the given statement can complete normally, as defined by JLS 14.21.
-
-<p>An exception is made for <code>System.exit</code>, which cannot complete normally in practice.</div>
+<div class="block"><p>Returns true if the given statement can complete normally, as defined by JLS 14.21.</p>
+<p>An exception is made for <code>System.exit</code>, which cannot complete normally in practice.</p>
+</div>
 </div>
 </section>
 </li>
@@ -198,12 +199,12 @@ into account the given <code>patches</code>.</div>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">canCompleteNormally</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/StatementTree.html" title="class or interface in com.sun.source.tree" class="external-link">StatementTree</a>&nbsp;statement,
  com.google.common.collect.ImmutableMap&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>, <a href="Reachability.CanCompleteNormallyPatch.html" title="enum class in com.google.errorprone.util">Reachability.CanCompleteNormallyPatch</a>&gt;&nbsp;patches)</span></div>
-<div class="block">Returns whether the given statement can complete normally, as defined by JLS 14.21, when taking
-into account the given <code>patches</code>. The patches are a (possibly empty) map from <code>
-Tree</code> to a <a href="Reachability.CanCompleteNormallyPatch.html" title="enum class in com.google.errorprone.util"><code>Reachability.CanCompleteNormallyPatch</code></a>. All relevant tree(s) not present in the patches
-will be analyzed as per the JLS.
-
-<p>An exception is made for <code>System.exit</code>, which cannot complete normally in practice.</div>
+<div class="block"><p>Returns whether the given statement can complete normally, as defined by JLS 14.21, when
+taking into account the given <code>patches</code>. The patches are a (possibly empty) map from <code>Tree</code> to
+a <a href="Reachability.CanCompleteNormallyPatch.html" title="enum class in com.google.errorprone.util"><code>Reachability.CanCompleteNormallyPatch</code></a>. All relevant tree(s) not present in the patches will be analyzed
+as per the JLS.</p>
+<p>An exception is made for <code>System.exit</code>, which cannot complete normally in practice.</p>
+</div>
 </div>
 </section>
 </li>
@@ -212,9 +213,9 @@ will be analyzed as per the JLS.
 <h3>canFallThrough</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">canFallThrough</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/CaseTree.html" title="class or interface in com.sun.source.tree" class="external-link">CaseTree</a>&nbsp;caseTree)</span></div>
-<div class="block">Returns true if the given case tree can fall through to the next case tree.
-
-<p>An exception is made for <code>System.exit</code>, which cannot complete normally in practice.</div>
+<div class="block"><p>Returns true if the given case tree can fall through to the next case tree.</p>
+<p>An exception is made for <code>System.exit</code>, which cannot complete normally in practice.</p>
+</div>
 </div>
 </section>
 </li>

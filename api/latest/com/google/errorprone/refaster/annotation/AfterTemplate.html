@@ -68,10 +68,11 @@ loadScripts(document, 'script');</script>
 <div class="type-signature"><span class="annotations"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/annotation/Target.html" title="class or interface in java.lang.annotation" class="external-link">@Target</a>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/annotation/ElementType.html#METHOD" title="class or interface in java.lang.annotation" class="external-link">METHOD</a>)
 <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/annotation/Retention.html" title="class or interface in java.lang.annotation" class="external-link">@Retention</a>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/annotation/RetentionPolicy.html#SOURCE" title="class or interface in java.lang.annotation" class="external-link">SOURCE</a>)
 </span><span class="modifiers">public @interface </span><span class="element-name type-name-label">AfterTemplate</span></div>
-<div class="block">Desired "after" version of a refactoring. Corresponds to a matching method annotated with <a href="BeforeTemplate.html" title="annotation interface in com.google.errorprone.refaster.annotation"><code>BeforeTemplate</code></a>.
-
-<p>Multiple <code>@AfterTemplate</code>s can be provided. This is useful in Tricorder findings, where
-multiple suggestions can be presented to the user.</div>
+<div class="block"><p>Desired &quot;after&quot; version of a refactoring. Corresponds to a matching method annotated with
+<a href="BeforeTemplate.html" title="annotation interface in com.google.errorprone.refaster.annotation"><code>BeforeTemplate</code></a>.</p>
+<p>Multiple <code>@AfterTemplate</code>s can be provided. This is useful in Tricorder findings, where multiple
+suggestions can be presented to the user.</p>
+</div>
 <dl class="notes">
 <dt>Author:</dt>
 <dd>lowasser@google.com (Louis Wasserman)</dd>

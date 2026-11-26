@@ -86,22 +86,19 @@ loadScripts(document, 'script');</script>
 <div class="horizontal-scroll">
 <div class="type-signature"><span class="modifiers">public final class </span><span class="element-name type-name-label">SideEffectAnalysis</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/util/TreeScanner.html" title="class or interface in com.sun.source.util" class="external-link">TreeScanner</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Void.html" title="class or interface in java.lang" class="external-link">Void</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Void.html" title="class or interface in java.lang" class="external-link">Void</a>&gt;</span></div>
-<div class="block">This class is responsible for analyzing an expression and telling if the expression can have side
-effects. This class is used by calling the static <a href="#hasSideEffect(com.sun.source.tree.ExpressionTree)"><code>hasSideEffect(ExpressionTree)</code></a> method.
-
+<div class="block"><p>This class is responsible for analyzing an expression and telling if the expression can have
+side effects. This class is used by calling the static <a href="#hasSideEffect(com.sun.source.tree.ExpressionTree)"><code>hasSideEffect(ExpressionTree)</code></a> method.</p>
 <p>A side-effect is what that would change the state of the program. Here are examples of
-expressions that could possibly change the state of a program.
-
+expressions that could possibly change the state of a program.</p>
 <ul>
-  <li>Any function call: toString(), hashCode(), setX(value), etc.
-  <li>Unary expression: i += 1, i++, --j
-  <li>New expression: new SomeClass()
+<li>Any function call: toString(), hashCode(), setX(value), etc.</li>
+<li>Unary expression: i += 1, i++, --j</li>
+<li>New expression: new SomeClass()</li>
 </ul>
-
-<p>Everything besides the above examples is considered side-effect free.
-
+<p>Everything besides the above examples is considered side-effect free.</p>
 <p>The analysis in this class initially assumes that the expression is side-effect free and then
-tries to prove it wrong.</div>
+tries to prove it wrong.</p>
+</div>
 </div>
 </section>
 <section class="summary">

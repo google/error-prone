@@ -139,8 +139,7 @@ loadScripts(document, 'script');</script>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static @Nullable <a href="TargetType.html" title="class in com.google.errorprone.util">TargetType</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#targetType(com.google.errorprone.VisitorState)" class="member-name-link">targetType</a><wbr>(<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Returns the target type of the tree at the given <a href="../VisitorState.html" title="class in com.google.errorprone"><code>VisitorState</code></a>'s path, or else <code>
-null</code>.</div>
+<div class="block">Returns the target type of the tree at the given <a href="../VisitorState.html" title="class in com.google.errorprone"><code>VisitorState</code></a>'s path, or else <code>null</code>.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#toString()" class="member-name-link">toString</a>()</code></div>
@@ -197,14 +196,12 @@ null</code>.</div>
 <h3>targetType</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">@Nullable <a href="TargetType.html" title="class in com.google.errorprone.util">TargetType</a></span>&nbsp;<span class="element-name">targetType</span><wbr><span class="parameters">(<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
-<div class="block">Returns the target type of the tree at the given <a href="../VisitorState.html" title="class in com.google.errorprone"><code>VisitorState</code></a>'s path, or else <code>
-null</code>.
-
+<div class="block"><p>Returns the target type of the tree at the given <a href="../VisitorState.html" title="class in com.google.errorprone"><code>VisitorState</code></a>'s path, or else <code>null</code>.</p>
 <p>For example, the target type of an assignment expression is the variable's type, and the
-target type of a return statement is the enclosing method's type.
-
-<p>A general mental model is that the target type of an expression where the value is used is
-the highest supertype that you could cast to and still have this compile.</div>
+target type of a return statement is the enclosing method's type.</p>
+<p>A general mental model is that the target type of an expression where the value is used is the
+highest supertype that you could cast to and still have this compile.</p>
+</div>
 </div>
 </section>
 </li>

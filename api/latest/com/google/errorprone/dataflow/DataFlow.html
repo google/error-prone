@@ -119,8 +119,8 @@ loadScripts(document, 'script');</script>
  com.sun.tools.javac.util.Context&nbsp;context,
  T&nbsp;transfer)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Runs the <code>transfer</code> dataflow analysis to compute the abstract value of the expression
-which is the leaf of <code>exprPath</code>.</div>
+<div class="block">Runs the <code>transfer</code> dataflow analysis to compute the abstract value of the expression which is
+the leaf of <code>exprPath</code>.</div>
 </div>
 </div>
 </div>
@@ -147,19 +147,18 @@ which is the leaf of <code>exprPath</code>.</div>
 <span class="return-type">@Nullable A</span>&nbsp;<span class="element-name">expressionDataflow</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/util/TreePath.html" title="class or interface in com.sun.source.util" class="external-link">TreePath</a>&nbsp;exprPath,
  com.sun.tools.javac.util.Context&nbsp;context,
  T&nbsp;transfer)</span></div>
-<div class="block">Runs the <code>transfer</code> dataflow analysis to compute the abstract value of the expression
-which is the leaf of <code>exprPath</code>.
-
+<div class="block"><p>Runs the <code>transfer</code> dataflow analysis to compute the abstract value of the expression which is
+the leaf of <code>exprPath</code>.</p>
 <p>The expression must be part of a method, lambda, or initializer (inline field initializer or
-initializer block). Example of an expression outside of such constructs is the identifier in an
-import statement.
-
+initializer block). Example of an expression outside of such constructs is the identifier in
+an import statement.</p>
 <p>Note that for initializers, each inline field initializer or initializer block is treated
-separately. I.e., we don't merge all initializers into one virtual block for dataflow.</div>
+separately. I.e., we don't merge all initializers into one virtual block for dataflow.</p>
+</div>
 <dl class="notes">
 <dt>Returns:</dt>
-<dd>dataflow result for the given expression or <code>null</code> if the expression is not part
-    of a method, lambda or initializer</dd>
+<dd>dataflow result for the given expression or <code>null</code> if the expression is not part of a
+method, lambda or initializer</dd>
 </dl>
 </div>
 </section>

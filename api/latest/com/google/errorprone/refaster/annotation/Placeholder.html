@@ -74,12 +74,10 @@ loadScripts(document, 'script');</script>
 <div class="type-signature"><span class="annotations"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/annotation/Target.html" title="class or interface in java.lang.annotation" class="external-link">@Target</a>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/annotation/ElementType.html#METHOD" title="class or interface in java.lang.annotation" class="external-link">METHOD</a>)
 <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/annotation/Retention.html" title="class or interface in java.lang.annotation" class="external-link">@Retention</a>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/annotation/RetentionPolicy.html#SOURCE" title="class or interface in java.lang.annotation" class="external-link">SOURCE</a>)
 </span><span class="modifiers">public @interface </span><span class="element-name type-name-label">Placeholder</span></div>
-<div class="block">Annotation to indicate a placeholder method.
-
+<div class="block"><p>Annotation to indicate a placeholder method.</p>
 <p>A placeholder method is an abstract method in a Refaster template class which can represent an
 arbitrary expression (if the return type is nonvoid), or zero or more statements (if the return
-type is void), in terms of its arguments. For example,
-
+type is void), in terms of its arguments. For example,</p>
 <pre><code>abstract class ComputeIfAbsent&lt;K, V&gt; {
  @Placeholder abstract V computeValue(K key);
 
@@ -95,13 +93,9 @@ type is void), in terms of its arguments. For example,
   }
 }
 </code></pre>
-
 <p>Here, <code>computeValue</code> represents an arbitrary expression in terms of <code>key</code>, and the
-<code>@AfterTemplate</code> rewrites that same expression in terms of the parameter of a lambda
-expression.
-
-<p>For a multi-line example, consider
-
+<code>@AfterTemplate</code> rewrites that same expression in terms of the parameter of a lambda expression.</p>
+<p>For a multi-line example, consider</p>
 <pre><code>abstract class TryWithResources&lt;T extends AutoCloseable&gt; {
  @Placeholder abstract T open();
  @Placeholder void process(T resource);
@@ -122,18 +116,16 @@ expression.
   }
 }
 </code></pre>
-
-<p>Here, <code>process</code> is any block, though it must refer to <code>resource</code> in some way; it
-is not permitted to reassign the contents of <code>resource</code>.
-
+<p>Here, <code>process</code> is any block, though it must refer to <code>resource</code> in some way; it is not
+permitted to reassign the contents of <code>resource</code>.</p>
 <p>Placeholder methods are not permitted to refer to any local variables or parameters of the
-<code>@BeforeTemplate</code> that are not passed to them as arguments. Additionally, they
-<em>must</em> contain references to all arguments that <em>are</em> passed to them -- except
-those corresponding to parameters annotated with <a href="MayOptionallyUse.html" title="annotation interface in com.google.errorprone.refaster.annotation"><code>MayOptionallyUse</code></a>.
-
-<p>Note that <a href="Matches.html" title="annotation interface in com.google.errorprone.refaster.annotation"><code>Matches</code></a> and <a href="NotMatches.html" title="annotation interface in com.google.errorprone.refaster.annotation"><code>NotMatches</code></a> can be applied to placeholder methods, but,
-<strong>and this is a serious health warning</strong>, those predicates will only be matched if
-the placeholder method is used as an <em>expression</em>, not a <em>statement</em>.</div>
+<code>@BeforeTemplate</code> that are not passed to them as arguments. Additionally, they <em>must</em> contain
+references to all arguments that <em>are</em> passed to them -- except those corresponding to
+parameters annotated with <a href="MayOptionallyUse.html" title="annotation interface in com.google.errorprone.refaster.annotation"><code>MayOptionallyUse</code></a>.</p>
+<p>Note that <a href="Matches.html" title="annotation interface in com.google.errorprone.refaster.annotation"><code>Matches</code></a> and <a href="NotMatches.html" title="annotation interface in com.google.errorprone.refaster.annotation"><code>NotMatches</code></a> can be applied to placeholder methods, but, <strong>and this is a
+serious health warning</strong>, those predicates will only be matched if the placeholder method is
+used as an <em>expression</em>, not a <em>statement</em>.</p>
+</div>
 <dl class="notes">
 <dt>Author:</dt>
 <dd>lowasser@google.com (Louis Wasserman)</dd>

@@ -87,13 +87,13 @@ loadScripts(document, 'script');</script>
 <a href="annotations/CheckReturnValue.html" title="annotation interface in com.google.errorprone.annotations">@CheckReturnValue</a>
 </span><span class="modifiers">public final class </span><span class="element-name type-name-label">SuppressionInfo</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
-<div class="block">Immutable container of "suppression signals" - annotations or other information gathered from
-source - that can be used to determine if a specific <a href="matchers/Suppressible.html" title="interface in com.google.errorprone.matchers"><code>Suppressible</code></a> object should be
-considered suppressed.
-
-<p>SuppressionInfo instances are obtained by starting with the <a href="#EMPTY"><code>EMPTY</code></a> instance, then
-getting new instances by calling <a href="#withExtendedSuppressions(com.sun.tools.javac.code.Symbol,com.google.errorprone.VisitorState,java.util.Set)"><code>withExtendedSuppressions(Symbol, VisitorState, Set)</code></a> with symbols discovered as you
-descend a program tree.</div>
+<div class="block"><p>Immutable container of &quot;suppression signals&quot; - annotations or other information gathered from
+source - that can be used to determine if a specific <a href="matchers/Suppressible.html" title="interface in com.google.errorprone.matchers"><code>Suppressible</code></a> object should be considered
+suppressed.</p>
+<p>SuppressionInfo instances are obtained by starting with the <a href="#EMPTY"><code>EMPTY</code></a> instance, then getting new
+instances by calling <a href="#withExtendedSuppressions(com.sun.tools.javac.code.Symbol,com.google.errorprone.VisitorState,java.util.Set)"><code>withExtendedSuppressions(Symbol, VisitorState, Set)</code></a> with symbols discovered as you descend a
+program tree.</p>
+</div>
 </div>
 </section>
 <section class="summary">
@@ -230,20 +230,19 @@ matchers on <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.comp
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="SuppressionInfo.html" title="class in com.google.errorprone">SuppressionInfo</a></span>&nbsp;<span class="element-name">withExtendedSuppressions</span><wbr><span class="parameters">(com.sun.tools.javac.code.Symbol&nbsp;sym,
  <a href="VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;? extends com.sun.tools.javac.util.Name&gt;&nbsp;customSuppressionAnnosToLookFor)</span></div>
-<div class="block">Returns an instance of <code>SuppressionInfo</code> that takes into account any suppression signals
-present on <code>sym</code> as well as those already stored in <code>this</code>.
-
-<p>Checks suppressions for any <code>@SuppressWarnings</code>, Android's <code>SuppressLint</code>, and
-custom suppression annotations described by <code>customSuppressionAnnosToLookFor</code>.
-
+<div class="block"><p>Returns an instance of <code>SuppressionInfo</code> that takes into account any suppression signals
+present on <code>sym</code> as well as those already stored in <code>this</code>.</p>
+<p>Checks suppressions for any <code>@SuppressWarnings</code>, Android's <code>SuppressLint</code>, and custom
+suppression annotations described by <code>customSuppressionAnnosToLookFor</code>.</p>
 <p>We do not modify the existing suppression sets, so they can be restored when moving up the
 tree. We also avoid copying the suppression sets if the next node to explore does not have any
-suppressed warnings or custom suppression annotations. This is the common case.</div>
+suppressed warnings or custom suppression annotations. This is the common case.</p>
+</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>sym</code> - The <code>Symbol</code> for the AST node currently being scanned</dd>
-<dd><code>state</code> - VisitorState for checking the current tree, as well as for getting the <code>
-    SuppressWarnings symbol type</code>.</dd>
+<dd><code>state</code> - VisitorState for checking the current tree, as well as for getting the
+<code>SuppressWarnings symbol type</code>.</dd>
 </dl>
 </div>
 </section>

@@ -238,14 +238,14 @@ classpath of the test execution.</div>
 <div class="member-signature"><span class="annotations"><a href="annotations/CanIgnoreReturnValue.html" title="annotation interface in com.google.errorprone.annotations">@CanIgnoreReturnValue</a>
 </span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="CompilationTestHelper.html" title="class in com.google.errorprone">CompilationTestHelper</a></span>&nbsp;<span class="element-name">addSourceLines</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;path,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>...&nbsp;lines)</span></div>
-<div class="block">Adds a source file to the test compilation, from the string content of the file.
-
-<p>The diagnostics expected from compiling the file are inferred from the file contents. For
-each line of the test file that contains the bug marker pattern "// BUG: Diagnostic contains:
-foo", we expect to see a diagnostic on that line containing "foo". For each line of the test
-file that does <i>not</i> contain the bug marker pattern, we expect no diagnostic to be
-generated. You can also use "// BUG: Diagnostic matches: X" in tandem with <code>
-expectErrorMessage("X", "foo")</code> to allow you to programmatically construct the error message.</div>
+<div class="block"><p>Adds a source file to the test compilation, from the string content of the file.</p>
+<p>The diagnostics expected from compiling the file are inferred from the file contents. For each
+line of the test file that contains the bug marker pattern &quot;// BUG: Diagnostic contains: foo&quot;,
+we expect to see a diagnostic on that line containing &quot;foo&quot;. For each line of the test file
+that does <em>not</em> contain the bug marker pattern, we expect no diagnostic to be generated. You
+can also use &quot;// BUG: Diagnostic matches: X&quot; in tandem with <code>expectErrorMessage(&quot;X&quot;, &quot;foo&quot;)</code>
+to allow you to programmatically construct the error message.</p>
+</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>path</code> - a path for the source file</dd>
@@ -262,16 +262,15 @@ expectErrorMessage("X", "foo")</code> to allow you to programmatically construct
 <a href="annotations/CanIgnoreReturnValue.html" title="annotation interface in com.google.errorprone.annotations">@CanIgnoreReturnValue</a>
 </span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="CompilationTestHelper.html" title="class in com.google.errorprone">CompilationTestHelper</a></span>&nbsp;<span class="element-name">addSourceFile</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;path)</span></div>
 <div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
-<div class="deprecation-comment">prefer <a href="#addSourceLines(java.lang.String,java.lang.String...)"><code>addSourceLines(String, String...)</code></a>. Declaring tests in the same file using text blocks
-    is more readable, as it encourages writing small, focussed tests.</div>
+<div class="deprecation-comment">prefer <a href="#addSourceLines(java.lang.String,java.lang.String...)"><code>addSourceLines(String, String...)</code></a>. Declaring tests in the same file using text blocks is
+more readable, as it encourages writing small, focussed tests.</div>
 </div>
-<div class="block">Adds a source file to the test compilation, from an existing resource file.
-
-<p>See <a href="#addSourceLines(java.lang.String,java.lang.String...)"><code>addSourceLines(String, String...)</code></a> for how expected diagnostics should be specified.
-
+<div class="block"><p>Adds a source file to the test compilation, from an existing resource file.</p>
+<p>See <a href="#addSourceLines(java.lang.String,java.lang.String...)"><code>addSourceLines(String, String...)</code></a> for how expected diagnostics should be specified.</p>
 <p>For most uses, <a href="#addSourceLines(java.lang.String,java.lang.String...)"><code>addSourceLines(String, String...)</code></a> is preferred. Using separate source files to denote
 positive/negative examples tends to bloat individual tests. Prefer writing smaller tests using
-<a href="#addSourceLines(java.lang.String,java.lang.String...)"><code>addSourceLines(String, String...)</code></a> which test a single behaviour in isolation.</div>
+<a href="#addSourceLines(java.lang.String,java.lang.String...)"><code>addSourceLines(String, String...)</code></a> which test a single behaviour in isolation.</p>
+</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>path</code> - the path to the source file</dd>
@@ -343,8 +342,8 @@ compilation arguments.</div>
 <div class="member-signature"><span class="annotations"><a href="annotations/CanIgnoreReturnValue.html" title="annotation interface in com.google.errorprone.annotations">@CanIgnoreReturnValue</a>
 </span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="CompilationTestHelper.html" title="class in com.google.errorprone">CompilationTestHelper</a></span>&nbsp;<span class="element-name">expectNoDiagnostics</span>()</div>
 <div class="block">Tells the compilation helper to expect that no diagnostics will be generated, even if the
-source file contains bug markers. Useful for testing that a check is actually disabled when the
-proper command-line argument is passed.</div>
+source file contains bug markers. Useful for testing that a check is actually disabled when
+the proper command-line argument is passed.</div>
 </div>
 </section>
 </li>
@@ -378,18 +377,14 @@ failure.</div>
 <div class="member-signature"><span class="annotations"><a href="annotations/CanIgnoreReturnValue.html" title="annotation interface in com.google.errorprone.annotations">@CanIgnoreReturnValue</a>
 </span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="CompilationTestHelper.html" title="class in com.google.errorprone">CompilationTestHelper</a></span>&nbsp;<span class="element-name">expectErrorMessage</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;key,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Predicate.html" title="class or interface in java.util.function" class="external-link">Predicate</a>&lt;? super <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;matcher)</span></div>
-<div class="block">Expects an error message matching <code>matcher</code> at the line below a comment matching the key.
-For example, given the source
-
-<pre>
-  // BUG: Diagnostic matches: X
+<div class="block"><p>Expects an error message matching <code>matcher</code> at the line below a comment matching the key. For
+example, given the source</p>
+<pre><code>  // BUG: Diagnostic matches: X
   a = b + c;
-</pre>
-
-... you can use <code>expectErrorMessage("X", Predicates.containsPattern("Can't add b to
-c"));</code>
-
-<p>Error message keys that don't match any diagnostics will cause test to fail.</div>
+</code></pre>
+<p>... you can use <code>expectErrorMessage(&quot;X&quot;, Predicates.containsPattern(&quot;Can't add b to c&quot;));</code></p>
+<p>Error message keys that don't match any diagnostics will cause test to fail.</p>
+</div>
 </div>
 </section>
 </li>
