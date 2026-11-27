@@ -3989,25 +3989,25 @@ public final class TraditionalJavadocToMarkdownTest {
             "Test.java",
             """
             public class Test {
-              /// (\\`foo/<stage>/<outcome>/<reason>`and`foo/<stage>/<outcome>/<reason>/users\\`)
+              /// (\\`foo/<stage>/<outcome>/<reason>\\` and \\`foo/<stage>/<outcome>/<reason>/users\\`)
               int acrossUnknownTags;
 
-              /// Use `foo`, \\`bar *baz*`, and `qux\\`.
+              /// Use `foo`, \\`bar *baz*\\`, and `qux`.
               int acrossEmphasis;
 
-              /// (`"a"` or \\`"b c"`). Defaults to `"a"\\` when blank.
+              /// (`"a"` or `"b c"`). Defaults to `"a"` when blank.
               int acrossLineBreak;
 
-              /// \\`foo `bar`<code>and</code>baz\\`.
+              /// \\`foo `bar`\\` and `baz`.
               int acrossInlineTag;
 
-              /// \\`a&lt;b`and`c\\`.
+              /// \\`a&lt;b\\` and `c`.
               int acrossEntity;
 
-              /// # \\`foo *bar*`and`baz\\`.
+              /// # \\`foo *bar*\\` and `baz`.
               static class InHeading {}
 
-              /// {@summary \\`foo *bar*`and`baz\\`.}
+              /// {@summary \\`foo *bar*\\` and `baz`.}
               int inInlineTag;
             }
             """)
@@ -4078,19 +4078,19 @@ public final class TraditionalJavadocToMarkdownTest {
               /// **`foo` bar** and **`foo` bar**.
               int duplicateEqualContainers;
 
-              /** ` ` and `foo`. */
+              /// \\` \\` and `foo`.
               int blankAcrossLineBreak;
 
-              /** ` foo ` */
+              /// `foo`
               int paddedAcrossLineBreak;
 
-              /// \\`\\`a `b` *c*\\`\\` and `d`.
+              /// \\`\\`a \\`b\\` *c*\\`\\` and `d`.
               int multiBacktickAcrossHtml;
 
               /// \\`a **b\\` c** and `d`.
               int openOutsideCloseInside;
 
-              /// **a \\`b** c`and`d\\`.
+              /// **a \\`b** c\\` and `d`.
               int openInsideCloseOutside;
             }
             """)

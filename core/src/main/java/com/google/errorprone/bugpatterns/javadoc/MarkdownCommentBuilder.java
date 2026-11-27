@@ -83,7 +83,9 @@ import com.sun.source.util.DocTrees;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
+import java.util.IdentityHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.regex.Pattern;
@@ -623,7 +625,7 @@ final class MarkdownCommentBuilder {
     private void flushParagraph() {
       pendingNewlines = 0;
       pendingHoistedSpace = false;
-      ImmutableList<Inline> paragraph = finishInlines(inlines);
+      ImmutableList<Inline> paragraph = resolveBacktickPairs(finishInlines(inlines));
       inlines.clear();
       if (!paragraph.isEmpty()) {
         blocks.add(new Paragraph(paragraph));
@@ -641,7 +643,7 @@ final class MarkdownCommentBuilder {
           line = WHITESPACE.trimLeadingFrom(line);
         }
         if (!line.isEmpty()) {
-          addInlines(splitBacktickPairs(line));
+          addInline(new Text(line));
         }
       }
     }
@@ -852,7 +854,9 @@ final class MarkdownCommentBuilder {
         singleLine.add(inline instanceof SoftBreak ? new Text(" ") : inline);
       }
       int level = heading.name().charAt(1) - '0';
-      return new Heading(Math.max(1, level - minHeadingLevel + 1), finishInlines(singleLine));
+      return new Heading(
+          Math.max(1, level - minHeadingLevel + 1),
+          resolveBacktickPairs(finishInlines(singleLine)));
     }
 
     private void lowerEmphasis(Element element, boolean strong)
@@ -1217,65 +1221,214 @@ final class MarkdownCommentBuilder {
     return false;
   }
 
-  /// Splits text into [Text] and [Code] nodes, treating pairs of backticks as code spans.
-  ///
-  /// Backticks have no meaning in traditional Javadoc, but they are commonly used as if they were
-  /// Markdown code spans, which is what they become in a Markdown comment. Unpaired backticks are
-  /// escaped when printed.
-  private static List<Inline> splitBacktickPairs(String line) {
-    List<Inline> result = new ArrayList<>();
-    int start = 0;
-    int i = 0;
-    while (i < line.length()) {
-      if (line.charAt(i) != '`') {
-        i++;
-        continue;
-      }
-      int runEnd = i;
-      while (runEnd < line.length() && line.charAt(runEnd) == '`') {
-        runEnd++;
-      }
-      String run = line.substring(i, runEnd);
-      int close = findClosingBacktickRun(line, runEnd, run.length());
-      if (close < 0) {
-        i = runEnd;
-        continue;
-      }
-      String content = line.substring(runEnd, close);
-      if (content.isBlank()) {
-        i = close + run.length();
-        continue;
-      }
-      if (i > start) {
-        result.add(new Text(line.substring(start, i)));
-      }
-      result.add(new Code(normalizeCodeSpanContent(content)));
-      i = close + run.length();
-      start = i;
+  /// A contiguous run of backticks inside a [Text] node in `container`.
+  private record BacktickRun(
+      ImmutableList<Inline> container, int inlineIndex, int offset, int length, int groupId) {
+    int endOffset() {
+      return offset + length;
     }
-    if (start < line.length()) {
-      result.add(new Text(line.substring(start)));
-    }
-    return result;
   }
 
-  private static int findClosingBacktickRun(String line, int from, int length) {
-    int i = from;
-    while (i < line.length()) {
-      if (line.charAt(i) != '`') {
+  /// A matched pair of backtick runs within the same [Inline] sequence that should become a [Code]
+  /// span with normalized [content].
+  private record BacktickSpan(BacktickRun open, BacktickRun close, String content) {}
+
+  /// Resolves pairs of backticks into [Code] spans across an inline sequence.
+  ///
+  /// Backticks have no meaning in traditional Javadoc, but they are commonly used as if they were
+  /// Markdown code spans, which is what they become in a Markdown comment. Pairing across the whole
+  /// inline sequence handles backtick pairs that wrap across a line break, and prevents a backtick
+  /// pair that spans inline HTML, an entity, or an inline tag from leaving its closing backtick to
+  /// pair with a subsequent opening backtick. Unpaired or cross-boundary backticks remain in [Text]
+  /// and are escaped when printed.
+  private static ImmutableList<Inline> resolveBacktickPairs(ImmutableList<Inline> inlines) {
+    if (!containsBacktick(inlines)) {
+      return inlines;
+    }
+    List<BacktickRun> runs = new ArrayList<>();
+    collectBacktickRuns(inlines, runs, new int[1]);
+    if (runs.size() < 2) {
+      return inlines;
+    }
+    // Key by identity because distinct inline containers (e.g., two <b> elements with equal
+    // children) have equal ImmutableLists and would collide in a HashMap.
+    Map<ImmutableList<Inline>, List<BacktickSpan>> spansByContainer = new IdentityHashMap<>();
+    int i = 0;
+    while (i < runs.size()) {
+      BacktickRun open = runs.get(i);
+      int closeIdx = findClosingBacktickRun(runs, i + 1, open.length());
+      if (closeIdx < 0) {
         i++;
         continue;
       }
-      int runEnd = i;
-      while (runEnd < line.length() && line.charAt(runEnd) == '`') {
-        runEnd++;
+      BacktickRun close = runs.get(closeIdx);
+      if (open.groupId() == close.groupId()) {
+        String content = extractCodeSpanContent(open, close);
+        if (!content.isBlank()) {
+          spansByContainer
+              .computeIfAbsent(open.container(), unused -> new ArrayList<>())
+              .add(new BacktickSpan(open, close, normalizeCodeSpanContent(content)));
+        }
       }
-      if (runEnd - i == length) {
+      i = closeIdx + 1;
+    }
+    if (spansByContainer.isEmpty()) {
+      return inlines;
+    }
+    return rewriteBacktickSpans(inlines, spansByContainer);
+  }
+
+  private static boolean containsBacktick(ImmutableList<Inline> inlines) {
+    for (Inline inline : inlines) {
+      boolean found =
+          switch (inline) {
+            case Text t -> t.literal().indexOf('`') >= 0;
+            case Emphasis e -> containsBacktick(e.inlines());
+            case Link l -> containsBacktick(l.inlines());
+            case ReferenceLink r -> r.label() != null && containsBacktick(r.label());
+            case Code c -> false;
+            case Entity e -> false;
+            case Html h -> false;
+            case InlineTag t -> false;
+            case MarkdownInlineTag t -> false;
+            case SoftBreak s -> false;
+          };
+      if (found) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  private static void collectBacktickRuns(
+      ImmutableList<Inline> container, List<BacktickRun> runs, int[] nextGroupId) {
+    int groupId = nextGroupId[0]++;
+    for (int idx = 0; idx < container.size(); idx++) {
+      Inline inline = container.get(idx);
+      switch (inline) {
+        case Text t -> {
+          String literal = t.literal();
+          int pos = 0;
+          while (pos < literal.length()) {
+            if (literal.charAt(pos) != '`') {
+              pos++;
+              continue;
+            }
+            int runEnd = pos;
+            while (runEnd < literal.length() && literal.charAt(runEnd) == '`') {
+              runEnd++;
+            }
+            runs.add(new BacktickRun(container, idx, pos, runEnd - pos, groupId));
+            pos = runEnd;
+          }
+        }
+        case SoftBreak s -> {}
+        case Emphasis e -> {
+          collectBacktickRuns(e.inlines(), runs, nextGroupId);
+          groupId = nextGroupId[0]++;
+        }
+        case Link l -> {
+          collectBacktickRuns(l.inlines(), runs, nextGroupId);
+          groupId = nextGroupId[0]++;
+        }
+        case ReferenceLink r -> {
+          if (r.label() != null) {
+            collectBacktickRuns(r.label(), runs, nextGroupId);
+          }
+          groupId = nextGroupId[0]++;
+        }
+        case Code c -> groupId = nextGroupId[0]++;
+        case Entity e -> groupId = nextGroupId[0]++;
+        case Html h -> groupId = nextGroupId[0]++;
+        case InlineTag t -> groupId = nextGroupId[0]++;
+        case MarkdownInlineTag t -> groupId = nextGroupId[0]++;
+      }
+    }
+  }
+
+  private static int findClosingBacktickRun(List<BacktickRun> runs, int fromIndex, int length) {
+    for (int i = fromIndex; i < runs.size(); i++) {
+      if (runs.get(i).length() == length) {
         return i;
       }
-      i = runEnd;
     }
     return -1;
+  }
+
+  private static String extractCodeSpanContent(BacktickRun open, BacktickRun close) {
+    if (open.inlineIndex() == close.inlineIndex()) {
+      Text text = (Text) open.container().get(open.inlineIndex());
+      return text.literal().substring(open.endOffset(), close.offset());
+    }
+    StringBuilder sb = new StringBuilder();
+    Text first = (Text) open.container().get(open.inlineIndex());
+    sb.append(first.literal(), open.endOffset(), first.literal().length());
+    for (int i = open.inlineIndex() + 1; i < close.inlineIndex(); i++) {
+      switch (open.container().get(i)) {
+        case Text t -> sb.append(t.literal());
+        case SoftBreak s -> sb.append(' ');
+        default -> throw new AssertionError("unexpected inline in code span");
+      }
+    }
+    Text last = (Text) close.container().get(close.inlineIndex());
+    sb.append(last.literal(), 0, close.offset());
+    return sb.toString();
+  }
+
+  private static ImmutableList<Inline> rewriteBacktickSpans(
+      ImmutableList<Inline> container,
+      Map<ImmutableList<Inline>, List<BacktickSpan>> spansByContainer) {
+    List<BacktickSpan> spans = spansByContainer.getOrDefault(container, ImmutableList.of());
+    ImmutableList.Builder<Inline> result = ImmutableList.builder();
+    int spanIdx = 0;
+    int inlineIdx = 0;
+    int charOffset = 0;
+    while (inlineIdx < container.size()) {
+      if (spanIdx < spans.size() && spans.get(spanIdx).open().inlineIndex() == inlineIdx) {
+        BacktickSpan span = spans.get(spanIdx++);
+        Text openText = (Text) container.get(inlineIdx);
+        if (span.open().offset() > charOffset) {
+          result.add(new Text(openText.literal().substring(charOffset, span.open().offset())));
+        }
+        result.add(new Code(span.content()));
+        inlineIdx = span.close().inlineIndex();
+        charOffset = span.close().endOffset();
+        Text closeText = (Text) container.get(inlineIdx);
+        if (charOffset == closeText.literal().length()) {
+          inlineIdx++;
+          charOffset = 0;
+        }
+        continue;
+      }
+      Inline inline = container.get(inlineIdx);
+      if (charOffset > 0) {
+        Text text = (Text) inline;
+        result.add(new Text(text.literal().substring(charOffset)));
+        charOffset = 0;
+      } else {
+        result.add(
+            switch (inline) {
+              case Emphasis e ->
+                  new Emphasis(e.tag(), rewriteBacktickSpans(e.inlines(), spansByContainer));
+              case Link l ->
+                  new Link(l.destination(), rewriteBacktickSpans(l.inlines(), spansByContainer));
+              case ReferenceLink r ->
+                  r.label() == null
+                      ? r
+                      : new ReferenceLink(
+                          r.reference(), rewriteBacktickSpans(r.label(), spansByContainer));
+              case Code c -> c;
+              case Entity e -> e;
+              case Html h -> h;
+              case InlineTag t -> t;
+              case MarkdownInlineTag t -> t;
+              case SoftBreak s -> s;
+              case Text t -> t;
+            });
+      }
+      inlineIdx++;
+    }
+    return result.build();
   }
 
   /// Strips a single leading and trailing space from code span content, as CommonMark does.
@@ -1843,7 +1996,8 @@ final class MarkdownCommentBuilder {
     }
     try {
       ImmutableList<Inline> inlines =
-          new Lowering(/* blockContext= */ false, context).lowerInlines(nodes);
+          resolveBacktickPairs(
+              new Lowering(/* blockContext= */ false, context).lowerInlines(nodes));
       return inlines.isEmpty() ? ImmutableList.of() : ImmutableList.of(new Paragraph(inlines));
     } catch (NestedLinkException e) {
       throw new UnsupportedCommentException("nested link in inline tag", e);
