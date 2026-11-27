@@ -3952,6 +3952,152 @@ public final class TraditionalJavadocToMarkdownTest {
   }
 
   @Test
+  public void backtickPairsAcrossHtmlAndLineBreaks() {
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            public class Test {
+              /** (`foo/<stage>/<outcome>/<reason>` and `foo/<stage>/<outcome>/<reason>/users`) */
+              int acrossUnknownTags;
+
+              /** Use `foo`, `bar <em>baz</em>`, and `qux`. */
+              int acrossEmphasis;
+
+              /**
+               * (`"a"` or `"b
+               * c"`). Defaults to `"a"` when blank.
+               */
+              int acrossLineBreak;
+
+              /** `foo {@code bar}` and `baz`. */
+              int acrossInlineTag;
+
+              /** `a&lt;b` and `c`. */
+              int acrossEntity;
+
+              /**
+               * <h3>`foo <em>bar</em>` and `baz`.</h3>
+               */
+              static class InHeading {}
+
+              /** {@summary `foo <em>bar</em>` and `baz`.} */
+              int inInlineTag;
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            public class Test {
+              /// (\\`foo/<stage>/<outcome>/<reason>`and`foo/<stage>/<outcome>/<reason>/users\\`)
+              int acrossUnknownTags;
+
+              /// Use `foo`, \\`bar *baz*`, and `qux\\`.
+              int acrossEmphasis;
+
+              /// (`"a"` or \\`"b c"`). Defaults to `"a"\\` when blank.
+              int acrossLineBreak;
+
+              /// \\`foo `bar`<code>and</code>baz\\`.
+              int acrossInlineTag;
+
+              /// \\`a&lt;b`and`c\\`.
+              int acrossEntity;
+
+              /// # \\`foo *bar*`and`baz\\`.
+              static class InHeading {}
+
+              /// {@summary \\`foo *bar*`and`baz\\`.}
+              int inInlineTag;
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void backtickPairsEdgeCases() {
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            public class Test {
+              /** <b>`foo`</b> and {@linkplain Object `bar`}. */
+              int insideInlineContainers;
+
+              /** A lone ` backtick. */
+              int loneBacktick;
+
+              /** <a href="https://example.com">`baz`</a>. */
+              int insideLink;
+
+              /** {@link String} and `foo`. */
+              int alongsideLabelLessReferenceLink;
+
+              /** <b>`foo` bar</b> and <b>`foo` bar</b>. */
+              int duplicateEqualContainers;
+
+              /**
+               * `
+               * ` and `foo`.
+               */
+              int blankAcrossLineBreak;
+
+              /**
+               * `
+               * foo
+               * `
+               */
+              int paddedAcrossLineBreak;
+
+              /** ``a `b` <em>c</em>`` and `d`. */
+              int multiBacktickAcrossHtml;
+
+              /** `a <b>b` c</b> and `d`. */
+              int openOutsideCloseInside;
+
+              /** <b>a `b</b> c` and `d`. */
+              int openInsideCloseOutside;
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            public class Test {
+              /// **`foo`** and [`bar`][Object].
+              int insideInlineContainers;
+
+              /// A lone \\` backtick.
+              int loneBacktick;
+
+              /// [`baz`](https://example.com).
+              int insideLink;
+
+              /// [String] and `foo`.
+              int alongsideLabelLessReferenceLink;
+
+              /// **`foo` bar** and **`foo` bar**.
+              int duplicateEqualContainers;
+
+              /** ` ` and `foo`. */
+              int blankAcrossLineBreak;
+
+              /** ` foo ` */
+              int paddedAcrossLineBreak;
+
+              /// \\`\\`a `b` *c*\\`\\` and `d`.
+              int multiBacktickAcrossHtml;
+
+              /// \\`a **b\\` c** and `d`.
+              int openOutsideCloseInside;
+
+              /// **a \\`b** c`and`d\\`.
+              int openInsideCloseOutside;
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
   public void validatorRejectsStructuralMismatchesAndHazards() {
     Paragraph plainStar = new Paragraph(ImmutableList.of(new Text("*foo*")));
     assertThat(
