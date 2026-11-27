@@ -65,8 +65,9 @@ public final class AssignmentExpression extends BugChecker implements Assignment
       return describeMatch(
           tree, SuggestedFix.replace(tree, state.getSourceForNode(tree.getExpression())));
     }
-    // If we got here it's something like x = y = 0, which is odd but not disallowed.
-    if (parent instanceof AssignmentTree) {
+    // If we got here it's something like x = y = 0 or int x = y = 0, which is odd but not
+    // disallowed.
+    if (parent instanceof AssignmentTree || parent instanceof VariableTree) {
       return Description.NO_MATCH;
     }
     return describeMatch(tree);
