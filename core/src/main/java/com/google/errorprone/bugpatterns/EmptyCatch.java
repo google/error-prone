@@ -27,7 +27,7 @@ import com.google.errorprone.matchers.Description;
 import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.CatchTree;
 
-/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
+/// A [BugChecker]; see the associated [BugPattern] annotation for details.
 @BugPattern(
     summary = "Caught exceptions should not be ignored",
     severity = WARNING,

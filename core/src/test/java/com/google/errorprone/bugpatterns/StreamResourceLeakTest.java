@@ -25,7 +25,7 @@ import com.google.testing.junit.testparameterinjector.TestParameterInjector;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-/** {@link StreamResourceLeakTest}Test */
+/// [StreamResourceLeak]Test
 @RunWith(TestParameterInjector.class)
 public class StreamResourceLeakTest {
 

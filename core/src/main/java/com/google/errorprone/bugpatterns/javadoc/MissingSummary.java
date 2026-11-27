@@ -54,11 +54,9 @@ import java.util.Set;
 import javax.lang.model.element.Modifier;
 import org.jspecify.annotations.Nullable;
 
-/**
- * Matches Javadocs which are missing a required summary line.
- *
- * @author ghm@google.com (Graeme Morgan)
- */
+/// Matches Javadocs which are missing a required summary line.
+///
+/// @author ghm@google.com (Graeme Morgan)
 @BugPattern(
     summary = "A summary line is required on public/protected Javadocs.",
     severity = WARNING,

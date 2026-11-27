@@ -21,7 +21,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** Unit tests for {@link StringJoin} check. */
+/// Unit tests for [StringJoin] check.
 @RunWith(JUnit4.class)
 public class StringJoinTest {
   private final BugCheckerRefactoringTestHelper testHelper =

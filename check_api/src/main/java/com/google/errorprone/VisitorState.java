@@ -67,9 +67,7 @@ import javax.lang.model.util.Elements;
 import javax.tools.JavaFileObject;
 import org.jspecify.annotations.Nullable;
 
-/**
- * @author alexeagle@google.com (Alex Eagle)
- */
+/// @author alexeagle@google.com (Alex Eagle)
 public final class VisitorState {
 
   private final SharedState sharedState;
@@ -81,11 +79,9 @@ public final class VisitorState {
   // of getDescriptionListener() don't have to do null-checking.
   private static void nullListener(Description description) {}
 
-  /**
-   * Return a VisitorState that has no Error Prone configuration, and can't report results.
-   *
-   * <p>If using this method, consider moving to using utility methods not needing VisitorSate
-   */
+  /// Return a VisitorState that has no Error Prone configuration, and can't report results.
+  ///
+  /// If using this method, consider moving to using utility methods not needing VisitorSate
   public static VisitorState createForUtilityPurposes(Context context) {
     return new VisitorState(
         context,
@@ -98,10 +94,8 @@ public final class VisitorState {
         SuppressedState.UNSUPPRESSED);
   }
 
-  /**
-   * Return a VisitorState that has no Error Prone configuration, but can report findings to {@code
-   * listener}.
-   */
+  /// Return a VisitorState that has no Error Prone configuration, but can report findings to
+  /// `listener`.
   public static VisitorState createForCustomFindingCollection(
       Context context, DescriptionListener listener) {
     return new VisitorState(
@@ -114,9 +108,7 @@ public final class VisitorState {
         SuppressedState.UNSUPPRESSED);
   }
 
-  /**
-   * Return a VisitorState configured for a new compilation, including Error Prone configuration.
-   */
+  /// Return a VisitorState configured for a new compilation, including Error Prone configuration.
   public static VisitorState createConfiguredForCompilation(
       Context context,
       DescriptionListener listener,
@@ -132,10 +124,8 @@ public final class VisitorState {
         SuppressedState.UNSUPPRESSED);
   }
 
-  /**
-   * The constructor used for brand-new VisitorState objects from outside. It builds a new
-   * SharedState.
-   */
+  /// The constructor used for brand-new VisitorState objects from outside. It builds a new
+  /// SharedState.
   private VisitorState(
       Context context,
       DescriptionListener descriptionListener,
@@ -153,10 +143,8 @@ public final class VisitorState {
             context, descriptionListener, statisticsCollector, severityMap, errorProneOptions);
   }
 
-  /**
-   * The constructor used for basing a new VisitorState object on an older one. It accepts
-   * parameters only for the things that can change, and reuses its SharedState.
-   */
+  /// The constructor used for basing a new VisitorState object on an older one. It accepts
+  /// parameters only for the things that can change, and reuses its SharedState.
   private VisitorState(
       Context context, TreePath path, SuppressedState suppressedState, SharedState sharedState) {
     this.context = context;
@@ -258,31 +246,23 @@ public final class VisitorState {
     return suppressedState == SuppressedState.SUPPRESSED ? key + "-suppressed" : key;
   }
 
-  /**
-   * Increment the counter for a combination of {@code bugChecker}'s canonical name and {@code key}
-   * by 1.
-   *
-   * <p>e.g.: a key of {@code foo} becomes {@code FooChecker-foo}.
-   */
+  /// Increment the counter for a combination of `bugChecker`'s canonical name and `key` by 1.
+  ///
+  /// e.g.: a key of `foo` becomes `FooChecker-foo`.
   public void incrementCounter(BugChecker bugChecker, String key) {
     incrementCounter(bugChecker, key, 1);
   }
 
-  /**
-   * Increment the counter for a combination of {@code bugChecker}'s canonical name and {@code key}
-   * by {@code count}.
-   *
-   * <p>e.g.: a key of {@code foo} becomes {@code FooChecker-foo}.
-   */
+  /// Increment the counter for a combination of `bugChecker`'s canonical name and `key` by `count`.
+  ///
+  /// e.g.: a key of `foo` becomes `FooChecker-foo`.
   public void incrementCounter(BugChecker bugChecker, String key, int count) {
     sharedState.statisticsCollector.incrementCounter(
         statsKey(bugChecker.canonicalName() + "-" + key), count);
   }
 
-  /**
-   * Returns a copy of all of the counters previously added to this VisitorState with {@link
-   * #incrementCounter}.
-   */
+  /// Returns a copy of all of the counters previously added to this VisitorState with
+  /// [#incrementCounter].
   public ImmutableMultiset<String> counters() {
     return sharedState.statisticsCollector.counters();
   }
@@ -291,23 +271,21 @@ public final class VisitorState {
     return getNames().fromString(nameStr);
   }
 
-  /**
-   * Given the binary name of a class, returns the {@link Type}.
-   *
-   * <p>Prefer not to use this method for constant class or interface name strings, or strings
-   * otherwise known at compile time. Instead, save the result of {@link ClassName#of} as a class
-   * constant, and use its {@link ClassName#type} method to look up the Type when needed (or use
-   * {@link #getSymtab()} for primitive and {@code void} types). This lookup will be faster,
-   * improving Error Prone's analysis time.
-   *
-   * <p>If this method returns null, the type has not been entered into the compiler's symbol table,
-   * which typically means that if you are comparing other types to this for equality or the subtype
-   * relation, your result would be false (unless the type is an indirect supertype of a class whose
-   * supertype hierarchy has not been completed yet; see b/138753468 and b/584699307).
-   *
-   * @param typeStr the JLS 13.1 binary name of the class, e.g. {@code "java.util.Map$Entry"}
-   * @return the {@link Type}, or null if it cannot be found
-   */
+  /// Given the binary name of a class, returns the [Type].
+  ///
+  /// Prefer not to use this method for constant class or interface name strings, or strings
+  /// otherwise known at compile time. Instead, save the result of [ClassName#of] as a class
+  /// constant, and use its [ClassName#type] method to look up the Type when needed (or use
+  /// [#getSymtab()] for primitive and `void` types). This lookup will be faster, improving Error
+  /// Prone's analysis time.
+  ///
+  /// If this method returns null, the type has not been entered into the compiler's symbol table,
+  /// which typically means that if you are comparing other types to this for equality or the
+  /// subtype relation, your result would be false (unless the type is an indirect supertype of a
+  /// class whose supertype hierarchy has not been completed yet; see b/138753468 and b/584699307).
+  ///
+  /// @param typeStr the JLS 13.1 binary name of the class, e.g. `"java.util.Map$Entry"`
+  /// @return the [Type], or null if it cannot be found
   public @Nullable Type getTypeFromString(String typeStr) {
     Type cached = sharedState.typeCache.get(typeStr);
     if (cached != null) {
@@ -336,14 +314,12 @@ public final class VisitorState {
     return null;
   }
 
-  /**
-   * Looks up the {@link Symbol} for a class name.
-   *
-   * <p>Prefer {@link ClassName#of} and {@link ClassName#symbol} for constant class names.
-   *
-   * @param symStr the string representation of a symbol
-   * @return the Symbol object, or null if it cannot be found
-   */
+  /// Looks up the [Symbol] for a class name.
+  ///
+  /// Prefer [ClassName#of] and [ClassName#symbol] for constant class names.
+  ///
+  /// @param symStr the string representation of a symbol
+  /// @return the Symbol object, or null if it cannot be found
   // TODO(cushon): deal with binary compat issues and return ClassSymbol
   public @Nullable Symbol getSymbolFromString(String symStr) {
     SharedState.ParsedName parsed = parseClassName(symStr);
@@ -362,22 +338,19 @@ public final class VisitorState {
     return parsed;
   }
 
-  /**
-   * Returns the Name object corresponding to the named class, converting it to binary form along
-   * the way if necessary (i.e., replacing Foo.Bar with Foo$Bar). To get the Name corresponding to
-   * some string that is not a class name, see the more general {@link #getName(String)}.
-   *
-   * <p>Prefer {@link ClassName#of} and {@link ClassName#binaryName} for constant class names.
-   */
+  /// Returns the Name object corresponding to the named class, converting it to binary form along
+  /// the way if necessary (i.e., replacing Foo.Bar with Foo$Bar). To get the Name corresponding to
+  /// some string that is not a class name, see the more general [#getName(String)].
+  ///
+  /// Prefer [ClassName#of] and [ClassName#binaryName] for constant class names.
   public Name binaryNameFromClassname(String className) {
     return parseClassName(className).binaryName();
   }
 
-  /**
-   * Look up the class symbol for a given Name.
-   *
-   * @param name the name to look up, which must be in binary form (i.e. with $ for nested classes).
-   */
+  /// Look up the class symbol for a given Name.
+  ///
+  /// @param name the name to look up, which must be in binary form (i.e. with $ for nested
+  ///   classes).
   public @Nullable ClassSymbol getSymbolFromName(Name name) {
     return getSymbolFromName(name, /* enclosingCandidates= */ null);
   }
@@ -439,10 +412,8 @@ public final class VisitorState {
     return result;
   }
 
-  /**
-   * Given a canonical class name, infers the binary class name using case conventions. For example,
-   * give {@code com.example.Outer.Inner} returns {@code com.example.Outer$Inner}.
-   */
+  /// Given a canonical class name, infers the binary class name using case conventions. For
+  /// example, give `com.example.Outer.Inner` returns `com.example.Outer$Inner`.
   // TODO(cushon): consider migrating call sites to use binary names and removing this code.
   // (But then we'd probably want error handling for probably-incorrect canonical names,
   // so it may not end up being a performance win.)
@@ -476,7 +447,7 @@ public final class VisitorState {
     return sb.toString();
   }
 
-  /** Build an instance of a Type. */
+  /// Build an instance of a Type.
   public Type getType(Type baseType, boolean isArray, List<Type> typeParams) {
     boolean isGeneric = typeParams != null && !typeParams.isEmpty();
     if (!isArray && !isGeneric) {
@@ -496,22 +467,18 @@ public final class VisitorState {
     }
   }
 
-  /**
-   * Build an array type from another type.
-   *
-   * <p>For constant types, prefer not to use this method. Instead, save the result of {@link
-   * com.google.errorprone.suppliers.Suppliers#arrayOf} as a class constant.
-   */
+  /// Build an array type from another type.
+  ///
+  /// For constant types, prefer not to use this method. Instead, save the result of
+  /// [com.google.errorprone.suppliers.Suppliers#arrayOf] as a class constant.
   public Type arrayTypeForType(Type baseType) {
     return new ArrayType(baseType, getSymtab().arrayClass);
   }
 
-  /**
-   * Returns the {@link TreePath} to the nearest tree node of one of the given types. To instead
-   * retrieve the element directly, use {@link #findEnclosing(Class...)}.
-   *
-   * @return the path, or {@code null} if there is no match
-   */
+  /// Returns the [TreePath] to the nearest tree node of one of the given types. To instead retrieve
+  /// the element directly, use [#findEnclosing(Class...)].
+  ///
+  /// @return the path, or `null` if there is no match
   @SafeVarargs
   public final @Nullable TreePath findPathToEnclosing(Class<? extends Tree>... classes) {
     TreePath enclosingPath = getPath();
@@ -526,11 +493,9 @@ public final class VisitorState {
     return null;
   }
 
-  /**
-   * Find the first enclosing tree node of one of the given types.
-   *
-   * @return the node, or {@code null} if there is no match
-   */
+  /// Find the first enclosing tree node of one of the given types.
+  ///
+  /// @return the node, or `null` if there is no match
   // findPathToEnclosing guarantees that the type is from |classes|
   @SuppressWarnings("unchecked")
   @SafeVarargs
@@ -550,11 +515,9 @@ public final class VisitorState {
     return sourceCode.subSequence(start, end);
   }
 
-  /**
-   * Gets the current source file.
-   *
-   * @return the source file as a sequence of characters, or null if it is not available
-   */
+  /// Gets the current source file.
+  ///
+  /// @return the source file as a sequence of characters, or null if it is not available
   public CharSequence getSourceCode() {
     try {
       JavaFileObject javaFileObject = getPath().getCompilationUnit().getSourceFile();
@@ -565,16 +528,14 @@ public final class VisitorState {
     }
   }
 
-  /**
-   * Gets the original source code that represents the given node.
-   *
-   * <p>Note that this may be different from what is returned by calling .toString() on the node.
-   * This returns exactly what is in the source code, whereas .toString() pretty-prints the node
-   * from its AST representation.
-   *
-   * @return the source code that represents the node, or {@code null} if the source code is
-   *     unavailable (e.g. for generated or desugared AST nodes)
-   */
+  /// Gets the original source code that represents the given node.
+  ///
+  /// Note that this may be different from what is returned by calling .toString() on the node. This
+  /// returns exactly what is in the source code, whereas .toString() pretty-prints the node from
+  /// its AST representation.
+  ///
+  /// @return the source code that represents the node, or `null` if the source code is unavailable
+  ///   (e.g. for generated or desugared AST nodes)
   public @Nullable String getSourceForNode(Tree tree) {
     int start = getStartPosition(tree);
     int end = getEndPosition(tree);
@@ -588,45 +549,39 @@ public final class VisitorState {
     return source.subSequence(start, end).toString();
   }
 
-  /**
-   * Returns the list of {@link Token}s for the given {@link JCTree}.
-   *
-   * <p>This is moderately expensive (the source of the node has to be re-lexed), so it should only
-   * be used if a fix is already going to be emitted.
-   */
+  /// Returns the list of [Token]s for the given [JCTree].
+  ///
+  /// This is moderately expensive (the source of the node has to be re-lexed), so it should only be
+  /// used if a fix is already going to be emitted.
   public ImmutableList<ErrorProneToken> getTokensForNode(Tree tree) {
     return ErrorProneTokens.getTokens(getSourceForNode(tree), context);
   }
 
-  /**
-   * Returns the list of {@link Token}s for the given {@link JCTree}, offset by the start position
-   * of the tree within the overall source.
-   *
-   * <p>This is moderately expensive (the source of the node has to be re-lexed), so it should only
-   * be used if a fix is already going to be emitted.
-   */
+  /// Returns the list of [Token]s for the given [JCTree], offset by the start position of the tree
+  /// within the overall source.
+  ///
+  /// This is moderately expensive (the source of the node has to be re-lexed), so it should only be
+  /// used if a fix is already going to be emitted.
   public ImmutableList<ErrorProneToken> getOffsetTokensForNode(Tree tree) {
     int start = getStartPosition(tree);
     return ErrorProneTokens.getTokens(getSourceForNode(tree), start, context);
   }
 
-  /**
-   * Returns the list of {@link Token}s for source code between the given positions, offset by the
-   * start position.
-   *
-   * <p>This is moderately expensive (the source of the node has to be re-lexed), so it should only
-   * be used if a fix is already going to be emitted.
-   */
+  /// Returns the list of [Token]s for source code between the given positions, offset by the start
+  /// position.
+  ///
+  /// This is moderately expensive (the source of the node has to be re-lexed), so it should only be
+  /// used if a fix is already going to be emitted.
   public ImmutableList<ErrorProneToken> getOffsetTokens(int start, int end) {
     return ErrorProneTokens.getTokens(getSourceCode(start, end).toString(), start, context);
   }
 
-  /** Returns the end position of the node, or -1 if it is not available. */
+  /// Returns the end position of the node, or -1 if it is not available.
   public int getEndPosition(Tree node) {
     return ErrorProneEndPosTable.getEndPosition(node, getPath().getCompilationUnit());
   }
 
-  /** Validates a type string, ensuring it is not generic and not an array type. */
+  /// Validates a type string, ensuring it is not generic and not an array type.
   private static void validateTypeStr(String typeStr) {
     if (typeStr.contains("[") || typeStr.contains("]")) {
       throw new IllegalArgumentException(
@@ -640,10 +595,8 @@ public final class VisitorState {
     }
   }
 
-  /**
-   * Given a string that represents a type, if it's a primitive type (e.g., "int") or "void", return
-   * the corresponding Type, or null otherwise.
-   */
+  /// Given a string that represents a type, if it's a primitive type (e.g., "int") or "void",
+  /// return the corresponding Type, or null otherwise.
   private @Nullable Type getPrimitiveOrVoidType(String typeStr) {
     return switch (typeStr) {
       case "byte" -> getSymtab().byteType;
@@ -659,7 +612,7 @@ public final class VisitorState {
     };
   }
 
-  /** Returns true if the compilation is targeting Android. */
+  /// Returns true if the compilation is targeting Android.
   public boolean isAndroidCompatible() {
     return Options.instance(context).getBoolean("androidCompatible");
   }
@@ -670,10 +623,8 @@ public final class VisitorState {
         public void close() {}
       };
 
-  /**
-   * Returns a timing span for the given {@link Suppressible} if {@link
-   * ErrorProneOptions#recordTimings} is true, or else a span that records nothing.
-   */
+  /// Returns a timing span for the given [Suppressible] if [ErrorProneOptions#recordTimings] is
+  /// true, or else a span that records nothing.
   public AutoCloseable timingSpan(Suppressible suppressible) {
     return sharedState.recordTimings ? sharedState.timings.span(suppressible) : NO_TIMING_SPAN;
   }
@@ -727,24 +678,20 @@ public final class VisitorState {
     }
   }
 
-  /**
-   * Produces a cache for a function that is expected to return the same result throughout a
-   * compilation, but requires a {@link VisitorState} to compute that result.
-   *
-   * <p><b>Note:</b> Do not use this method for a function that depends on the varying state of a
-   * {@link com.google.errorprone.VisitorState} (e.g. {@link #getPath()}—including the compilation
-   * unit itself!).
-   */
+  /// Produces a cache for a function that is expected to return the same result throughout a
+  /// compilation, but requires a [VisitorState] to compute that result.
+  ///
+  /// **Note:** Do not use this method for a function that depends on the varying state of a
+  /// [com.google.errorprone.VisitorState] (e.g. [#getPath()]—including the compilation unit
+  /// itself!).
   public static <T> Supplier<T> memoize(Supplier<T> f) {
     return new Cache<>(f);
   }
 
-  /**
-   * Instances that every {@link VisitorState} instance can share.
-   *
-   * <p>For the types that are typically stored in {@link Context}, caching the references over
-   * {@code SomeClass.instance(context)} has sizable performance improvements in aggregate.
-   */
+  /// Instances that every [VisitorState] instance can share.
+  ///
+  /// For the types that are typically stored in [Context], caching the references over
+  /// `SomeClass.instance(context)` has sizable performance improvements in aggregate.
   private static final class SharedState {
     private final Names names;
     private final Symtab symtab;
@@ -789,10 +736,8 @@ public final class VisitorState {
     }
   }
 
-  /**
-   * Returns the Java source code for a constant expression representing the given constant value.
-   * Like {@link Elements#getConstantExpression}, but doesn't over-escape single quotes in strings.
-   */
+  /// Returns the Java source code for a constant expression representing the given constant value.
+  /// Like [Elements#getConstantExpression], but doesn't over-escape single quotes in strings.
   public String getConstantExpression(Object value) {
     String escaped = getElements().getConstantExpression(value);
     if (value instanceof String) {

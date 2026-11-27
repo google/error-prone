@@ -21,7 +21,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** Tests for {@link PrimitiveAtomicReference}. */
+/// Tests for [PrimitiveAtomicReference].
 @RunWith(JUnit4.class)
 public final class PrimitiveAtomicReferenceTest {
   private final CompilationTestHelper helper =

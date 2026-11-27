@@ -24,7 +24,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** Tests for {@link AutoValueBuilderDefaultsInConstructor}. */
+/// Tests for [AutoValueBuilderDefaultsInConstructor].
 @RunWith(JUnit4.class)
 public final class AutoValueBuilderDefaultsInConstructorTest {
   private final CompilationTestHelper helper =

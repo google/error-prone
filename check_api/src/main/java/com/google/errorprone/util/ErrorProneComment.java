@@ -23,7 +23,7 @@ import com.google.common.base.Suppliers;
 import com.sun.tools.javac.parser.Tokens.Comment;
 import com.sun.tools.javac.parser.Tokens.Comment.CommentStyle;
 
-/** Wraps a {@link Comment} to allow an offset source position to be reported. */
+/// Wraps a [Comment] to allow an offset source position to be reported.
 public final class ErrorProneComment {
 
   private final int pos;
@@ -53,12 +53,10 @@ public final class ErrorProneComment {
     return endPos + offset;
   }
 
-  /**
-   * Returns the source position of the character at index {@code index} in the comment text.
-   *
-   * <p>The handling of javadoc comments in javac has more logic to skip over leading whitespace and
-   * '*' characters when indexing into doc comments, but we don't need any of that.
-   */
+  /// Returns the source position of the character at index `index` in the comment text.
+  ///
+  /// The handling of javadoc comments in javac has more logic to skip over leading whitespace and
+  /// '\*' characters when indexing into doc comments, but we don't need any of that.
   public int getSourcePos(int index) {
     checkArgument(
         0 <= index && index < (endPos - pos),
@@ -68,24 +66,22 @@ public final class ErrorProneComment {
     return pos + index + offset;
   }
 
-  /**
-   * A compatibility wrapper for {@link CommentStyle}.
-   *
-   * <p>Directly using {@link CommentStyle} would make Error Prone incompatible with older versions
-   * of javac (which only have {@code LINE}, {@code BLOCK}, and {@code JAVADOC}) and newer versions
-   * (which add {@code JAVADOC_LINE} and rename {@code JAVADOC} to {@code JAVADOC_BLOCK}).
-   */
+  /// A compatibility wrapper for [CommentStyle].
+  ///
+  /// Directly using [CommentStyle] would make Error Prone incompatible with older versions of javac
+  /// (which only have `LINE`, `BLOCK`, and `JAVADOC`) and newer versions (which add `JAVADOC_LINE`
+  /// and rename `JAVADOC` to `JAVADOC_BLOCK`).
   public enum ErrorProneCommentStyle {
-    /** An inline implementation comment that starts with {@code //}. */
+    /// An inline implementation comment that starts with `//`.
     LINE,
-    /** An inline block comment that starts with {@code /*}. */
+    /// An inline block comment that starts with `/*`.
     BLOCK,
-    /** A markdown javadoc comment that starts with {@code ///}. */
+    /// A markdown javadoc comment that starts with `///`.
     JAVADOC_LINE,
-    /** A traditional javadoc comment that starts with {@code /**}. */
+    /// A traditional javadoc comment that starts with `/**`.
     JAVADOC_BLOCK;
 
-    /** Returns the {@link ErrorProneCommentStyle} for the given {@link CommentStyle}. */
+    /// Returns the [ErrorProneCommentStyle] for the given [CommentStyle].
     public static ErrorProneCommentStyle from(CommentStyle style) {
       return switch (style.name()) {
         case "LINE" -> ErrorProneCommentStyle.LINE;
@@ -107,11 +103,9 @@ public final class ErrorProneComment {
     return text.get();
   }
 
-  /**
-   * We don't care about {@code @deprecated} javadoc tags (see the DepAnn check).
-   *
-   * @return false
-   */
+  /// We don't care about `@deprecated` javadoc tags (see the DepAnn check).
+  ///
+  /// @return false
   public boolean isDeprecated() {
     return false;
   }

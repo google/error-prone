@@ -22,7 +22,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** {@link BanSerializableRead}Test */
+/// [BanSerializableRead]Test
 @RunWith(JUnit4.class)
 public class BanSerializableReadTest {
   private final CompilationTestHelper compilationHelper =

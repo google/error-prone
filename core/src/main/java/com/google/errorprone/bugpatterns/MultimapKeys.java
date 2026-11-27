@@ -31,7 +31,7 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
 
-/** A BugPattern; see the summary. */
+/// A BugPattern; see the summary.
 @BugPattern(
     summary =
         "Iterating or streaming over `Multimap.keys()` does not collapse duplicates. Did you mean"

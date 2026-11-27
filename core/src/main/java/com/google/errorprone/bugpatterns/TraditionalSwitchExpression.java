@@ -27,7 +27,7 @@ import com.sun.source.tree.CaseTree.CaseKind;
 import com.sun.source.tree.SwitchExpressionTree;
 import com.sun.source.tree.Tree;
 
-/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
+/// A [BugChecker]; see the associated [BugPattern] annotation for details.
 @BugPattern(summary = "Prefer -> switches for switch expressions", severity = WARNING)
 public class TraditionalSwitchExpression extends BugChecker implements BugChecker.CaseTreeMatcher {
 

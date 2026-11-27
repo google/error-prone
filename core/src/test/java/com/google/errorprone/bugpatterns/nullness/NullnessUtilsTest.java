@@ -45,7 +45,7 @@ import com.sun.tools.javac.tree.JCTree.JCModuleDecl;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-/** Tests for {@link NullnessUtils}. */
+/// Tests for [NullnessUtils].
 @RunWith(TestParameterInjector.class)
 public final class NullnessUtilsTest {
   public enum OverloadOfIsLikelyToBePublicApi {
@@ -145,7 +145,7 @@ public final class NullnessUtilsTest {
     return CompilationTestHelper.newInstance(overload.checker, getClass());
   }
 
-  /** Test checker for {@link NullnessUtils#isLikelyToBePublicApi(Symbol)}. */
+  /// Test checker for [NullnessUtils#isLikelyToBePublicApi(Symbol)].
   @BugPattern(summary = "Element is likely to be public API", severity = ERROR)
   public static final class SymbolLikelyPublicApiChecker extends BugChecker
       implements PackageTreeMatcher,
@@ -183,7 +183,7 @@ public final class NullnessUtilsTest {
     }
   }
 
-  /** Test checker for {@link NullnessUtils#isLikelyToBePublicApi(TreePath)}. */
+  /// Test checker for [NullnessUtils#isLikelyToBePublicApi(TreePath)].
   @BugPattern(summary = "TreePath is likely to be public API", severity = ERROR)
   public static final class TreePathLikelyPublicApiChecker extends BugChecker
       implements PackageTreeMatcher,

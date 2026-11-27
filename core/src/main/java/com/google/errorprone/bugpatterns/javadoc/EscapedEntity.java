@@ -38,11 +38,9 @@ import org.jspecify.annotations.Nullable;
 import org.safere.Matcher;
 import org.safere.Pattern;
 
-/**
- * Finds unescaped entities in Javadocs.
- *
- * @author ghm@google.com (Graeme Morgan)
- */
+/// Finds unescaped entities in Javadocs.
+///
+/// @author ghm@google.com (Graeme Morgan)
 @BugPattern(
     summary = "HTML entities in @code/@literal tags will appear literally in the rendered javadoc.",
     severity = WARNING,

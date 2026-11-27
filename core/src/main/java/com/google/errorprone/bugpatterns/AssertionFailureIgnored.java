@@ -62,7 +62,7 @@ import java.util.stream.Stream;
 import org.jspecify.annotations.Nullable;
 import org.safere.Pattern;
 
-/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
+/// A [BugChecker]; see the associated [BugPattern] annotation for details.
 @BugPattern(
     summary =
         "This assertion throws an AssertionError if it fails, which will be caught by an enclosing"

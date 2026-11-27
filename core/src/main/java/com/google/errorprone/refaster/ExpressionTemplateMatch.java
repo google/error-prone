@@ -18,11 +18,9 @@ package com.google.errorprone.refaster;
 
 import com.sun.tools.javac.tree.JCTree.JCExpression;
 
-/**
- * A complete representation of a match against an {@code ExpressionTemplate}.
- *
- * @author lowasser@google.com (Louis Wasserman)
- */
+/// A complete representation of a match against an `ExpressionTemplate`.
+///
+/// @author lowasser@google.com (Louis Wasserman)
 class ExpressionTemplateMatch extends TemplateMatch {
 
   public ExpressionTemplateMatch(JCExpression location, Unifier unifier) {

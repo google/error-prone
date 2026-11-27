@@ -34,7 +34,7 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import org.safere.Pattern;
 
-/** A BugPattern; see the summary. */
+/// A BugPattern; see the summary.
 @BugPattern(
     summary =
         "Setting a proto field to an UNRECOGNIZED value will result in an exception at runtime when"

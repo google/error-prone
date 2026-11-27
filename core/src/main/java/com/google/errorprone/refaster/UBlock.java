@@ -27,11 +27,9 @@ import com.sun.tools.javac.util.ListBuffer;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * {@link UTree} representation of a {@link BlockTree}.
- *
- * @author lowasser@google.com (Louis Wasserman)
- */
+/// [UTree] representation of a [BlockTree].
+///
+/// @author lowasser@google.com (Louis Wasserman)
 @AutoValue
 abstract class UBlock extends USimpleStatement implements BlockTree {
   public static UBlock create(List<UStatement> statements) {

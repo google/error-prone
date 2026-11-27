@@ -37,7 +37,7 @@ import com.google.errorprone.matchers.Matcher;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.MethodTree;
 
-/** A checker for injected constructors with @Inject(optional=true) or binding annotations. */
+/// A checker for injected constructors with @Inject(optional=true) or binding annotations.
 @BugPattern(
     summary = "Injected constructors cannot be optional nor have binding annotations",
     severity = WARNING)
@@ -55,10 +55,8 @@ public class InjectedConstructorAnnotations extends BugChecker implements Method
             .matches(annotationTree.getAnnotationType(), state);
       };
 
-  /**
-   * Matches injected constructors annotated with @Inject(optional=true) or binding annotations.
-   * Suggests fixes to remove the argument {@code optional=true} or binding annotations.
-   */
+  /// Matches injected constructors annotated with @Inject(optional=true) or binding annotations.
+  /// Suggests fixes to remove the argument `optional=true` or binding annotations.
   @Override
   public Description matchMethod(MethodTree methodTree, VisitorState state) {
     var fix = SuggestedFix.builder();

@@ -34,13 +34,12 @@ import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.ImportTree;
 import com.sun.source.util.TreePathScanner;
-import com.sun.tools.javac.code.Symbol;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 import javax.inject.Inject;
 
-/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
+/// A [BugChecker]; see the associated [BugPattern] annotation for details.
 @BugPattern(
     name = "ImmutableRefactoring",
     summary = "Refactors uses of the JSR 305 @Immutable to Error Prone's annotation",
@@ -67,10 +66,9 @@ public class ImmutableRefactoring extends BugChecker implements CompilationUnitT
             ImmutableSet.of(JSR_305_IMMUTABLE, Immutable.class.getName()));
     Optional<? extends ImportTree> immutableImport =
         tree.getImports().stream()
-            .filter(i -> {
-              Symbol s = ASTHelpers.getSymbol(i.getQualifiedIdentifier());
-              return s != null && s.flatName().equals(IMMUTABLE.binaryName(state));
-            })
+            .filter(i ->
+                ASTHelpers.hasClassName(
+                    ASTHelpers.getSymbol(i.getQualifiedIdentifier()), IMMUTABLE, state))
             .findFirst();
     if (immutableImport.isEmpty()) {
       return Description.NO_MATCH;

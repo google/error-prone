@@ -19,11 +19,9 @@ package com.google.errorprone.refaster;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.TreeVisitor;
 
-/**
- * Abstract supertype for {@link UTree} identifiers.
- *
- * @author lowasser@google.com (Louis Wasserman)
- */
+/// Abstract supertype for [UTree] identifiers.
+///
+/// @author lowasser@google.com (Louis Wasserman)
 abstract class UIdent extends UExpression implements IdentifierTree {
   @Override
   public <R, D> R accept(TreeVisitor<R, D> visitor, D data) {

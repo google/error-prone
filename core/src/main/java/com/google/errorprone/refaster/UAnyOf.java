@@ -23,11 +23,9 @@ import com.sun.source.tree.Tree;
 import com.sun.source.tree.TreeVisitor;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
 
-/**
- * {@code UExpression} allowing a match against any of a list of expressions.
- *
- * @author lowasser@google.com (Louis Wasserman)
- */
+/// `UExpression` allowing a match against any of a list of expressions.
+///
+/// @author lowasser@google.com (Louis Wasserman)
 @AutoValue
 public abstract class UAnyOf extends UExpression {
   public static UAnyOf create(UExpression... expressions) {

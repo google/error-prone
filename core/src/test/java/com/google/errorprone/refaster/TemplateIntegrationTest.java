@@ -39,11 +39,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * Tests for Refaster templates.
- *
- * @author lowasser@google.com (Louis Wasserman)
- */
+/// Tests for Refaster templates.
+///
+/// @author lowasser@google.com (Louis Wasserman)
 @RunWith(JUnit4.class)
 public class TemplateIntegrationTest extends CompilerBasedTest {
   private CodeTransformer extractRefasterRule(JavaFileObject object) {

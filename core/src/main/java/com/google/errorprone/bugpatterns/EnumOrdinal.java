@@ -34,7 +34,7 @@ import com.sun.source.tree.MethodInvocationTree;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 
-/** Discourages the use of {@link Enum#ordinal()} and other ways to access enum values by index. */
+/// Discourages the use of [Enum#ordinal()] and other ways to access enum values by index.
 @BugPattern(
     summary =
         "You should almost never invoke the Enum.ordinal() method or depend on the enum values by"

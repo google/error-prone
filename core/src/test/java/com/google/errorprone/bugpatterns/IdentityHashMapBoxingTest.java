@@ -21,7 +21,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** Unit tests for {@link IdentityHashMapBoxing} bug pattern. */
+/// Unit tests for [IdentityHashMapBoxing] bug pattern.
 @RunWith(JUnit4.class)
 public class IdentityHashMapBoxingTest {
   private final CompilationTestHelper compilationHelper =

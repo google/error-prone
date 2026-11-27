@@ -34,12 +34,10 @@ import java.util.List;
 import java.util.Optional;
 import org.jspecify.annotations.Nullable;
 
-/**
- * A mutable representation of an attempt to match a template source tree against a target source
- * tree.
- *
- * @author Louis Wasserman
- */
+/// A mutable representation of an attempt to match a template source tree against a target source
+/// tree.
+///
+/// @author Louis Wasserman
 public final class Unifier {
   private final Bindings bindings;
 
@@ -79,10 +77,8 @@ public final class Unifier {
     this.compilationUnit = checkNotNull(compilationUnit);
   }
 
-  /**
-   * Returns a {@code Unifier} containing all the bindings from this {@code Unifier}, but which can
-   * succeed or fail independently of this {@code Unifier}.
-   */
+  /// Returns a `Unifier` containing all the bindings from this `Unifier`, but which can succeed or
+  /// fail independently of this `Unifier`.
   public Unifier fork() {
     return new Unifier(context, bindings, types, treeMaker, compilationUnit);
   }
@@ -103,10 +99,8 @@ public final class Unifier {
     return new Inliner(context, bindings, compilationUnit);
   }
 
-  /**
-   * Returns an {@link Inliner} for code that will replace {@code location}, which lets the inliner
-   * check which names are in scope there.
-   */
+  /// Returns an [Inliner] for code that will replace `location`, which lets the inliner check which
+  /// names are in scope there.
   Inliner createInliner(JCTree location) {
     return new Inliner(
         context, bindings, compilationUnit, TreePath.getPath(compilationUnit, location));
@@ -170,19 +164,15 @@ public final class Unifier {
     return (Unifier unifier) -> unifyList(unifier, toUnify, targets, allowVarargs);
   }
 
-  /**
-   * Returns all successful unification paths from the specified {@code Unifier} unifying the
-   * specified lists, disallowing varargs.
-   */
+  /// Returns all successful unification paths from the specified `Unifier` unifying the specified
+  /// lists, disallowing varargs.
   public static <T, U extends Unifiable<? super T>> Choice<Unifier> unifyList(
       Unifier unifier, @Nullable List<U> toUnify, @Nullable List<? extends T> targets) {
     return unifyList(unifier, toUnify, targets, /* allowVarargs= */ false);
   }
 
-  /**
-   * Returns all successful unification paths from the specified {@code Unifier} unifying the
-   * specified lists, allowing varargs if and only if {@code allowVarargs} is true.
-   */
+  /// Returns all successful unification paths from the specified `Unifier` unifying the specified
+  /// lists, allowing varargs if and only if `allowVarargs` is true.
   public static <T, U extends Unifiable<? super T>> Choice<Unifier> unifyList(
       Unifier unifier,
       @Nullable List<U> toUnify,

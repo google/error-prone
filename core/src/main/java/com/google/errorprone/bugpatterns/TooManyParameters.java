@@ -42,7 +42,7 @@ import com.sun.source.tree.MethodTree;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import javax.inject.Inject;
 
-/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
+/// A [BugChecker]; see the associated [BugPattern] annotation for details.
 @BugPattern(
     summary = "A large number of parameters on public APIs should be avoided.",
     severity = WARNING)

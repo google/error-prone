@@ -37,7 +37,6 @@ import static java.util.stream.Stream.concat;
 import com.google.common.collect.Streams;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.ClassName;
-import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
@@ -58,7 +57,7 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import javax.inject.Inject;
 
-/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
+/// A [BugChecker]; see the associated [BugPattern] annotation for details.
 @BugPattern(summary = "Argument is not compatible with the subject's type.", severity = WARNING)
 public class TruthIncompatibleType extends BugChecker implements MethodInvocationTreeMatcher {
 
@@ -188,13 +187,10 @@ public class TruthIncompatibleType extends BugChecker implements MethodInvocatio
   private static final ClassName TABLE = ClassName.of("com.google.common.collect.Table");
 
   private final TypeCompatibility typeCompatibility;
-  private final boolean checkTableSubject;
 
   @Inject
-  TruthIncompatibleType(TypeCompatibility typeCompatibility, ErrorProneFlags flags) {
+  TruthIncompatibleType(TypeCompatibility typeCompatibility) {
     this.typeCompatibility = typeCompatibility;
-    this.checkTableSubject =
-        flags.getBoolean("TruthIncompatibleType:CheckTableSubject").orElse(true);
   }
 
   @Override
@@ -499,7 +495,7 @@ public class TruthIncompatibleType extends BugChecker implements MethodInvocatio
 
   private Stream<Description> matchTableContainsCell(
       MethodInvocationTree tree, VisitorState state) {
-    if (!checkTableSubject || !TABLE_CONTAINS_CELL.matches(tree, state)) {
+    if (!TABLE_CONTAINS_CELL.matches(tree, state)) {
       return Stream.empty();
     }
     var receiver = getReceiver(tree);
@@ -525,7 +521,7 @@ public class TruthIncompatibleType extends BugChecker implements MethodInvocatio
 
   private Stream<Description> matchTableScalarContains(
       MethodInvocationTree tree, VisitorState state) {
-    if (!checkTableSubject || !TABLE_SCALAR_CONTAINS.matches(tree, state)) {
+    if (!TABLE_SCALAR_CONTAINS.matches(tree, state)) {
       return Stream.empty();
     }
     var receiver = getReceiver(tree);
@@ -556,7 +552,7 @@ public class TruthIncompatibleType extends BugChecker implements MethodInvocatio
         .flatMap(x -> x);
   }
 
-  /** Whether this is a varargs method being invoked in a non-varargs way. */
+  /// Whether this is a varargs method being invoked in a non-varargs way.
   private static boolean isNonVarargsCall(
       MethodSymbol methodSymbol, long index, Type argumentType) {
     return methodSymbol.getParameters().size() - 1 == index

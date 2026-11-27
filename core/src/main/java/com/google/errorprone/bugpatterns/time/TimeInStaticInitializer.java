@@ -44,7 +44,7 @@ import com.sun.source.util.TreePath;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
 
-/** A BugPattern; see the summary. */
+/// A BugPattern; see the summary.
 @BugPattern(
     severity = WARNING,
     summary =
@@ -112,9 +112,7 @@ public final class TimeInStaticInitializer extends BugChecker
           instanceMethod().onDescendantOf("java.time.InstantSource").named("instant"),
           instanceMethod().onDescendantOf("com.google.common.time.TimeSource").named("instant"));
 
-  /**
-   * As a heuristic, Flags seem fine, given those usually do want to capture something at start
-   * time.
-   */
+  /// As a heuristic, Flags seem fine, given those usually do want to capture something at start
+  /// time.
   private static final Supplier<Type> FLAG = typeFromString("com.google.common.flags.Flag");
 }

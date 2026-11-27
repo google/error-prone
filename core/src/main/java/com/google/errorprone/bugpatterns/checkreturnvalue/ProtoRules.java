@@ -30,30 +30,26 @@ import com.sun.tools.javac.code.Type;
 import java.util.Optional;
 import org.safere.Pattern;
 
-/** Rules for methods on proto messages and builders. */
+/// Rules for methods on proto messages and builders.
 public final class ProtoRules {
 
   private ProtoRules() {}
 
-  /**
-   * Returns a rule that handles proto builders, making their fluent setter methods' results
-   * ignorable.
-   */
+  /// Returns a rule that handles proto builders, making their fluent setter methods' results
+  /// ignorable.
   public static ResultUseRule<VisitorState, Symbol> protoBuilders() {
     return new ProtoRule(isDescendantOfAny(MESSAGE_LITE_BUILDER), "PROTO_BUILDER");
   }
 
-  /**
-   * Returns a rule that handles mutable protos, making their fluent setter methods' results
-   * ignorable.
-   */
+  /// Returns a rule that handles mutable protos, making their fluent setter methods' results
+  /// ignorable.
   public static ResultUseRule<VisitorState, Symbol> mutableProtos() {
     return new ProtoRule(isDescendantOfAny(MUTABLE_MESSAGE_LITE), "MUTABLE_PROTO");
   }
 
   // TODO(cgdecker): Move proto rules from IgnoredPureGetter and ReturnValueIgnored here
 
-  /** Rules for methods on protos. */
+  /// Rules for methods on protos.
   private static final class ProtoRule extends ErrorProneMethodRule {
     // Methods that start this way produce a modification to the proto, and either return this
     // or return the parameter given, for chaining purposes.

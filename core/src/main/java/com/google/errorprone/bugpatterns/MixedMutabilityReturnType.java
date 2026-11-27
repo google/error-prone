@@ -62,10 +62,8 @@ import java.util.Map;
 import java.util.Set;
 import javax.lang.model.type.TypeKind;
 
-/**
- * Flags methods which return mutable collections from some code paths, but immutable ones from
- * others.
- */
+/// Flags methods which return mutable collections from some code paths, but immutable ones from
+/// others.
 @BugPattern(
     summary =
         "This method returns both mutable and immutable collections or maps from different "

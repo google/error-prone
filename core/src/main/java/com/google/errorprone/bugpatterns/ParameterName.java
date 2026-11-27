@@ -55,7 +55,7 @@ import java.util.Optional;
 import java.util.function.Consumer;
 import javax.inject.Inject;
 
-/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
+/// A [BugChecker]; see the associated [BugPattern] annotation for details.
 @BugPattern(
     summary =
         "Detects `/* name= */`-style comments on actual parameters where the name doesn't match the"
@@ -153,14 +153,12 @@ public class ParameterName extends BugChecker
     }
   }
 
-  /**
-   * Returns false if there are definitely no comments between {@code start} and the end of {@code
-   * lastArgument}, which (as the positions of arguments are increasing) contains all the source
-   * that {@link #checkArguments} tokenizes.
-   *
-   * <p>This is a cheap pre-check to avoid looking up symbols and re-tokenizing the arguments of
-   * every call. It ignores comments that start with a unicode escape for {@code /}.
-   */
+  /// Returns false if there are definitely no comments between `start` and the end of
+  /// `lastArgument`, which (as the positions of arguments are increasing) contains all the source
+  /// that [#checkArguments] tokenizes.
+  ///
+  /// This is a cheap pre-check to avoid looking up symbols and re-tokenizing the arguments of every
+  /// call. It ignores comments that start with a unicode escape for `/`.
   private static boolean mayContainComments(
       int start, ExpressionTree lastArgument, VisitorState state) {
     int end = state.getEndPosition(lastArgument);
@@ -176,7 +174,7 @@ public class ParameterName extends BugChecker
     return false;
   }
 
-  /** Returns the source span for a tree, or empty if the position information is not available. */
+  /// Returns the source span for a tree, or empty if the position information is not available.
   Optional<Range<Integer>> positions(Tree tree, VisitorState state) {
     int endPosition = state.getEndPosition(tree);
     if (endPosition == Position.NOPOS) {

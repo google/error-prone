@@ -44,7 +44,7 @@ import com.sun.source.util.TreePath;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import java.util.stream.Stream;
 
-/** A {@link BugChecker}; see the summary. */
+/// A [BugChecker]; see the summary.
 @BugPattern(
     summary = "Migrate off a deprecated overload of org.robolectric.shadow.api.Shadow#directlyOn",
     severity = WARNING)

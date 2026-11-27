@@ -28,20 +28,16 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.sun.source.tree.MethodInvocationTree;
 
-/**
- * Points out if an object is compared to itself.
- *
- * @author bhagwani@google.com (Sumit Bhagwani)
- */
+/// Points out if an object is compared to itself.
+///
+/// @author bhagwani@google.com (Sumit Bhagwani)
 @BugPattern(summary = "An object is compared to itself", severity = ERROR)
 public class SelfComparison extends BugChecker implements MethodInvocationTreeMatcher {
 
-  /**
-   * Matches calls to any instance method called "compareTo" with exactly one argument in which the
-   * receiver is the same reference as the argument.
-   *
-   * <p>Example: foo.compareTo(foo)
-   */
+  /// Matches calls to any instance method called "compareTo" with exactly one argument in which the
+  /// receiver is the same reference as the argument.
+  ///
+  /// Example: foo.compareTo(foo)
   private static final Matcher<MethodInvocationTree> COMPARE_TO_MATCHER =
       allOf(
           instanceMethod().onDescendantOf("java.lang.Comparable").named("compareTo"),

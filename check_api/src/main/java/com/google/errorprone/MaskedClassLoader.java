@@ -25,16 +25,11 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import javax.tools.JavaFileManager;
 
-/**
- * A classloader that allows plugins to access the Error Prone classes from the compiler classpath.
- */
+/// A classloader that allows plugins to access the Error Prone classes from the compiler classpath.
 // TODO(cushon): consolidate with Bazel's ClassloaderMaskingFileManager
 public class MaskedClassLoader extends ClassLoader {
 
-  /**
-   * An alternative to {@link JavacFileManager#preRegister(Context)} that installs a {@link
-   * MaskedClassLoader}.
-   */
+  /// An alternative to [JavacFileManager#preRegister(Context)] that installs a [MaskedClassLoader].
   public static void preRegisterFileManager(Context context) {
     context.put(
         JavaFileManager.class,

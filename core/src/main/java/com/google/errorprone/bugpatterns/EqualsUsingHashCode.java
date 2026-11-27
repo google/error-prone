@@ -36,11 +36,9 @@ import com.sun.source.tree.ReturnTree;
 import com.sun.source.util.TreeScanner;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-/**
- * Discourages implementing {@code equals} using {@code hashCode}.
- *
- * @author ghm@google.com (Graeme Morgan)
- */
+/// Discourages implementing `equals` using `hashCode`.
+///
+/// @author ghm@google.com (Graeme Morgan)
 @BugPattern(
     summary =
         "Implementing #equals by just comparing hashCodes is fragile. Hashes collide "

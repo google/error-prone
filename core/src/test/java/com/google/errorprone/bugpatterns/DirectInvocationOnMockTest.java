@@ -24,7 +24,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** Tests for {@link DirectInvocationOnMock}. */
+/// Tests for [DirectInvocationOnMock].
 @RunWith(JUnit4.class)
 public final class DirectInvocationOnMockTest {
   private final CompilationTestHelper helper =

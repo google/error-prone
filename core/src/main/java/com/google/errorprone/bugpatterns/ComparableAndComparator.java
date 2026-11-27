@@ -31,10 +31,8 @@ import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import java.util.Comparator;
 import java.util.List;
 
-/**
- * @author sulku@google.com (Marsela Sulku)
- * @author mariasam@google.com (Maria Sam)
- */
+/// @author sulku@google.com (Marsela Sulku)
+/// @author mariasam@google.com (Maria Sam)
 @BugPattern(
     summary = "Class should not implement both `Comparable` and `Comparator`",
     severity = WARNING)
@@ -42,13 +40,13 @@ public class ComparableAndComparator extends BugChecker implements ClassTreeMatc
   private static final String COMPARABLE = Comparable.class.getCanonicalName();
   private static final String COMPARATOR = Comparator.class.getCanonicalName();
 
-  /** Matches if a class/interface is subtype of Comparable */
+  /// Matches if a class/interface is subtype of Comparable
   private static final Matcher<Tree> COMPARABLE_MATCHER = isSubtypeOf(COMPARABLE);
 
-  /** Matches if a class/interface is subtype of Comparator */
+  /// Matches if a class/interface is subtype of Comparator
   private static final Matcher<Tree> COMPARATOR_MATCHER = isSubtypeOf(COMPARATOR);
 
-  /** Matches if a class/interface is subtype of Comparable _and_ Comparator */
+  /// Matches if a class/interface is subtype of Comparable \_and\_ Comparator
   private static final Matcher<Tree> COMPARABLE_AND_COMPARATOR_MATCHER =
       allOf(COMPARABLE_MATCHER, COMPARATOR_MATCHER);
 

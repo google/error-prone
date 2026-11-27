@@ -42,23 +42,21 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * A {@link BugChecker} that detects inconsistently overloaded methods in Java classes.
- *
- * <p>The bug checker works in several stages. First, it group the class methods by name. Then each
- * group is processed separately (and violations are reported on per-group basis).
- *
- * <p>The group is processed by building a {@link ParameterTrie}. This trie is an archetype built
- * from methods of lower arity used to determine ordering of methods of higher arity. After ordering
- * of arguments of particular method has been determined (using the archetype) it is then added to
- * the trie and serves as basis for methods of even higher arity.
- *
- * <p>If the determined ordering is different the original parameter ordering a {@link
- * ParameterOrderingViolation} is reported. It is essentially a list of expected parameter and list
- * of actual parameters then used to build a {@link SuggestedFix} object.
- *
- * @author hanuszczak@google.com (Łukasz Hanuszczak)
- */
+/// A [BugChecker] that detects inconsistently overloaded methods in Java classes.
+///
+/// The bug checker works in several stages. First, it group the class methods by name. Then each
+/// group is processed separately (and violations are reported on per-group basis).
+///
+/// The group is processed by building a [ParameterTrie]. This trie is an archetype built from
+/// methods of lower arity used to determine ordering of methods of higher arity. After ordering of
+/// arguments of particular method has been determined (using the archetype) it is then added to the
+/// trie and serves as basis for methods of even higher arity.
+///
+/// If the determined ordering is different the original parameter ordering a
+/// [ParameterOrderingViolation] is reported. It is essentially a list of expected parameter and
+/// list of actual parameters then used to build a [SuggestedFix] object.
+///
+/// @author hanuszczak@google.com (Łukasz Hanuszczak)
 @BugPattern(
     summary =
         "The ordering of parameters in overloaded methods should be as consistent as possible (when"
@@ -124,24 +122,20 @@ public final class InconsistentOverloads extends BugChecker implements ClassTree
     return comparingInt(ParameterTrie::getMethodTreeArity);
   }
 
-  /**
-   * Returns a collection of method groups for given list of {@code classMethods}.
-   *
-   * <p>A <i>method group</i> is a list of methods with the same name.
-   *
-   * <p>It is assumed that given {@code classMethods} really do belong to the same class. The
-   * returned collection does not guarantee any particular group ordering.
-   */
+  /// Returns a collection of method groups for given list of `classMethods`.
+  ///
+  /// A *method group* is a list of methods with the same name.
+  ///
+  /// It is assumed that given `classMethods` really do belong to the same class. The returned
+  /// collection does not guarantee any particular group ordering.
   private static Collection<List<MethodTree>> getMethodGroups(List<MethodTree> classMethods) {
     return classMethods.stream().collect(groupingBy(MethodTree::getName)).values();
   }
 
-  /**
-   * Returns a list of {@link MethodTree} declared in the given {@code classTree}.
-   *
-   * <p>Only method trees that belong to the {@code classTree} are returned, so methods declared in
-   * nested classes are not going to be considered.
-   */
+  /// Returns a list of [MethodTree] declared in the given `classTree`.
+  ///
+  /// Only method trees that belong to the `classTree` are returned, so methods declared in nested
+  /// classes are not going to be considered.
   private ImmutableList<MethodTree> getClassTreeMethods(ClassTree classTree, VisitorState state) {
     List<? extends Tree> members = classTree.getMembers();
     return members.stream()

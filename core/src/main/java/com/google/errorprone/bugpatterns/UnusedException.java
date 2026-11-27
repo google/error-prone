@@ -55,12 +55,10 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javax.lang.model.element.Modifier;
 
-/**
- * Bugpattern for catch blocks which catch an exception but throw another one without wrapping the
- * original.
- *
- * @author ghm@google.com (Graeme Morgan)
- */
+/// Bugpattern for catch blocks which catch an exception but throw another one without wrapping the
+/// original.
+///
+/// @author ghm@google.com (Graeme Morgan)
 @BugPattern(
     summary =
         "This catch block catches an exception and re-throws another, but swallows the caught"

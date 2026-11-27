@@ -33,7 +33,7 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import javax.inject.Inject;
 
-/** Bans calls to {@code Period#plus/minus(TemporalAmount)} where the argument is a Duration. */
+/// Bans calls to `Period#plus/minus(TemporalAmount)` where the argument is a Duration.
 @BugPattern(
     summary = "When adding or subtracting from a Period, Duration is incompatible.",
     explanation =

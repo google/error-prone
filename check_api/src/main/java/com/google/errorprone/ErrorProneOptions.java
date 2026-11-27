@@ -44,13 +44,11 @@ import java.util.Map;
 import java.util.stream.Stream;
 import org.safere.Pattern;
 
-/**
- * Processes command-line options specific to error-prone.
- *
- * <p>Documentation for the available flags are available at https://errorprone.infoflags
- *
- * @author eaftan@google.com (Eddie Aftandilian)
- */
+/// Processes command-line options specific to error-prone.
+///
+/// Documentation for the available flags are available at https://errorprone.infoflags
+///
+/// @author eaftan@google.com (Eddie Aftandilian)
 public final class ErrorProneOptions {
 
   private static final String PREFIX = "-Xep";
@@ -75,7 +73,7 @@ public final class ErrorProneOptions {
   private static final String RECORD_TIMINGS = "-XepRecordTimings";
   private static final String ARGUMENT_FILE_PREFIX = "@";
 
-  /** see {@link javax.tools.OptionChecker#isSupportedOption(String)} */
+  /// see [javax.tools.OptionChecker#isSupportedOption(String)]
   public static int isSupportedOption(String option) {
     boolean isSupported =
         option.startsWith(SEVERITY_PREFIX)
@@ -106,9 +104,8 @@ public final class ErrorProneOptions {
     return disableAllChecks;
   }
 
-  /**
-   * Severity levels for an error-prone check that define how the check results should be presented.
-   */
+  /// Severity levels for an error-prone check that define how the check results should be
+  /// presented.
   public enum Severity {
     DEFAULT, // whatever is specified in the @BugPattern annotation
     OFF,
@@ -253,15 +250,13 @@ public final class ErrorProneOptions {
     return ignoreLargeCodeGenerators;
   }
 
-  /**
-   * Returns true if Error Prone records how long each check runs, and prints the totals once the
-   * compilation finishes.
-   */
+  /// Returns true if Error Prone records how long each check runs, and prints the totals once the
+  /// compilation finishes.
   public boolean printTimings() {
     return printTimings;
   }
 
-  /** Returns true if Error Prone records how long each check runs. */
+  /// Returns true if Error Prone records how long each check runs.
   public boolean recordTimings() {
     return recordTimings;
   }
@@ -425,15 +420,13 @@ public final class ErrorProneOptions {
     return EMPTY;
   }
 
-  /** Check if an argument looks like a argument file. */
+  /// Check if an argument looks like a argument file.
   private static boolean isArgumentFile(String argument) {
     return argument.startsWith(ARGUMENT_FILE_PREFIX);
   }
 
-  /**
-   * Read a CLI argument file, ignoring blank lines and full line comments. It fails if a line tries
-   * to reference another argument file.
-   */
+  /// Read a CLI argument file, ignoring blank lines and full line comments. It fails if a line
+  /// tries to reference another argument file.
   private static ImmutableList<String> loadArgumentFileContent(String fileName) {
     Splitter splitter =
         Splitter.on(CharMatcher.breakingWhitespace()).trimResults().omitEmptyStrings();
@@ -463,10 +456,8 @@ public final class ErrorProneOptions {
     }
   }
 
-  /**
-   * Pre-processes an argument list, replacing arguments of the form {@code @filename} by the lines
-   * read from the file.
-   */
+  /// Pre-processes an argument list, replacing arguments of the form `@filename` by the lines read
+  /// from the file.
   private static ImmutableList<String> preprocessArgs(Iterable<String> args) {
     ImmutableList.Builder<String> newArgs = ImmutableList.builder();
     for (String arg : args) {
@@ -479,14 +470,12 @@ public final class ErrorProneOptions {
     return newArgs.build();
   }
 
-  /**
-   * Given a list of command-line arguments, produce the corresponding {@link ErrorProneOptions}
-   * instance.
-   *
-   * @param args command-line arguments
-   * @return an {@link ErrorProneOptions} instance encapsulating the given arguments
-   * @throws InvalidCommandLineOptionException if an error-prone option is invalid
-   */
+  /// Given a list of command-line arguments, produce the corresponding [ErrorProneOptions]
+  /// instance.
+  ///
+  /// @param args command-line arguments
+  /// @return an [ErrorProneOptions] instance encapsulating the given arguments
+  /// @throws InvalidCommandLineOptionException if an error-prone option is invalid
   public static ErrorProneOptions processArgs(Iterable<String> args) {
     Preconditions.checkNotNull(args);
     ImmutableList.Builder<String> remainingArgs = ImmutableList.builder();
@@ -594,14 +583,12 @@ public final class ErrorProneOptions {
     return builder.build(remainingArgs.build());
   }
 
-  /**
-   * Given a list of command-line arguments, produce the corresponding {@link ErrorProneOptions}
-   * instance.
-   *
-   * @param args command-line arguments
-   * @return an {@link ErrorProneOptions} instance encapsulating the given arguments
-   * @throws InvalidCommandLineOptionException if an error-prone option is invalid
-   */
+  /// Given a list of command-line arguments, produce the corresponding [ErrorProneOptions]
+  /// instance.
+  ///
+  /// @param args command-line arguments
+  /// @return an [ErrorProneOptions] instance encapsulating the given arguments
+  /// @throws InvalidCommandLineOptionException if an error-prone option is invalid
   public static ErrorProneOptions processArgs(String[] args) {
     Preconditions.checkNotNull(args);
     return processArgs(Arrays.asList(args));

@@ -23,7 +23,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** Tests for {@link StringCaseLocaleUsage}. */
+/// Tests for [StringCaseLocaleUsage].
 @RunWith(JUnit4.class)
 public final class StringCaseLocaleUsageTest {
   private final CompilationTestHelper compilationTestHelper =

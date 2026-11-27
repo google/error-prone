@@ -50,11 +50,9 @@ import java.util.Optional;
 import java.util.Set;
 import javax.lang.model.element.ElementKind;
 
-/**
- * Checks for {@code equals} implementations comparing non-corresponding fields.
- *
- * @author ghm@google.com (Graeme Morgan)
- */
+/// Checks for `equals` implementations comparing non-corresponding fields.
+///
+/// @author ghm@google.com (Graeme Morgan)
 @BugPattern(
     summary =
         "Comparing different pairs of fields/getters in an equals implementation is probably "

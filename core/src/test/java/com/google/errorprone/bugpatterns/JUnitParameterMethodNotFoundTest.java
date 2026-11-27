@@ -21,7 +21,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** Tests for {@link JUnitParameterMethodNotFound} */
+/// Tests for [JUnitParameterMethodNotFound]
 @RunWith(JUnit4.class)
 public class JUnitParameterMethodNotFoundTest {
   private final CompilationTestHelper compilationHelper =

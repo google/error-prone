@@ -61,10 +61,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Stream;
 import org.jspecify.annotations.Nullable;
 
-/**
- * Checks for cases where an {@link InterruptedException} is caught as part of a catch block
- * catching a supertype, and not specially handled.
- */
+/// Checks for cases where an [InterruptedException] is caught as part of a catch block catching a
+/// supertype, and not specially handled.
 @BugPattern(
     summary =
         "This catch block appears to be catching an explicitly declared InterruptedException as an"
@@ -209,10 +207,8 @@ public final class InterruptedExceptionSwallowed extends BugChecker
         }.scan(block, null));
   }
 
-  /**
-   * Returns the exceptions that need to be handled by {@code tryTree}'s catch blocks, or be
-   * propagated out.
-   */
+  /// Returns the exceptions that need to be handled by `tryTree`'s catch blocks, or be propagated
+  /// out.
   private static ImmutableSet<Type> getThrownExceptions(TryTree tryTree, VisitorState state) {
     ScanThrownTypes scanner = new ScanThrownTypes(state);
     scanner.scanResources(tryTree);

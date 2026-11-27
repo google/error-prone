@@ -44,7 +44,7 @@ import javax.tools.JavaFileObject;
 import javax.tools.StandardJavaFileManager;
 import org.jspecify.annotations.Nullable;
 
-/** An Error Prone compiler that implements {@link javax.tools.JavaCompiler}. */
+/// An Error Prone compiler that implements [javax.tools.JavaCompiler].
 public class BaseErrorProneJavaCompiler implements JavaCompiler {
 
   private final JavaCompiler javacTool;
@@ -68,11 +68,8 @@ public class BaseErrorProneJavaCompiler implements JavaCompiler {
       Iterable<String> classes,
       Iterable<? extends JavaFileObject> compilationUnits) {
     ErrorProneOptions errorProneOptions = ErrorProneOptions.processArgs(options);
-    ImmutableList<String> javacOpts = errorProneOptions.getRemainingArgs();
-    javacOpts = defaultToLatestSupportedLanguageLevel(javacOpts);
-    javacOpts = setCompilePolicyToByFile(javacOpts);
-    javacOpts = setShouldStopIfErrorPolicyToFlow(javacOpts);
-    javacOpts = setAddTypeAnnotationsToSymbol(javacOpts);
+    ImmutableList<String> javacOpts =
+        applyRequiredJavacOptions(errorProneOptions.getRemainingArgs());
     JavacTask task =
         (JavacTask)
             javacTool.getTask(
@@ -85,10 +82,7 @@ public class BaseErrorProneJavaCompiler implements JavaCompiler {
       JavacTask javacTask, ScannerSupplier scannerSupplier, ErrorProneOptions errorProneOptions) {
     Context context = ((BasicJavacTask) javacTask).getContext();
     setupMessageBundle(context);
-    Options options = Options.instance(context);
-    checkCompilePolicy(options.get("compilePolicy"));
-    checkShouldStopIfErrorPolicy(options.get("should-stop.ifError"));
-    checkAddTypeAnnotationsToSymbol(options.get("addTypeAnnotationsToSymbol"));
+    checkRequiredJavacOptions(Options.instance(context));
     RefactoringCollection[] refactoringCollection = {null};
     javacTask.addTaskListener(
         ErrorProneAnalyzer.createAnalyzer(
@@ -132,11 +126,38 @@ public class BaseErrorProneJavaCompiler implements JavaCompiler {
     return filtered;
   }
 
-  /**
-   * Default to compiling with the same -source and -target as the host's javac.
-   *
-   * <p>This prevents, e.g., targeting Java 8 by default when using error-prone on JDK7.
-   */
+  /// Returns `args` with Error Prone's required javac defaults (`-XDcompilePolicy=simple`,
+  /// `--should-stop=ifError=FLOW`, and `-XDaddTypeAnnotationsToSymbol=true`) prepended.
+  public static ImmutableList<String> applyRequiredJavacOptions(ImmutableList<String> args) {
+    // Prepend defaults rather than appending so trailing dangling options (e.g., `-cp`) cannot
+    // consume them, and so javac's last-wins semantics let valid explicit overrides (e.g.,
+    // `-XDcompilePolicy=byfile` or `--should-stop=ifError=GENERATE`) take effect while
+    // checkRequiredJavacOptions rejects unsupported values (e.g., `bytodo`, `INIT`, `false`).
+    return ImmutableList.<String>builder()
+        .add(
+            // Attribute all classes in a file before lowering any of them; Error Prone depends on
+            // this when analyzing files that contain multiple top-level classes.
+            "-XDcompilePolicy=simple",
+            // Continue through flow analysis even after earlier errors so checks still see
+            // flow-computed facts like effective finality (see error-prone#4595).
+            "--should-stop=ifError=FLOW",
+            // Attach type annotations to symbols on JDK 21 (enabled by default on JDK 22+).
+            "-XDaddTypeAnnotationsToSymbol=true")
+        .addAll(defaultToLatestSupportedLanguageLevel(args))
+        .build();
+  }
+
+  /// Validates that `options` satisfy Error Prone's required javac options (`-XDcompilePolicy`,
+  /// `--should-stop=ifError`, and `-XDaddTypeAnnotationsToSymbol`).
+  public static void checkRequiredJavacOptions(Options options) {
+    checkCompilePolicy(options.get("compilePolicy"));
+    checkShouldStopIfErrorPolicy(options.get("should-stop.ifError"));
+    checkAddTypeAnnotationsToSymbol(options.get("addTypeAnnotationsToSymbol"));
+  }
+
+  /// Default to compiling with the same -source and -target as the host's javac.
+  ///
+  /// This prevents, e.g., targeting Java 8 by default when using error-prone on JDK7.
   private static ImmutableList<String> defaultToLatestSupportedLanguageLevel(
       ImmutableList<String> args) {
 
@@ -158,10 +179,8 @@ public class BaseErrorProneJavaCompiler implements JavaCompiler {
         .build();
   }
 
-  /**
-   * Throws InvalidCommandLineOptionException if the {@code -XDcompilePolicy} flag is set to an
-   * unsupported value
-   */
+  /// Throws InvalidCommandLineOptionException if the `-XDcompilePolicy` flag is set to an
+  /// unsupported value
   static void checkCompilePolicy(@Nullable String compilePolicy) {
     if (compilePolicy == null) {
       throw new InvalidCommandLineOptionException(
@@ -177,22 +196,6 @@ public class BaseErrorProneJavaCompiler implements JavaCompiler {
                       + " pass -XDcompilePolicy=simple instead",
                   compilePolicy));
     }
-  }
-
-  /**
-   * Sets javac's {@code -XDcompilePolicy} flag to ensure that all classes in a file are attributed
-   * before any of them are lowered. Error Prone depends on this behavior when analyzing files that
-   * contain multiple top-level classes.
-   */
-  private static ImmutableList<String> setCompilePolicyToByFile(ImmutableList<String> args) {
-    for (String arg : args) {
-      if (arg.startsWith("-XDcompilePolicy")) {
-        String value = arg.substring(arg.indexOf('=') + 1);
-        checkCompilePolicy(value);
-        return args; // don't do anything if a valid policy is already set
-      }
-    }
-    return ImmutableList.<String>builder().addAll(args).add("-XDcompilePolicy=simple").build();
   }
 
   private static void checkShouldStopIfErrorPolicy(String value) {
@@ -211,32 +214,6 @@ public class BaseErrorProneJavaCompiler implements JavaCompiler {
     }
   }
 
-  private static ImmutableList<String> setShouldStopIfErrorPolicyToFlow(
-      ImmutableList<String> args) {
-    for (String arg : args) {
-      if (arg.startsWith("--should-stop=ifError") || arg.startsWith("-XDshould-stop.ifError")) {
-        String value = arg.substring(arg.lastIndexOf('=') + 1);
-        checkShouldStopIfErrorPolicy(value);
-        return args; // don't do anything if a valid policy is already set
-      }
-    }
-    return ImmutableList.<String>builder().addAll(args).add("--should-stop=ifError=FLOW").build();
-  }
-
-  private static ImmutableList<String> setAddTypeAnnotationsToSymbol(ImmutableList<String> args) {
-    for (String arg : args) {
-      if (arg.startsWith("-XDaddTypeAnnotationsToSymbol")) {
-        String value = arg.substring(arg.indexOf('=') + 1);
-        checkAddTypeAnnotationsToSymbol(value);
-        return args; // don't do anything if a valid policy is already set
-      }
-    }
-    return ImmutableList.<String>builder()
-        .addAll(args)
-        .add("-XDaddTypeAnnotationsToSymbol=true")
-        .build();
-  }
-
   private static void checkAddTypeAnnotationsToSymbol(String value) {
     if (value == null) {
       if (Runtime.version().feature() <= 21) {
@@ -251,7 +228,7 @@ public class BaseErrorProneJavaCompiler implements JavaCompiler {
     }
   }
 
-  /** Registers our message bundle. */
+  /// Registers our message bundle.
   public static void setupMessageBundle(Context context) {
     ResourceBundle bundle = ResourceBundle.getBundle("com.google.errorprone.errors");
     JavacMessages.instance(context).add(l -> bundle);

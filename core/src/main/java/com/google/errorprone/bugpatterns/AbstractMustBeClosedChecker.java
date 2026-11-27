@@ -80,12 +80,10 @@ import java.util.Objects;
 import java.util.Optional;
 import javax.lang.model.element.ElementKind;
 
-/**
- * An abstract check for resources that must be closed; used by {@link StreamResourceLeak} and
- * {@link MustBeClosedChecker}.
- */
+/// An abstract check for resources that must be closed; used by [StreamResourceLeak] and
+/// [MustBeClosedChecker].
 public abstract class AbstractMustBeClosedChecker extends BugChecker {
-  /** Matches trees annotated with {@link MustBeClosed}. */
+  /// Matches trees annotated with [MustBeClosed].
   protected static final Matcher<Tree> HAS_MUST_BE_CLOSED_ANNOTATION =
       symbolHasAnnotation(MUST_BE_CLOSED_ANNOTATION);
 
@@ -99,7 +97,7 @@ public abstract class AbstractMustBeClosedChecker extends BugChecker {
   static final class NameSuggester {
     private final Multiset<String> assignedNamesInThisMethod = HashMultiset.create();
 
-    /** Returns basename if there are no conflicts, then basename + "2", then basename + "3"... */
+    /// Returns basename if there are no conflicts, then basename + "2", then basename + "3"...
     String uniquifyName(String basename) {
       int numPreviousConflicts = assignedNamesInThisMethod.add(basename, 1);
       if (numPreviousConflicts == 0) {
@@ -110,9 +108,7 @@ public abstract class AbstractMustBeClosedChecker extends BugChecker {
       return basename + (numPreviousConflicts + 1);
     }
 
-    /**
-     * @param tree must be either MethodInvocationTree or NewClassTree
-     */
+    /// @param tree must be either MethodInvocationTree or NewClassTree
     String suggestName(ExpressionTree tree) {
       String symbolName =
           switch (tree) {
@@ -125,10 +121,8 @@ public abstract class AbstractMustBeClosedChecker extends BugChecker {
     }
   }
 
-  /**
-   * Scans a method body for method invocations, constructor calls, and method or constructor
-   * references matching {@code matcher}, emitting them as a single fix.
-   */
+  /// Scans a method body for method invocations, constructor calls, and method or constructor
+  /// references matching `matcher`, emitting them as a single fix.
   protected Description scanEntireMethodFor(
       Matcher<? super ExpressionTree> matcher, MethodTree tree, VisitorState state) {
     BlockTree body = tree.getBody();
@@ -188,14 +182,12 @@ public abstract class AbstractMustBeClosedChecker extends BugChecker {
     return describeMatch(firstIssuedFixLocation[0], fixBuilder.build());
   }
 
-  /**
-   * Error Prone's fix application logic doesn't like it when a fix suggests multiple identical
-   * insertions at the same position. This Change class breaks up a SuggestedFix into two parts: a
-   * position at which to insert a close brace, and a SuggestedFix of other related changes. We use
-   * this to aggregate all the suggested changes within a method, so that we can handle adding
-   * multiple try blocks with the same scope. Instead of emitting N fixes that each add a new
-   * close-brace at the end of that scope, we emit a single fix that adds N close braces.
-   */
+  /// Error Prone's fix application logic doesn't like it when a fix suggests multiple identical
+  /// insertions at the same position. This Change class breaks up a SuggestedFix into two parts: a
+  /// position at which to insert a close brace, and a SuggestedFix of other related changes. We use
+  /// this to aggregate all the suggested changes within a method, so that we can handle adding
+  /// multiple try blocks with the same scope. Instead of emitting N fixes that each add a new
+  /// close-brace at the end of that scope, we emit a single fix that adds N close braces.
   @AutoValue
   protected abstract static class Change {
     abstract SuggestedFix otherFixes();
@@ -210,11 +202,9 @@ public abstract class AbstractMustBeClosedChecker extends BugChecker {
 
       abstract Change build();
 
-      /**
-       * A shortcut for {@code Optional.of(build())}. Many operations taking a Change expect an
-       * {@code Optional<Change>}, and if you have a Builder already, you're clearly not planning to
-       * return empty(), so this is a convenient way to make the Optional implicit.
-       */
+      /// A shortcut for `Optional.of(build())`. Many operations taking a Change expect an
+      /// `Optional<Change>`, and if you have a Builder already, you're clearly not planning to
+      /// return empty(), so this is a convenient way to make the Optional implicit.
       Optional<Change> wrapped() {
         return Optional.of(build());
       }
@@ -229,12 +219,10 @@ public abstract class AbstractMustBeClosedChecker extends BugChecker {
     }
   }
 
-  /**
-   * Checks that the resource produced by {@code tree} is closed: a method invocation or constructor
-   * call must occur within the resource variable initializer of a try-with-resources statement (or
-   * another supported pattern), and a method or constructor reference must implement a functional
-   * interface method that is annotated {@code @MustBeClosed}.
-   */
+  /// Checks that the resource produced by `tree` is closed: a method invocation or constructor call
+  /// must occur within the resource variable initializer of a try-with-resources statement (or
+  /// another supported pattern), and a method or constructor reference must implement a functional
+  /// interface method that is annotated `@MustBeClosed`.
   private Optional<Change> matchResourceExpression(
       ExpressionTree tree, VisitorState state, NameSuggester suggester) {
     if (isInStaticInitializer(state)) {
@@ -535,11 +523,8 @@ public abstract class AbstractMustBeClosedChecker extends BugChecker {
         .wrapped();
   }
 
-  /**
-   * Returns true if {@code decorator} is the instantiation of an {@link AutoCloseable} decorator
-   * type that decorates the given {@code resource} and always closes the decorated {@code resource}
-   * when closed.
-   */
+  /// Returns true if `decorator` is the instantiation of an [AutoCloseable] decorator type that
+  /// decorates the given `resource` and always closes the decorated `resource` when closed.
   private static boolean isClosingDecorator(
       NewClassTree decorator, Tree resource, VisitorState state) {
     if (decorator.getArguments().isEmpty()

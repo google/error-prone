@@ -22,7 +22,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** Unit tests for {@link UnnecessaryAssignment}. */
+/// Unit tests for [UnnecessaryAssignment].
 @RunWith(JUnit4.class)
 public final class UnnecessaryAssignmentTest {
   private final CompilationTestHelper testHelper =

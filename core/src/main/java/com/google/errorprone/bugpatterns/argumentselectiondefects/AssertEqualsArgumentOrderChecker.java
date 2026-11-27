@@ -31,17 +31,15 @@ import com.sun.tools.javac.code.Symbol.TypeSymbol;
 import java.util.function.Function;
 import javax.lang.model.element.ElementKind;
 
-/**
- * Checker to make sure that assertEquals-like methods are called with the arguments expected and
- * actual the right way round.
- *
- * <p>Warning: this check relies on recovering parameter names from library class files. These names
- * are only included if you compile with debugging symbols (-g) or with -parameters. You also need
- * to tell the compiler to read these names from the classfiles and so must compile your project
- * with -parameters too.
- *
- * @author andrewrice@google.com (Andrew Rice)
- */
+/// Checker to make sure that assertEquals-like methods are called with the arguments expected and
+/// actual the right way round.
+///
+/// Warning: this check relies on recovering parameter names from library class files. These names
+/// are only included if you compile with debugging symbols (-g) or with -parameters. You also need
+/// to tell the compiler to read these names from the classfiles and so must compile your project
+/// with -parameters too.
+///
+/// @author andrewrice@google.com (Andrew Rice)
 @BugPattern(summary = "Arguments are swapped in assertEquals-like call", severity = WARNING)
 public final class AssertEqualsArgumentOrderChecker extends BugChecker
     implements MethodInvocationTreeMatcher {
@@ -76,13 +74,11 @@ public final class AssertEqualsArgumentOrderChecker extends BugChecker
         .build();
   }
 
-  /**
-   * This function looks explicitly for parameters named expected and actual. All other pairs with
-   * parameters other than these are given a distance of 0 if they are in their original position
-   * and Inf otherwise (i.e. they will not be considered for moving). For expected and actual, if
-   * the actual parameter name starts with expected or actual respectively then we consider it a
-   * perfect match otherwise we return a distance of 1.
-   */
+  /// This function looks explicitly for parameters named expected and actual. All other pairs with
+  /// parameters other than these are given a distance of 0 if they are in their original position
+  /// and Inf otherwise (i.e. they will not be considered for moving). For expected and actual, if
+  /// the actual parameter name starts with expected or actual respectively then we consider it a
+  /// perfect match otherwise we return a distance of 1.
   private static Function<ParameterPair, Double> buildDistanceFunction() {
     return (ParameterPair parameterPair) -> {
       Parameter formal = parameterPair.formal();
@@ -114,7 +110,7 @@ public final class AssertEqualsArgumentOrderChecker extends BugChecker
     };
   }
 
-  /** Returns true if this parameter is an enum identifier */
+  /// Returns true if this parameter is an enum identifier
   private static boolean isEnumIdentifier(Parameter parameter) {
     switch (parameter.kind()) {
       case IDENTIFIER, MEMBER_SELECT -> {}

@@ -21,7 +21,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** {@link DereferenceWithNullBranch}Test */
+/// [DereferenceWithNullBranch]Test
 @RunWith(JUnit4.class)
 public class DereferenceWithNullBranchTest {
   private final CompilationTestHelper helper =

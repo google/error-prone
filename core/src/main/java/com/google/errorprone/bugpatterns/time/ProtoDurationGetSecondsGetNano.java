@@ -29,12 +29,10 @@ import com.google.errorprone.matchers.Matcher;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 
-/**
- * This checker warns about accessing the underlying nanosecond-adjustment field of a duration
- * without a "nearby" access of the underlying seconds field.
- *
- * @author kak@google.com (Kurt Alfred Kluever)
- */
+/// This checker warns about accessing the underlying nanosecond-adjustment field of a duration
+/// without a "nearby" access of the underlying seconds field.
+///
+/// @author kak@google.com (Kurt Alfred Kluever)
 @BugPattern(
     summary = "getNanos() only accesses the underlying nanosecond-adjustment of the duration.",
     explanation =

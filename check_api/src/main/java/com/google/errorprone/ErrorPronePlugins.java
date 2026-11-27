@@ -27,7 +27,7 @@ import java.util.ServiceLoader;
 import javax.tools.JavaFileManager;
 import javax.tools.StandardLocation;
 
-/** Loads custom Error Prone checks from the annotation processor classpath. */
+/// Loads custom Error Prone checks from the annotation processor classpath.
 public final class ErrorPronePlugins {
 
   public static ScannerSupplier loadPlugins(ScannerSupplier scannerSupplier, Context context) {

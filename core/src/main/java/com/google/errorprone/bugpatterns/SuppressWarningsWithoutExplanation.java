@@ -44,13 +44,11 @@ import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.LineMap;
 import com.sun.source.tree.Tree;
 
-/**
- * Finds occurrences of {@code @SuppressWarnings} where there is definitely no explanation for why
- * it is safe.
- *
- * <p>The Google style guide mandates this for <em>all</em> suppressions; we're matching on a subset
- * to start which seem important.
- */
+/// Finds occurrences of `@SuppressWarnings` where there is definitely no explanation for why it is
+/// safe.
+///
+/// The Google style guide mandates this for *all* suppressions; we're matching on a subset to start
+/// which seem important.
 @BugPattern(
     summary =
         "Use of @SuppressWarnings should be accompanied by a comment describing why the warning is"

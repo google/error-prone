@@ -39,9 +39,7 @@ import com.google.errorprone.matchers.MultiMatcher.MultiMatchResult;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.MethodTree;
 
-/**
- * @author sgoldfeder@google.com (Steven Goldfeder)
- */
+/// @author sgoldfeder@google.com (Steven Goldfeder)
 @BugPattern(
     summary = "Abstract and default methods are not injectable with javax.inject.Inject",
     severity = ERROR)

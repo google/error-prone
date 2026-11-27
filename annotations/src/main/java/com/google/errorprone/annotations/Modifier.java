@@ -16,16 +16,12 @@
 
 package com.google.errorprone.annotations;
 
-/**
- * Modifiers in the Java language, as specified in:
- *
- * <ul>
- *   <li>https://docs.oracle.com/javase/specs/jls/se11/html/jls-8.html#jls-8.1.1
- *   <li>https://docs.oracle.com/javase/specs/jls/se11/html/jls-8.html#jls-8.3.1
- *   <li>https://docs.oracle.com/javase/specs/jls/se11/html/jls-8.html#jls-8.4.3
- *   <li>https://docs.oracle.com/javase/specs/jls/se11/html/jls-9.html#jls-9.4
- * </ul>
- */
+/// Modifiers in the Java language, as specified in:
+///
+/// - https://docs.oracle.com/javase/specs/jls/se11/html/jls-8.html#jls-8.1.1
+/// - https://docs.oracle.com/javase/specs/jls/se11/html/jls-8.html#jls-8.3.1
+/// - https://docs.oracle.com/javase/specs/jls/se11/html/jls-8.html#jls-8.4.3
+/// - https://docs.oracle.com/javase/specs/jls/se11/html/jls-9.html#jls-9.4
 public enum Modifier {
   PUBLIC,
   PROTECTED,

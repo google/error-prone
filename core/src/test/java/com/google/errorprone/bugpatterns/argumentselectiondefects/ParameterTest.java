@@ -32,18 +32,14 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * Tests for Parameter
- *
- * @author andrewrice@google.com (Andrew Rice)
- */
+/// Tests for Parameter
+///
+/// @author andrewrice@google.com (Andrew Rice)
 @RunWith(JUnit4.class)
 public class ParameterTest {
 
-  /**
-   * A {@link BugChecker} that prints whether the type of first argument is assignable to the type
-   * of the second one.
-   */
+  /// A [BugChecker] that prints whether the type of first argument is assignable to the type of the
+  /// second one.
   @BugPattern(
       severity = SeverityLevel.ERROR,
       summary = "Print whether the type of the first argument is assignable to the second one")
@@ -111,7 +107,7 @@ public class ParameterTest {
         .doTest();
   }
 
-  /** A {@link BugChecker} that prints the name extracted for the first argument */
+  /// A [BugChecker] that prints the name extracted for the first argument
   @BugPattern(severity = SeverityLevel.ERROR, summary = "Print the name of the first argument")
   public static class PrintNameOfFirstArgument extends BugChecker
       implements MethodInvocationTreeMatcher {
@@ -333,7 +329,7 @@ public class ParameterTest {
         .doTest();
   }
 
-  /** A {@link BugChecker} that prints whether the first argument is constant */
+  /// A [BugChecker] that prints whether the first argument is constant
   @BugPattern(
       severity = SeverityLevel.ERROR,
       summary = "Print whether the first argument is constant")

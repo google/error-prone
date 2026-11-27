@@ -21,7 +21,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** Unit tests for {@link ImmutableSetForContains}. */
+/// Unit tests for [ImmutableSetForContains].
 @RunWith(JUnit4.class)
 public final class ImmutableSetForContainsTest {
   private final BugCheckerRefactoringTestHelper refactoringHelper =

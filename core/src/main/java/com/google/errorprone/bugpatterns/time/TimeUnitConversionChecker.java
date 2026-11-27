@@ -34,7 +34,7 @@ import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Symbol;
 import java.util.concurrent.TimeUnit;
 
-/** Check for problematic or suspicious TimeUnit conversion calls. */
+/// Check for problematic or suspicious TimeUnit conversion calls.
 @BugPattern(
     summary =
         "This TimeUnit conversion looks buggy: converting from a smaller unit to a larger unit "

@@ -37,24 +37,19 @@ import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.util.Name;
 
-/**
- * Checks if {@code Optional#of} is chained with a redundant method.
- *
- * <p>{@code Optional#of} will always return a non-empty optional. Using any of the following
- * methods:
- *
- * <ul>
- *   <li>{@code isPresent}
- *   <li>{@code ifPresent}
- *   <li>{@code orElse}
- *   <li>{@code orElseGet}
- *   <li>{@code orElseThrow}
- *   <li>{@code or} (only for Guava optionals)
- *   <li>{@code orNull} (only for Guava optionals)
- * </ul>
- *
- * on it is unnecessary and a potential source of bugs.
- */
+/// Checks if `Optional#of` is chained with a redundant method.
+///
+/// `Optional#of` will always return a non-empty optional. Using any of the following methods:
+///
+/// - `isPresent`
+/// - `ifPresent`
+/// - `orElse`
+/// - `orElseGet`
+/// - `orElseThrow`
+/// - `or` (only for Guava optionals)
+/// - `orNull` (only for Guava optionals)
+///
+/// on it is unnecessary and a potential source of bugs.
 @BugPattern(
     summary =
         "Optional.of() always returns a non-empty optional. Using"

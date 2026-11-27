@@ -29,11 +29,9 @@ import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 
-/**
- * Points out if #valueOf() is called on a Protocol Buffer Enum.
- *
- * @author bhagwani@google.com (Sumit Bhagwani)
- */
+/// Points out if #valueOf() is called on a Protocol Buffer Enum.
+///
+/// @author bhagwani@google.com (Sumit Bhagwani)
 @BugPattern(
     summary =
         "Instead of looking up a lite enum by name, use its numeric value since that is the stable "

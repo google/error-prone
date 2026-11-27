@@ -31,13 +31,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * Tests to verify assumptions about specific JDK and other methods and fields built into {@link
- * NullnessPropagationTransfer} by running the referenced methods and reading the referenced fields
- * where possible/feasible.
- *
- * @author kmb@google.com (Kevin Bierhoff)
- */
+/// Tests to verify assumptions about specific JDK and other methods and fields built into
+/// [NullnessPropagationTransfer] by running the referenced methods and reading the referenced
+/// fields where possible/feasible.
+///
+/// @author kmb@google.com (Kevin Bierhoff)
 // TODO(kmb): Add tests for methods assumed to return non-null values (for all inputs...)
 @RunWith(JUnit4.class)
 public class NonNullAssumptionsTest {

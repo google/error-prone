@@ -29,7 +29,7 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.Tree.Kind;
 
-/** Check for expressions containing {@code this != null} or {@code this == null} */
+/// Check for expressions containing `this != null` or `this == null`
 @BugPattern(
     summary = "this == null is always false, this != null is always true",
     explanation =

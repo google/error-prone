@@ -27,11 +27,9 @@ import com.sun.tools.javac.tree.JCTree.JCAnnotatedType;
 import com.sun.tools.javac.tree.JCTree.JCAnnotation;
 import com.sun.tools.javac.util.List;
 
-/**
- * {@code UTree} representation of an {@code AnnotatedTypeTree}.
- *
- * @author lowasser@google.com (Louis Wasserman)
- */
+/// `UTree` representation of an `AnnotatedTypeTree`.
+///
+/// @author lowasser@google.com (Louis Wasserman)
 @AutoValue
 abstract class UAnnotatedType extends UExpression implements AnnotatedTypeTree {
   public static UAnnotatedType create(Iterable<UAnnotation> annotations, UExpression type) {

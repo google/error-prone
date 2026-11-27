@@ -21,11 +21,9 @@ import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Symbol;
 
-/**
- * Matches a symbol with the given symbol as superclass.
- *
- * @author cushon@google.com (Liam Miller-Cushon)
- */
+/// Matches a symbol with the given symbol as superclass.
+///
+/// @author cushon@google.com (Liam Miller-Cushon)
 class IsSymbol implements Matcher<Tree> {
   private final Class<? extends Symbol> symbolClass;
 

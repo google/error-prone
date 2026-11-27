@@ -21,7 +21,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-/** A {@link FileDestination} that writes content to a destination on the local filesystem. */
+/// A [FileDestination] that writes content to a destination on the local filesystem.
 public final class FsFileDestination implements FileDestination {
 
   private final Path rootPath;

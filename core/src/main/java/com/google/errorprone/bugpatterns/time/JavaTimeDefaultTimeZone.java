@@ -32,7 +32,7 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 
-/** Check for calls to {@code java.time} APIs that silently use the default system time-zone. */
+/// Check for calls to `java.time` APIs that silently use the default system time-zone.
 @BugPattern(
     summary = "java.time APIs that silently use the default system time-zone are not allowed.",
     explanation =

@@ -51,7 +51,7 @@ import java.util.Set;
 import javax.lang.model.element.TypeElement;
 import org.jspecify.annotations.Nullable;
 
-/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
+/// A [BugChecker]; see the associated [BugPattern] annotation for details.
 @BugPattern(
     summary =
         "Prefer an exhaustive @TestParameter with an assumption to filter out specific enum values,"

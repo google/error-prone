@@ -22,18 +22,16 @@ import static java.lang.annotation.ElementType.METHOD;
 import java.lang.annotation.Documented;
 import java.lang.annotation.Target;
 
-/**
- * Annotation for constructors of AutoCloseables or methods that return an AutoCloseable and require
- * that the resource is closed.
- *
- * <p>This is enforced by checking that invocations occur within the resource variable initializer
- * of a try-with-resources statement, which guarantees that the resource is always closed. The
- * analysis may be improved in the future to recognize other patterns where the resource will always
- * be closed.
- *
- * <p>Note that Android SDK versions prior to 19 do not support try-with-resources, so the
- * annotation should be avoided on APIs that may be used on Android, unless desugaring is used.
- */
+/// Annotation for constructors of AutoCloseables or methods that return an AutoCloseable and
+/// require that the resource is closed.
+///
+/// This is enforced by checking that invocations occur within the resource variable initializer of
+/// a try-with-resources statement, which guarantees that the resource is always closed. The
+/// analysis may be improved in the future to recognize other patterns where the resource will
+/// always be closed.
+///
+/// Note that Android SDK versions prior to 19 do not support try-with-resources, so the annotation
+/// should be avoided on APIs that may be used on Android, unless desugaring is used.
 @Documented
 @Target({CONSTRUCTOR, METHOD})
 public @interface MustBeClosed {}

@@ -31,13 +31,11 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-/**
- * Represents a list of import statements. Supports adding and removing import statements and pretty
- * printing the result as source code. Sorts and organizes the imports using the given {@code
- * importOrganizer}.
- *
- * @author eaftan@google.com (Eddie Aftandilian)
- */
+/// Represents a list of import statements. Supports adding and removing import statements and
+/// pretty printing the result as source code. Sorts and organizes the imports using the given
+/// `importOrganizer`.
+///
+/// @author eaftan@google.com (Eddie Aftandilian)
 public class ImportStatements {
 
   private final ImportOrganizer importOrganizer;
@@ -46,7 +44,7 @@ public class ImportStatements {
   private final Set<String> importStrings;
   private final boolean hasExistingImports;
 
-  /** A copy of the original imports, used to check for any actual changes to the imports. */
+  /// A copy of the original imports, used to check for any actual changes to the imports.
   private final ImmutableSet<String> originalImports;
 
   public static ImportStatements create(JCCompilationUnit compilationUnit) {
@@ -104,59 +102,51 @@ public class ImportStatements {
     originalImports = ImmutableSet.copyOf(importStrings);
   }
 
-  /** Return the start position of the import statements. */
+  /// Return the start position of the import statements.
   public int getStartPos() {
     return startPos;
   }
 
-  /** Return the end position of the import statements. */
+  /// Return the end position of the import statements.
   public int getEndPos() {
     return endPos;
   }
 
-  /**
-   * Add an import to the list of imports. If the import is already in the list, does nothing. The
-   * import should be of the form "import foo.bar".
-   *
-   * @param importToAdd a string representation of the import to add
-   * @return true if the import was added
-   */
+  /// Add an import to the list of imports. If the import is already in the list, does nothing. The
+  /// import should be of the form "import foo.bar".
+  ///
+  /// @param importToAdd a string representation of the import to add
+  /// @return true if the import was added
   @CanIgnoreReturnValue
   public boolean add(String importToAdd) {
     return importStrings.add(importToAdd);
   }
 
-  /**
-   * Add all imports in a collection to this list of imports. Does not add any imports that are
-   * already in the list.
-   *
-   * @param importsToAdd a collection of imports to add
-   * @return true if any imports were added to the list
-   */
+  /// Add all imports in a collection to this list of imports. Does not add any imports that are
+  /// already in the list.
+  ///
+  /// @param importsToAdd a collection of imports to add
+  /// @return true if any imports were added to the list
   @CanIgnoreReturnValue
   public boolean addAll(Collection<String> importsToAdd) {
     return importStrings.addAll(importsToAdd);
   }
 
-  /**
-   * Remove an import from the list of imports. If the import is not in the list, does nothing. The
-   * import should be of the form "import foo.bar".
-   *
-   * @param importToRemove a string representation of the import to remove
-   * @return true if the import was removed
-   */
+  /// Remove an import from the list of imports. If the import is not in the list, does nothing. The
+  /// import should be of the form "import foo.bar".
+  ///
+  /// @param importToRemove a string representation of the import to remove
+  /// @return true if the import was removed
   @CanIgnoreReturnValue
   public boolean remove(String importToRemove) {
     return importStrings.remove(importToRemove);
   }
 
-  /**
-   * Removes all imports in a collection to this list of imports. Does not remove any imports that
-   * are not in the list.
-   *
-   * @param importsToRemove a collection of imports to remove
-   * @return true if any imports were removed from the list
-   */
+  /// Removes all imports in a collection to this list of imports. Does not remove any imports that
+  /// are not in the list.
+  ///
+  /// @param importsToRemove a collection of imports to remove
+  /// @return true if any imports were removed from the list
   @CanIgnoreReturnValue
   public boolean removeAll(Collection<String> importsToRemove) {
     return importStrings.removeAll(importsToRemove);
@@ -166,7 +156,7 @@ public class ImportStatements {
     return !importStrings.equals(originalImports);
   }
 
-  /** Returns a string representation of the imports as Java code in correct order. */
+  /// Returns a string representation of the imports as Java code in correct order.
   @Override
   public String toString() {
     if (importStrings.isEmpty()) {

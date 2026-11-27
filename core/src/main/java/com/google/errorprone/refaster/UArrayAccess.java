@@ -23,11 +23,9 @@ import com.sun.source.tree.ArrayAccessTree;
 import com.sun.source.tree.TreeVisitor;
 import com.sun.tools.javac.tree.JCTree.JCArrayAccess;
 
-/**
- * {@link UTree} version of {@link ArrayAccessTree}.
- *
- * @author lowasser@google.com (Louis Wasserman)
- */
+/// [UTree] version of [ArrayAccessTree].
+///
+/// @author lowasser@google.com (Louis Wasserman)
 @AutoValue
 abstract class UArrayAccess extends UExpression implements ArrayAccessTree {
   public static UArrayAccess create(UExpression arrayExpr, UExpression indexExpr) {

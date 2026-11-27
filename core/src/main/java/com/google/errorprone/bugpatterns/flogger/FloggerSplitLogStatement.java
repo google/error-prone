@@ -39,7 +39,7 @@ import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 
-/** Bugpattern to prevent splitting flogger log invocations into multiple statements. */
+/// Bugpattern to prevent splitting flogger log invocations into multiple statements.
 @BugPattern(
     summary = "Splitting log statements and using Api instances directly breaks logging.",
     linkType = CUSTOM,

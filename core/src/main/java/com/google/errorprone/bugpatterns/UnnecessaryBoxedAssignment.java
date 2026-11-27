@@ -39,11 +39,9 @@ import com.sun.source.tree.ReturnTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.tools.javac.code.Type;
 
-/**
- * Finds and fixes unnecessarily boxed return expressions.
- *
- * @author awturner@google.com (Andy Turner)
- */
+/// Finds and fixes unnecessarily boxed return expressions.
+///
+/// @author awturner@google.com (Andy Turner)
 @BugPattern(
     summary = "This expression can be implicitly boxed.",
     severity = SeverityLevel.SUGGESTION)

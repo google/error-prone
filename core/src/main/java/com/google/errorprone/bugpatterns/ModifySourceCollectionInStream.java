@@ -36,12 +36,10 @@ import com.sun.source.tree.Tree;
 import com.sun.source.util.TreePath;
 import org.jspecify.annotations.Nullable;
 
-/**
- * Identify the backing collection source of a stream and reports if the source is mutated during
- * the stream operations.
- *
- * @author deltazulu@google.com (Donald Duo Zhao)
- */
+/// Identify the backing collection source of a stream and reports if the source is mutated during
+/// the stream operations.
+///
+/// @author deltazulu@google.com (Donald Duo Zhao)
 @BugPattern(
     summary = "Modifying the backing source during stream operations may cause unintended results.",
     severity = WARNING)
@@ -59,7 +57,7 @@ public class ModifySourceCollectionInStream extends BugChecker
           .onDescendantOf("java.util.Collection")
           .namedAnyOf(STREAM_CREATION_METHOD_NAMES);
 
-  /** Covers common stream structures, including Stream, IntStream, LongStream, DoubleStream. */
+  /// Covers common stream structures, including Stream, IntStream, LongStream, DoubleStream.
   private static final Matcher<ExpressionTree> STREAM_API_INVOCATION_MATCHER =
       instanceMethod().onDescendantOfAny("java.util.stream.BaseStream");
 
@@ -114,15 +112,10 @@ public class ModifySourceCollectionInStream extends BugChecker
         : Description.NO_MATCH;
   }
 
-  /**
-   * Returns true if and only if the given MethodInvocationTree
-   *
-   * <ol>
-   *   <li>is a Stream API invocation (e.g. map, filter, collect);
-   *   <li>the source of the stream has the same expression representation as
-   *       streamSourceExpression.
-   * </ol>
-   */
+  /// Returns true if and only if the given MethodInvocationTree
+  ///
+  /// 1. is a Stream API invocation (e.g. map, filter, collect);
+  /// 1. the source of the stream has the same expression representation as streamSourceExpression.
   private static boolean isStreamApiInvocationOnStreamSource(
       @Nullable ExpressionTree rootTree,
       ExpressionTree streamSourceExpression,

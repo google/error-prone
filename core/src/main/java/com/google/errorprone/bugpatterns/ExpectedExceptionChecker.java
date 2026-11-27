@@ -66,7 +66,7 @@ import java.util.List;
 import org.jspecify.annotations.Nullable;
 import org.safere.Pattern;
 
-/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
+/// A [BugChecker]; see the associated [BugPattern] annotation for details.
 @BugPattern(summary = "Prefer assertThrows to ExpectedException", severity = WARNING)
 public class ExpectedExceptionChecker extends BugChecker implements MethodTreeMatcher {
 
@@ -145,15 +145,13 @@ public class ExpectedExceptionChecker extends BugChecker implements MethodTreeMa
     return handleMatch(tree, state, expectations, ImmutableList.copyOf(suffix), failure);
   }
 
-  /**
-   * Handle a method that contains a use of {@code ExpectedException}.
-   *
-   * @param tree the method
-   * @param state the visitor state
-   * @param expectations the statements for the call to {@code thrown.except(...)}, and any
-   *     additional assertions
-   * @param suffix the statements after the assertions, which are expected to throw
-   */
+  /// Handle a method that contains a use of `ExpectedException`.
+  ///
+  /// @param tree the method
+  /// @param state the visitor state
+  /// @param expectations the statements for the call to `thrown.except(...)`, and any additional
+  ///   assertions
+  /// @param suffix the statements after the assertions, which are expected to throw
   private Description handleMatch(
       MethodTree tree,
       VisitorState state,

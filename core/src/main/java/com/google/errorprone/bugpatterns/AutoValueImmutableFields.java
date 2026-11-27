@@ -37,11 +37,9 @@ import com.sun.source.tree.Tree;
 import java.util.Map;
 import javax.lang.model.element.Modifier;
 
-/**
- * Flags mutable collections in AutoValue.
- *
- * @author bhagwani@google.com (Sumit Bhagwani)
- */
+/// Flags mutable collections in AutoValue.
+///
+/// @author bhagwani@google.com (Sumit Bhagwani)
 @BugPattern(
     altNames = "mutable",
     summary = "AutoValue recommends using immutable collections",

@@ -44,10 +44,8 @@ import java.util.ArrayList;
 import java.util.List;
 import org.jspecify.annotations.Nullable;
 
-/**
- * Simplifies redundant {@code hashCode()} or {@code Objects.hash()} calls inside {@code
- * Objects.hash()}, and simplifies single-argument calls to {@code Objects.hashCode()}.
- */
+/// Simplifies redundant `hashCode()` or `Objects.hash()` calls inside `Objects.hash()`, and
+/// simplifies single-argument calls to `Objects.hashCode()`.
 @BugPattern(
     summary =
         "Calling hashCode() or Objects.hash() inside Objects.hash() is redundant; use"
@@ -135,7 +133,7 @@ public final class HashCodeInObjectsHash extends BugChecker implements MethodInv
     return describeMatch(tree, fix.build());
   }
 
-  /** Checks if this call is a direct argument (modulo parens) of an outer Objects.hash. */
+  /// Checks if this call is a direct argument (modulo parens) of an outer Objects.hash.
   private static boolean isDirectArgumentOfObjectsHash(VisitorState state) {
     TreePath path = state.getPath().getParentPath();
     while (path != null && path.getLeaf() instanceof ParenthesizedTree) {

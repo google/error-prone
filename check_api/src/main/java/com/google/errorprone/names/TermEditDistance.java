@@ -20,22 +20,18 @@ import com.google.common.collect.ImmutableList;
 import java.util.function.BiFunction;
 import java.util.stream.DoubleStream;
 
-/**
- * A utility class for finding the distance between two identifiers. Each identifier is split into
- * its constituent terms (based on camel case or underscore naming conventions). Then the edit
- * distance between each term is computed and the minimum cost assignment is found.
- */
+/// A utility class for finding the distance between two identifiers. Each identifier is split into
+/// its constituent terms (based on camel case or underscore naming conventions). Then the edit
+/// distance between each term is computed and the minimum cost assignment is found.
 public class TermEditDistance {
 
   private final BiFunction<String, String, Double> editDistanceFn;
   private final BiFunction<Integer, Integer, Double> maxDistanceFn;
 
-  /**
-   * Creates a TermEditDistance Object
-   *
-   * @param editDistanceFn function to compute the distance between two terms
-   * @param maxDistanceFn function to compute the worst case distance between two terms
-   */
+  /// Creates a TermEditDistance Object
+  ///
+  /// @param editDistanceFn function to compute the distance between two terms
+  /// @param maxDistanceFn function to compute the worst case distance between two terms
   public TermEditDistance(
       BiFunction<String, String, Double> editDistanceFn,
       BiFunction<Integer, Integer, Double> maxDistanceFn) {
@@ -94,10 +90,8 @@ public class TermEditDistance {
     return assignmentCost / maxCost;
   }
 
-  /**
-   * Compute the total cost of this assignment including the costs of unassigned source and target
-   * terms.
-   */
+  /// Compute the total cost of this assignment including the costs of unassigned source and target
+  /// terms.
   private static double computeCost(
       int[] assignments,
       double[][] costMatrix,

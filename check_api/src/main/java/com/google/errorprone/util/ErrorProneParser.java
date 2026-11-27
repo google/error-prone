@@ -20,7 +20,7 @@ import com.sun.tools.javac.parser.JavacParser;
 import com.sun.tools.javac.parser.ParserFactory;
 import com.sun.tools.javac.util.Context;
 
-/** A compatibility wrapper around {@link ParserFactory}. */
+/// A compatibility wrapper around [ParserFactory].
 public final class ErrorProneParser {
 
   public static JavacParser newParser(

@@ -44,11 +44,9 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import java.util.List;
 import org.jspecify.annotations.Nullable;
 
-/**
- * Detects usages of Truth assertions with the expected and actual values reversed.
- *
- * @author ghm@google.com (Graeme Morgan)
- */
+/// Detects usages of Truth assertions with the expected and actual values reversed.
+///
+/// @author ghm@google.com (Graeme Morgan)
 @BugPattern(
     summary =
         "The actual and expected values appear to be swapped, which results in poor assertion "
@@ -70,13 +68,10 @@ public final class TruthAssertExpected extends BugChecker implements MethodInvoc
 
   private static final Matcher<ExpressionTree> ASSERTION = anyOf(TRUTH_ASSERTTHAT, TRUTH_VERB);
 
-  /**
-   * A heuristic for whether a method may have been invoked with an expected value.
-   *
-   * <p>We match cases such as {@code assertThat(expectedFoo)}, {@code
-   * assertThat(expectedBar.id())}, but not if the identifier extends {@link Throwable} (as this is
-   * often named {@code expectedException} or similar).
-   */
+  /// A heuristic for whether a method may have been invoked with an expected value.
+  ///
+  /// We match cases such as `assertThat(expectedFoo)`, `assertThat(expectedBar.id())`, but not if
+  /// the identifier extends [Throwable] (as this is often named `expectedException` or similar).
   private static boolean expectedValue(ExpressionTree tree, VisitorState state) {
     if (!(tree instanceof MethodInvocationTree methodTree)) {
       return false;
@@ -95,7 +90,7 @@ public final class TruthAssertExpected extends BugChecker implements MethodInvoc
   private static final Matcher<ExpressionTree> ASSERT_ON_EXPECTED =
       allOf(ASSERTION, TruthAssertExpected::expectedValue);
 
-  /** Truth assertion chains which are commutative. Many are not, such as {@code containsAny}. */
+  /// Truth assertion chains which are commutative. Many are not, such as `containsAny`.
   private static final Matcher<ExpressionTree> REVERSIBLE_TERMINATORS =
       anyOf(
           instanceMethod()
@@ -116,10 +111,8 @@ public final class TruthAssertExpected extends BugChecker implements MethodInvoc
               .onDescendantOf("com.google.common.truth.DoubleSubject.TolerantDoubleComparison")
               .named("of"));
 
-  /**
-   * Matches expressions that look like they should be considered constant, i.e. {@code
-   * ImmutableList.of(1, 2)}, {@code Long.valueOf(10L)}.
-   */
+  /// Matches expressions that look like they should be considered constant, i.e.
+  /// `ImmutableList.of(1, 2)`, `Long.valueOf(10L)`.
   private static boolean isConstantCreator(ExpressionTree tree) {
     List<? extends ExpressionTree> arguments =
         tree.accept(
@@ -144,7 +137,7 @@ public final class TruthAssertExpected extends BugChecker implements MethodInvoc
         && arguments.stream().allMatch(argument -> ASTHelpers.constValue(argument) != null);
   }
 
-  /** Matcher for a reversible assertion that appears to be the wrong way around. */
+  /// Matcher for a reversible assertion that appears to be the wrong way around.
   private static final Matcher<ExpressionTree> MATCH =
       allOf(REVERSIBLE_TERMINATORS, hasReceiverMatching(ASSERT_ON_EXPECTED));
 
@@ -180,19 +173,15 @@ public final class TruthAssertExpected extends BugChecker implements MethodInvoc
     return (tree, state) -> findReceiverMatching(tree, state, matcher) != null;
   }
 
-  /**
-   * Walks up the receivers for an expression chain until one matching {@code matcher} is found, and
-   * returns the matched {@link ExpressionTree}, or {@code null} if none match.
-   */
+  /// Walks up the receivers for an expression chain until one matching `matcher` is found, and
+  /// returns the matched [ExpressionTree], or `null` if none match.
   private static @Nullable ExpressionTree findReceiverMatching(
       ExpressionTree tree, VisitorState state, Matcher<ExpressionTree> matcher) {
     return streamReceivers(tree).filter(t -> matcher.matches(t, state)).findFirst().orElse(null);
   }
 
-  /**
-   * Walks up the provided {@link ExpressionTree} to find the {@link IdentifierTree identifier} that
-   * it stems from. Returns {@code null} if the tree doesn't terminate in an identifier.
-   */
+  /// Walks up the provided [ExpressionTree] to find the [`identifier`][IdentifierTree] that it
+  /// stems from. Returns `null` if the tree doesn't terminate in an identifier.
   private static @Nullable IdentifierTree getRootIdentifier(ExpressionTree tree) {
     if (tree == null) {
       return null;

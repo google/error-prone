@@ -40,34 +40,30 @@ import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.MethodTree;
 
-/**
- * This checker matches iff *both* of the following conditions are true: 1) The class is assisted:
- * a) If there is a constructor that is annotated with @Inject and that constructor has at least one
- * parameter that is annotated with @Assisted. b) If there is no @Inject constructor and at least
- * one constructor is annotated with {@code @AssistedInject}. 2) There is an annotation on the
- * class, and the annotation is itself annotated with {@code @ScopeAnnotation}.
- *
- * @author eaftan@google.com (Eddie Aftandilian)
- */
+/// This checker matches iff \*both\* of the following conditions are true: 1) The class is
+/// assisted: a) If there is a constructor that is annotated with @Inject and that constructor has
+/// at least one parameter that is annotated with @Assisted. b) If there is no @Inject constructor
+/// and at least one constructor is annotated with `@AssistedInject`. 2) There is an annotation on
+/// the class, and the annotation is itself annotated with `@ScopeAnnotation`.
+///
+/// @author eaftan@google.com (Eddie Aftandilian)
 @BugPattern(
     name = "GuiceAssistedInjectScoping",
     summary = "Scope annotation on implementation class of AssistedInject factory is not allowed",
     severity = ERROR)
 public class AssistedInjectScoping extends BugChecker implements ClassTreeMatcher {
 
-  /** Matches classes that have an annotation that itself is annotated with @ScopeAnnotation. */
+  /// Matches classes that have an annotation that itself is annotated with @ScopeAnnotation.
   private static final MultiMatcher<ClassTree, AnnotationTree> CLASS_TO_SCOPE_ANNOTATIONS =
       annotations(AT_LEAST_ONE, IS_SCOPING_ANNOTATION);
 
-  /** Matches if any constructor of a class is annotated with an @Inject annotation. */
+  /// Matches if any constructor of a class is annotated with an @Inject annotation.
   private static final MultiMatcher<ClassTree, MethodTree> CLASS_TO_INJECTED_CONSTRUCTORS =
       constructor(AT_LEAST_ONE, hasInjectAnnotation());
 
-  /**
-   * Matches if: 1) If there is a constructor that is annotated with @Inject and that constructor
-   * has at least one parameter that is annotated with @Assisted. 2) If there is no @Inject
-   * constructor and at least one constructor is annotated with @AssistedInject.
-   */
+  /// Matches if: 1) If there is a constructor that is annotated with @Inject and that constructor
+  /// has at least one parameter that is annotated with @Assisted. 2) If there is no @Inject
+  /// constructor and at least one constructor is annotated with @AssistedInject.
   private static final Matcher<ClassTree> HAS_ASSISTED_CONSTRUCTOR =
       (ClassTree classTree, VisitorState state) -> {
         MultiMatchResult<MethodTree> injectedConstructors =

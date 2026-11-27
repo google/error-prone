@@ -123,11 +123,9 @@ import javax.lang.model.element.ElementKind;
 import javax.lang.model.type.TypeMirror;
 import org.jspecify.annotations.Nullable;
 
-/**
- * Converts a type-checked syntax tree to a portable {@code UTree} template.
- *
- * @author lowasser@google.com (Louis Wasserman)
- */
+/// Converts a type-checked syntax tree to a portable `UTree` template.
+///
+/// @author lowasser@google.com (Louis Wasserman)
 public class UTemplater extends SimpleTreeVisitor<Tree, Void> {
   public static Template<?> createTemplate(
       Context context,
@@ -648,10 +646,7 @@ public class UTemplater extends SimpleTreeVisitor<Tree, Void> {
         .orElse(null);
   }
 
-  /**
-   * Returns the {@link Class} instance for the {@link Matcher} associated with the provided
-   * annotation mirror.
-   */
+  /// Returns the [Class] instance for the [Matcher] associated with the provided annotation mirror.
   static Class<? extends Matcher<? super ExpressionTree>> getMatcherClass(
       AnnotationMirror compound) {
     TypeMirror type =
@@ -667,10 +662,8 @@ public class UTemplater extends SimpleTreeVisitor<Tree, Void> {
     }
   }
 
-  /**
-   * Similar to {@link Class#asSubclass(Class)}, but it accepts a {@link TypeToken} so it handles
-   * generics better.
-   */
+  /// Similar to [Class#asSubclass(Class)], but it accepts a [TypeToken] so it handles generics
+  /// better.
   @SuppressWarnings("unchecked")
   private static <T> Class<? extends T> asSubclass(Class<?> klass, TypeToken<T> token) {
     if (!token.isSupertypeOf(klass)) {

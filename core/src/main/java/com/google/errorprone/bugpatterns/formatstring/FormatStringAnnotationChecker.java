@@ -42,7 +42,7 @@ import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
 import java.util.List;
 
-/** {@link BugChecker} to assert validity of methods calls with {@link FormatString} annotations. */
+/// [BugChecker] to assert validity of methods calls with [FormatString] annotations.
 @BugPattern(
     name = "FormatStringAnnotation",
     summary = "Invalid format string passed to formatting method.",
@@ -50,10 +50,8 @@ import java.util.List;
 public final class FormatStringAnnotationChecker extends BugChecker
     implements MethodInvocationTreeMatcher, MethodTreeMatcher, NewClassTreeMatcher {
 
-  /**
-   * Matches a method or constructor invocation. The input symbol should match the invoked method or
-   * constructor and the args should be the parameters in the invocation.
-   */
+  /// Matches a method or constructor invocation. The input symbol should match the invoked method
+  /// or constructor and the args should be the parameters in the invocation.
   private Description matchInvocation(
       ExpressionTree tree,
       MethodSymbol symbol,

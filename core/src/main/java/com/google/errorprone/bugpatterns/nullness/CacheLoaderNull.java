@@ -25,7 +25,7 @@ import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.sun.source.tree.ExpressionTree;
 
-/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
+/// A [BugChecker]; see the associated [BugPattern] annotation for details.
 @BugPattern(summary = "The result of CacheLoader#load must be non-null.", severity = WARNING)
 public final class CacheLoaderNull extends AbstractAsyncTypeReturnsNull {
   public CacheLoaderNull() {

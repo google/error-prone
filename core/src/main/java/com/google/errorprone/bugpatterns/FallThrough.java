@@ -37,7 +37,7 @@ import com.sun.tools.javac.util.Position;
 import java.util.List;
 import org.safere.Pattern;
 
-/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
+/// A [BugChecker]; see the associated [BugPattern] annotation for details.
 @BugPattern(altNames = "fallthrough", summary = "Switch case may fall through", severity = WARNING)
 public class FallThrough extends BugChecker implements SwitchTreeMatcher {
 

@@ -45,7 +45,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-/** Flogger's withCause(Throwable) method checks */
+/// Flogger's withCause(Throwable) method checks
 @BugPattern(
     summary =
         "Calling withCause(Throwable) with an inline allocated Throwable is discouraged."
@@ -140,16 +140,14 @@ public class FloggerWithCause extends BugChecker implements MethodInvocationTree
     return Optional.empty();
   }
 
-  /**
-   * Returns fix that has current method replaced with provided method replacement string and
-   * provided static import added to it
-   */
+  /// Returns fix that has current method replaced with provided method replacement string and
+  /// provided static import added to it
   private static Fix getFix(
       MethodInvocationTree tree, VisitorState state, String replacement, String importString) {
     return getFixBuilder(tree, state, replacement).addStaticImport(importString).build();
   }
 
-  /** Returns fix that has current method replaced with provided method replacement string */
+  /// Returns fix that has current method replaced with provided method replacement string
   private static Fix getFix(MethodInvocationTree tree, VisitorState state, String replacement) {
     return getFixBuilder(tree, state, replacement).build();
   }

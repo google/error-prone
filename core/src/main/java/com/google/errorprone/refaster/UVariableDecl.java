@@ -33,19 +33,17 @@ import com.sun.tools.javac.util.Name;
 import java.util.Optional;
 import org.jspecify.annotations.Nullable;
 
-/**
- * A {@link UTree} representation of a local variable declaration.
- *
- * <p>A {@code UVariableDecl} can be unified with any variable declaration which has a matching type
- * and initializer. Annotations and modifiers are preserved for the corresponding replacement, as
- * well as the variable name. {@link ULocalVarIdent} instances are used to represent references to
- * local variables.
- *
- * <p>As a result, we can modify variable declarations and initializations in target code while
- * preserving variable names and other contextual information.
- *
- * @author lowasser@google.com (Louis Wasserman)
- */
+/// A [UTree] representation of a local variable declaration.
+///
+/// A `UVariableDecl` can be unified with any variable declaration which has a matching type and
+/// initializer. Annotations and modifiers are preserved for the corresponding replacement, as well
+/// as the variable name. [ULocalVarIdent] instances are used to represent references to local
+/// variables.
+///
+/// As a result, we can modify variable declarations and initializations in target code while
+/// preserving variable names and other contextual information.
+///
+/// @author lowasser@google.com (Louis Wasserman)
 @AutoValue
 public abstract class UVariableDecl extends USimpleStatement implements VariableTree {
   public static UVariableDecl create(

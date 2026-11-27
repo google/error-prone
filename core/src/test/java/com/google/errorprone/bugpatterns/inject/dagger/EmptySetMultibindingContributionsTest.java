@@ -31,7 +31,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
-/** Tests {@link EmptySetMultibindingContributions}. */
+/// Tests [EmptySetMultibindingContributions].
 @RunWith(Parameterized.class)
 public final class EmptySetMultibindingContributionsTest {
   @Parameters(name = "{0}")

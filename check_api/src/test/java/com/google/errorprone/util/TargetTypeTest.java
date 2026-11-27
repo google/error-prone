@@ -39,7 +39,7 @@ import org.safere.Pattern;
 
 @RunWith(JUnit4.class)
 public final class TargetTypeTest {
-  /** A {@link BugChecker} that prints the target type of matched method invocations. */
+  /// A [BugChecker] that prints the target type of matched method invocations.
   @BugPattern(severity = SeverityLevel.ERROR, summary = "Prints the target type")
   public static class TargetTypeChecker extends BugChecker
       implements MethodInvocationTreeMatcher, IdentifierTreeMatcher {

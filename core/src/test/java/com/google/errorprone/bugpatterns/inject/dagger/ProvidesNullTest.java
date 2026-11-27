@@ -21,7 +21,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** Tests for {@link ProvidesNull}. */
+/// Tests for [ProvidesNull].
 @RunWith(JUnit4.class)
 public class ProvidesNullTest {
   private final CompilationTestHelper compilationHelper =
@@ -127,10 +127,8 @@ public class Test {
         .doTest();
   }
 
-  /**
-   * Tests that we do not flag Guice {@code @Provides} methods. While this is also wrong, there is
-   * no enforcement in Guice and so the incorrect usage is too common to error on.
-   */
+  /// Tests that we do not flag Guice `@Provides` methods. While this is also wrong, there is no
+  /// enforcement in Guice and so the incorrect usage is too common to error on.
   @Test
   public void guiceProvides() {
     compilationHelper

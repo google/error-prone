@@ -44,7 +44,7 @@ import java.util.Map;
 import java.util.Set;
 import javax.inject.Inject;
 
-/** Bugpattern to detect unused nested classes. */
+/// Bugpattern to detect unused nested classes.
 @BugPattern(
     altNames = "unused",
     summary = "This nested class is unused, and can be removed.",

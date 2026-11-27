@@ -28,7 +28,7 @@ import com.sun.source.util.TreePath;
 import com.sun.tools.javac.util.Context;
 import java.lang.annotation.Annotation;
 
-/** Adapter from an {@link ErrorProneScanner} to a {@link CodeTransformer}. */
+/// Adapter from an [ErrorProneScanner] to a [CodeTransformer].
 @AutoValue
 public abstract class ErrorProneScannerTransformer implements CodeTransformer {
 
@@ -48,7 +48,7 @@ public abstract class ErrorProneScannerTransformer implements CodeTransformer {
     return ImmutableClassToInstanceMap.of();
   }
 
-  /** Create a VisitorState object from a compilation unit. */
+  /// Create a VisitorState object from a compilation unit.
   private VisitorState createVisitorState(Context context, DescriptionListener listener) {
     ErrorProneOptions options = requireNonNull(context.get(ErrorProneOptions.class));
     return VisitorState.createConfiguredForCompilation(

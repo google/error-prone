@@ -40,7 +40,7 @@ import com.sun.source.tree.NewClassTree;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import java.util.List;
 
-/** Match possibly incorrect use of Period to obtain a number of (e.g.) days between two dates. */
+/// Match possibly incorrect use of Period to obtain a number of (e.g.) days between two dates.
 @BugPattern(
     summary =
         "This may have surprising semantics, e.g. new Period(LocalDate.parse(\"1970-01-01\"), "

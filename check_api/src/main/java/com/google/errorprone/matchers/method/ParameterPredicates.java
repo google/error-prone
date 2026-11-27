@@ -23,7 +23,7 @@ import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.TypeTag;
 import java.util.List;
 
-/** Utility methods for creating {@link ParameterPredicate} instances. */
+/// Utility methods for creating [ParameterPredicate] instances.
 public final class ParameterPredicates {
 
   public static ParameterPredicate of(TypePredicate predicate) {

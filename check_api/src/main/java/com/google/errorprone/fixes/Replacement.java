@@ -19,21 +19,17 @@ package com.google.errorprone.fixes;
 import com.google.common.collect.Range;
 import com.google.errorprone.SourcePositionException;
 
-/**
- * A replaced section of a source file.
- *
- * @param range The {@link Range} to be replaced.
- * @param replaceWith The source text to appear in the output.
- */
+/// A replaced section of a source file.
+///
+/// @param range The [Range] to be replaced.
+/// @param replaceWith The source text to appear in the output.
 public record Replacement(Range<Integer> range, String replaceWith) {
-  /**
-   * Creates a {@link Replacement}. Start and end positions are represented as code unit indices in
-   * a Unicode 16-bit string.
-   *
-   * @param startPosition the beginning of the replacement
-   * @param endPosition the end of the replacement, exclusive
-   * @param replaceWith the replacement text
-   */
+  /// Creates a [Replacement]. Start and end positions are represented as code unit indices in a
+  /// Unicode 16-bit string.
+  ///
+  /// @param startPosition the beginning of the replacement
+  /// @param endPosition the end of the replacement, exclusive
+  /// @param replaceWith the replacement text
   public static Replacement create(int startPosition, int endPosition, String replaceWith) {
     if (startPosition < 0 || startPosition > endPosition) {
       throw new SourcePositionException(startPosition, endPosition);
@@ -41,22 +37,22 @@ public record Replacement(Range<Integer> range, String replaceWith) {
     return new Replacement(Range.closedOpen(startPosition, endPosition), replaceWith);
   }
 
-  /** The beginning of the replacement range. */
+  /// The beginning of the replacement range.
   public int startPosition() {
     return range().lowerEndpoint();
   }
 
-  /** The length of the input text to be replaced. */
+  /// The length of the input text to be replaced.
   public int length() {
     return endPosition() - startPosition();
   }
 
-  /** The end of the replacement range, exclusive. */
+  /// The end of the replacement range, exclusive.
   public int endPosition() {
     return range().upperEndpoint();
   }
 
-  /** Creates a new replacement at the same range with different text. */
+  /// Creates a new replacement at the same range with different text.
   Replacement withDifferentText(String replaceWith) {
     return new Replacement(range(), replaceWith);
   }

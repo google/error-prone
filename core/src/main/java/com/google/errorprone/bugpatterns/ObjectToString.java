@@ -34,12 +34,10 @@ import com.sun.tools.javac.util.Names;
 import java.util.Optional;
 import javax.inject.Inject;
 
-/**
- * Warns against calling toString() on Objects which don't have toString() method overridden and
- * won't produce meaningful output.
- *
- * @author bhagwani@google.com (Sumit Bhagwani)
- */
+/// Warns against calling toString() on Objects which don't have toString() method overridden and
+/// won't produce meaningful output.
+///
+/// @author bhagwani@google.com (Sumit Bhagwani)
 @BugPattern(
     summary =
         "Calling toString on Objects that don't override toString() doesn't"

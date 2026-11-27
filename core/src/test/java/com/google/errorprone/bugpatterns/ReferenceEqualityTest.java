@@ -26,7 +26,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** {@link ReferenceEquality}Test */
+/// [ReferenceEquality]Test
 @RunWith(JUnit4.class)
 public class ReferenceEqualityTest {
 
@@ -1384,6 +1384,35 @@ public class ReferenceEqualityTest {
               }
 
               boolean g(ExpressionTree a, ExpressionTree b) {
+                return a == b;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void negative_element() {
+    compilationHelper
+        .addModules("jdk.compiler/com.sun.tools.javac.code")
+        .addSourceLines(
+            "Test.java",
+            """
+            import com.sun.tools.javac.code.Symbol;
+            import com.sun.tools.javac.code.Symbol.TypeSymbol;
+            import javax.lang.model.element.Element;
+            import javax.lang.model.element.TypeElement;
+
+            class Test {
+              boolean f(Symbol a, Symbol b) {
+                return a == b;
+              }
+
+              boolean g(Symbol a, TypeSymbol b) {
+                return a == b;
+              }
+
+              boolean h(Element a, TypeElement b) {
                 return a == b;
               }
             }

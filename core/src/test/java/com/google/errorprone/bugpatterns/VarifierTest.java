@@ -23,7 +23,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** Tests for {@link Varifier}. */
+/// Tests for [Varifier].
 @RunWith(JUnit4.class)
 public final class VarifierTest {
   private final BugCheckerRefactoringTestHelper refactoringHelper =

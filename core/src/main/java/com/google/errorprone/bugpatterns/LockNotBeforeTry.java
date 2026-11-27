@@ -41,12 +41,10 @@ import com.sun.source.util.TreePath;
 import com.sun.source.util.TreeScanner;
 import org.jspecify.annotations.Nullable;
 
-/**
- * Suggests that calls to {@code Lock.lock} must be immediately followed by a {@code try-finally}
- * that calls {@code Lock.unlock}.
- *
- * @author ghm@google.com (Graeme Morgan)
- */
+/// Suggests that calls to `Lock.lock` must be immediately followed by a `try-finally` that calls
+/// `Lock.unlock`.
+///
+/// @author ghm@google.com (Graeme Morgan)
 @BugPattern(
     summary =
         "Calls to Lock#lock should be immediately followed by a try block which releases the lock.",

@@ -49,7 +49,7 @@ import java.util.List;
 import java.util.Set;
 import javax.inject.Inject;
 
-/** Matches always-default expressions in oneof switches. */
+/// Matches always-default expressions in oneof switches.
 @BugPattern(
     severity = ERROR,
     summary = "This field is guaranteed not to be set given it's within a switch over a one_of.")

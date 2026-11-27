@@ -21,7 +21,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** Unit test of {@link JUnit4ClassAnnotationNonStatic} */
+/// Unit test of [JUnit4ClassAnnotationNonStatic]
 @RunWith(JUnit4.class)
 public class JUnit4ClassAnnotationNonStaticTest {
 

@@ -20,9 +20,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * @author Gregory Kick (gak@google.com)
- */
+/// @author Gregory Kick (gak@google.com)
 @RunWith(JUnit4.class)
 public final class PrivateConstructorForNoninstantiableModuleTest {
   private final BugCheckerRefactoringTestHelper testHelper =

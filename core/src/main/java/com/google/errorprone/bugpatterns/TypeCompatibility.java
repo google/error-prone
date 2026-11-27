@@ -21,6 +21,7 @@ import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.common.collect.Iterables.isEmpty;
 import static com.google.common.collect.Streams.concat;
 import static com.google.errorprone.VisitorState.memoize;
+import static com.google.errorprone.bugpatterns.NonInheritedEqualsTypes.CLASSES_WITH_NON_INHERITED_EQUALS;
 import static com.google.errorprone.matchers.ProtobufMatchers.DYNAMIC_MESSAGE;
 import static com.google.errorprone.matchers.ProtobufMatchers.MESSAGE;
 import static com.google.errorprone.matchers.ProtobufMatchers.MESSAGE_LITE;
@@ -55,14 +56,12 @@ import javax.lang.model.element.Element;
 import javax.lang.model.type.TypeKind;
 import org.jspecify.annotations.Nullable;
 
-/**
- * Methods to answer the question: are these two types "compatible" with each other, in the context
- * of an equality check?
- *
- * <p>That is, based on the types alone, is it possible for them to be equal. In general this
- * requires a common superclass that overrides {@link Object#equals(Object)}, but there are
- * complexities and special-cases.
- */
+/// Methods to answer the question: are these two types "compatible" with each other, in the context
+/// of an equality check?
+///
+/// That is, based on the types alone, is it possible for them to be equal. In general this requires
+/// a common superclass that overrides [Object#equals(Object)], but there are complexities and
+/// special-cases.
 public final class TypeCompatibility {
   private static final String WITHOUT_EQUALS_REASON =
       ". Though these types are the same, the type doesn't implement equals.";
@@ -204,11 +203,9 @@ public final class TypeCompatibility {
         .anyMatch(method -> rightClass.isSubClass(method.enclClass(), types));
   }
 
-  /**
-   * Returns {@code true} if the given {@code equals} method represents an implementation of {@code
-   * equals(Object)} that is not on {@link Object}, {@link Enum}, {@link Record}, or other types
-   * whose {@code equals} declaration does not define cross-subtype value equality.
-   */
+  /// Returns `true` if the given `equals` method represents an implementation of `equals(Object)`
+  /// that is not on [Object], [Enum], [Record], or other types whose `equals` declaration does not
+  /// define cross-subtype value equality.
   private boolean customEqualsMethod(MethodSymbol methodSymbol, VisitorState state) {
     ClassSymbol owningClass = methodSymbol.enclClass();
     return !methodSymbol.isStatic()
@@ -225,14 +222,12 @@ public final class TypeCompatibility {
         && !classesWithNonInheritedEquals.get(state).contains(owningClass.getQualifiedName());
   }
 
-  /**
-   * Detects the situation where two distinct subtypes of Collection (e.g.: List or Set) are
-   * compared.
-   *
-   * <p>Since they share a common interface with an equals() declaration ({@code Collection<T>}),
-   * normal processing will consider them compatible with each other, but each subtype of Collection
-   * overrides equals() in such a way as to be incompatible with each other.
-   */
+  /// Detects the situation where two distinct subtypes of Collection (e.g.: List or Set) are
+  /// compared.
+  ///
+  /// Since they share a common interface with an equals() declaration (`Collection<T>`), normal
+  /// processing will consider them compatible with each other, but each subtype of Collection
+  /// overrides equals() in such a way as to be incompatible with each other.
   private static boolean areTypesIncompatibleCollections(
       Type leftType, Type rightType, Type nearestCommonSupertype, VisitorState state) {
     // We want to disallow equality between these collection sub-interfaces, but *do* want to
@@ -315,16 +310,13 @@ public final class TypeCompatibility {
     return String.join(".", parts);
   }
 
-  /**
-   * Given a {@code leftType} and {@code rightType} (of the shared supertype {@code superType}),
-   * compare the generic types of those two types (as projected against the {@code superType})
-   * against each other.
-   *
-   * <p>If there are no generic types, or the generic types are compatible with each other, returns
-   * a {@link TypeCompatibilityReport#isCompatible} report. Otherwise, returns a compatibility
-   * report showing that a specific generic type in the projection of {@code leftType} is
-   * incompatible with the specific generic type in the projection of {@code rightType}.
-   */
+  /// Given a `leftType` and `rightType` (of the shared supertype `superType`), compare the generic
+  /// types of those two types (as projected against the `superType`) against each other.
+  ///
+  /// If there are no generic types, or the generic types are compatible with each other, returns a
+  /// [TypeCompatibilityReport#isCompatible] report. Otherwise, returns a compatibility report
+  /// showing that a specific generic type in the projection of `leftType` is incompatible with the
+  /// specific generic type in the projection of `rightType`.
   private TypeCompatibilityReport checkForGenericsMismatch(
       Type leftType,
       Type rightType,
@@ -375,11 +367,9 @@ public final class TypeCompatibility {
         state.getTypes().isSameType(t1, t2) ? 0 : t1.toString().compareTo(t2.toString()));
   }
 
-  /**
-   * The result of a {@link TypeCompatibility#compatibilityOfTypes} call.
-   *
-   * <p>If {@link #isCompatible} is {@code true}, the other fields are {@code null}.
-   */
+  /// The result of a [TypeCompatibility#compatibilityOfTypes] call.
+  ///
+  /// If [#isCompatible] is `true`, the other fields are `null`.
   public record TypeCompatibilityReport(
       boolean isCompatible, @Nullable Type lhs, @Nullable Type rhs, @Nullable String extraReason) {
     private static final TypeCompatibilityReport COMPATIBLE =
@@ -404,34 +394,4 @@ public final class TypeCompatibility {
       VisitorState.memoize(state -> state.getName("equals"));
 
   private static final Supplier<Type> JAVA_UTIL_COLLECTION = typeFromString("java.util.Collection");
-
-  private static final ImmutableSet<String> CLASSES_WITH_NON_INHERITED_EQUALS =
-      ImmutableSet.of(
-          "com.google.common.base.Converter",
-          "com.google.common.base.Equivalence",
-          "com.google.common.base.Function",
-          "com.google.common.base.Predicate",
-          "com.google.common.base.Supplier",
-          "com.google.common.flags.Flag",
-          "com.google.common.flogger.MetadataKey",
-          "com.google.common.reflect.AbstractInvocationHandler",
-          "com.sun.tools.javac.code.Type",
-          "java.awt.RenderingHints.Key",
-          "java.lang.ProcessHandle",
-          "java.net.InetAddress",
-          "java.nio.file.Path",
-          "java.security.BasicPermission",
-          "java.security.Permission",
-          "java.security.Principal",
-          "java.text.AttributedCharacterIterator.Attribute",
-          "java.text.Collator",
-          "java.text.DateFormat",
-          "java.text.NumberFormat",
-          "java.time.Clock",
-          "java.time.chrono.ChronoLocalDate",
-          "java.time.chrono.ChronoLocalDateTime",
-          "java.time.chrono.ChronoPeriod",
-          "java.time.chrono.ChronoZonedDateTime",
-          "java.util.Collection",
-          "java.util.Comparator");
 }

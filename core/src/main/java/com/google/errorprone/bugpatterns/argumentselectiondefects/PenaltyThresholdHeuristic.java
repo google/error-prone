@@ -20,14 +20,12 @@ import com.google.errorprone.VisitorState;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 
-/**
- * Heuristic to keep suggestions which score sufficiently different to the original. The idea is
- * that we should leave the arguments alone if we are not sure we can swap them so if the overall
- * score of the alternative is not significantly better than the original we want to leave the
- * original in place.
- *
- * @author andrewrice@google.com (Andrew Rice)
- */
+/// Heuristic to keep suggestions which score sufficiently different to the original. The idea is
+/// that we should leave the arguments alone if we are not sure we can swap them so if the overall
+/// score of the alternative is not significantly better than the original we want to leave the
+/// original in place.
+///
+/// @author andrewrice@google.com (Andrew Rice)
 final class PenaltyThresholdHeuristic implements Heuristic {
 
   private final double threshold;
@@ -38,12 +36,12 @@ final class PenaltyThresholdHeuristic implements Heuristic {
     this.threshold = threshold;
   }
 
-  /** Constructs an instance using the default threshold value. */
+  /// Constructs an instance using the default threshold value.
   PenaltyThresholdHeuristic() {
     this(DEFAULT_THRESHOLD);
   }
 
-  /** Return true if the change is sufficiently different. */
+  /// Return true if the change is sufficiently different.
   @Override
   public boolean isAcceptableChange(
       Changes changes, Tree node, MethodSymbol symbol, VisitorState state) {

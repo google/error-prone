@@ -21,11 +21,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * Unit tests for {@link SelfComparison} bug pattern.
- *
- * @author bhagwani@google.com (Sumit Bhagwani)
- */
+/// Unit tests for [SelfComparison] bug pattern.
+///
+/// @author bhagwani@google.com (Sumit Bhagwani)
 @RunWith(JUnit4.class)
 public class SelfComparisonTest {
   private final CompilationTestHelper compilationHelper =

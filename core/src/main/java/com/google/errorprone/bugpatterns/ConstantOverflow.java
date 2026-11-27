@@ -50,7 +50,7 @@ import com.sun.tools.javac.code.Type;
 import javax.lang.model.type.TypeKind;
 import org.jspecify.annotations.Nullable;
 
-/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
+/// A [BugChecker]; see the associated [BugPattern] annotation for details.
 @BugPattern(summary = "Compile-time constant expression overflows", severity = ERROR)
 public class ConstantOverflow extends BugChecker implements BinaryTreeMatcher {
 
@@ -77,9 +77,7 @@ public class ConstantOverflow extends BugChecker implements BinaryTreeMatcher {
     }
   }
 
-  /**
-   * If the left operand of an int binary expression is an int literal, suggest making it a long.
-   */
+  /// If the left operand of an int binary expression is an int literal, suggest making it a long.
   private static @Nullable Fix longFix(ExpressionTree expr, VisitorState state) {
     BinaryTree binExpr = null;
     while (expr instanceof BinaryTree) {
@@ -104,7 +102,7 @@ public class ConstantOverflow extends BugChecker implements BinaryTreeMatcher {
     return fix.build();
   }
 
-  /** A compile-time constant expression evaluator that checks for overflow. */
+  /// A compile-time constant expression evaluator that checks for overflow.
   private static final SimpleTreeVisitor<Number, Void> CONSTANT_VISITOR =
       new SimpleTreeVisitor<Number, Void>() {
 

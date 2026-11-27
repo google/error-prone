@@ -38,11 +38,9 @@ import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.MethodTree;
 import javax.lang.model.element.Modifier;
 
-/**
- * Checks the toString(), hashCode() and equals() methods are final in AutoValue classes.
- *
- * @author bhagwani@google.com (Sumit Bhagwani)
- */
+/// Checks the toString(), hashCode() and equals() methods are final in AutoValue classes.
+///
+/// @author bhagwani@google.com (Sumit Bhagwani)
 @BugPattern(
     summary =
         "Make toString(), hashCode() and equals() final in AutoValue classes"

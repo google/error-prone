@@ -37,7 +37,7 @@ import com.sun.source.tree.Tree.Kind;
 import com.sun.tools.javac.code.Symtab;
 import com.sun.tools.javac.code.Type;
 
-/** A BugPattern; see the summary. */
+/// A BugPattern; see the summary.
 @BugPattern(
     summary = "This calculation may lose precision compared to its target type.",
     severity = WARNING)

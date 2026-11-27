@@ -73,9 +73,7 @@ import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * @author cushon@google.com (Liam Miller-Cushon)
- */
+/// @author cushon@google.com (Liam Miller-Cushon)
 @RunWith(JUnit4.class)
 public class ErrorProneJavaCompilerTest {
 
@@ -609,12 +607,10 @@ public class ErrorProneJavaCompilerTest {
             """);
   }
 
-  /**
-   * Creates a {@link JavaFileObject} with matching on-disk contents.
-   *
-   * <p>This method aids in testing patching functionality, as {@code IN_PLACE} patching requires
-   * that compiled code actually exists on disk.
-   */
+  /// Creates a [JavaFileObject] with matching on-disk contents.
+  ///
+  /// This method aids in testing patching functionality, as `IN_PLACE` patching requires that
+  /// compiled code actually exists on disk.
   private JavaFileObject createOnDiskFileObject(String fileName, String source) throws IOException {
     Path location = tempDir.getRoot().toPath().resolve(fileName);
     Files.writeString(location, source);

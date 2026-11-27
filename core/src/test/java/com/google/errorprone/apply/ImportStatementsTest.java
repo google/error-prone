@@ -39,11 +39,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * Unit tests for {@link ImportStatements}
- *
- * @author eaftan@google.com (Eddie Aftandilian)
- */
+/// Unit tests for [ImportStatements]
+///
+/// @author eaftan@google.com (Eddie Aftandilian)
 @RunWith(JUnit4.class)
 public class ImportStatementsTest {
 
@@ -138,7 +136,7 @@ public class ImportStatementsTest {
         .doTest();
   }
 
-  /** Test that adding a new import inserts it in the correct position. */
+  /// Test that adding a new import inserts it in the correct position.
   @Test
   public void shouldAddImportInCorrectPosition() {
     testImports(
@@ -168,7 +166,7 @@ public class ImportStatementsTest {
         "import org.joda.time.Interval;");
   }
 
-  /** Test that adding multiple new imports using addAll() inserts them in the correct positions. */
+  /// Test that adding multiple new imports using addAll() inserts them in the correct positions.
   @Test
   public void shouldAddMultipleImportsInCorrectPositions() {
     testImports(
@@ -203,7 +201,7 @@ public class ImportStatementsTest {
         "import org.joda.time.Interval;");
   }
 
-  /** Test that adding an already-existing import doesn't change anything. */
+  /// Test that adding an already-existing import doesn't change anything.
   @Test
   public void shouldNotAddExistingImport() {
     testImports(
@@ -231,7 +229,7 @@ public class ImportStatementsTest {
         "import javax.tools.ToolProvider;");
   }
 
-  /** Test that removing an import works and the resulting output is correctly sorted. */
+  /// Test that removing an import works and the resulting output is correctly sorted.
   @Test
   public void shouldRemoveImportAndSort() {
     testImports(
@@ -259,10 +257,8 @@ public class ImportStatementsTest {
         "import org.joda.time.Interval;");
   }
 
-  /**
-   * Test that removing multiple imports using removeAll() works and the resulting output is
-   * correctly sorted.
-   */
+  /// Test that removing multiple imports using removeAll() works and the resulting output is
+  /// correctly sorted.
   @Test
   public void shouldRemoveMultipleImportsAndSort() {
     testImports(
@@ -291,7 +287,7 @@ public class ImportStatementsTest {
         "import org.joda.time.DateTimeZone;");
   }
 
-  /** Tests that a list of imports with no static imports is handled correctly. */
+  /// Tests that a list of imports with no static imports is handled correctly.
   @Test
   public void noRemainingStaticImports() {
     testImports(
@@ -319,7 +315,7 @@ public class ImportStatementsTest {
         "import org.joda.time.Interval;");
   }
 
-  /** Test that removing a non-existent import doesn't change anything. */
+  /// Test that removing a non-existent import doesn't change anything.
   @Test
   public void removingNonExistingImportShouldntChangeImports() {
     testImports(

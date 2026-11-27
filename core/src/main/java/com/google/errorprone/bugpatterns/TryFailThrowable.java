@@ -57,37 +57,31 @@ import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Types;
 import java.util.List;
 
-/**
- * A bug checker for the following code pattern:
- *
- * <pre>
- * try {
- *   // do something
- *   Assert.fail(); // or any Assert.assert*
- *   // maybe do something more
- * } catch (Throwable t) {
- *   // empty or only comments
- * }
- * </pre>
- *
- * * Matches all static methods named "fail" and starting with "assert" from the following classes:
- *
- * <ul>
- *   <li>{@code org.junit.Assert},
- *   <li>{@code junit.framework.Assert},
- *   <li>{@code junit.framework.TestCase} - which overrides the methods from Assert in order to
- *       deprecate them and
- *   <li>every class whose name ends with "MoreAsserts".
- * </ul>
- *
- * Possible improvements/generalizations of this matcher:
- *
- * <ul>
- *   <li>support multiple catch() blocks
- * </ul>
- *
- * @author adamwos@google.com (Adam Wos)
- */
+/// A bug checker for the following code pattern:
+///
+/// ```
+/// try {
+///   // do something
+///   Assert.fail(); // or any Assert.assert*
+///   // maybe do something more
+/// } catch (Throwable t) {
+///   // empty or only comments
+/// }
+/// ```
+///
+/// Matches all static methods named "fail" and starting with "assert" from the following classes:
+///
+/// - `org.junit.Assert`,
+/// - `junit.framework.Assert`,
+/// - `junit.framework.TestCase` - which overrides the methods from Assert in order to deprecate
+///   them and
+/// - every class whose name ends with "MoreAsserts".
+///
+/// Possible improvements/generalizations of this matcher:
+///
+/// - support multiple catch() blocks
+///
+/// @author adamwos@google.com (Adam Wos)
 @BugPattern(
     summary = "Catching Throwable/Error masks failures from fail() or assert*() in the try block",
     severity = ERROR)
@@ -199,10 +193,8 @@ public class TryFailThrowable extends BugChecker implements TryTreeMatcher {
         : "";
   }
 
-  /**
-   * Whether the assertion method we're inserting a call to has extra parameters besides its message
-   * (like {@code assertTrue}) or not (like {@code fail}).
-   */
+  /// Whether the assertion method we're inserting a call to has extra parameters besides its
+  /// message (like `assertTrue`) or not (like `fail`).
   enum HasOtherParameters {
     TRUE,
     FALSE;

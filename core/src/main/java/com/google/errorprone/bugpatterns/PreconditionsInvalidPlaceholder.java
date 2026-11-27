@@ -37,9 +37,7 @@ import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import org.safere.Pattern;
 
-/**
- * @author Louis Wasserman
- */
+/// @author Louis Wasserman
 @BugPattern(
     summary = "Preconditions only accepts the %s placeholder in error message strings",
     severity = ERROR,
@@ -78,12 +76,10 @@ public class PreconditionsInvalidPlaceholder extends BugChecker
     return Description.NO_MATCH;
   }
 
-  /**
-   * Matches most {@code java.util.Formatter} and {@code java.text.MessageFormat} format
-   * placeholders, other than %s itself.
-   *
-   * <p>This does not need to be completely exhaustive, since it is only used to suggest fixes.
-   */
+  /// Matches most `java.util.Formatter` and `java.text.MessageFormat` format placeholders, other
+  /// than %s itself.
+  ///
+  /// This does not need to be completely exhaustive, since it is only used to suggest fixes.
   private static final Pattern BAD_PLACEHOLDER_REGEX =
       Pattern.compile("\\$s|%(?:\\d+\\$)??[dbBhHScCoxXeEfgGaAtTn]|\\{\\d+}");
 

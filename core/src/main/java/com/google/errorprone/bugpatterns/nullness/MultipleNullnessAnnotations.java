@@ -44,7 +44,7 @@ import com.sun.tools.javac.code.Type;
 import java.util.Collection;
 import javax.lang.model.element.AnnotationMirror;
 
-/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
+/// A [BugChecker]; see the associated [BugPattern] annotation for details.
 @BugPattern(summary = "This type use has conflicting nullness annotations", severity = WARNING)
 public class MultipleNullnessAnnotations extends BugChecker
     implements AnnotatedTypeTreeMatcher, MethodTreeMatcher, VariableTreeMatcher {

@@ -26,11 +26,9 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.CompilationUnitTree;
 
-/**
- * Java classes shouldn't use default package.
- *
- * @author bhagwani@google.com (Sumit Bhagwani)
- */
+/// Java classes shouldn't use default package.
+///
+/// @author bhagwani@google.com (Sumit Bhagwani)
 @BugPattern(summary = "Java classes shouldn't use default package", severity = WARNING)
 public final class DefaultPackage extends BugChecker implements CompilationUnitTreeMatcher {
 

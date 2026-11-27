@@ -27,12 +27,10 @@ import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.tree.JCTree.JCStatement;
 import java.io.IOException;
 
-/**
- * A representation of a match against a {@code BlockTemplate}. The "location" is the first
- * statement of the match.
- *
- * @author lowasser@google.com (Louis Wasserman)
- */
+/// A representation of a match against a `BlockTemplate`. The "location" is the first statement of
+/// the match.
+///
+/// @author lowasser@google.com (Louis Wasserman)
 class BlockTemplateMatch extends TemplateMatch {
   private final ImmutableList<JCStatement> statements;
 

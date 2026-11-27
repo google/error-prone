@@ -33,7 +33,7 @@ import com.google.errorprone.matchers.Description;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.VariableTree;
 
-/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
+/// A [BugChecker]; see the associated [BugPattern] annotation for details.
 @BugPattern(
     summary = "Explicitly specifying all values on a boolean or enum @TestParameter is unnecessary",
     severity = SUGGESTION)

@@ -23,30 +23,28 @@ import static com.google.errorprone.bugpatterns.checkreturnvalue.ResultUseRule.R
 import com.google.common.collect.ImmutableSet;
 import java.util.Optional;
 
-/**
- * A rule for determining {@link ResultUsePolicy} for methods and/or constructors.
- *
- * @param <C> the type of the context object used during evaluation
- * @param <S> the type of symbols
- */
+/// A rule for determining [ResultUsePolicy] for methods and/or constructors.
+///
+/// @param <C> the type of the context object used during evaluation
+/// @param <S> the type of symbols
 public abstract class ResultUseRule<C, S> {
 
   // TODO(cgdecker): Switching to a model where scopes can only either be in a "marked" or
   //  "unmarked" state and only methods can have a specific policy will simplify all of this a lot.
 
-  /** An ID for uniquely identifying this rule. */
+  /// An ID for uniquely identifying this rule.
   public abstract String id();
 
-  /** The scopes this rule applies to. */
+  /// The scopes this rule applies to.
   public abstract ImmutableSet<RuleScope> scopes();
 
   // TODO(dpb): Reorder parameters for the following methods so they have the same initial
   // parameters.
 
-  /** Evaluates the given {@code symbol} and optionally returns a {@link ResultUsePolicy} for it. */
+  /// Evaluates the given `symbol` and optionally returns a [ResultUsePolicy] for it.
   public abstract Optional<ResultUsePolicy> evaluate(S symbol, C context);
 
-  /** Evaluates the given symbol and optionally returns an {@link Evaluation} of it. */
+  /// Evaluates the given symbol and optionally returns an [Evaluation] of it.
   public final Optional<Evaluation<S>> evaluate(RuleScope scope, S symbol, C context) {
     return evaluate(symbol, context).map(policy -> Evaluation.create(this, scope, symbol, policy));
   }
@@ -56,13 +54,11 @@ public abstract class ResultUseRule<C, S> {
     return id();
   }
 
-  /**
-   * A rule that evaluates methods and constructors to determine a {@link ResultUsePolicy} for them.
-   *
-   * @param <C> the type of the context object used during evaluation
-   * @param <S> the type of symbols
-   * @param <M> the type of method symbols
-   */
+  /// A rule that evaluates methods and constructors to determine a [ResultUsePolicy] for them.
+  ///
+  /// @param <C> the type of the context object used during evaluation
+  /// @param <S> the type of symbols
+  /// @param <M> the type of method symbols
   public abstract static class MethodRule<C, S, M extends S> extends ResultUseRule<C, S> {
     private static final ImmutableSet<RuleScope> SCOPES = ImmutableSet.of(METHOD);
     private final Class<M> methodSymbolClass;
@@ -76,9 +72,7 @@ public abstract class ResultUseRule<C, S> {
       return SCOPES;
     }
 
-    /**
-     * Evaluates the given {@code method} and optionally returns a {@link ResultUsePolicy} for it.
-     */
+    /// Evaluates the given `method` and optionally returns a [ResultUsePolicy] for it.
     public abstract Optional<ResultUsePolicy> evaluateMethod(M method, C context);
 
     @Override
@@ -89,13 +83,11 @@ public abstract class ResultUseRule<C, S> {
     }
   }
 
-  /**
-   * A rule that evaluates symbols of any kind to determine a {@link ResultUsePolicy} to associate
-   * with them.
-   *
-   * @param <C> the type of the context object used during evaluation
-   * @param <S> the type of symbols
-   */
+  /// A rule that evaluates symbols of any kind to determine a [ResultUsePolicy] to associate with
+  /// them.
+  ///
+  /// @param <C> the type of the context object used during evaluation
+  /// @param <S> the type of symbols
   public abstract static class SymbolRule<C, S> extends ResultUseRule<C, S> {
     private static final ImmutableSet<RuleScope> SCOPES =
         ImmutableSet.of(METHOD, ENCLOSING_ELEMENTS);
@@ -106,13 +98,11 @@ public abstract class ResultUseRule<C, S> {
     }
   }
 
-  /**
-   * A global rule that is evaluated when none of the more specific rules determine a {@link
-   * ResultUsePolicy} for a method.
-   *
-   * @param <C> the type of the context object used during evaluation
-   * @param <S> the type of symbols
-   */
+  /// A global rule that is evaluated when none of the more specific rules determine a
+  /// [ResultUsePolicy] for a method.
+  ///
+  /// @param <C> the type of the context object used during evaluation
+  /// @param <S> the type of symbols
   public abstract static class GlobalRule<C, S> extends ResultUseRule<C, S> {
     private static final ImmutableSet<RuleScope> SCOPES = ImmutableSet.of(GLOBAL);
 
@@ -122,33 +112,28 @@ public abstract class ResultUseRule<C, S> {
     }
   }
 
-  /** Scope to which a rule may apply. */
+  /// Scope to which a rule may apply.
   public enum RuleScope {
-    /** The specific method or constructor for which a {@link ResultUsePolicy} is being chosen. */
+    /// The specific method or constructor for which a [ResultUsePolicy] is being chosen.
     METHOD,
 
-    /**
-     * Classes and package that enclose a <i>method</i> for which a {@link ResultUsePolicy} is being
-     * chosen.
-     */
+    /// Classes and package that enclose a *method* for which a [ResultUsePolicy] is being chosen.
     ENCLOSING_ELEMENTS,
 
-    /** The global scope. */
+    /// The global scope.
     GLOBAL,
   }
 
-  /**
-   * An evaluation that a rule makes.
-   *
-   * @param <S> the type of symbols
-   * @param rule The rule that made this evaluation.
-   * @param scope The scope at which the evaluation was made.
-   * @param element The specific element in the scope for which the evaluation was made.
-   * @param policy The policy the rule selected.
-   */
+  /// An evaluation that a rule makes.
+  ///
+  /// @param <S> the type of symbols
+  /// @param rule The rule that made this evaluation.
+  /// @param scope The scope at which the evaluation was made.
+  /// @param element The specific element in the scope for which the evaluation was made.
+  /// @param policy The policy the rule selected.
   public record Evaluation<S>(
       ResultUseRule<?, S> rule, RuleScope scope, S element, ResultUsePolicy policy) {
-    /** Creates a new {@link Evaluation}. */
+    /// Creates a new [Evaluation].
     public static <S> Evaluation<S> create(
         ResultUseRule<?, S> rule, RuleScope scope, S element, ResultUsePolicy policy) {
       return new Evaluation<>(rule, scope, element, policy);

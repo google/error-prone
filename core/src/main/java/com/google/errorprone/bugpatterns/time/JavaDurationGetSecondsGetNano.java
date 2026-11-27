@@ -30,12 +30,10 @@ import com.google.errorprone.matchers.Matchers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 
-/**
- * This checker warns about calls to {@code duration.getNano()} without a corresponding "nearby"
- * call to {@code duration.getSeconds()}.
- *
- * @author kak@google.com (Kurt Alfred Kluever)
- */
+/// This checker warns about calls to `duration.getNano()` without a corresponding "nearby" call to
+/// `duration.getSeconds()`.
+///
+/// @author kak@google.com (Kurt Alfred Kluever)
 @BugPattern(
     summary =
         "duration.getNano() only accesses the underlying nanosecond adjustment from the whole "

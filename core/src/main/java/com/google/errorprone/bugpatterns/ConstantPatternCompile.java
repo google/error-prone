@@ -65,12 +65,10 @@ import javax.lang.model.element.Modifier;
 import javax.lang.model.element.NestingKind;
 import org.jspecify.annotations.Nullable;
 
-/**
- * Flags variables initialized with {@link java.util.regex.Pattern#compile(String)} calls that could
- * be constants.
- *
- * @author bhagwani@google.com (Sumit Bhagwani)
- */
+/// Flags variables initialized with [java.util.regex.Pattern#compile(String)] calls that could be
+/// constants.
+///
+/// @author bhagwani@google.com (Sumit Bhagwani)
 @BugPattern(
     summary = "Variables initialized with Pattern#compile calls on constants can be constants",
     severity = WARNING)
@@ -199,28 +197,25 @@ public final class ConstantPatternCompile extends BugChecker implements ClassTre
         .build();
   }
 
-  /**
-   * If the pattern variable is initialized with a regex from a {@code private static final String}
-   * constant, and the constant is only used once, store the {@code Pattern} in the existing
-   * constant.
-   *
-   * <p>Before:
-   *
-   * <pre>{@code
-   * private static final String MY_REGEX = "a+";
-   * ...
-   * Pattern p = Pattern.compile(MY_REGEX);
-   * p.matcher(...);
-   * }</pre>
-   *
-   * <p>After:
-   *
-   * <pre>{@code
-   * private static final Pattern MY_REGEX = Pattern.compile("a+");
-   * ...
-   * MY_REGEX.matcher(...);
-   * }</pre>
-   */
+  /// If the pattern variable is initialized with a regex from a `private static final String`
+  /// constant, and the constant is only used once, store the `Pattern` in the existing constant.
+  ///
+  /// Before:
+  ///
+  /// ```
+  /// private static final String MY_REGEX = "a+";
+  /// ...
+  /// Pattern p = Pattern.compile(MY_REGEX);
+  /// p.matcher(...);
+  /// ```
+  ///
+  /// After:
+  ///
+  /// ```
+  /// private static final Pattern MY_REGEX = Pattern.compile("a+");
+  /// ...
+  /// MY_REGEX.matcher(...);
+  /// ```
   private static SuggestedFix replaceRegexConstant(VariableTree tree, VisitorState state) {
     ExpressionTree regex = ((MethodInvocationTree) tree.getInitializer()).getArguments().getFirst();
     Symbol regexSym = getSymbol(regex);
@@ -276,7 +271,7 @@ public final class ConstantPatternCompile extends BugChecker implements ClassTre
         .build();
   }
 
-  /** Infer a name when upgrading the {@code Pattern} local to a constant. */
+  /// Infer a name when upgrading the `Pattern` local to a constant.
   private static @Nullable String inferName(VariableTree tree, VisitorState state) {
     String name;
     if ((name = fromName(tree)) != null) {
@@ -291,7 +286,7 @@ public final class ConstantPatternCompile extends BugChecker implements ClassTre
     return null;
   }
 
-  /** Use the existing local variable's name, unless it's terrible. */
+  /// Use the existing local variable's name, unless it's terrible.
   private static @Nullable String fromName(VariableTree tree) {
     String name = LOWER_CAMEL.to(UPPER_UNDERSCORE, tree.getName().toString());
     if (name.length() > 1 && !name.equals("PATTERN")) {
@@ -300,12 +295,9 @@ public final class ConstantPatternCompile extends BugChecker implements ClassTre
     return null;
   }
 
-  /**
-   * If the pattern is initialized from an existing constant, re-use its name.
-   *
-   * <p>e.g. use {@code FOO_PATTERN} for {@code Pattern.compile(FOO)} and {@code
-   * Pattern.compile(FOO_REGEX)}.
-   */
+  /// If the pattern is initialized from an existing constant, re-use its name.
+  ///
+  /// e.g. use `FOO_PATTERN` for `Pattern.compile(FOO)` and `Pattern.compile(FOO_REGEX)`.
   private static @Nullable String fromInitializer(VariableTree tree) {
     ExpressionTree regex = ((MethodInvocationTree) tree.getInitializer()).getArguments().getFirst();
     if (!(regex instanceof IdentifierTree identifierTree)) {
@@ -323,11 +315,9 @@ public final class ConstantPatternCompile extends BugChecker implements ClassTre
     return name + "_PATTERN";
   }
 
-  /**
-   * If the pattern is only used once in a call to {@code matcher}, and the argument is a variable,
-   * use that variable's name. For example, infer {@code FOO_PATTERN} from {@code
-   * pattern.matcher(foo)}. If the argument to the call is a method call, use the method's name.
-   */
+  /// If the pattern is only used once in a call to `matcher`, and the argument is a variable, use
+  /// that variable's name. For example, infer `FOO_PATTERN` from `pattern.matcher(foo)`. If the
+  /// argument to the call is a method call, use the method's name.
   private static @Nullable String fromUse(VariableTree tree, VisitorState state) {
     VarSymbol sym = getSymbol(tree);
     ImmutableList.Builder<TreePath> usesBuilder = ImmutableList.builder();
@@ -348,10 +338,8 @@ public final class ConstantPatternCompile extends BugChecker implements ClassTre
     return findNameFromMatcherArgument(state, use);
   }
 
-  /**
-   * If the path at {@code use} is a Pattern object whose .matcher method is being called on a
-   * variable CharSequence, returns the name of that variable.
-   */
+  /// If the path at `use` is a Pattern object whose .matcher method is being called on a variable
+  /// CharSequence, returns the name of that variable.
   private static @Nullable String findNameFromMatcherArgument(VisitorState state, TreePath use) {
     Tree grandParent = use.getParentPath().getParentPath().getLeaf();
     if (!(grandParent instanceof ExpressionTree expressionTree)) {

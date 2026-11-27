@@ -41,7 +41,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
+/// A [BugChecker]; see the associated [BugPattern] annotation for details.
 @BugPattern(summary = "Method reference is ambiguous", severity = WARNING)
 public class AmbiguousMethodReference extends BugChecker implements ClassTreeMatcher {
 
@@ -103,7 +103,7 @@ public class AmbiguousMethodReference extends BugChecker implements ClassTreeMat
     return NO_MATCH;
   }
 
-  /** Returns a string descriptor of a method's reference type. */
+  /// Returns a string descriptor of a method's reference type.
   private static String methodReferenceDescriptor(VisitorState state, MethodSymbol sym) {
     StringBuilder sb = new StringBuilder();
     sb.append(sym.getSimpleName()).append('(');

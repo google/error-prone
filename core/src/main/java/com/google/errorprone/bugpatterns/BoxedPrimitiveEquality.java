@@ -24,7 +24,7 @@ import com.google.errorprone.VisitorState;
 import com.sun.source.tree.ExpressionTree;
 import javax.inject.Inject;
 
-/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
+/// A [BugChecker]; see the associated [BugPattern] annotation for details.
 @BugPattern(
     summary =
         "Comparison using reference equality instead of value equality. Reference equality of"

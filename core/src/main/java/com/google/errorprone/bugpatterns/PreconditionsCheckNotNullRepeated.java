@@ -31,12 +31,10 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import java.util.List;
 
-/**
- * Checks that Guava's {@code Preconditions.checkNotNull} and {@code Verify.verifyNotNull} don't
- * include the checked reference in the failure message.
- *
- * @author bhagwani@google.com (Sumit Bhagwani)
- */
+/// Checks that Guava's `Preconditions.checkNotNull` and `Verify.verifyNotNull` don't include the
+/// checked reference in the failure message.
+///
+/// @author bhagwani@google.com (Sumit Bhagwani)
 @BugPattern(
     summary =
         "Including the first argument of checkNotNull (or verifyNotNull) in the failure message"

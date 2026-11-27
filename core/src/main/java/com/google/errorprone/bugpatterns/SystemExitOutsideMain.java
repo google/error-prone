@@ -35,11 +35,9 @@ import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
 import java.util.Optional;
 
-/**
- * Check for calls to {@code System.exit()} outside of a main method.
- *
- * @author seibelsabrina@google.com (Sabrina Seibel)
- */
+/// Check for calls to `System.exit()` outside of a main method.
+///
+/// @author seibelsabrina@google.com (Sabrina Seibel)
 @BugPattern(summary = "Code that contains System.exit() is untestable.", severity = ERROR)
 public class SystemExitOutsideMain extends BugChecker implements MethodInvocationTreeMatcher {
   private static final Matcher<ExpressionTree> CALLS_TO_SYSTEM_EXIT =

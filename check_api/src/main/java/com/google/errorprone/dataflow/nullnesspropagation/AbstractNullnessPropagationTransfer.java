@@ -106,25 +106,23 @@ import org.checkerframework.errorprone.dataflow.cfg.node.UnsignedRightShiftNode;
 import org.checkerframework.errorprone.dataflow.cfg.node.VariableDeclarationNode;
 import org.checkerframework.errorprone.dataflow.cfg.node.WideningConversionNode;
 
-/**
- * A default implementation of a transfer function for nullability analysis with more convenient
- * visitor methods. The default implementation consists of labeling almost every kind of node as
- * {@code NULLABLE}. The convenient visitor methods consist first of "summary" methods, like the
- * {@code visitValueLiteral} method called for every {@code ValueLiteralNode} (like {@code
- * AbstractNodeVisitor}), and second of more targeted parameters to the individual {@code visit*}
- * methods. For example, a {@code visitTypeCast} does not need access to the full {@link
- * TransferInput}{@code <Nullness, NullnessPropagationStore>}, only to {@linkplain
- * TransferInput#getValueOfSubNode the subnode values it provides}. To accomplish this, this class
- * provides a {@code final} implementation of the inherited {@code visitTypeCast} method that
- * delegates to an overrideable {@code visitTypeCast} method with simpler parameters.
- *
- * <p>Despite being "abstract," this class is fairly tightly coupled to its sole current
- * implementation, {@link NullnessPropagationTransfer}. I expect that changes to that class will
- * sometimes require corresponding changes to this one. The value of separating the two classes
- * isn't in decoupling the two so much as in hiding the boilerplate in this class.
- *
- * @author cpovirk@google.com (Chris Povirk)
- */
+/// A default implementation of a transfer function for nullability analysis with more convenient
+/// visitor methods. The default implementation consists of labeling almost every kind of node as
+/// `NULLABLE`. The convenient visitor methods consist first of "summary" methods, like the
+/// `visitValueLiteral` method called for every `ValueLiteralNode` (like `AbstractNodeVisitor`), and
+/// second of more targeted parameters to the individual `visit*` methods. For example, a
+/// `visitTypeCast` does not need access to the full [TransferInput]`<Nullness,
+/// NullnessPropagationStore>`, only to [the subnode values it
+/// provides][TransferInput#getValueOfSubNode]. To accomplish this, this class provides a `final`
+/// implementation of the inherited `visitTypeCast` method that delegates to an overrideable
+/// `visitTypeCast` method with simpler parameters.
+///
+/// Despite being "abstract," this class is fairly tightly coupled to its sole current
+/// implementation, [NullnessPropagationTransfer]. I expect that changes to that class will
+/// sometimes require corresponding changes to this one. The value of separating the two classes
+/// isn't in decoupling the two so much as in hiding the boilerplate in this class.
+///
+/// @author cpovirk@google.com (Chris Povirk)
 abstract class AbstractNullnessPropagationTransfer
     implements ForwardTransferFunction<Nullness, AccessPathStore<Nullness>> {
   @Override
@@ -133,19 +131,15 @@ abstract class AbstractNullnessPropagationTransfer
     return AccessPathStore.empty();
   }
 
-  /**
-   * Provides the previously computed nullness values of descendant nodes. All descendant nodes have
-   * already been assigned a value, if only the default of {@code NULLABLE}.
-   */
+  /// Provides the previously computed nullness values of descendant nodes. All descendant nodes
+  /// have already been assigned a value, if only the default of `NULLABLE`.
   interface SubNodeValues {
     Nullness valueOfSubNode(Node node);
   }
 
-  /**
-   * Receives updates to the nullness values of local parameters. The transfer function
-   * implementation calls {@link #set} when it can conclude that a variable must have a given
-   * nullness value upon successful (non-exceptional) execution of the current node's expression.
-   */
+  /// Receives updates to the nullness values of local parameters. The transfer function
+  /// implementation calls [#set] when it can conclude that a variable must have a given nullness
+  /// value upon successful (non-exceptional) execution of the current node's expression.
   interface Updates {
     // TODO(cpovirk): consider the API setIfLocalVariable(Node, Nullness)
     void set(LocalVariableNode node, Nullness value);
@@ -157,27 +151,27 @@ abstract class AbstractNullnessPropagationTransfer
     void set(AccessPath path, Nullness value);
   }
 
-  /** "Summary" method called by default for every {@code ValueLiteralNode}. */
+  /// "Summary" method called by default for every `ValueLiteralNode`.
   Nullness visitValueLiteral() {
     return NULLABLE;
   }
 
-  /** "Summary" method called by default for bitwise operations. */
+  /// "Summary" method called by default for bitwise operations.
   Nullness visitBitwiseOperation() {
     return NULLABLE;
   }
 
-  /** "Summary" method called by default for numerical comparisons. */
+  /// "Summary" method called by default for numerical comparisons.
   Nullness visitNumericalComparison() {
     return NULLABLE;
   }
 
-  /** "Summary" method called by default for numerical operations. */
+  /// "Summary" method called by default for numerical operations.
   Nullness visitNumericalOperation() {
     return NULLABLE;
   }
 
-  /** "Summary" method called by default for every {@code ThisNode}. */
+  /// "Summary" method called by default for every `ThisNode`.
   Nullness visitThis() {
     return NULLABLE;
   }

@@ -31,7 +31,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** {@link WildcardImport}Test */
+/// [WildcardImport]Test
 @RunWith(JUnit4.class)
 public class WildcardImportTest {
   private final BugCheckerRefactoringTestHelper testHelper =

@@ -23,7 +23,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** {@link ParameterName}Test */
+/// [ParameterName]Test
 @RunWith(JUnit4.class)
 public class ParameterNameTest {
 
@@ -330,11 +330,9 @@ public class ParameterNameTest {
         .doTest();
   }
 
-  /**
-   * We allow multiple comments if any one of them is right. This helps libraries migrate to a new
-   * parameter name gradually without breaking any builds: update the caller to use both names, then
-   * update the API, then remove the old name.
-   */
+  /// We allow multiple comments if any one of them is right. This helps libraries migrate to a new
+  /// parameter name gradually without breaking any builds: update the caller to use both names,
+  /// then update the API, then remove the old name.
   @Test
   public void namedParametersChecker_multipleComments_allowedIfAnyMatch() {
     testHelper
@@ -495,9 +493,9 @@ public class ParameterNameTest {
         .doTest();
   }
 
-  /** A test for inner class constructor parameter names across compilation boundaries. */
+  /// A test for inner class constructor parameter names across compilation boundaries.
   public static class InnerClassTest {
-    /** An inner class. */
+    /// An inner class.
     public class Inner {
       public Inner(int foo, int bar) {}
 
@@ -543,7 +541,7 @@ public class ParameterNameTest {
         .doTest();
   }
 
-  /** A test for anonymous class constructors across compilation boundaries. */
+  /// A test for anonymous class constructors across compilation boundaries.
   public static class Foo {
     public Foo(int foo, int bar) {}
   }
@@ -626,9 +624,9 @@ public class ParameterNameTest {
         .doTest();
   }
 
-  /** A test for annotated parameters across compilation boundaries. */
+  /// A test for annotated parameters across compilation boundaries.
   public static final class AnnotatedParametersTestClass {
-    /** An annotation to apply to method parameters. */
+    /// An annotation to apply to method parameters.
     public @interface Annotated {}
 
     public static void target(@Annotated int foo) {}
@@ -894,14 +892,14 @@ class Test {
         .doTest();
   }
 
-  /** A test input for separate compilation. */
+  /// A test input for separate compilation.
   public static final class Holder {
     public static void varargsMethod(int... values) {}
 
     private Holder() {}
   }
 
-  /** Regression test for b/147344912. */
+  /// Regression test for b/147344912.
   @Test
   public void varargsSeparateCompilation() {
     testHelper

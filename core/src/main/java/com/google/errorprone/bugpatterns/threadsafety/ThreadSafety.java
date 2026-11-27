@@ -62,10 +62,8 @@ import javax.lang.model.type.TypeKind;
 import org.jspecify.annotations.Nullable;
 import org.pcollections.ConsPStack;
 
-/**
- * A class which gives information about the annotation of types; if a type isn't annotated, {@link
- * Violation} gives information as to why it is not.
- */
+/// A class which gives information about the annotation of types; if a type isn't annotated,
+/// [Violation] gives information as to why it is not.
 public final class ThreadSafety {
   private final VisitorState state;
   private final Purpose purpose;
@@ -101,49 +99,41 @@ public final class ThreadSafety {
     return builder;
   }
 
-  /** Builder for {@link ThreadSafety}. */
+  /// Builder for [ThreadSafety].
   @AutoBuilder(ofClass = ThreadSafety.class)
   public abstract static class Builder {
 
-    /** See {@link Purpose}. */
+    /// See [Purpose].
     public abstract Builder purpose(Purpose purpose);
 
-    /** Whether to assume the marker annotation is implicitly inherited by subclasses. */
+    /// Whether to assume the marker annotation is implicitly inherited by subclasses.
     public abstract Builder markerAnnotationInherited(boolean markerAnnotationInherited);
 
-    /** Information about known types and whether they're known to be safe or unsafe. */
+    /// Information about known types and whether they're known to be safe or unsafe.
     public abstract Builder knownTypes(ThreadSafetyKnownTypes knownTypes);
 
-    /**
-     * Annotations that will cause a class to be tested with this {@link ThreadSafety} instance; for
-     * example, when testing a class for immutability, this should be @Immutable.
-     */
+    /// Annotations that will cause a class to be tested with this [ThreadSafety] instance; for
+    /// example, when testing a class for immutability, this should be @Immutable.
     public abstract Builder markerAnnotations(Iterable<String> markerAnnotations);
 
-    /**
-     * Annotations that do *not* cause a class to be tested, but which are treated as valid
-     * annotations to pass the test; for example, if @ThreadSafe is the marker
-     * annotation, @Immutable would be included in this list, as an immutable class is by definition
-     * thread-safe.
-     */
+    /// Annotations that do \*not\* cause a class to be tested, but which are treated as valid
+    /// annotations to pass the test; for example, if @ThreadSafe is the marker
+    /// annotation, @Immutable would be included in this list, as an immutable class is by
+    /// definition thread-safe.
     public abstract Builder acceptedAnnotations(Iterable<String> acceptedAnnotations);
 
-    /** An annotation which marks a generic parameter as a container type. */
+    /// An annotation which marks a generic parameter as a container type.
     public abstract Builder containerOfAnnotation(Iterable<String> containerOfAnnotation);
 
-    /** An annotation which, when found on a class, should suppress the test */
+    /// An annotation which, when found on a class, should suppress the test
     public abstract Builder suppressAnnotation(Iterable<String> suppressAnnotation);
 
-    /**
-     * An annotation which, when found on a type parameter, indicates that the type parameter may
-     * only be instantiated with thread-safe types.
-     */
+    /// An annotation which, when found on a type parameter, indicates that the type parameter may
+    /// only be instantiated with thread-safe types.
     public abstract Builder typeParameterAnnotation(Iterable<String> typeParameterAnnotation);
 
-    /**
-     * An annotation which, when found on a type parameter, indicates that the type parameter may
-     * only be instantiated with thread-safe types.
-     */
+    /// An annotation which, when found on a type parameter, indicates that the type parameter may
+    /// only be instantiated with thread-safe types.
     public abstract Builder acceptedTypeParameterAnnotation(
         Iterable<String> acceptedTypeParameterAnnotation);
 
@@ -156,13 +146,11 @@ public final class ThreadSafety {
     abstract ThreadSafety build();
   }
 
-  /**
-   * The {@link ThreadSafety} utility class can be used by either the bug checker that enforces
-   * immutability or by the bug checker that enforces thread-safety. Depending on which of these bug
-   * checkers is using this utility, different messages become appropriate.
-   */
+  /// The [ThreadSafety] utility class can be used by either the bug checker that enforces
+  /// immutability or by the bug checker that enforces thread-safety. Depending on which of these
+  /// bug checkers is using this utility, different messages become appropriate.
   public enum Purpose {
-    /** This is being used by the immutability bug checker */
+    /// This is being used by the immutability bug checker
     FOR_IMMUTABLE_CHECKER {
       @Override
       String mutableOrNonThreadSafe() {
@@ -175,7 +163,7 @@ public final class ThreadSafety {
       }
     },
 
-    /** This is being used by the thread-safety bug checker */
+    /// This is being used by the thread-safety bug checker
     FOR_THREAD_SAFE_CHECKER {
       @Override
       String mutableOrNonThreadSafe() {
@@ -189,16 +177,10 @@ public final class ThreadSafety {
     },
     ;
 
-    /**
-     * Returns either the string {@code "mutable"} or {@code "non-thread-safe"} depending on the
-     * purpose.
-     */
+    /// Returns either the string `"mutable"` or `"non-thread-safe"` depending on the purpose.
     abstract String mutableOrNonThreadSafe();
 
-    /**
-     * Returns either the string {@code "mutable"} or {@code "not thread-safe"} depending on the
-     * purpose.
-     */
+    /// Returns either the string `"mutable"` or `"not thread-safe"` depending on the purpose.
     abstract String mutableOrNotThreadSafe();
   }
 
@@ -225,55 +207,52 @@ public final class ThreadSafety {
     this.acceptedTypeParameterAnnotation = acceptedTypeParameterAnnotation;
   }
 
-  /**
-   * A human-friendly explanation of a thread safety violations.
-   *
-   * <p>An absent explanation indicates either an annotated type with no violations, or a type
-   * without the annotation.
-   *
-   * @param path The list of steps in the explanation.
-   *     <p>Example: ["Foo has field 'xs' of type 'int[]'", "arrays are not thread-safe"]
-   */
+  /// A human-friendly explanation of a thread safety violations.
+  ///
+  /// An absent explanation indicates either an annotated type with no violations, or a type without
+  /// the annotation.
+  ///
+  /// @param path The list of steps in the explanation.
+  ///
+  ///   Example: `["Foo has field 'xs' of type 'int[]'", "arrays are not thread-safe"]`
   public record Violation(ConsPStack<String> path) {
     public static Violation create(ConsPStack<String> path) {
       return new Violation(path);
     }
 
-    /** Returns true if a violation was found. */
+    /// Returns true if a violation was found.
     public boolean isPresent() {
       return !path().isEmpty();
     }
 
-    /** Returns the explanation. */
+    /// Returns the explanation.
     public String message() {
       return Joiner.on(", ").join(path());
     }
 
-    /** Adds a step. */
+    /// Adds a step.
     public Violation plus(String edge) {
       return create(path().plus(edge));
     }
 
-    /** Creates an explanation with one step. */
+    /// Creates an explanation with one step.
     public static Violation of(String reason) {
       return create(ConsPStack.singleton(reason));
     }
 
-    /** An empty explanation. */
+    /// An empty explanation.
     public static Violation absent() {
       return create(ConsPStack.empty());
     }
   }
 
-  /**
-   * Check that a type-use of an {@code @ThreadSafe}-annotated type is instantiated with threadsafe
-   * type arguments where required by its annotation's containerOf element.
-   *
-   * @param containerTypeParameters the in-scope threadsafe type parameters, declared on some
-   *     enclosing class.
-   * @param annotation the type's {@code @ThreadSafe} info
-   * @param type the type to check
-   */
+  /// Check that a type-use of an `@ThreadSafe`-annotated type is instantiated with threadsafe type
+  /// arguments where required by its annotation's containerOf element.
+  ///
+  /// @param containerTypeParameters the in-scope threadsafe type parameters, declared on some
+  ///   enclosing class.
+  /// @param annotation the type's `@ThreadSafe` info
+  /// @param type the type to check
   public Violation threadSafeInstantiation(
       Set<String> containerTypeParameters, AnnotationInfo annotation, Type type) {
     return threadSafeInstantiation(containerTypeParameters, annotation, type, new HashSet<>());
@@ -325,17 +304,15 @@ public final class ThreadSafety {
     return Violation.absent();
   }
 
-  /**
-   * Check that the super-type of a {@code @ThreadSafe}-annotated type is instantiated with
-   * threadsafe type arguments where required by its annotation's containerOf element, and that any
-   * type arguments that correspond to containerOf type parameters on the sub-type are also in the
-   * super-type's containerOf spec.
-   *
-   * @param containerTypeParameters the in-scope threadsafe type parameters, declared on some
-   *     enclosing class.
-   * @param annotation the type's {@code @ThreadSafe} info
-   * @param type the type to check
-   */
+  /// Check that the super-type of a `@ThreadSafe`-annotated type is instantiated with threadsafe
+  /// type arguments where required by its annotation's containerOf element, and that any type
+  /// arguments that correspond to containerOf type parameters on the sub-type are also in the
+  /// super-type's containerOf spec.
+  ///
+  /// @param containerTypeParameters the in-scope threadsafe type parameters, declared on some
+  ///   enclosing class.
+  /// @param annotation the type's `@ThreadSafe` info
+  /// @param type the type to check
   public Violation checkSuperInstantiation(
       Set<String> containerTypeParameters, AnnotationInfo annotation, Type type) {
     Violation info = threadSafeInstantiation(containerTypeParameters, annotation, type);
@@ -386,16 +363,14 @@ public final class ThreadSafety {
     return true;
   }
 
-  /**
-   * Returns an {@link Violation} explaining whether the type is threadsafe.
-   *
-   * @param allowContainerTypeParameters true when checking the instantiation of an {@code
-   *     typeParameterAnnotation}-annotated type parameter; indicates that {@code
-   *     containerTypeParameters} should be ignored
-   * @param containerTypeParameters type parameters in enclosing elements' containerOf
-   *     specifications
-   * @param type to check for thread-safety
-   */
+  /// Returns an [Violation] explaining whether the type is threadsafe.
+  ///
+  /// @param allowContainerTypeParameters true when checking the instantiation of an
+  ///   `typeParameterAnnotation`-annotated type parameter; indicates that `containerTypeParameters`
+  ///   should be ignored
+  /// @param containerTypeParameters type parameters in enclosing elements' containerOf
+  ///   specifications
+  /// @param type to check for thread-safety
   public Violation isThreadSafeType(
       boolean allowContainerTypeParameters, Set<String> containerTypeParameters, Type type) {
     return isThreadSafeTypeInternal(
@@ -525,52 +500,45 @@ public final class ThreadSafety {
     }
   }
 
-  /**
-   * Returns whether the given type parameter's declaration is annotated with {@link
-   * #typeParameterAnnotation} indicating it will only ever be instantiated with thread-safe types.
-   */
+  /// Returns whether the given type parameter's declaration is annotated with
+  /// [#typeParameterAnnotation] indicating it will only ever be instantiated with thread-safe
+  /// types.
   public boolean hasThreadSafeTypeParameterAnnotation(TypeVariableSymbol symbol) {
     return symbol.getAnnotationMirrors().stream()
         .anyMatch(t -> typeParameterAnnotation.contains(t.type.tsym.flatName().toString()));
   }
 
-  /**
-   * Returns whether the given type parameter's declaration is annotated with {@link
-   * #typeParameterAnnotation} or another acceptable annotation.
-   */
+  /// Returns whether the given type parameter's declaration is annotated with
+  /// [#typeParameterAnnotation] or another acceptable annotation.
   public boolean hasAcceptedThreadSafeTypeParameterAnnotation(TypeVariableSymbol symbol) {
     Set<String> annotations = Sets.union(typeParameterAnnotation, acceptedTypeParameterAnnotation);
     return symbol.getAnnotationMirrors().stream()
         .anyMatch(t -> annotations.contains(t.type.tsym.flatName().toString()));
   }
 
-  /**
-   * Returns whether the given type parameter's declaration is annotated with {@link
-   * #containerOfAnnotation} indicating its type-safety determines the type-safety of the outer
-   * class.
-   */
+  /// Returns whether the given type parameter's declaration is annotated with
+  /// [#containerOfAnnotation] indicating its type-safety determines the type-safety of the outer
+  /// class.
   public boolean hasThreadSafeElementAnnotation(TypeVariableSymbol symbol) {
     return symbol.getAnnotationMirrors().stream()
         .anyMatch(t -> containerOfAnnotation.contains(t.type.tsym.flatName().toString()));
   }
 
-  /**
-   * Returns whether a type parameter is thread-safe.
-   *
-   * <p>This is true if either the type parameter's declaration is annotated with {@link
-   * #typeParameterAnnotation} (indicating it can only be instantiated with thread-safe types), or
-   * the type parameter has a thread-safe upper bound (sub-classes of thread-safe types are also
-   * thread-safe).
-   *
-   * <p>If a type has a recursive bound, we recursively assume that this type satisfies all
-   * thread-safety constraints. Recursion can only happen with type variables that have recursive
-   * type bounds. These type variables do not need to be called out in the "containerOf" attribute
-   * or annotated with {@link #typeParameterAnnotation}.
-   *
-   * <p>Recursion does not apply to other kinds of types because all declared types must be
-   * annotated thread-safe, which means that thread-safety checkers don't need to analyze all
-   * referenced types recursively.
-   */
+  /// Returns whether a type parameter is thread-safe.
+  ///
+  /// This is true if either the type parameter's declaration is annotated with
+  /// [#typeParameterAnnotation] (indicating it can only be instantiated with thread-safe types), or
+  /// the type parameter has a thread-safe upper bound (sub-classes of thread-safe types are also
+  /// thread-safe).
+  ///
+  /// If a type has a recursive bound, we recursively assume that this type satisfies all
+  /// thread-safety constraints. Recursion can only happen with type variables that have recursive
+  /// type bounds. These type variables do not need to be called out in the "containerOf" attribute
+  /// or annotated with [#typeParameterAnnotation].
+  ///
+  /// Recursion does not apply to other kinds of types because all declared types must be annotated
+  /// thread-safe, which means that thread-safety checkers don't need to analyze all referenced
+  /// types recursively.
   private boolean isTypeParameterThreadSafe(
       TypeVariableSymbol symbol, Set<String> containerTypeParameters) {
     return isTypeParameterThreadSafe(symbol, containerTypeParameters, new HashSet<>());
@@ -600,10 +568,8 @@ public final class ThreadSafety {
     }
   }
 
-  /**
-   * Gets the {@link Symbol}'s annotation info, either from a marker annotation on the symbol, from
-   * an accepted annotation on the symbol, or from the list of well-known types.
-   */
+  /// Gets the [Symbol]'s annotation info, either from a marker annotation on the symbol, from an
+  /// accepted annotation on the symbol, or from the list of well-known types.
   public AnnotationInfo getMarkerOrAcceptedAnnotation(Symbol sym, VisitorState state) {
     String nameStr = sym.flatName().toString();
     AnnotationInfo known = knownTypes.getKnownSafeClasses().get(nameStr);
@@ -614,7 +580,7 @@ public final class ThreadSafety {
         sym, ImmutableSet.copyOf(Sets.union(markerAnnotations, acceptedAnnotations)), state);
   }
 
-  /** Returns an enclosing instance for the specified type if it is thread-safe. */
+  /// Returns an enclosing instance for the specified type if it is thread-safe.
   public @Nullable Type mutableEnclosingInstance(Optional<ClassTree> tree, ClassType type) {
     if (tree.isPresent()
         && !CanBeStaticAnalyzer.referencesOuter(
@@ -636,18 +602,16 @@ public final class ThreadSafety {
     return null;
   }
 
-  /**
-   * Gets the set of in-scope threadsafe type parameters from the containerOf specs on annotations.
-   *
-   * <p>Usually only the immediately enclosing declaration is searched, but it's possible to have
-   * cases like:
-   *
-   * <pre>{@code
-   * @MarkerAnnotation(containerOf="T") class C<T> {
-   *   class Inner extends ThreadSafeCollection<T> {}
-   * }
-   * }</pre>
-   */
+  /// Gets the set of in-scope threadsafe type parameters from the containerOf specs on annotations.
+  ///
+  /// Usually only the immediately enclosing declaration is searched, but it's possible to have
+  /// cases like:
+  ///
+  /// ```
+  /// @MarkerAnnotation(containerOf="T") class C<T> {
+  ///   class Inner extends ThreadSafeCollection<T> {}
+  /// }
+  /// ```
   public Set<String> threadSafeTypeParametersInScope(Symbol sym) {
     if (sym == null) {
       return ImmutableSet.of();
@@ -762,10 +726,8 @@ public final class ThreadSafety {
     return null;
   }
 
-  /**
-   * Gets the possibly inherited marker annotation on the given symbol, and reverse-propagates
-   * containerOf spec's from super-classes.
-   */
+  /// Gets the possibly inherited marker annotation on the given symbol, and reverse-propagates
+  /// containerOf spec's from super-classes.
   public AnnotationInfo getInheritedAnnotation(Symbol sym, VisitorState state) {
     return getAnnotation(sym, markerAnnotations, state);
   }
@@ -774,7 +736,7 @@ public final class ThreadSafety {
     return getStrings(attr, CONTAINEROF.get(state).toString());
   }
 
-  /** Gets a human-friendly name for the given {@link Symbol} to use in diagnostics. */
+  /// Gets a human-friendly name for the given [Symbol] to use in diagnostics.
   public String getPrettyName(Symbol sym) {
     if (!sym.getSimpleName().isEmpty()) {
       return sym.getSimpleName().toString();
@@ -804,7 +766,7 @@ public final class ThreadSafety {
         .orElse(Violation.absent());
   }
 
-  /** Checks that any thread-safe type parameters are instantiated with thread-safe types. */
+  /// Checks that any thread-safe type parameters are instantiated with thread-safe types.
   public Violation checkInstantiation(
       TypeVariableSymbol typeParameter, Collection<Type> instantiations) {
     if (!hasThreadSafeTypeParameterAnnotation(typeParameter)) {
@@ -825,7 +787,7 @@ public final class ThreadSafety {
     return Violation.absent();
   }
 
-  /** Checks the instantiation of any thread-safe type parameters in the current invocation. */
+  /// Checks the instantiation of any thread-safe type parameters in the current invocation.
   public Violation checkInvocation(Type methodType, Symbol symbol) {
     if (methodType == null) {
       return Violation.absent();

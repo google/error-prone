@@ -39,7 +39,7 @@ import java.lang.reflect.Modifier;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-/** {@link TruthIncompatibleType}Test */
+/// [TruthIncompatibleType]Test
 @RunWith(TestParameterInjector.class)
 public class TruthIncompatibleTypeTest {
 
@@ -966,37 +966,6 @@ public class Test {
                 assertWithMessage("msg").that(hashTable).containsRow(1);
                 // BUG: Diagnostic contains: `String` is not compatible with `Integer`
                 assume().that(hashTable).containsColumn("c");
-              }
-            }
-            """)
-        .doTest();
-  }
-
-  @Test
-  public void table_flagDisabled() {
-    compilationHelper
-        .setArgs("-XepOpt:TruthIncompatibleType:CheckTableSubject=false")
-        .addSourceLines(
-            "Test.java",
-            """
-            import static com.google.common.truth.Truth.assertThat;
-
-            import com.google.common.collect.Table;
-            import com.google.common.collect.Table.Cell;
-
-            public class Test {
-              public void f(Table<String, Integer, Long> t, Cell<Long, String, Integer> cell) {
-                assertThat(t).contains(1, "c");
-                assertThat(t).doesNotContain(1, "c");
-                assertThat(t).containsCell(1, "c", "v");
-                assertThat(t).doesNotContainCell(1, "c", "v");
-                assertThat(t).containsCell(cell);
-                assertThat(t).doesNotContainCell(cell);
-                assertThat(t).containsRow(1);
-                assertThat(t).containsColumn("c");
-                assertThat(t).containsValue("v");
-                // BUG: Diagnostic contains:
-                assertThat(t).isEqualTo("not a table");
               }
             }
             """)

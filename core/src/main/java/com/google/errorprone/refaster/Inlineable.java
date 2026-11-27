@@ -16,12 +16,10 @@
 
 package com.google.errorprone.refaster;
 
-/**
- * A type that can be inlined given an {@code Inliner} context.
- *
- * @param <T> The type that this inlines to.
- * @author Louis Wasserman
- */
+/// A type that can be inlined given an `Inliner` context.
+///
+/// @param <T> The type that this inlines to.
+/// @author Louis Wasserman
 interface Inlineable<T> {
   T inline(Inliner inliner) throws CouldNotResolveImportException;
 }

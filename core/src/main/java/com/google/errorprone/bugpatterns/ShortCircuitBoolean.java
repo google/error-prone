@@ -35,11 +35,9 @@ import com.sun.source.tree.Tree.Kind;
 import com.sun.source.util.TreeScanner;
 import java.util.Iterator;
 
-/**
- * @author cushon@google.com (Liam Miller-Cushon)
- * @author sulku@google.com (Marsela Sulku)
- * @author mariasam@google.com (Maria Sam)
- */
+/// @author cushon@google.com (Liam Miller-Cushon)
+/// @author sulku@google.com (Marsela Sulku)
+/// @author mariasam@google.com (Maria Sam)
 @BugPattern(
     summary = "Prefer the short-circuiting boolean operators && and || to & and |.",
     severity = WARNING,
@@ -71,12 +69,12 @@ public class ShortCircuitBoolean extends BugChecker implements BinaryTreeMatcher
     }
   }
 
-  /** Replaces the operators when visiting the binary nodes */
+  /// Replaces the operators when visiting the binary nodes
   public static class TreeScannerBinary extends TreeScanner<Void, SuggestedFix.Builder> {
-    /** saved state */
+    /// saved state
     public VisitorState state;
 
-    /** constructor */
+    /// constructor
     public TreeScannerBinary(VisitorState currState) {
       this.state = currState;
     }

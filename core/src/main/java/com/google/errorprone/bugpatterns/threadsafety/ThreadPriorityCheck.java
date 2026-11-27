@@ -29,13 +29,11 @@ import com.google.errorprone.matchers.Matchers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 
-/**
- * Bug checker to detect usage of {@code Thread.stop()}, {@code Thread.yield()}, and changing thread
- * priorities.
- *
- * @author siyuanl@google.com (Siyuan Liu)
- * @author eleanorh@google.com (Eleanor Harris)
- */
+/// Bug checker to detect usage of `Thread.stop()`, `Thread.yield()`, and changing thread
+/// priorities.
+///
+/// @author siyuanl@google.com (Siyuan Liu)
+/// @author eleanorh@google.com (Eleanor Harris)
 @BugPattern(
     name = "ThreadPriorityCheck",
     summary = "Relying on the thread scheduler is discouraged.",

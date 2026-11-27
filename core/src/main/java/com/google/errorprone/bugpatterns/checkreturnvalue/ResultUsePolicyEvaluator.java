@@ -35,59 +35,53 @@ import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-/**
- * Evaluates methods and their enclosing classes and packages to determine a {@link ResultUsePolicy}
- * for the methods.
- *
- * @param <C> the type of the context object used during evaluation
- * @param <S> the type of symbols
- * @param <M> the type of method symbols
- */
+/// Evaluates methods and their enclosing classes and packages to determine a [ResultUsePolicy] for
+/// the methods.
+///
+/// @param <C> the type of the context object used during evaluation
+/// @param <S> the type of symbols
+/// @param <M> the type of method symbols
 public final class ResultUsePolicyEvaluator<C, S, M extends S> {
 
-  /**
-   * Returns a new {@link Builder} for creating a {@link ResultUsePolicyEvaluator}.
-   *
-   * @param <C> the type of the context object used during evaluation
-   * @param <S> the type of symbols
-   * @param <M> the type of method symbols
-   */
+  /// Returns a new [Builder] for creating a [ResultUsePolicyEvaluator].
+  ///
+  /// @param <C> the type of the context object used during evaluation
+  /// @param <S> the type of symbols
+  /// @param <M> the type of method symbols
   public static <C, S, M extends S> ResultUsePolicyEvaluator.Builder<C, S, M> builder(
       MethodInfo<C, S, M> methodInfo) {
     return new Builder<>(methodInfo);
   }
 
-  /**
-   * Delegate to return information about a method symbol.
-   *
-   * @param <C> the type of the context object used during evaluation
-   * @param <S> the type of symbols
-   * @param <M> the type of method symbols
-   */
+  /// Delegate to return information about a method symbol.
+  ///
+  /// @param <C> the type of the context object used during evaluation
+  /// @param <S> the type of symbols
+  /// @param <M> the type of method symbols
   public interface MethodInfo<C, S, M extends S> {
-    /** Returns an ordered stream of elements in this scope relative to the given {@code method}. */
+    /// Returns an ordered stream of elements in this scope relative to the given `method`.
     Stream<S> scopeMembers(RuleScope scope, M method, C context);
 
-    /** Returns the kind of the given method. */
+    /// Returns the kind of the given method.
     MethodKind getMethodKind(M method);
 
-    /** Returns the scopes that apply for the given method. */
+    /// Returns the scopes that apply for the given method.
     default ImmutableList<RuleScope> scopes(M method) {
       return getMethodKind(method).scopes;
     }
 
-    /** What kind a method symbol is, and what scopes apply to it. */
+    /// What kind a method symbol is, and what scopes apply to it.
     enum MethodKind {
-      /** An actual method, not a constructor. */
+      /// An actual method, not a constructor.
       METHOD(RuleScope.METHOD, ENCLOSING_ELEMENTS, GLOBAL),
 
-      /** A constructor. */
+      /// A constructor.
       // TODO(cgdecker): Constructors in particular (though really all methods I think) should
       //  not be able to get a policy of OPTIONAL from enclosing elements. Only defaults should
       //  come from enclosing elements, and there should only be one default policy (EXPECTED).
       CONSTRUCTOR(RuleScope.METHOD, ENCLOSING_ELEMENTS, GLOBAL),
 
-      /** Neither a method nor a constructor. */
+      /// Neither a method nor a constructor.
       OTHER(),
       ;
 
@@ -99,7 +93,7 @@ public final class ResultUsePolicyEvaluator<C, S, M extends S> {
     }
   }
 
-  /** All the rules for this evaluator, indexed by the scopes they apply to. */
+  /// All the rules for this evaluator, indexed by the scopes they apply to.
   private final ImmutableListMultimap<RuleScope, ResultUseRule<C, S>> rules;
 
   private final MethodInfo<C, S, M> methodInfo;
@@ -112,10 +106,7 @@ public final class ResultUsePolicyEvaluator<C, S, M extends S> {
     this.methodInfo = builder.methodInfo;
   }
 
-  /**
-   * Evaluates the given {@code method} and returns a single {@link ResultUsePolicy} that should
-   * apply to it.
-   */
+  /// Evaluates the given `method` and returns a single [ResultUsePolicy] that should apply to it.
   public ResultUsePolicy evaluate(M method, C state) {
     // Equivalent to evaluations(method, state).findFirst().map(Evaluation::policy), but avoids the
     // overhead of streams, since this is called for every invocation whose result is unused. Rules
@@ -136,18 +127,13 @@ public final class ResultUsePolicyEvaluator<C, S, M extends S> {
     return UNSPECIFIED;
   }
 
-  /**
-   * Returns a stream of {@link Evaluation}s made by rules starting from the given {@code method}.
-   */
+  /// Returns a stream of [Evaluation]s made by rules starting from the given `method`.
   public Stream<Evaluation<S>> evaluations(M method, C state) {
     return methodInfo.scopes(method).stream()
         .flatMap(scope -> evaluateForScope(method, state, scope));
   }
 
-  /**
-   * Evaluates all rules in a {@code scope} for each member of the {@code scope} for the {@code
-   * method}.
-   */
+  /// Evaluates all rules in a `scope` for each member of the `scope` for the `method`.
   private Stream<Evaluation<S>> evaluateForScope(M method, C state, RuleScope scope) {
     ImmutableList<ResultUseRule<C, S>> scopeRules = rules.get(scope);
     return methodInfo
@@ -156,13 +142,11 @@ public final class ResultUsePolicyEvaluator<C, S, M extends S> {
         .flatMap(Optional::stream);
   }
 
-  /**
-   * Builder for {@link ResultUsePolicyEvaluator}.
-   *
-   * @param <C> the type of the context object used during evaluation
-   * @param <S> the type of symbols
-   * @param <M> the type of method symbols
-   */
+  /// Builder for [ResultUsePolicyEvaluator].
+  ///
+  /// @param <C> the type of the context object used during evaluation
+  /// @param <S> the type of symbols
+  /// @param <M> the type of method symbols
   // TODO(dpb): Consider using @AutoBuilder.
   public static final class Builder<C, S, M extends S> {
     private final List<ResultUseRule<C, S>> rules = new ArrayList<>();
@@ -172,27 +156,27 @@ public final class ResultUsePolicyEvaluator<C, S, M extends S> {
       this.methodInfo = methodInfo;
     }
 
-    /** Adds the given {@code rule}. */
+    /// Adds the given `rule`.
     @CanIgnoreReturnValue
     public Builder<C, S, M> addRule(ResultUseRule<C, S> rule) {
       this.rules.add(rule);
       return this;
     }
 
-    /** Adds all the given {@code rules}. */
+    /// Adds all the given `rules`.
     @CanIgnoreReturnValue
     public Builder<C, S, M> addRules(ResultUseRule<C, S>... rules) {
       return addRules(Arrays.asList(rules));
     }
 
-    /** Adds all the given {@code rules}. */
+    /// Adds all the given `rules`.
     @CanIgnoreReturnValue
     public Builder<C, S, M> addRules(Iterable<? extends ResultUseRule<C, S>> rules) {
       rules.forEach(this::addRule);
       return this;
     }
 
-    /** Builds a new {@link ResultUsePolicyEvaluator}. */
+    /// Builds a new [ResultUsePolicyEvaluator].
     public ResultUsePolicyEvaluator<C, S, M> build() {
       return new ResultUsePolicyEvaluator<>(this);
     }

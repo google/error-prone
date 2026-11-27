@@ -37,20 +37,16 @@ import com.sun.tools.javac.code.Symtab;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Types;
 
-/**
- * @author bill.pugh@gmail.com (Bill Pugh)
- * @author eaftan@google.com (Eddie Aftandilian)
- */
+/// @author bill.pugh@gmail.com (Bill Pugh)
+/// @author eaftan@google.com (Eddie Aftandilian)
 @BugPattern(summary = "Shift by an amount that is out of range", severity = ERROR)
 public class BadShiftAmount extends BugChecker implements BinaryTreeMatcher {
 
-  /**
-   * Matches if the left operand is an int, byte, short, or char, and the right operand is a literal
-   * that is not in the range 0-31 inclusive.
-   *
-   * <p>In a shift expression, byte, short, and char undergo unary numeric promotion and are
-   * promoted to int. See JLS 5.6.1.
-   */
+  /// Matches if the left operand is an int, byte, short, or char, and the right operand is a
+  /// literal that is not in the range 0-31 inclusive.
+  ///
+  /// In a shift expression, byte, short, and char undergo unary numeric promotion and are promoted
+  /// to int. See JLS 5.6.1.
   private static final Matcher<BinaryTree> BAD_SHIFT_AMOUNT_INT =
       (BinaryTree tree, VisitorState state) -> {
         Type leftType = ASTHelpers.getType(tree.getLeftOperand());

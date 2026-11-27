@@ -22,7 +22,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** {@link ArrayToString}Test */
+/// [ArrayToString]Test
 @RunWith(JUnit4.class)
 public class ArrayToStringTest {
 
@@ -223,10 +223,7 @@ public class ArrayToStringTest {
         .doTest();
   }
 
-  /**
-   * Don't complain about {@code @FormatMethod}s; there's a chance they're handling arrays
-   * correctly.
-   */
+  /// Don't complain about `@FormatMethod`s; there's a chance they're handling arrays correctly.
   @Test
   public void customFormatMethod() {
     compilationHelper

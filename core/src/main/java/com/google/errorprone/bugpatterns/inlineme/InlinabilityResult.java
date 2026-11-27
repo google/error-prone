@@ -57,7 +57,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import javax.lang.model.element.Modifier;
 import org.jspecify.annotations.Nullable;
 
-/** Whether an API can have {@code @InlineMe} applied to it or not. */
+/// Whether an API can have `@InlineMe` applied to it or not.
 record InlinabilityResult(
     @Nullable InlineValidationErrorReason error,
     @Nullable ExpressionTree body,
@@ -237,11 +237,9 @@ record InlinabilityResult(
     return inlinable(body);
   }
 
-  /**
-   * Describes an API element that the body may not reference. Method and constructor calls are
-   * described by their signature, because their source includes the whole receiver chain (e.g.,
-   * {@code Foo.newBuilder().setBar(bar)}), hiding which method is at fault.
-   */
+  /// Describes an API element that the body may not reference. Method and constructor calls are
+  /// described by their signature, because their source includes the whole receiver chain (e.g.,
+  /// `Foo.newBuilder().setBar(bar)`), hiding which method is at fault.
   private static String describeApi(Tree tree, MethodSymbol methodSym, VisitorState state) {
     return switch (tree) {
       case MethodInvocationTree mit ->

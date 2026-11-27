@@ -41,7 +41,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
+/// A [BugChecker]; see the associated [BugPattern] annotation for details.
 @BugPattern(summary = "Thrown exception is a subtype of another", severity = WARNING)
 public class RedundantThrows extends BugChecker implements MethodTreeMatcher {
   @Override

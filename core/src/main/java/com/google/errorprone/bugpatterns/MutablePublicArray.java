@@ -36,7 +36,7 @@ import com.sun.tools.javac.tree.JCTree.JCNewArray;
 import java.util.Objects;
 import javax.lang.model.element.Modifier;
 
-/** Check for public static final declaration of Arrays. */
+/// Check for public static final declaration of Arrays.
 @BugPattern(
     summary =
         "Non-empty arrays are mutable, so this `public static final` array is not a constant"

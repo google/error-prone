@@ -28,7 +28,7 @@ import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.ContinueTree;
 import com.sun.source.tree.Tree;
 
-/** A bug checker; see the summary. */
+/// A bug checker; see the summary.
 @BugPattern(
     severity = SeverityLevel.WARNING,
     summary = "This continue statement is redundant and can be removed. It may be misleading.")

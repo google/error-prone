@@ -45,9 +45,7 @@ import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
 
-/**
- * @author glorioso@google.com (Nick Glorioso)
- */
+/// @author glorioso@google.com (Nick Glorioso)
 @BugPattern(
     summary =
         "This code declares a binding for a common value type without a Qualifier annotation.",

@@ -26,7 +26,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** Tests for {@link PeriodFrom}. */
+/// Tests for [PeriodFrom].
 @RunWith(JUnit4.class)
 public class PeriodFromTest {
   private final CompilationTestHelper helper =

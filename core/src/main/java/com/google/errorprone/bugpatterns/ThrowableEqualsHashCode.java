@@ -32,7 +32,7 @@ import com.google.errorprone.matchers.Matcher;
 import com.sun.source.tree.MethodTree;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 
-/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
+/// A [BugChecker]; see the associated [BugPattern] annotation for details.
 @BugPattern(
     summary = "Overriding Throwable.equals() or hashCode() is discouraged.",
     severity = SeverityLevel.WARNING)

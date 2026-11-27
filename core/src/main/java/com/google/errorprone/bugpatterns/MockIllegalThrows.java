@@ -36,7 +36,7 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.NewClassTree;
 
-/** A BugPattern; see the summary */
+/// A BugPattern; see the summary
 @BugPattern(summary = "This exception can't be thrown by the mocked method.", severity = WARNING)
 public final class MockIllegalThrows extends BugChecker implements MethodInvocationTreeMatcher {
 

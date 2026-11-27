@@ -34,11 +34,9 @@ import com.sun.tools.javac.tree.JCTree.JCClassDecl;
 import com.sun.tools.javac.util.List;
 import javax.lang.model.element.Name;
 
-/**
- * {@code UTree} representation of a {@code ClassTree} for anonymous inner class matching.
- *
- * @author lowasser@google.com (Louis Wasserman)
- */
+/// `UTree` representation of a `ClassTree` for anonymous inner class matching.
+///
+/// @author lowasser@google.com (Louis Wasserman)
 @AutoValue
 abstract class UClassDecl extends USimpleStatement implements ClassTree {
   public static UClassDecl create(UMethodDecl... members) {

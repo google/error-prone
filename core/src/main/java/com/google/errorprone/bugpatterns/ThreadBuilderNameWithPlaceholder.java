@@ -29,10 +29,8 @@ import com.google.errorprone.matchers.Matcher;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 
-/**
- * A check that bans using placeholders in {@link Thread.Builder#name(String)} and {@link
- * Thread.Builder#name(String, int)}.
- */
+/// A check that bans using placeholders in [Thread.Builder#name(String)] and
+/// [Thread.Builder#name(String, int)].
 @BugPattern(
     summary =
         "Thread.Builder.name() does not accept placeholders (e.g., %d or %s)."

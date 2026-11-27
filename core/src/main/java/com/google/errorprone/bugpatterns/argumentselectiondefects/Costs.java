@@ -22,28 +22,24 @@ import blogspot.software_and_algorithms.stern_library.optimization.HungarianAlgo
 import com.google.common.collect.ImmutableList;
 import java.util.stream.Stream;
 
-/**
- * Accumulates the various costs of using existing arguments or alternatives. These are modelled as
- * edge weights in a bipartite graph mapping parameters on to potential arguments. The {@link
- * #computeAssignments()} function can then be used to find the optimal assignment of parameters to
- * arguments.
- *
- * @author andrewrice@google.com (Andrew Rice)
- */
+/// Accumulates the various costs of using existing arguments or alternatives. These are modelled as
+/// edge weights in a bipartite graph mapping parameters on to potential arguments. The
+/// [#computeAssignments()] function can then be used to find the optimal assignment of parameters
+/// to arguments.
+///
+/// @author andrewrice@google.com (Andrew Rice)
 final class Costs {
 
-  /** Formal parameters for the method being called. */
+  /// Formal parameters for the method being called.
   private final ImmutableList<Parameter> formals;
 
-  /** Actual parameters (arguments) for the method call. */
+  /// Actual parameters (arguments) for the method call.
   private final ImmutableList<Parameter> actuals;
 
-  /**
-   * The cost matrix of distances: Element (i,j) is the distance between the ith formal parameter
-   * and the name of the jth actual parameter. The next stages assign costs to the elements of this
-   * matrix using Infinity to indicate that this alternative should not be considered. We will refer
-   * to combinations of formal parameter and (potential) actual parameter as pairs.
-   */
+  /// The cost matrix of distances: Element (i,j) is the distance between the ith formal parameter
+  /// and the name of the jth actual parameter. The next stages assign costs to the elements of this
+  /// matrix using Infinity to indicate that this alternative should not be considered. We will
+  /// refer to combinations of formal parameter and (potential) actual parameter as pairs.
   private final double[][] costMatrix;
 
   Costs(ImmutableList<Parameter> formals, ImmutableList<Parameter> actuals) {
@@ -81,12 +77,10 @@ final class Costs {
     return Changes.create(originalCost, assignmentCost, changes);
   }
 
-  /**
-   * Constructs a stream for every element of formals paired with every element of actuals (cross
-   * product). Each item contains the formal and the actual, which in turn contain their index into
-   * the cost matrix. Elements whose cost is Inf in the cost matrix are filtered out so only viable
-   * pairings remain.
-   */
+  /// Constructs a stream for every element of formals paired with every element of actuals (cross
+  /// product). Each item contains the formal and the actual, which in turn contain their index into
+  /// the cost matrix. Elements whose cost is Inf in the cost matrix are filtered out so only viable
+  /// pairings remain.
   Stream<ParameterPair> viablePairs() {
     return formals.stream()
         .flatMap(f -> actuals.stream().map(a -> ParameterPair.create(f, a)))
@@ -94,12 +88,12 @@ final class Costs {
             p -> costMatrix[p.formal().index()][p.actual().index()] != Double.POSITIVE_INFINITY);
   }
 
-  /** Update the cost of the given pairing. */
+  /// Update the cost of the given pairing.
   void updatePair(ParameterPair p, double cost) {
     costMatrix[p.formal().index()][p.actual().index()] = cost;
   }
 
-  /** Set the cost of this pairing to be Inf. */
+  /// Set the cost of this pairing to be Inf.
   void invalidatePair(ParameterPair p) {
     updatePair(p, Double.POSITIVE_INFINITY);
   }

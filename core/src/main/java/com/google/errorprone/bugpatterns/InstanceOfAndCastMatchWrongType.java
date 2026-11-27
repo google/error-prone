@@ -43,10 +43,8 @@ import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Types;
 import org.jspecify.annotations.Nullable;
 
-/**
- * @author sulku@google.com (Marsela Sulku)
- * @author mariasam@google.com (Maria Sam)
- */
+/// @author sulku@google.com (Marsela Sulku)
+/// @author mariasam@google.com (Maria Sam)
 @BugPattern(
     summary = "Casting inside an if block should be plausibly consistent with the instanceof type",
     severity = WARNING)
@@ -167,11 +165,8 @@ public class InstanceOfAndCastMatchWrongType extends BugChecker implements TypeC
     }
   }
 
-  /**
-   * Determines whether two {@link ExpressionTree} instances are equal. Only handles the cases
-   * relevant to this checker: array accesses, identifiers, and literals. Returns false for all
-   * other cases.
-   */
+  /// Determines whether two [ExpressionTree] instances are equal. Only handles the cases relevant
+  /// to this checker: array accesses, identifiers, and literals. Returns false for all other cases.
   private static boolean expressionsEqual(ExpressionTree expr1, ExpressionTree expr2) {
     if (expr1 instanceof ArrayAccessTree arrayAccessTree1
         && expr2 instanceof ArrayAccessTree arrayAccessTree2) {

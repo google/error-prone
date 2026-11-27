@@ -63,11 +63,9 @@ import javax.lang.model.element.Modifier;
 import javax.lang.model.element.Name;
 import org.jspecify.annotations.Nullable;
 
-/**
- * Checks annotation positioning, and orphaned Javadocs.
- *
- * @author ghm@google.com (Graeme Morgan)
- */
+/// Checks annotation positioning, and orphaned Javadocs.
+///
+/// @author ghm@google.com (Graeme Morgan)
 @BugPattern(
     summary = "Annotations should be positioned after Javadocs, but before modifiers.",
     severity = WARNING,
@@ -132,7 +130,7 @@ public final class AnnotationPosition extends BugChecker
         .build();
   }
 
-  /** Tokenizes as little of the {@code tree} as possible to ensure we grab all the annotations. */
+  /// Tokenizes as little of the `tree` as possible to ensure we grab all the annotations.
   private static ImmutableList<ErrorProneToken> annotationTokens(
       Tree tree, VisitorState state, int annotationEnd) {
     int endPos;
@@ -169,7 +167,7 @@ public final class AnnotationPosition extends BugChecker
     return state.getOffsetTokens(annotationEnd, endPos);
   }
 
-  /** Checks that annotations are on the right side of the modifiers. */
+  /// Checks that annotations are on the right side of the modifiers.
   private Description checkAnnotations(
       Tree tree,
       List<? extends AnnotationTree> annotations,

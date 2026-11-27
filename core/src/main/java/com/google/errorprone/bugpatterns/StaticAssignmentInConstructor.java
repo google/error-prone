@@ -34,7 +34,7 @@ import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 
-/** Checks for static fields being assigned within constructors. */
+/// Checks for static fields being assigned within constructors.
 @BugPattern(
     severity = WARNING,
     summary =

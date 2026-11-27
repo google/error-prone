@@ -41,21 +41,17 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * @author deminguyen@google.com (Demi Nguyen)
- */
+/// @author deminguyen@google.com (Demi Nguyen)
 @RunWith(JUnit4.class)
 public class NullnessPropagationTest {
 
   private final CompilationTestHelper compilationHelper =
       CompilationTestHelper.newInstance(NullnessPropagationChecker.class, getClass());
 
-  /**
-   * This method triggers the {@code BugPattern} used to test nullness propagation
-   *
-   * @param obj Variable whose nullness value is being checked
-   * @return {@code obj} for use in expressions
-   */
+  /// This method triggers the `BugPattern` used to test nullness propagation
+  ///
+  /// @param obj Variable whose nullness value is being checked
+  /// @return `obj` for use in expressions
   public static Object triggerNullnessChecker(Object obj) {
     return obj;
   }
@@ -87,10 +83,8 @@ public class NullnessPropagationTest {
 
   public static void triggerNullnessChecker(short s) {}
 
-  /**
-   * This method also triggers the {@code BugPattern} used to test nullness propagation, but it is
-   * intended to be used only in the rare case of testing the result of boxing a primitive.
-   */
+  /// This method also triggers the `BugPattern` used to test nullness propagation, but it is
+  /// intended to be used only in the rare case of testing the result of boxing a primitive.
   public static void triggerNullnessCheckerOnBoxed(Object obj) {}
 
   /*
@@ -114,10 +108,10 @@ public class NullnessPropagationTest {
 
   public static void triggerNullnessCheckerOnPrimitive(short s) {}
 
-  /** For {@link #testConstantsDefinedInOtherCompilationUnits}. */
+  /// For [#testConstantsDefinedInOtherCompilationUnits].
   public static final String COMPILE_TIME_CONSTANT = "not null";
 
-  /** For {@link #testConstantsDefinedInOtherCompilationUnits} as constant outside compilation. */
+  /// For [#testConstantsDefinedInOtherCompilationUnits] as constant outside compilation.
   @SuppressWarnings("GoodTime") // false positive
   public static final Integer NOT_COMPILE_TIME_CONSTANT = 421;
 
@@ -2402,14 +2396,12 @@ public class LambdaBodyTest {
         .doTest();
   }
 
-  /**
-   * Tests nullness propagation for references to constants defined in other compilation units. Enum
-   * constants and compile-time constants are still known to be non-null; other constants are
-   * assumed nullable. It doesn't matter whether the referenced compilation unit is part of the same
-   * compilation or not. Note we often do better when constants are defined in the same compilation
-   * unit. Circular initialization dependencies between compilation units are also not recognized
-   * while we do recognize them inside a compilation unit.
-   */
+  /// Tests nullness propagation for references to constants defined in other compilation units.
+  /// Enum constants and compile-time constants are still known to be non-null; other constants are
+  /// assumed nullable. It doesn't matter whether the referenced compilation unit is part of the
+  /// same compilation or not. Note we often do better when constants are defined in the same
+  /// compilation unit. Circular initialization dependencies between compilation units are also not
+  /// recognized while we do recognize them inside a compilation unit.
   @Test
   public void constantsDefinedInOtherCompilationUnits() {
     compilationHelper
@@ -2615,7 +2607,7 @@ public class AnnotatedFormalTest {
         .doTest();
   }
 
-  /** BugPattern to test dataflow analysis using nullness propagation */
+  /// BugPattern to test dataflow analysis using nullness propagation
   @BugPattern(
       summary = "Test checker for NullnessPropagationTest",
       explanation =

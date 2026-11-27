@@ -31,11 +31,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-/**
- * Results of running {@code NullnessQualifierInference} over a method. The {@code constraintGraph}
- * represents qualifier constraints as a directed graph, where graph reachability encodes a
- * less-than-or-equal-to relationship.
- */
+/// Results of running `NullnessQualifierInference` over a method. The `constraintGraph` represents
+/// qualifier constraints as a directed graph, where graph reachability encodes a
+/// less-than-or-equal-to relationship.
 public class InferredNullability {
   private final ImmutableGraph<InferenceVariable> constraintGraph;
 
@@ -45,11 +43,9 @@ public class InferredNullability {
     this.constraintGraph = ImmutableGraph.copyOf(constraints);
   }
 
-  /**
-   * Get inferred nullness qualifiers for method-generic type variables at a callsite. When
-   * inference is not possible for a given type variable, that type variable is not included in the
-   * resulting map.
-   */
+  /// Get inferred nullness qualifiers for method-generic type variables at a callsite. When
+  /// inference is not possible for a given type variable, that type variable is not included in the
+  /// resulting map.
   public ImmutableMap<TypeVariableSymbol, Nullness> getNullnessGenerics(
       MethodInvocationTree callsite) {
     ImmutableMap.Builder<TypeVariableSymbol, Nullness> result = ImmutableMap.builder();
@@ -63,7 +59,7 @@ public class InferredNullability {
     return result.buildOrThrow();
   }
 
-  /** Get inferred nullness qualifier for an expression, if possible. */
+  /// Get inferred nullness qualifier for an expression, if possible.
   public Optional<Nullness> getExprNullness(ExpressionTree exprTree) {
     InferenceVariable iv = TypeArgInferenceVar.create(ImmutableList.of(), exprTree);
     return constraintGraph.nodes().contains(iv) ? getNullness(iv) : Optional.empty();

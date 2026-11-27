@@ -24,6 +24,7 @@ import static org.junit.Assert.assertThrows;
 
 import com.google.common.base.Predicates;
 import com.google.common.collect.ImmutableList;
+import com.google.errorprone.TestProcessors.FailingProcessor;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
@@ -38,13 +39,19 @@ import com.sun.source.tree.ReturnTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 import com.sun.tools.javac.main.Main.Result;
+import java.io.IOException;
+import java.nio.file.Path;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** Tests for {@link CompilationTestHelper}. */
+/// Tests for [CompilationTestHelper].
 @RunWith(JUnit4.class)
 public class CompilationTestHelperTest {
+
+  @Rule public final TemporaryFolder tempFolder = new TemporaryFolder();
 
   private final CompilationTestHelper compilationHelper =
       CompilationTestHelper.newInstance(ReturnTreeChecker.class, getClass());
@@ -582,7 +589,7 @@ public class CompilationTestHelperTest {
     }
   }
 
-  /** Test classes used for withClassPath tests */
+  /// Test classes used for withClassPath tests
   public static class WithClassPath extends WithClassPathSuper {}
 
   public static class WithClassPathSuper {}
@@ -641,7 +648,7 @@ public class CompilationTestHelperTest {
         .contains("An unhandled exception was thrown by the Error Prone static analysis plugin");
   }
 
-  /** A BugPattern that always throws. */
+  /// A BugPattern that always throws.
   @BugPattern(summary = "A really broken checker.", severity = ERROR)
   public static class AssertionFailingChecker extends BugChecker
       implements CompilationUnitTreeMatcher {
@@ -720,5 +727,48 @@ public class CompilationTestHelperTest {
             "// BUG: Diagnostic contains: Checks if isTestOnlyTarget is true",
             "public class Test {}")
         .doTest();
+  }
+
+  @Test
+  public void serviceLoadedProcessorJar_disabledByDefault() throws IOException {
+    Path processorJar =
+        TestProcessors.createProcessorJar(tempFolder.newFolder().toPath(), FailingProcessor.class);
+    compilationHelper
+        .setArgs("-cp", processorJar.toString())
+        .addSourceLines("Trigger.java", "public @interface Trigger {}")
+        .addSourceLines(
+            "Test.java",
+            """
+            @Trigger
+            public class Test {}
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void serviceLoadedProcessorJar_enabledWithProcFull() throws IOException {
+    Path processorJar =
+        TestProcessors.createProcessorJar(tempFolder.newFolder().toPath(), FailingProcessor.class);
+    compilationHelper
+        .setArgs("-cp", processorJar.toString(), "-proc:full")
+        .matchAllDiagnostics()
+        .expectResult(Result.ERROR)
+        .addSourceLines("Trigger.java", "public @interface Trigger {}")
+        .addSourceLines(
+            "Test.java",
+            """
+            @Trigger
+            // BUG: Diagnostic contains: FailingProcessor ran
+            public class Test {}
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void danglingSingleArgOption_doesNotConsumeProcNone() {
+    CompilationTestHelper helper =
+        compilationHelper.setArgs("-cp").addSourceLines("Test.java", "public class Test {}");
+    IllegalArgumentException thrown = assertThrows(IllegalArgumentException.class, helper::doTest);
+    assertThat(thrown).hasMessageThat().contains("requires an argument");
   }
 }

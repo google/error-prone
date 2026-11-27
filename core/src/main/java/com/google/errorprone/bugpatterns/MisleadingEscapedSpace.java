@@ -28,7 +28,7 @@ import com.google.errorprone.util.ErrorProneTokens;
 import com.sun.source.tree.LiteralTree;
 import com.sun.tools.javac.parser.Tokens.TokenKind;
 
-/** See the summary. */
+/// See the summary.
 @BugPattern(
     summary =
         "Using \\s anywhere except at the end of a line in a text block is potentially misleading.",

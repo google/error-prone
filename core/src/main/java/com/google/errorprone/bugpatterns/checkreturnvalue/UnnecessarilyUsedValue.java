@@ -38,9 +38,7 @@ import com.sun.source.tree.TryTree;
 import com.sun.source.tree.VariableTree;
 import javax.lang.model.element.Name;
 
-/**
- * Checker that warns when capturing the result of an ignorable API into an {@code unused} variable.
- */
+/// Checker that warns when capturing the result of an ignorable API into an `unused` variable.
 @BugPattern(
     summary =
         "The result of this API is ignorable, so it does not need to be captured / assigned into an"

@@ -22,11 +22,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * Unit tests for {@link FloatingPointAssertionWithinEpsilon} bug pattern.
- *
- * @author ghm@google.com (Graeme Morgan)
- */
+/// Unit tests for [FloatingPointAssertionWithinEpsilon] bug pattern.
+///
+/// @author ghm@google.com (Graeme Morgan)
 @RunWith(JUnit4.class)
 public final class FloatingPointAssertionWithinEpsilonTest {
   private final CompilationTestHelper compilationHelper =

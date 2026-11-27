@@ -29,12 +29,10 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import java.util.Optional;
 import org.jspecify.annotations.Nullable;
 
-/**
- * Detect whether the method invocation we are examining is enclosed by either a method or a class
- * which is involved in reversing things.
- *
- * @author andrewrice@google.com (Andrew Rice)
- */
+/// Detect whether the method invocation we are examining is enclosed by either a method or a class
+/// which is involved in reversing things.
+///
+/// @author andrewrice@google.com (Andrew Rice)
 final class EnclosedByReverseHeuristic implements Heuristic {
 
   private static final ImmutableSet<String> DEFAULT_REVERSE_WORDS_TERMS =
@@ -71,7 +69,7 @@ final class EnclosedByReverseHeuristic implements Heuristic {
     this.reverseWordsTerms = reverseWordsTerms;
   }
 
-  /** Return true if this call is not enclosed in a method call about reversing things */
+  /// Return true if this call is not enclosed in a method call about reversing things
   @Override
   public boolean isAcceptableChange(
       Changes changes, Tree node, MethodSymbol symbol, VisitorState state) {

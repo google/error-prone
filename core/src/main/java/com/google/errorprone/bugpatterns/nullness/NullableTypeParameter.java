@@ -37,7 +37,7 @@ import com.sun.source.tree.TypeParameterTree;
 import java.util.List;
 import java.util.Optional;
 
-/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
+/// A [BugChecker]; see the associated [BugPattern] annotation for details.
 @BugPattern(
     summary =
         "Nullness annotations directly on type parameters are interpreted differently by different"

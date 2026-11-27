@@ -35,11 +35,9 @@ import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 
-/**
- * Check for calls to Math's {@link Math#round} with an integer or long parameter.
- *
- * @author seibelsabrina@google.com (Sabrina Seibel)
- */
+/// Check for calls to Math's [Math#round] with an integer or long parameter.
+///
+/// @author seibelsabrina@google.com (Sabrina Seibel)
 @BugPattern(
     summary = "Math.round(Integer) results in truncation",
     explanation =

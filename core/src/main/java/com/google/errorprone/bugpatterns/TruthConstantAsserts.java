@@ -39,11 +39,9 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javax.inject.Inject;
 
-/**
- * Points out if Truth Library assert is called on a constant.
- *
- * @author bhagwani@google.com (Sumit Bhagwani)
- */
+/// Points out if Truth Library assert is called on a constant.
+///
+/// @author bhagwani@google.com (Sumit Bhagwani)
 @BugPattern(
     summary = "Truth Library assert is called on a constant.",
     severity = WARNING,

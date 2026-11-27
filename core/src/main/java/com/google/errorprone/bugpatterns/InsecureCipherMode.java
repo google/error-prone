@@ -29,9 +29,7 @@ import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 
-/**
- * @author avenet@google.com (Arnaud J. Venet)
- */
+/// @author avenet@google.com (Arnaud J. Venet)
 @BugPattern(
     name = "InsecureCryptoUsage",
     altNames = {"InsecureCipherMode"},

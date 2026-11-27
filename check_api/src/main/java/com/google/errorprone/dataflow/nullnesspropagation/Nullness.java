@@ -18,24 +18,20 @@ package com.google.errorprone.dataflow.nullnesspropagation;
 
 import org.checkerframework.errorprone.dataflow.analysis.AbstractValue;
 
-/**
- * Represents one of the possible nullness values in our nullness analysis.
- *
- * @author deminguyen@google.com (Demi Nguyen)
- */
+/// Represents one of the possible nullness values in our nullness analysis.
+///
+/// @author deminguyen@google.com (Demi Nguyen)
 public enum Nullness implements AbstractValue<Nullness> {
 
-  /**
-   * The lattice for nullness looks like:
-   *
-   * <pre>
-   *        Nullable
-   *       /        \
-   *   Null          Non-null
-   *        \      /
-   *         Bottom
-   * </pre>
-   */
+  /// The lattice for nullness looks like:
+  ///
+  /// ```
+  ///        Nullable
+  ///       /        \
+  ///   Null          Non-null
+  ///        \      /
+  ///         Bottom
+  /// ```
   NULLABLE("Nullable"), // TODO(eaftan): Rename to POSSIBLY_NULL?
   NULL("Null"),
   NONNULL("Non-null"),
@@ -82,27 +78,23 @@ public enum Nullness implements AbstractValue<Nullness> {
     return BOTTOM;
   }
 
-  /**
-   * Returns the {@code Nullness} that corresponds to what you can deduce by knowing that some
-   * expression is not equal to another expression with this {@code Nullness}.
-   *
-   * <p>A {@code Nullness} represents a set of possible values for a expression. Suppose you have
-   * two variables {@code var1} and {@code var2}. If {@code var1 != var2}, then {@code var1} must be
-   * an element of the complement of the singleton set containing the value of {@code var2}. If you
-   * union these complement sets over all possible values of {@code var2}, the set that results is
-   * what this method returns, assuming that {@code this} is the {@code Nullness} of {@code var2}.
-   *
-   * <p>Example 1: Suppose {@code nv2 == NULL}. Then {@code var2} can have exactly one value, {@code
-   * null}, and {@code var1} must have a value in the set of all values except {@code null}. That
-   * set is exactly {@code NONNULL}.
-   *
-   * <p>Example 2: Suppose {@code nv2 == NONNULL}. Then {@code var2} can have any value except
-   * {@code null}. Suppose {@code var2} has value {@code "foo"}. Then {@code var1} must have a value
-   * in the set of all values except {@code "foo"}. Now suppose {@code var2} has value {@code "bar"}
-   * . Then {@code var1} must have a value in set of all values except {@code "bar"}. Since we don't
-   * know which value in the set {@code NONNULL var2} has, we union all possible complement sets to
-   * get the set of all values, or {@code NULLABLE}.
-   */
+  /// Returns the `Nullness` that corresponds to what you can deduce by knowing that some expression
+  /// is not equal to another expression with this `Nullness`.
+  ///
+  /// A `Nullness` represents a set of possible values for a expression. Suppose you have two
+  /// variables `var1` and `var2`. If `var1 != var2`, then `var1` must be an element of the
+  /// complement of the singleton set containing the value of `var2`. If you union these complement
+  /// sets over all possible values of `var2`, the set that results is what this method returns,
+  /// assuming that `this` is the `Nullness` of `var2`.
+  ///
+  /// Example 1: Suppose `nv2 == NULL`. Then `var2` can have exactly one value, `null`, and `var1`
+  /// must have a value in the set of all values except `null`. That set is exactly `NONNULL`.
+  ///
+  /// Example 2: Suppose `nv2 == NONNULL`. Then `var2` can have any value except `null`. Suppose
+  /// `var2` has value `"foo"`. Then `var1` must have a value in the set of all values except
+  /// `"foo"`. Now suppose `var2` has value `"bar"` . Then `var1` must have a value in set of all
+  /// values except `"bar"`. Since we don't know which value in the set `NONNULL var2` has, we union
+  /// all possible complement sets to get the set of all values, or `NULLABLE`.
   public Nullness deducedValueWhenNotEqual() {
     return switch (this) {
       case NULLABLE, NONNULL -> NULLABLE;

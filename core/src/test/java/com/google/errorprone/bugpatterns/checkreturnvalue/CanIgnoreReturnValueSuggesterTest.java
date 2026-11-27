@@ -21,7 +21,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** Tests for the {@link CanIgnoreReturnValueSuggester}. */
+/// Tests for the [CanIgnoreReturnValueSuggester].
 @RunWith(JUnit4.class)
 public class CanIgnoreReturnValueSuggesterTest {
 

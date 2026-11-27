@@ -45,9 +45,7 @@ import com.sun.source.tree.TypeCastTree;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.TypeTag;
 
-/**
- * @author irogers@google.com (Ian Rogers)
- */
+/// @author irogers@google.com (Ian Rogers)
 @BugPattern(
     summary = "Possible sign flip from narrowing conversion",
     severity = WARNING,
@@ -57,7 +55,7 @@ public class BadComparable extends BugChecker implements TypeCastTreeMatcher {
   private static final Matcher<ClassTree> COMPARABLE_CLASS_MATCHER =
       isSubtypeOf("java.lang.Comparable");
 
-  /** Matcher for the overriding method of 'int java.util.Comparator.compare(T o1, T o2)' */
+  /// Matcher for the overriding method of 'int java.util.Comparator.compare(T o1, T o2)'
   private static final Matcher<MethodTree> COMPARATOR_METHOD_MATCHER =
       allOf(
           methodIsNamed("compare"),
@@ -68,11 +66,9 @@ public class BadComparable extends BugChecker implements TypeCastTreeMatcher {
   private static final Matcher<ClassTree> COMPARATOR_CLASS_MATCHER =
       isSubtypeOf("java.util.Comparator");
 
-  /**
-   * Compute the type of the subtract BinaryTree. We use the type of the left/right operand except
-   * when they're not the same, in which case we prefer the type of the expression. This ensures
-   * that a byte/short subtracted from another byte/short isn't regarded as an int.
-   */
+  /// Compute the type of the subtract BinaryTree. We use the type of the left/right operand except
+  /// when they're not the same, in which case we prefer the type of the expression. This ensures
+  /// that a byte/short subtracted from another byte/short isn't regarded as an int.
   private static Type getTypeOfSubtract(BinaryTree expression, VisitorState state) {
     Type expressionType = ASTHelpers.getType(expression.getLeftOperand());
     if (!ASTHelpers.isSameType(
@@ -82,10 +78,8 @@ public class BadComparable extends BugChecker implements TypeCastTreeMatcher {
     return expressionType;
   }
 
-  /**
-   * Matches if this is a narrowing integral cast between signed types where the expression is a
-   * subtract.
-   */
+  /// Matches if this is a narrowing integral cast between signed types where the expression is a
+  /// subtract.
   private static boolean matches(TypeCastTree tree, VisitorState state) {
     Type treeType = ASTHelpers.getType(tree.getType());
 

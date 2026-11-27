@@ -28,6 +28,7 @@ import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
+import static com.google.errorprone.util.ASTHelpers.hasClassName;
 import static com.google.errorprone.util.ASTHelpers.isGeneratedConstructor;
 import static com.google.errorprone.util.ASTHelpers.isStatic;
 
@@ -62,7 +63,7 @@ import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
 import org.jspecify.annotations.Nullable;
 
-/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
+/// A [BugChecker]; see the associated [BugPattern] annotation for details.
 @BugPattern(
     summary =
         "Implementing a functional interface is unnecessary; prefer to implement the functional"
@@ -113,7 +114,7 @@ public class UnnecessaryAnonymousClass extends BugChecker implements VariableTre
       return NO_MATCH;
     }
     if (tree.getModifiers().getAnnotations().stream()
-        .anyMatch(at -> getSymbol(at).flatName().equals(SPY.binaryName(state)))) {
+        .anyMatch(at -> hasClassName(getSymbol(at), SPY, state))) {
       return NO_MATCH;
     }
     SuggestedFix.Builder fixBuilder = SuggestedFix.builder();
@@ -137,7 +138,7 @@ public class UnnecessaryAnonymousClass extends BugChecker implements VariableTre
         .orElse(NO_MATCH);
   }
 
-  /** Remove anonymous class definition beginning and end, leaving only the method definition. */
+  /// Remove anonymous class definition beginning and end, leaving only the method definition.
   private static SuggestedFix trimToMethodDef(
       VariableTree varDefinitionTree, VisitorState state, MethodTree implementation) {
     int methodModifiersEndPos = state.getEndPosition(implementation.getModifiers());
@@ -153,10 +154,8 @@ public class UnnecessaryAnonymousClass extends BugChecker implements VariableTre
         .build();
   }
 
-  /**
-   * Replace all uses of {@code varSym} within the enclosing compilation unit with a method
-   * reference, as specified by {@code newName}.
-   */
+  /// Replace all uses of `varSym` within the enclosing compilation unit with a method reference, as
+  /// specified by `newName`.
   private static Optional<SuggestedFix> replaceUsesWithMethodReference(
       String newName, Symbol varSym, MethodTree implementation, VisitorState state) {
     // Extract method body.
@@ -228,9 +227,7 @@ public class UnnecessaryAnonymousClass extends BugChecker implements VariableTre
       return super.visitIdentifier(node, null);
     }
 
-    /**
-     * Replace the given {@code node} with the method reference specified by {@code this.newName}.
-     */
+    /// Replace the given `node` with the method reference specified by `this.newName`.
     private @Nullable SuggestedFix replaceUseWithMethodReference(
         ExpressionTree node, VisitorState state) {
       Tree parent = state.getPath().getParentPath().getLeaf();

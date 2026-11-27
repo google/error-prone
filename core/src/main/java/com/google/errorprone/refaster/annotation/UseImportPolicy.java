@@ -22,11 +22,9 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-/**
- * Annotation to indicate which import policy to use.
- *
- * @author lowasser@google.com (Louis Wasserman)
- */
+/// Annotation to indicate which import policy to use.
+///
+/// @author lowasser@google.com (Louis Wasserman)
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.SOURCE)
 @RequiredAnnotation(AfterTemplate.class)

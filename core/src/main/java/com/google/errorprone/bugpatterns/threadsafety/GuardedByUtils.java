@@ -39,9 +39,7 @@ import java.util.Optional;
 import javax.lang.model.element.ElementKind;
 import org.jspecify.annotations.Nullable;
 
-/**
- * @author cushon@google.com (Liam Miller-Cushon)
- */
+/// @author cushon@google.com (Liam Miller-Cushon)
 public final class GuardedByUtils {
   public static ImmutableSet<String> getGuardValues(Symbol sym) {
     // This is called for every identifier and member select in the analyzed code, and most symbols

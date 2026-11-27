@@ -32,11 +32,9 @@ import com.sun.source.tree.MethodTree;
 import com.sun.source.util.DocTreePath;
 import com.sun.source.util.DocTreePathScanner;
 
-/**
- * Finds common Javadoc errors, and tries to suggest useful fixes.
- *
- * @author ghm@google.com (Graeme Morgan)
- */
+/// Finds common Javadoc errors, and tries to suggest useful fixes.
+///
+/// @author ghm@google.com (Graeme Morgan)
 @BugPattern(
     summary = "Void methods should not have a @return tag.",
     severity = WARNING,

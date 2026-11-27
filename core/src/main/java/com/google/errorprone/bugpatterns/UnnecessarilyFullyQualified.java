@@ -65,7 +65,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import javax.inject.Inject;
 import javax.lang.model.element.Name;
 
-/** Flags uses of fully qualified names which are not ambiguous if imported. */
+/// Flags uses of fully qualified names which are not ambiguous if imported.
 @BugPattern(
     severity = SeverityLevel.WARNING,
     summary = "This fully qualified name is unambiguous to the compiler if imported.")
@@ -74,18 +74,16 @@ public final class UnnecessarilyFullyQualified extends BugChecker
 
   private static final ImmutableSet<String> EXEMPTED_NAMES = ImmutableSet.of("Annotation");
 
-  /**
-   * Exempted types that fully qualified name usages are acceptable for their nested types when
-   * importing the enclosing type is ambiguous.
-   *
-   * <p>Some types are meant to provide a namespace; therefore, imports for their nested types can
-   * be confusing.
-   *
-   * <p>For instance, unlike its name suggests, {@code org.immutables.value.Value.Immutable} is used
-   * to generate immutable value types, and its import can be misleading. So, importing {@code
-   * org.immutables.value.Value} and using {@code @Value.Immutable} is more favorable than importing
-   * {@code org.immutables.value.Value.Immutable} and using {@code @Immutable}.
-   */
+  /// Exempted types that fully qualified name usages are acceptable for their nested types when
+  /// importing the enclosing type is ambiguous.
+  ///
+  /// Some types are meant to provide a namespace; therefore, imports for their nested types can be
+  /// confusing.
+  ///
+  /// For instance, unlike its name suggests, `org.immutables.value.Value.Immutable` is used to
+  /// generate immutable value types, and its import can be misleading. So, importing
+  /// `org.immutables.value.Value` and using `@Value.Immutable` is more favorable than importing
+  /// `org.immutables.value.Value.Immutable` and using `@Immutable`.
   private final ImmutableSet<String> exemptedEnclosingTypes;
 
   private final boolean batchFindings;

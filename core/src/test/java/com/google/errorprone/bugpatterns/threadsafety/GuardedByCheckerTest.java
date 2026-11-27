@@ -23,7 +23,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-/** {@link GuardedByChecker}Test */
+/// [GuardedByChecker]Test
 @RunWith(TestParameterInjector.class)
 public class GuardedByCheckerTest {
   private final CompilationTestHelper compilationHelper =
@@ -67,7 +67,7 @@ public class GuardedByCheckerTest {
         .doTest();
   }
 
-  /** "static synchronized method() { ... }" == "synchronized (MyClass.class) { ... }" */
+  /// "static synchronized method() { ... }" == "synchronized (MyClass.class) { ... }"
   @Test
   public void staticLocked() {
     compilationHelper

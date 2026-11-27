@@ -27,7 +27,7 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.sun.source.tree.MethodInvocationTree;
 
-/** A {@link BugChecker} that detects use of the unsafe JNDI API system. */
+/// A [BugChecker] that detects use of the unsafe JNDI API system.
 @BugPattern(
     summary =
         "Using JNDI may deserialize user input via the `Serializable` API which is extremely"
@@ -36,7 +36,7 @@ import com.sun.source.tree.MethodInvocationTree;
 public final class BanJNDI extends AbstractBanUnsafeAPIChecker
     implements MethodInvocationTreeMatcher {
 
-  /** Checks for direct or indirect calls to context.lookup() via the JDK */
+  /// Checks for direct or indirect calls to context.lookup() via the JDK
   private static final Matcher<MethodInvocationTree> MATCHER =
       anyOf(
           anyMethod()

@@ -54,12 +54,10 @@ import java.time.DateTimeException;
 import java.time.temporal.ChronoField;
 import java.util.List;
 
-/**
- * This checker errors on calls to {@code java.time} methods using values that are guaranteed to
- * throw a {@link DateTimeException}.
- *
- * @author kak@google.com (Kurt Alfred Kluever)
- */
+/// This checker errors on calls to `java.time` methods using values that are guaranteed to throw a
+/// [DateTimeException].
+///
+/// @author kak@google.com (Kurt Alfred Kluever)
 @BugPattern(
     summary =
         "This checker errors on calls to java.time methods using values that are guaranteed to "

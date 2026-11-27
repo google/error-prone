@@ -35,7 +35,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** Tests for {@code @SuppressLint} suppression method. */
+/// Tests for `@SuppressLint` suppression method.
 @RunWith(JUnit4.class)
 public class SuppressLintTest {
   private ErrorProneTestCompiler compiler;

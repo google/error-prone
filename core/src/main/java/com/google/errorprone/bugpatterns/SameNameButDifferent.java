@@ -55,7 +55,7 @@ import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Name;
 import org.jspecify.annotations.Nullable;
 
-/** Looks for types being shadowed by other types in a way that may be confusing. */
+/// Looks for types being shadowed by other types in a way that may be confusing.
 @BugPattern(
     summary = "This type name shadows another in a way that may be confusing.",
     severity = WARNING)
@@ -224,7 +224,7 @@ public final class SameNameButDifferent extends BugChecker implements Compilatio
     return Optional.empty();
   }
 
-  /** Try to qualify the type, or return the full name. */
+  /// Try to qualify the type, or return the full name.
   public static String qualifyType(VisitorState state, SuggestedFix.Builder fix, Symbol sym) {
     Deque<String> names = new ArrayDeque<>();
     for (Symbol curr = sym; curr != null; curr = curr.owner) {

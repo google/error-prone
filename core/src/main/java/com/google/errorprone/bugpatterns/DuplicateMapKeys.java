@@ -30,11 +30,9 @@ import com.sun.source.tree.MethodInvocationTree;
 import java.util.HashSet;
 import java.util.Set;
 
-/**
- * Flags duplicate keys used in ImmutableMap construction.
- *
- * @author bhagwani@google.com (Sumit Bhagwani)
- */
+/// Flags duplicate keys used in ImmutableMap construction.
+///
+/// @author bhagwani@google.com (Sumit Bhagwani)
 @BugPattern(
     summary =
         "Map#ofEntries will throw an IllegalArgumentException if there are any duplicate keys",

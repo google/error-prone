@@ -32,6 +32,7 @@ import static com.google.errorprone.suppliers.Suppliers.arrayOf;
 import static com.google.errorprone.suppliers.Suppliers.typeFromString;
 import static com.google.errorprone.util.ASTHelpers.findEnclosingMethod;
 import static com.google.errorprone.util.ASTHelpers.findEnclosingMethodPath;
+import static com.google.errorprone.util.ASTHelpers.hasClassName;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -78,7 +79,7 @@ import java.util.Optional;
 import javax.inject.Inject;
 import org.jspecify.annotations.Nullable;
 
-/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
+/// A [BugChecker]; see the associated [BugPattern] annotation for details.
 @BugPattern(summary = "Suggests alternatives to obsolete JDK classes.", severity = WARNING)
 public class JdkObsolete extends BugChecker
     implements NewClassTreeMatcher,
@@ -506,7 +507,7 @@ public class JdkObsolete extends BugChecker
     if (description == NO_MATCH) {
       return NO_MATCH;
     }
-    if (owner.flatName().equals(STRING_BUFFER.binaryName(state))
+    if (hasClassName(owner, STRING_BUFFER, state)
         && androidMinSdkVersion.isPresent()
         && androidMinSdkVersion.get() < 34) {
       boolean[] found = {false};
@@ -713,7 +714,7 @@ public class JdkObsolete extends BugChecker
   private static final Matcher<ExpressionTree> MOCKITO_MATCHER =
       staticMethod().onClass("org.mockito.Mockito").named("when");
 
-  /** Allow mocking APIs that return obsolete types. */
+  /// Allow mocking APIs that return obsolete types.
   private boolean mockingObsoleteMethod(MethodTree enclosingMethod, VisitorState state, Type type) {
     // mutable boolean to return result from visitor
     boolean[] found = {false};
@@ -739,7 +740,7 @@ public class JdkObsolete extends BugChecker
     return found[0];
   }
 
-  /** Allow creating obsolete types when overriding a method with an obsolete return type. */
+  /// Allow creating obsolete types when overriding a method with an obsolete return type.
   private static boolean implementingObsoleteMethod(
       MethodTree enclosingMethod, VisitorState state, Type type) {
     MethodSymbol method = ASTHelpers.getSymbol(enclosingMethod);

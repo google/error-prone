@@ -26,11 +26,9 @@ import com.sun.tools.javac.tree.JCTree.JCExpression;
 import java.util.Set;
 import org.jspecify.annotations.Nullable;
 
-/**
- * {@code UExpression} imposing a restriction on the kind of the matched expression.
- *
- * @author lowasser@google.com (Louis Wasserman)
- */
+/// `UExpression` imposing a restriction on the kind of the matched expression.
+///
+/// @author lowasser@google.com (Louis Wasserman)
 @AutoValue
 abstract class UOfKind extends UExpression {
   public static UOfKind create(UExpression expression, Set<Kind> allowed) {

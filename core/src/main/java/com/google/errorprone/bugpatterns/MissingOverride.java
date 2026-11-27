@@ -40,14 +40,14 @@ import com.sun.tools.javac.util.Name;
 import javax.inject.Inject;
 import javax.lang.model.element.Modifier;
 
-/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
+/// A [BugChecker]; see the associated [BugPattern] annotation for details.
 @BugPattern(
     summary = "method overrides method in supertype; expected @Override",
     severity = WARNING,
     tags = StandardTags.STYLE)
 public class MissingOverride extends BugChecker implements MethodTreeMatcher {
 
-  /** if true, don't warn on missing {@code @Override} annotations inside interfaces */
+  /// if true, don't warn on missing `@Override` annotations inside interfaces
   private final boolean ignoreInterfaceOverrides;
 
   @Inject

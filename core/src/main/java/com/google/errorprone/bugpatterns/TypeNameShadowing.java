@@ -49,11 +49,9 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-/**
- * Warns when a type parameter shadows another type name in scope.
- *
- * @author bennostein@google.com (Benno Stein)
- */
+/// Warns when a type parameter shadows another type name in scope.
+///
+/// @author bennostein@google.com (Benno Stein)
 @BugPattern(
     summary = "Type parameter declaration shadows another named type",
     severity = WARNING,
@@ -76,10 +74,8 @@ public class TypeNameShadowing extends BugChecker implements MethodTreeMatcher, 
     return findShadowedTypes(tree, tree.getTypeParameters(), state);
   }
 
-  /**
-   * Returns a list of type symbols in the scope enclosing {@code env} guaranteeing that, when two
-   * symbols share a simple name, the shadower precedes the shadow-ee
-   */
+  /// Returns a list of type symbols in the scope enclosing `env` guaranteeing that, when two
+  /// symbols share a simple name, the shadower precedes the shadow-ee
   private static Iterable<Symbol> typesInEnclosingScope(
       Env<AttrContext> env, PackageSymbol javaLang) {
     // Collect all visible type names declared in this source file by ascending lexical scopes,
@@ -106,7 +102,7 @@ public class TypeNameShadowing extends BugChecker implements MethodTreeMatcher, 
         env.toplevel.packge.members().getSymbols()); // Siblings in class hierarchy
   }
 
-  /** Iterate through a list of type parameters, looking for type names shadowed by any of them. */
+  /// Iterate through a list of type parameters, looking for type names shadowed by any of them.
   private Description findShadowedTypes(
       Tree tree, List<? extends TypeParameterTree> typeParameters, VisitorState state) {
 

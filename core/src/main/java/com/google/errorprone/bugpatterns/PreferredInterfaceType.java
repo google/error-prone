@@ -76,7 +76,7 @@ import javax.inject.Inject;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.type.TypeKind;
 
-/** Tightens types which refer to an Iterable, Map, Multimap, etc. */
+/// Tightens types which refer to an Iterable, Map, Multimap, etc.
 @BugPattern(
     altNames = {"MutableConstantField", "MutableMethodReturnType"},
     summary = "This type can be more specific.",

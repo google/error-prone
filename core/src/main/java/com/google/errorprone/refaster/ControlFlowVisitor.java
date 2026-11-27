@@ -47,18 +47,14 @@ import java.util.HashSet;
 import java.util.Set;
 import javax.lang.model.element.Name;
 
-/**
- * Analyzes a series of statements to determine whether they don't, sometimes, or never return.
- *
- * @author lowasser@google.com (Louis Wasserman)
- */
+/// Analyzes a series of statements to determine whether they don't, sometimes, or never return.
+///
+/// @author lowasser@google.com (Louis Wasserman)
 public final class ControlFlowVisitor extends SimpleTreeVisitor<Result, BreakContext> {
   public static final ControlFlowVisitor INSTANCE = new ControlFlowVisitor();
 
-  /**
-   * The state of whether a sequence of statements may return, break out of the visited statements,
-   * or neither.
-   */
+  /// The state of whether a sequence of statements may return, break out of the visited statements,
+  /// or neither.
   public enum Result {
     NEVER_EXITS {
       @Override

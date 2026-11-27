@@ -24,11 +24,9 @@ import com.sun.source.tree.TreeVisitor;
 import com.sun.tools.javac.tree.JCTree.JCReturn;
 import org.jspecify.annotations.Nullable;
 
-/**
- * {@link UTree} representation of a {@link ReturnTree}.
- *
- * @author lowasser@google.com
- */
+/// [UTree] representation of a [ReturnTree].
+///
+/// @author lowasser@google.com
 @AutoValue
 public abstract class UReturn extends USimpleStatement implements ReturnTree {
   public static UReturn create(UExpression expression) {

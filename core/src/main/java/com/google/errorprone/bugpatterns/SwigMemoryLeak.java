@@ -30,9 +30,7 @@ import com.sun.source.tree.LiteralTree;
 import com.sun.source.tree.MethodTree;
 import javax.lang.model.element.Name;
 
-/**
- * @author irogers@google.com (Ian Rogers)
- */
+/// @author irogers@google.com (Ian Rogers)
 @BugPattern(
     summary = "SWIG generated code that can't call a C++ destructor will leak memory",
     severity = WARNING)

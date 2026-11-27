@@ -34,10 +34,8 @@ import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
 import org.jspecify.annotations.Nullable;
 
-/**
- * Checks that non-record concrete {@code value} classes explicitly override {@link Object#equals}
- * and {@link Object#hashCode}.
- */
+/// Checks that non-record concrete `value` classes explicitly override [Object#equals] and
+/// [Object#hashCode].
 @BugPattern(
     summary =
         """

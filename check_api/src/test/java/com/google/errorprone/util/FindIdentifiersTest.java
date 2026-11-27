@@ -40,11 +40,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** Tests for {@link FindIdentifiers}. */
+/// Tests for [FindIdentifiers].
 @RunWith(JUnit4.class)
 public class FindIdentifiersTest {
 
-  /** A {@link BugChecker} that prints all identifiers in scope at a call to String.format(). */
+  /// A [BugChecker] that prints all identifiers in scope at a call to String.format().
   @BugPattern(
       severity = SeverityLevel.ERROR,
       summary = "Prints all identifiers in scope at a call to String.format()")
@@ -1019,7 +1019,7 @@ public class FindIdentifiersTest {
         .doTest();
   }
 
-  /** A {@link BugChecker} that prints all identifiers in scope at a method declaration. */
+  /// A [BugChecker] that prints all identifiers in scope at a method declaration.
   @BugPattern(
       severity = SeverityLevel.ERROR,
       summary = "Prints all identifiers in scope at a method declaration.")
@@ -1050,9 +1050,7 @@ public class FindIdentifiersTest {
         .doTest();
   }
 
-  /**
-   * A {@link BugChecker} that prints all unused variables in scope at a call to String.format().
-   */
+  /// A [BugChecker] that prints all unused variables in scope at a call to String.format().
   @BugPattern(
       severity = SeverityLevel.ERROR,
       summary = "Prints all unused variabled in scope at a call to String.format()")
@@ -1206,7 +1204,7 @@ public class FindIdentifiersTest {
         .doTest();
   }
 
-  /** A {@link BugChecker} that prints all fields in receiver class on method invocations. */
+  /// A [BugChecker] that prints all fields in receiver class on method invocations.
   @BugPattern(
       severity = SeverityLevel.ERROR,
       summary = "Prints all fields in receivers of method invocations")
@@ -1277,7 +1275,7 @@ public class FindIdentifiersTest {
         .doTest();
   }
 
-  /** A {@link BugChecker} that prints whether {@code A} is visible on each member select. */
+  /// A [BugChecker] that prints whether `A` is visible on each member select.
   @BugPattern(severity = SeverityLevel.ERROR, summary = "A is visible")
   public static class IsAVisible extends BugChecker implements MemberSelectTreeMatcher {
     @Override
@@ -1332,7 +1330,7 @@ public class FindIdentifiersTest {
         .doTest();
   }
 
-  /** A {@link BugChecker} that prints whether {@code A} is visible on each class tree. */
+  /// A [BugChecker] that prints whether `A` is visible on each class tree.
   @BugPattern(severity = SeverityLevel.ERROR, summary = "A is visible on ClassTree")
   public static class IsAVisibleOnClassTree extends BugChecker implements ClassTreeMatcher {
     @Override

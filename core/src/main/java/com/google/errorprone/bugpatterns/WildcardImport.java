@@ -50,7 +50,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import javax.lang.model.element.ElementKind;
 
-/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
+/// A [BugChecker]; see the associated [BugPattern] annotation for details.
 @BugPattern(
     summary = "Wildcard imports, static or otherwise, should not be used",
     severity = SUGGESTION,
@@ -60,17 +60,15 @@ import javax.lang.model.element.ElementKind;
     link = "https://google.github.io/styleguide/javaguide.html?cl=head#s3.3.1-wildcard-imports")
 public class WildcardImport extends BugChecker implements CompilationUnitTreeMatcher {
 
-  /** Maximum number of members to import before switching to qualified names. */
+  /// Maximum number of members to import before switching to qualified names.
   public static final int MAX_MEMBER_IMPORTS = 20;
 
-  /**
-   * A type or member that needs to be imported.
-   *
-   * @param name Returns the simple name of the import.
-   * @param owner Returns the owner of the imported type or member.
-   * @param isStatic Returns true if the import needs to be static (i.e. the import is for a field
-   *     or method).
-   */
+  /// A type or member that needs to be imported.
+  ///
+  /// @param name Returns the simple name of the import.
+  /// @param owner Returns the owner of the imported type or member.
+  /// @param isStatic Returns true if the import needs to be static (i.e. the import is for a field
+  ///   or method).
   private record TypeToImport(String name, Symbol owner, boolean isStatic) {
     static TypeToImport create(String name, Symbol owner, boolean stat) {
       return new TypeToImport(name, owner, stat);
@@ -103,7 +101,7 @@ public class WildcardImport extends BugChecker implements CompilationUnitTreeMat
     return describeMatch(wildcardImports.getFirst(), fix);
   }
 
-  /** Collect all on demand imports. */
+  /// Collect all on demand imports.
   private static ImmutableList<ImportTree> getWildcardImports(List<? extends ImportTree> imports) {
     ImmutableList.Builder<ImportTree> result = ImmutableList.builder();
     for (ImportTree tree : imports) {
@@ -119,7 +117,7 @@ public class WildcardImport extends BugChecker implements CompilationUnitTreeMat
     return result.build();
   }
 
-  /** Collects all uses of on demand-imported types and static members in a compilation unit. */
+  /// Collects all uses of on demand-imported types and static members in a compilation unit.
   static class ImportCollector extends TreeScanner {
 
     private final StarImportScope wildcardScope;
@@ -177,7 +175,7 @@ public class WildcardImport extends BugChecker implements CompilationUnitTreeMat
     }
   }
 
-  /** Creates a {@link Fix} that replaces wildcard imports. */
+  /// Creates a [Fix] that replaces wildcard imports.
   static Fix createFix(
       ImmutableList<ImportTree> wildcardImports,
       Set<TypeToImport> typesToImport,
@@ -207,10 +205,8 @@ public class WildcardImport extends BugChecker implements CompilationUnitTreeMat
     return fix.build();
   }
 
-  /**
-   * Add an import for {@code owner}, and qualify all on demand imported references to members of
-   * owner by owner's simple name.
-   */
+  /// Add an import for `owner`, and qualify all on demand imported references to members of owner
+  /// by owner's simple name.
   private static void qualifiedNameFix(SuggestedFix.Builder fix, Symbol owner, VisitorState state) {
     fix.addImport(owner.getQualifiedName().toString());
     JCCompilationUnit unit = (JCCompilationUnit) state.getPath().getCompilationUnit();

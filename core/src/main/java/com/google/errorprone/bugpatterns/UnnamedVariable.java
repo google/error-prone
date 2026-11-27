@@ -61,7 +61,7 @@ import java.util.Set;
 import javax.inject.Inject;
 import javax.lang.model.element.ElementKind;
 
-/** A bug pattern that suggests renaming unused variables to {@code var _}. */
+/// A bug pattern that suggests renaming unused variables to `var _`.
 @BugPattern(
     summary = "Use the unnamed variable syntax (`_`) for unused variables and lambda parameters.",
     severity = WARNING)
@@ -127,10 +127,8 @@ public final class UnnamedVariable extends BugChecker implements CompilationUnit
     return fix;
   }
 
-  /**
-   * Returns true if we can remove the declared type of the lambda parameter at the given {@link
-   * TreePath}.
-   */
+  /// Returns true if we can remove the declared type of the lambda parameter at the given
+  /// [TreePath].
   private static boolean canRemoveLambdaParameterType(TreePath path, Set<Symbol> unusedSymbols) {
     // We can only remove the declared type if variable is used as an initializer in a
     // `VariableTree` or as the expression in an `AssignmentTree`, as these are contexts in which
@@ -155,17 +153,13 @@ public final class UnnamedVariable extends BugChecker implements CompilationUnit
     return true;
   }
 
-  /**
-   * Returns true if the given variable can be declared using {@code var}. This is true if the
-   * variable is:
-   *
-   * <ul>
-   *   <li>A local or resource variable.
-   *   <li>Part of an enhanced for loop or has an initializer whose type can be inferred for {@code
-   *       var} (JLS 14.4.1).
-   *   <li>Not part of a compound declaration (e.g., {@code int a, b;}).
-   * </ul>
-   */
+  /// Returns true if the given variable can be declared using `var`. This is true if the variable
+  /// is:
+  ///
+  /// - A local or resource variable.
+  /// - Part of an enhanced for loop or has an initializer whose type can be inferred for `var` (JLS
+  ///   14.4.1).
+  /// - Not part of a compound declaration (e.g., `int a, b;`).
   private static boolean canUseVar(VariableTree tree, Symbol symbol, TreePath path) {
     boolean isLocalOrResource =
         switch (symbol.getKind()) {
@@ -180,18 +174,15 @@ public final class UnnamedVariable extends BugChecker implements CompilationUnit
     return isLocalOrResource && isForEachOrHasInitializer && isNotCompound;
   }
 
-  /**
-   * Returns true if javac can infer a type for {@code var} from the given initializer (JLS 14.4.1).
-   *
-   * <p>The initializer must not have the null type, and must not contain a lambda expression,
-   * method reference, or array initializer that isn't nested inside a method invocation, class
-   * instance creation, or cast. This mirrors javac's {@code Attr.LocalInitScanner}, which is
-   * syntactic, e.g. it also rejects a lambda in a variable declaration inside a switch expression
-   * block.
-   *
-   * <p>TODO(b/585664542): Passing javac's syntactic check isn't sufficient: e.g. {@code var x =
-   * List.of(() -> {})} still fails type inference without a target type.
-   */
+  /// Returns true if javac can infer a type for `var` from the given initializer (JLS 14.4.1).
+  ///
+  /// The initializer must not have the null type, and must not contain a lambda expression, method
+  /// reference, or array initializer that isn't nested inside a method invocation, class instance
+  /// creation, or cast. This mirrors javac's `Attr.LocalInitScanner`, which is syntactic, e.g. it
+  /// also rejects a lambda in a variable declaration inside a switch expression block.
+  ///
+  /// TODO(b/585664542): Passing javac's syntactic check isn't sufficient: e.g. `var x = List.of(()
+  /// -> {})` still fails type inference without a target type.
   private static boolean hasValidVarInitializer(ExpressionTree initializer) {
     if (getType(initializer).hasTag(TypeTag.BOT)) {
       return false;
@@ -243,10 +234,8 @@ public final class UnnamedVariable extends BugChecker implements CompilationUnit
     return !scanner.needsExplicitType;
   }
 
-  /**
-   * Returns true if the given variable is part of a compound declaration (e.g., {@code int a, b;}).
-   * In javac, compound declarations share the same type tree object instance and start position.
-   */
+  /// Returns true if the given variable is part of a compound declaration (e.g., `int a, b;`). In
+  /// javac, compound declarations share the same type tree object instance and start position.
   private static boolean isPartOfCompoundDeclaration(VariableTree tree, TreePath path) {
     Tree parent = path.getParentPath().getLeaf();
     if (parent instanceof BlockTree blockTree) {
@@ -261,10 +250,8 @@ public final class UnnamedVariable extends BugChecker implements CompilationUnit
     return false;
   }
 
-  /**
-   * Returns true if any other variable in the list of trees shares the same start position as the
-   * given variable.
-   */
+  /// Returns true if any other variable in the list of trees shares the same start position as the
+  /// given variable.
   private static boolean isCompound(VariableTree tree, List<? extends Tree> trees) {
     for (Tree sibling : trees) {
       if (sibling instanceof VariableTree siblingVar && siblingVar != tree) {

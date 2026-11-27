@@ -27,11 +27,9 @@ import com.sun.tools.javac.tree.JCTree.JCForLoop;
 import com.sun.tools.javac.tree.JCTree.JCStatement;
 import org.jspecify.annotations.Nullable;
 
-/**
- * {@link UTree} representation of a {@link ForLoopTree}.
- *
- * @author lowasser@google.com (Louis Wasserman)
- */
+/// [UTree] representation of a [ForLoopTree].
+///
+/// @author lowasser@google.com (Louis Wasserman)
 @AutoValue
 abstract class UForLoop extends USimpleStatement implements ForLoopTree {
 

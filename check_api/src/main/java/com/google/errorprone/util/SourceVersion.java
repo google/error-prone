@@ -19,39 +19,39 @@ package com.google.errorprone.util;
 import com.sun.tools.javac.code.Source;
 import com.sun.tools.javac.util.Context;
 
-/** JDK source version utilities. */
+/// JDK source version utilities.
 public final class SourceVersion {
-  /** Returns true if the compiler source version level supports switch expressions. */
+  /// Returns true if the compiler source version level supports switch expressions.
   public static boolean supportsSwitchExpressions(Context context) {
     return sourceIsAtLeast(context, 14);
   }
 
-  /** Returns true if the compiler source version level supports text blocks. */
+  /// Returns true if the compiler source version level supports text blocks.
   public static boolean supportsTextBlocks(Context context) {
     return sourceIsAtLeast(context, 15);
   }
 
-  /** Returns whether the compiler supports pattern-matching instanceofs. */
+  /// Returns whether the compiler supports pattern-matching instanceofs.
   public static boolean supportsPatternMatchingInstanceof(Context context) {
     return sourceIsAtLeast(context, 17);
   }
 
-  /** Returns true if the compiler source version level supports static inner classes. */
+  /// Returns true if the compiler source version level supports static inner classes.
   public static boolean supportsStaticInnerClass(Context context) {
     return sourceIsAtLeast(context, 16);
   }
 
-  /** Returns true if the compiler source version level supports pattern-matching switches. */
+  /// Returns true if the compiler source version level supports pattern-matching switches.
   public static boolean supportsPatternMatchingSwitch(Context context) {
     return sourceIsAtLeast(context, 21);
   }
 
-  /** Returns true if the compiler source version level supports unnamed variables and patterns. */
+  /// Returns true if the compiler source version level supports unnamed variables and patterns.
   public static boolean supportsUnnamedVariablesAndPatterns(Context context) {
     return sourceIsAtLeast(context, 22);
   }
 
-  /** Returns true if the compiler source version level supports instance main methods. */
+  /// Returns true if the compiler source version level supports instance main methods.
   public static boolean supportsInstanceMainMethods(Context context) {
     return sourceIsAtLeast(context, 25);
   }

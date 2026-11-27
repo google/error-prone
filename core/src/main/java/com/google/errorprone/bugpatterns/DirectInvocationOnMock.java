@@ -29,6 +29,7 @@ import static com.google.errorprone.matchers.Matchers.staticMethod;
 import static com.google.errorprone.suppliers.Suppliers.OBJECT_TYPE_ARRAY;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
+import static com.google.errorprone.util.ASTHelpers.hasClassName;
 import static com.google.errorprone.util.MoreAnnotations.getValue;
 import static java.lang.String.format;
 
@@ -56,7 +57,7 @@ import java.util.HashSet;
 import java.util.Set;
 import javax.lang.model.element.AnnotationMirror;
 
-/** A bugpattern; see the description. */
+/// A bugpattern; see the description.
 @BugPattern(
     summary =
         "Methods should not be directly invoked on mocks. Should this be part of a verify(..)"
@@ -135,8 +136,7 @@ public final class DirectInvocationOnMock extends BugChecker implements Compilat
         return symbol != null
             && (mocks.contains(symbol)
                 || symbol.getAnnotationMirrors().stream()
-                    .filter(
-                        am -> am.type.tsym.flatName().equals(ORG_MOCKITO_MOCK.binaryName(state)))
+                    .filter(am -> hasClassName(am.type.tsym, ORG_MOCKITO_MOCK, state))
                     .findFirst()
                     .filter(am -> getValue((AnnotationMirror) am, "answer").isEmpty())
                     .isPresent());

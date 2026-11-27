@@ -48,10 +48,10 @@ import javax.tools.JavaCompiler;
 import javax.tools.JavaFileObject;
 import javax.tools.StandardLocation;
 
-/** Compilation test helpers for ApiDiff tools. */
+/// Compilation test helpers for ApiDiff tools.
 public final class CompilationBuilderHelpers {
 
-  /** A collection of sources to compile. */
+  /// A collection of sources to compile.
   public static class SourceBuilder {
     final File tempFolder;
     final List<Path> sources = new ArrayList<>();
@@ -73,7 +73,7 @@ public final class CompilationBuilderHelpers {
     }
   }
 
-  /** A wrapper around {@link JavaCompiler}. */
+  /// A wrapper around [JavaCompiler].
   public static class CompilationBuilder {
 
     final JavaCompiler compiler;
@@ -170,7 +170,7 @@ public final class CompilationBuilderHelpers {
     }
   }
 
-  /** The output from a compilation. */
+  /// The output from a compilation.
   record CompilationResult(
       boolean ok,
       ImmutableList<Diagnostic<? extends JavaFileObject>> diagnostics,

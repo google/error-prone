@@ -22,12 +22,10 @@ import com.google.common.escape.CharEscaper;
 import com.google.common.escape.Escaper;
 import java.util.Map;
 
-/**
- * A factory for Escaper instances used to escape strings for safe use in Java.
- *
- * <p>This is a subset of source code escapers that are in the process of being open-sources as part
- * of guava, see: https://github.com/google/guava/issues/1620
- */
+/// A factory for Escaper instances used to escape strings for safe use in Java.
+///
+/// This is a subset of source code escapers that are in the process of being open-sources as part
+/// of guava, see: https://github.com/google/guava/issues/1620
 // TODO(cushon): migrate to the guava version once it is open-sourced, and delete this
 public final class SourceCodeEscapers {
   private SourceCodeEscapers() {}
@@ -41,14 +39,13 @@ public final class SourceCodeEscapers {
 
   private static final char[] HEX_DIGITS = "0123456789abcdef".toCharArray();
 
-  /**
-   * Returns an {@link Escaper} instance that escapes special characters in a string so it can
-   * safely be included in either a Java character literal or string literal. This is the preferred
-   * way to escape Java characters for use in String or character literals.
-   *
-   * <p>See: <a href= "https://java.sun.com/docs/books/jls/third_edition/html/lexical.html#101089"
-   * >The Java Language Specification</a> for more details.
-   */
+  /// Returns an [Escaper] instance that escapes special characters in a string so it can safely be
+  /// included in either a Java character literal or string literal. This is the preferred way to
+  /// escape Java characters for use in String or character literals.
+  ///
+  /// See: [The Java Language
+  /// Specification](https://java.sun.com/docs/books/jls/third_edition/html/lexical.html#101089) for
+  /// more details.
   public static CharEscaper javaCharEscaper() {
     return JAVA_CHAR_ESCAPER;
   }
@@ -65,19 +62,18 @@ public final class SourceCodeEscapers {
               '\\', "\\\\",
               '\'', "\\'"));
 
-  /**
-   * Returns an {@link Escaper} instance that escapes special characters in a string so it can
-   * safely be included in either a Java text block.
-   *
-   * <p>Double quotes are not escaped. If the string contents contain a run of three or more
-   * consecutive double quotes, additional action is required to make it safe to include in a text
-   * block.
-   *
-   * <p>See: <a href= "https://docs.oracle.com/javase/specs/jls/se21/html/jls-3.html#jls-3.10.6"
-   * >The Java Language Specification</a> for more details.
-   *
-   * <p>The Guava FR for this is: https://github.com/google/guava/issues/7421
-   */
+  /// Returns an [Escaper] instance that escapes special characters in a string so it can safely be
+  /// included in either a Java text block.
+  ///
+  /// Double quotes are not escaped. If the string contents contain a run of three or more
+  /// consecutive double quotes, additional action is required to make it safe to include in a text
+  /// block.
+  ///
+  /// See: [The Java Language
+  /// Specification](https://docs.oracle.com/javase/specs/jls/se21/html/jls-3.html#jls-3.10.6) for
+  /// more details.
+  ///
+  /// The Guava FR for this is: https://github.com/google/guava/issues/7421
   public static CharEscaper getJavaTextBlockEscaper() {
     return JAVA_TEXT_BLOCK_ESCAPER;
   }

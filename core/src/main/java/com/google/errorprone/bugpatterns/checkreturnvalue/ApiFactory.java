@@ -24,10 +24,10 @@ import com.sun.tools.javac.code.Type.StructuralTypeMapping;
 import com.sun.tools.javac.code.TypeMetadata;
 import com.sun.tools.javac.code.Types;
 
-/** Utility method to produce {@link Api} objects from javac {@link MethodSymbol}. */
+/// Utility method to produce [Api] objects from javac [MethodSymbol].
 public final class ApiFactory {
 
-  /** Returns the {@code Api} representation of the given {@code symbol}. */
+  /// Returns the `Api` representation of the given `symbol`.
   public static Api fromSymbol(MethodSymbol symbol, Types types) {
     return Api.internalCreate(
         symbol.owner.getQualifiedName().toString(),
@@ -44,11 +44,9 @@ public final class ApiFactory {
     return unannotatedType.toString();
   }
 
-  /**
-   * Removes type metadata (e.g.: type annotations) from types, as well as from "containing
-   * structures" like arrays. Notably, this annotation remover doesn't handle Type parameters, as it
-   * only attempts to handle erased types.
-   */
+  /// Removes type metadata (e.g.: type annotations) from types, as well as from "containing
+  /// structures" like arrays. Notably, this annotation remover doesn't handle Type parameters, as
+  /// it only attempts to handle erased types.
   private static final StructuralTypeMapping<Void> ANNOTATION_REMOVER =
       new StructuralTypeMapping<>() {
         @Override

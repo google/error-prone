@@ -30,14 +30,12 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-/**
- * A representation of a choice with zero or more options, which may be evaluated lazily or
- * strictly.
- *
- * <p>This resembles the list monad in Haskell.
- *
- * @author lowasser@google.com (Louis Wasserman)
- */
+/// A representation of a choice with zero or more options, which may be evaluated lazily or
+/// strictly.
+///
+/// This resembles the list monad in Haskell.
+///
+/// @author lowasser@google.com (Louis Wasserman)
 public abstract class Choice<T> {
   /*
    * This is currently implemented in terms of Iterators, but this may change in future, e.g. to a
@@ -91,13 +89,13 @@ public abstract class Choice<T> {
         }
       };
 
-  /** The empty {@code Choice}. */
+  /// The empty `Choice`.
   @SuppressWarnings("unchecked")
   public static <T> Choice<T> none() {
     return (Choice) NONE;
   }
 
-  /** Returns a {@code Choice} with only one option, {@code t}. */
+  /// Returns a `Choice` with only one option, `t`.
   public static <T> Choice<T> of(T t) {
     checkNotNull(t);
     return new Choice<T>() {
@@ -138,17 +136,12 @@ public abstract class Choice<T> {
     };
   }
 
-  /**
-   * Returns a {@code Choice} with {@code t} as an option if {@code condition}, and no options
-   * otherwise.
-   */
+  /// Returns a `Choice` with `t` as an option if `condition`, and no options otherwise.
   public static <T> Choice<T> condition(boolean condition, T t) {
     return condition ? of(t) : Choice.<T>none();
   }
 
-  /**
-   * Returns a choice of the optional value, if it is present, or the empty choice if it is absent.
-   */
+  /// Returns a choice of the optional value, if it is present, or the empty choice if it is absent.
   public static <T> Choice<T> fromOptional(Optional<T> optional) {
     return optional.isPresent() ? of(optional.get()) : Choice.<T>none();
   }
@@ -187,18 +180,16 @@ public abstract class Choice<T> {
     return Iterables.toString(asIterable());
   }
 
-  /** Returns the first valid option from this {@code Choice}. */
+  /// Returns the first valid option from this `Choice`.
   public Optional<T> findFirst() {
     Iterator<T> itr = iterator();
     return itr.hasNext() ? Optional.of(itr.next()) : Optional.<T>empty();
   }
 
-  /**
-   * Returns all the choices obtained by choosing from this {@code Choice} and then choosing from
-   * the {@code Choice} yielded by this function on the result.
-   *
-   * <p>The function may be applied lazily or immediately, at the discretion of the implementation.
-   */
+  /// Returns all the choices obtained by choosing from this `Choice` and then choosing from the
+  /// `Choice` yielded by this function on the result.
+  ///
+  /// The function may be applied lazily or immediately, at the discretion of the implementation.
   public <R> Choice<R> flatMap(Function<? super T, Choice<R>> function) {
     checkNotNull(function);
     if (Thread.interrupted()) {
@@ -217,12 +208,10 @@ public abstract class Choice<T> {
     };
   }
 
-  /**
-   * Returns all the choices obtained by choosing from this {@code Choice} and yielding a present
-   * {@code Optional}.
-   *
-   * <p>The function may be applied lazily or immediately, at the discretion of the implementation.
-   */
+  /// Returns all the choices obtained by choosing from this `Choice` and yielding a present
+  /// `Optional`.
+  ///
+  /// The function may be applied lazily or immediately, at the discretion of the implementation.
   public <R> Choice<R> mapIfPresent(Function<? super T, Optional<R>> function) {
     checkNotNull(function);
     Choice<T> thisChoice = this;
@@ -239,7 +228,7 @@ public abstract class Choice<T> {
     };
   }
 
-  /** Maps the choices with the specified function. */
+  /// Maps the choices with the specified function.
   public <R> Choice<R> map(Function<? super T, R> function) {
     checkNotNull(function);
     Choice<T> thisChoice = this;
@@ -251,7 +240,7 @@ public abstract class Choice<T> {
     };
   }
 
-  /** Returns a choice of the options from this {@code Choice} or from {@code other}. */
+  /// Returns a choice of the options from this `Choice` or from `other`.
   public Choice<T> concat(Choice<T> other) {
     checkNotNull(other);
     if (other == none()) {
@@ -272,7 +261,7 @@ public abstract class Choice<T> {
     }
   }
 
-  /** Filters the choices to those that satisfy the provided {@code Predicate}. */
+  /// Filters the choices to those that satisfy the provided `Predicate`.
   public Choice<T> filter(Predicate<? super T> predicate) {
     checkNotNull(predicate);
     Choice<T> thisChoice = this;

@@ -22,16 +22,14 @@ import com.sun.tools.javac.tree.JCTree.JCStatement;
 import java.io.Serializable;
 import java.util.List;
 
-/**
- * {@link UTree} representation of a {@link StatementTree}.
- *
- * @author lowasser@google.com (Louis Wasserman)
- */
+/// [UTree] representation of a [StatementTree].
+///
+/// @author lowasser@google.com (Louis Wasserman)
 public interface UStatement
     extends Serializable,
         StatementTree,
         Function<UnifierWithUnconsumedStatements, Choice<UnifierWithUnconsumedStatements>> {
-  /** Tuple of a Unifier and a list of statements that are still waiting to be matched. */
+  /// Tuple of a Unifier and a list of statements that are still waiting to be matched.
   public record UnifierWithUnconsumedStatements(
       Unifier unifier, ImmutableList<? extends StatementTree> unconsumedStatements) {
     public static UnifierWithUnconsumedStatements create(

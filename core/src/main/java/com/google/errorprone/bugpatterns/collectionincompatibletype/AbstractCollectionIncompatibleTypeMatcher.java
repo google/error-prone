@@ -29,74 +29,62 @@ import java.util.Map;
 import java.util.Optional;
 import org.jspecify.annotations.Nullable;
 
-/**
- * Extracts the necessary information from a {@link MethodInvocationTree} to check whether calls to
- * a method are using incompatible types and to emit a helpful error message.
- */
+/// Extracts the necessary information from a [MethodInvocationTree] to check whether calls to a
+/// method are using incompatible types and to emit a helpful error message.
 public abstract class AbstractCollectionIncompatibleTypeMatcher {
 
-  /**
-   * Returns a matcher for the appropriate method invocation for this matcher. For example, this
-   * might match {@link Collection#remove(Object)} or {@link Map#containsKey(Object)}.
-   */
+  /// Returns a matcher for the appropriate method invocation for this matcher. For example, this
+  /// might match [Collection#remove(Object)] or [Map#containsKey(Object)].
   abstract Matcher<ExpressionTree> methodMatcher();
 
-  /**
-   * Extracts the source type that must be castable to the target type. For example, in this code
-   * sample:
-   *
-   * <pre>{@code
-   * Collection<Integer> collection;
-   * collection.contains("foo");
-   * }</pre>
-   *
-   * The source type is String.
-   *
-   * @return the source type or null if not available
-   */
+  /// Extracts the source type that must be castable to the target type. For example, in this code
+  /// sample:
+  ///
+  /// ```
+  /// Collection<Integer> collection;
+  /// collection.contains("foo");
+  /// ```
+  ///
+  /// The source type is String.
+  ///
+  /// @return the source type or null if not available
   abstract @Nullable Type extractSourceType(MethodInvocationTree tree, VisitorState state);
 
   abstract @Nullable Type extractSourceType(MemberReferenceTree tree, VisitorState state);
 
-  /**
-   * Returns the AST node from which the source type was extracted. Needed to produce readable error
-   * messages. For example, in this code sample:
-   *
-   * <pre>{@code
-   * Collection<Integer> collection;
-   * collection.contains("foo");
-   * }</pre>
-   *
-   * The source tree is "foo".
-   *
-   * @return the source AST node or null if not available
-   */
+  /// Returns the AST node from which the source type was extracted. Needed to produce readable
+  /// error messages. For example, in this code sample:
+  ///
+  /// ```
+  /// Collection<Integer> collection;
+  /// collection.contains("foo");
+  /// ```
+  ///
+  /// The source tree is "foo".
+  ///
+  /// @return the source AST node or null if not available
   abstract @Nullable ExpressionTree extractSourceTree(
       MethodInvocationTree tree, VisitorState state);
 
   abstract @Nullable ExpressionTree extractSourceTree(MemberReferenceTree tree, VisitorState state);
 
-  /**
-   * Extracts the target type to which the source type must be castable. For example, in this code
-   * sample:
-   *
-   * <pre>{@code
-   * Collection<Integer> collection;
-   * collection.contains("foo");
-   * }</pre>
-   *
-   * The target type is Integer.
-   *
-   * @return the target type or null if not available
-   */
+  /// Extracts the target type to which the source type must be castable. For example, in this code
+  /// sample:
+  ///
+  /// ```
+  /// Collection<Integer> collection;
+  /// collection.contains("foo");
+  /// ```
+  ///
+  /// The target type is Integer.
+  ///
+  /// @return the target type or null if not available
   abstract @Nullable Type extractTargetType(MethodInvocationTree tree, VisitorState state);
 
   abstract @Nullable Type extractTargetType(MemberReferenceTree tree, VisitorState state);
 
-  /**
-   * Encapsulates the result of matching a {@link Collection#contains}-like call, including the
-   * source and target types.
-   */
+  /// Encapsulates the result of matching a [Collection#contains]-like call, including the source
+  /// and target types.
   public record MatchResult(
       ExpressionTree sourceTree,
       Type sourceType,

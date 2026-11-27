@@ -21,7 +21,7 @@ import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import com.google.errorprone.BugPattern;
 import java.util.Optional;
 
-/** Ban use of D (day-of-year) in a date format pattern that also contains M (month-of-year). */
+/// Ban use of D (day-of-year) in a date format pattern that also contains M (month-of-year).
 @BugPattern(
     summary =
         "Use of 'DD' (day of year) in a date pattern with 'MM' (month of year) is not likely to be"

@@ -36,13 +36,10 @@ import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.Tree;
 import java.util.List;
 
-/**
- * This checker matches if a class has more than one annotation that is a scope annotation(that is,
- * the annotation is either annotated with Guice's {@code @ScopeAnnotation} or Javax's
- * {@code @Scope}).
- *
- * @author sgoldfeder@google.com (Steven Goldfeder)
- */
+/// This checker matches if a class has more than one annotation that is a scope annotation(that is,
+/// the annotation is either annotated with Guice's `@ScopeAnnotation` or Javax's `@Scope`).
+///
+/// @author sgoldfeder@google.com (Steven Goldfeder)
 @BugPattern(
     name = "InjectMoreThanOneScopeAnnotationOnClass",
     altNames = "MoreThanOneScopeAnnotationOnClass",

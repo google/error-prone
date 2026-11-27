@@ -40,7 +40,7 @@ import com.sun.source.tree.VariableTree;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import javax.inject.Inject;
 
-/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
+/// A [BugChecker]; see the associated [BugPattern] annotation for details.
 @BugPattern(
     summary = "Method overrides Object.equals but does not have @Nullable on its parameter",
     severity = SUGGESTION)

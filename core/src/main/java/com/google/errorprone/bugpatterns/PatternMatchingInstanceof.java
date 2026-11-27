@@ -76,7 +76,7 @@ import javax.inject.Inject;
 import javax.lang.model.SourceVersion;
 import org.jspecify.annotations.Nullable;
 
-/** A BugPattern; see the summary. */
+/// A BugPattern; see the summary.
 @BugPattern(
     severity = WARNING,
     summary = "This code can be simplified to use a pattern-matching instanceof.")
@@ -244,11 +244,9 @@ public final class PatternMatchingInstanceof extends BugChecker implements Insta
     return variableNamer.avoidShadowing(baseName);
   }
 
-  /**
-   * Finds trees which are implied by the {@code instanceOfTree}. That is, trees representing code
-   * that can only be reached if the {@code instanceOfTree} expression is true, and where we could
-   * consider introducing a pattern variable like {@code foo instanceof Bar bar}.
-   */
+  /// Finds trees which are implied by the `instanceOfTree`. That is, trees representing code that
+  /// can only be reached if the `instanceOfTree` expression is true, and where we could consider
+  /// introducing a pattern variable like `foo instanceof Bar bar`.
   private static ImmutableList<Tree> findImpliedStatements(
       InstanceOfTree tree, VisitorState state) {
     // We are going to work from the InstanceOfTree to the root of the AST. As we go, `last` is the
@@ -358,10 +356,7 @@ public final class PatternMatchingInstanceof extends BugChecker implements Insta
     return impliedStatements.build();
   }
 
-  /**
-   * Finds all casts of {@code symbol} which are cast to {@code instanceOfType} within {@code
-   * trees}.
-   */
+  /// Finds all casts of `symbol` which are cast to `instanceOfType` within `trees`.
   private ImmutableSet<TreePath> findAllCasts(
       ConstantExpression symbol, Iterable<Tree> trees, Type instanceOfType, VisitorState state) {
     var usages = ImmutableSet.<TreePath>builder();
@@ -407,11 +402,9 @@ public final class PatternMatchingInstanceof extends BugChecker implements Insta
     return type instanceof WildcardType wt && wt.kind == UNBOUND;
   }
 
-  /**
-   * Expands the usage path to include enclosing parentheses if replacing the cast expression with a
-   * simple variable name would make those parentheses redundant (e.g. `((Foo) x).bar()` ->
-   * `x.bar()`).
-   */
+  /// Expands the usage path to include enclosing parentheses if replacing the cast expression with
+  /// a simple variable name would make those parentheses redundant (e.g. `((Foo) x).bar()` ->
+  /// `x.bar()`).
   private static TreePath getUsage(TreePath currentPath) {
     TreePath parentPath = currentPath.getParentPath();
     return parentPath.getLeaf() instanceof ParenthesizedTree && !requiresParentheses(parentPath)
@@ -435,13 +428,11 @@ public final class PatternMatchingInstanceof extends BugChecker implements Insta
     };
   }
 
-  /**
-   * Returns true if the given variable is reassigned anywhere in the given trees.
-   *
-   * <p>Pattern variables are implicitly final in Java, so a local variable cannot be replaced with
-   * a pattern variable if it is ever mutated (assigned, compound-assigned, or
-   * incremented/decremented).
-   */
+  /// Returns true if the given variable is reassigned anywhere in the given trees.
+  ///
+  /// Pattern variables are implicitly final in Java, so a local variable cannot be replaced with a
+  /// pattern variable if it is ever mutated (assigned, compound-assigned, or
+  /// incremented/decremented).
   private static boolean isReassigned(VariableTree variableTree, List<Tree> trees) {
     VarSymbol varSymbol = getSymbol(variableTree);
 
@@ -490,10 +481,8 @@ public final class PatternMatchingInstanceof extends BugChecker implements Insta
     return scanner.reassigned;
   }
 
-  /**
-   * Returns true if a variable with the given name is declared in the given trees, excluding the
-   * {@code excludedVariable}.
-   */
+  /// Returns true if a variable with the given name is declared in the given trees, excluding the
+  /// `excludedVariable`.
   private static boolean isNameDeclared(
       String name, Iterable<Tree> trees, @Nullable VariableTree excludedVariable) {
     var scanner =

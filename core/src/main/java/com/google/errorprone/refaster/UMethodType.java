@@ -25,12 +25,10 @@ import com.sun.tools.javac.code.Type.MethodType;
 import java.util.List;
 import org.jspecify.annotations.Nullable;
 
-/**
- * A {@code UType} representation of a {@link MethodType}. This can be used to e.g. disambiguate
- * method overloads.
- *
- * @author lowasser@google.com (Louis Wasserman)
- */
+/// A `UType` representation of a [MethodType]. This can be used to e.g. disambiguate method
+/// overloads.
+///
+/// @author lowasser@google.com (Louis Wasserman)
 @AutoValue
 public abstract class UMethodType extends UType {
 

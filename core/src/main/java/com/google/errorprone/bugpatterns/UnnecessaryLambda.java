@@ -74,7 +74,7 @@ import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
 import org.jspecify.annotations.Nullable;
 
-/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
+/// A [BugChecker]; see the associated [BugPattern] annotation for details.
 @BugPattern(
     summary =
         "Returning a lambda from a helper method or saving it in a constant is unnecessary; prefer"
@@ -196,11 +196,9 @@ public class UnnecessaryLambda extends BugChecker
           "java.util.function",
           "java.lang");
 
-  /**
-   * Check if the only methods invoked on the functional interface type are the descriptor method,
-   * e.g. don't rewrite uses of {@link Predicate} in compilation units that call other methods like
-   * {#link Predicate#add}.
-   */
+  /// Check if the only methods invoked on the functional interface type are the descriptor method,
+  /// e.g. don't rewrite uses of [Predicate] in compilation units that call other methods like
+  /// [Predicate#and].
   private boolean canFix(Tree type, Symbol sym, VisitorState state) {
     Symbol descriptor;
     try {

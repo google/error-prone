@@ -25,15 +25,13 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.VariableTree;
 
-/**
- * A class used to represent ordering violations within a {@link MethodTree}.
- *
- * <p>It is a triplet of three things: an original {@link MethodTree}, List<{@link VariableTree}> of
- * expected parameters, and a List<{@link VariableTree}> of actual parameters. Violations are
- * reported by using {@link ParameterTrie#extendAndComputeViolation(MethodTree)}.
- *
- * @author hanuszczak@google.com (Łukasz Hanuszczak)
- */
+/// A class used to represent ordering violations within a [MethodTree].
+///
+/// It is a triplet of three things: an original [MethodTree], a `List` of expected [VariableTree]
+/// parameters, and a `List` of actual [VariableTree] parameters. Violations are reported by using
+/// [ParameterTrie#extendAndComputeViolation(MethodTree)].
+///
+/// @author hanuszczak@google.com (Łukasz Hanuszczak)
 record ParameterOrderingViolation(
     MethodTree methodTree,
     ImmutableList<ParameterTree> actual,
@@ -64,13 +62,11 @@ record ParameterOrderingViolation(
     return new AutoBuilder_ParameterOrderingViolation_Builder();
   }
 
-  /**
-   * Provides a violation description with suggested parameter ordering.
-   *
-   * <p>An automated {@link SuggestedFix} is not returned with the description because it is not
-   * safe: reordering the parameters can break the build (if we are lucky) or - in case of
-   * reordering parameters with the same types - break runtime behaviour of the program.
-   */
+  /// Provides a violation description with suggested parameter ordering.
+  ///
+  /// An automated [SuggestedFix] is not returned with the description because it is not safe:
+  /// reordering the parameters can break the build (if we are lucky) or - in case of reordering
+  /// parameters with the same types - break runtime behaviour of the program.
   public String getDescription() {
     return "The parameters of this method are inconsistent with other overloaded versions."
         + " A consistent order would be: "

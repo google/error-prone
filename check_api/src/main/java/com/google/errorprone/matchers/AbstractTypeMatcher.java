@@ -23,7 +23,7 @@ import com.google.errorprone.suppliers.Supplier;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Type;
 
-/** Base class for type matchers. */
+/// Base class for type matchers.
 public abstract class AbstractTypeMatcher<T extends Tree> implements Matcher<T> {
 
   protected Supplier<Type> typeToCompareSupplier;

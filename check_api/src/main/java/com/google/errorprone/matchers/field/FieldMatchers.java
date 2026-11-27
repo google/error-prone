@@ -18,6 +18,7 @@ package com.google.errorprone.matchers.field;
 
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
+import static com.google.errorprone.util.ASTHelpers.hasClassName;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
@@ -26,15 +27,14 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.suppliers.Supplier;
 import com.sun.source.tree.ExpressionTree;
-import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.util.Name;
 import java.util.function.BiPredicate;
 
-/** Matchers for fields. */
+/// Matchers for fields.
 public final class FieldMatchers {
 
-  /** Matches instance fields. */
+  /// Matches instance fields.
   public interface InstanceFieldMatcher {
     default FieldClassMatcher onClass(String className) {
       return onClass(ClassName.of(className));
@@ -43,7 +43,7 @@ public final class FieldMatchers {
     FieldClassMatcher onClass(ClassName className);
   }
 
-  /** Matches static fields. */
+  /// Matches static fields.
   public interface StaticFieldMatcher {
     default FieldClassMatcher onClass(String className) {
       return onClass(ClassName.of(className));
@@ -52,7 +52,7 @@ public final class FieldMatchers {
     FieldClassMatcher onClass(ClassName className);
   }
 
-  /** Matches fields by declaring class. */
+  /// Matches fields by declaring class.
   public interface FieldClassMatcher {
     FieldNameMatcher named(String name);
 
@@ -61,7 +61,7 @@ public final class FieldMatchers {
     FieldNameMatcher namedAnyOf(ImmutableSet<String> names);
   }
 
-  /** Matches fields by name. */
+  /// Matches fields by name.
   public interface FieldNameMatcher extends Matcher<ExpressionTree> {}
 
   private static FieldClassMatcher fieldClassMatcher(
@@ -97,10 +97,8 @@ public final class FieldMatchers {
 
   private static final InstanceFieldMatcher INSTANCE_FIELD_MATCHER =
       className ->
-          fieldClassMatcher((sym, state) ->
-              !sym.isStatic()
-                  && sym.owner instanceof ClassSymbol owner
-                  && owner.flatName().equals(className.binaryName(state)));
+          fieldClassMatcher(
+              (sym, state) -> !sym.isStatic() && hasClassName(sym.owner, className, state));
 
   public static InstanceFieldMatcher instanceField() {
     return INSTANCE_FIELD_MATCHER;
@@ -108,10 +106,8 @@ public final class FieldMatchers {
 
   private static final StaticFieldMatcher STATIC_FIELD_MATCHER =
       className ->
-          fieldClassMatcher((sym, state) ->
-              sym.isStatic()
-                  && sym.owner instanceof ClassSymbol owner
-                  && owner.flatName().equals(className.binaryName(state)));
+          fieldClassMatcher(
+              (sym, state) -> sym.isStatic() && hasClassName(sym.owner, className, state));
 
   public static StaticFieldMatcher staticField() {
     return STATIC_FIELD_MATCHER;

@@ -20,20 +20,19 @@ import com.google.common.collect.ImmutableList;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.tools.javac.code.Symbol.TypeVariableSymbol;
 
-/**
- * Type Variable inference variables correspond to type application sites, where type-polymorphic
- * methods are instantiated with a particular concrete type.
- *
- * @param typeApplicationSite AST Node for a method invocation whose type is parameterized by the
- *     given type var.
- * @param typeArgSelector An empty list selects the type variable itself, while non-empty lists
- *     select type variables within the actual type the type variable was instantiated with at the
- *     application site, using the format as described for {@link TypeArgInferenceVar}.
- *     <p>As a simple example, consider a method declared to return its only type variable, {@code
- *     T}. For a given invocation of that method, let's say the type variable is instantiated as
- *     {@code Map<String, Integer>}. Then, an empty selector here selects {@code T} itself, while a
- *     selector [0] selects {@code String} and [1] selects {@code Integer}.
- */
+/// Type Variable inference variables correspond to type application sites, where type-polymorphic
+/// methods are instantiated with a particular concrete type.
+///
+/// @param typeApplicationSite AST Node for a method invocation whose type is parameterized by the
+///   given type var.
+/// @param typeArgSelector An empty list selects the type variable itself, while non-empty lists
+///   select type variables within the actual type the type variable was instantiated with at the
+///   application site, using the format as described for [TypeArgInferenceVar].
+///
+///   As a simple example, consider a method declared to return its only type variable, `T`. For a
+///   given invocation of that method, let's say the type variable is instantiated as `Map<String,
+///   Integer>`. Then, an empty selector here selects `T` itself, while a selector `[0]` selects
+///   `String` and `[1]` selects `Integer`.
 record TypeVariableInferenceVar(
     TypeVariableSymbol typeVar,
     MethodInvocationTree typeApplicationSite,

@@ -63,14 +63,12 @@ import java.util.stream.Stream;
 import javax.lang.model.type.TypeKind;
 import org.jspecify.annotations.Nullable;
 
-/** Utilities for validating format strings. */
+/// Utilities for validating format strings.
 public final class FormatStringValidation {
 
-  /**
-   * Description of an incorrect format method call.
-   *
-   * @param message A human-readable diagnostic message.
-   */
+  /// Description of an incorrect format method call.
+  ///
+  /// @param message A human-readable diagnostic message.
   public record ValidationResult(String message) {
     public static ValidationResult create(String message) {
       return new ValidationResult(message);
@@ -141,11 +139,8 @@ public final class FormatStringValidation {
         .orElse(null);
   }
 
-  /**
-   * Return an instance of the given type if it receives special handling by {@code String.format}.
-   * For example, an instance of {@link Integer} will be returned for an input of type {@code int}
-   * or {@link Integer}.
-   */
+  /// Return an instance of the given type if it receives special handling by `String.format`. For
+  /// example, an instance of [Integer] will be returned for an input of type `int` or [Integer].
   private static @Nullable Object getInstance(Tree tree, VisitorState state) {
     Object value = ASTHelpers.constValue(tree);
     if (value != null) {

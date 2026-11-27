@@ -33,7 +33,7 @@ import com.sun.source.tree.IfTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.util.SimpleTreeVisitor;
 
-/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
+/// A [BugChecker]; see the associated [BugPattern] annotation for details.
 @BugPattern(
     summary = "This break is unnecessary, fallthrough does not occur in -> switches",
     severity = WARNING)

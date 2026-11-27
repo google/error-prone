@@ -47,9 +47,7 @@ import java.lang.annotation.ElementType;
 import java.util.EnumSet;
 import java.util.Set;
 
-/**
- * @author sgoldfeder@google.com (Steven Goldfeder)
- */
+/// @author sgoldfeder@google.com (Steven Goldfeder)
 @BugPattern(
     name = "InjectInvalidTargetingOnScopingAnnotation",
     summary = "A scoping annotation's Target should include TYPE and METHOD.",
@@ -83,10 +81,8 @@ public class InvalidTargetingOnScopingAnnotation extends BugChecker implements C
     return Description.NO_MATCH;
   }
 
-  /**
-   * Rewrite the annotation with static imports, adding TYPE and METHOD to the @Target annotation
-   * value (and reordering them to their declaration order in ElementType).
-   */
+  /// Rewrite the annotation with static imports, adding TYPE and METHOD to the @Target annotation
+  /// value (and reordering them to their declaration order in ElementType).
   private static Fix replaceTargetAnnotation(
       Set<ElementType> existingTargets, AnnotationTree targetAnnotationTree) {
     Set<ElementType> types = EnumSet.copyOf(REQUIRED_ELEMENT_TYPES);

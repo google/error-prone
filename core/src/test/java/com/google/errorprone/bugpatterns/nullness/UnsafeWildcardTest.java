@@ -560,10 +560,8 @@ public class UnsafeWildcardTest {
         .doTest();
   }
 
-  /**
-   * Regression test demonstrating that generic array creation is a compiler error. If it wasn't,
-   * we'd want to check element types.
-   */
+  /// Regression test demonstrating that generic array creation is a compiler error. If it wasn't,
+  /// we'd want to check element types.
   @Test
   public void genericArrays_isCompilerError() {
     compilationHelper
@@ -621,12 +619,10 @@ public class UnsafeWildcardTest {
         .doTest();
   }
 
-  /**
-   * Regression test to ignore {@code null} assignment to wildcard whose lower bound is a type
-   * variable with non-trivial upper bound. The compiler rejects potentially dangerous wildcards on
-   * its own in this case, but simple subtype checks between lower and upper bound can fail and lead
-   * to false positives if involved type variables' upper bounds capture another type variable.
-   */
+  /// Regression test to ignore `null` assignment to wildcard whose lower bound is a type variable
+  /// with non-trivial upper bound. The compiler rejects potentially dangerous wildcards on its own
+  /// in this case, but simple subtype checks between lower and upper bound can fail and lead to
+  /// false positives if involved type variables' upper bounds capture another type variable.
   @Test
   public void boundedTypeVar_validLowerBound_isIgnored() {
     compilationHelper
@@ -674,12 +670,10 @@ public class UnsafeWildcardTest {
         .doTest();
   }
 
-  /**
-   * Regression test to ignore {@code null} assignment to wildcard whose lower bound is a concrete
-   * type and whose implicit upper bound is F-bounded. The compiler rejects potentially dangerous
-   * wildcards on its own in this case, but simple subtype checks between lower and upper bound can
-   * fail and lead to false positives.
-   */
+  /// Regression test to ignore `null` assignment to wildcard whose lower bound is a concrete type
+  /// and whose implicit upper bound is F-bounded. The compiler rejects potentially dangerous
+  /// wildcards on its own in this case, but simple subtype checks between lower and upper bound can
+  /// fail and lead to false positives.
   @Test
   public void fBoundedImplicitUpperBound_validLowerBound_isIgnored() {
     compilationHelper

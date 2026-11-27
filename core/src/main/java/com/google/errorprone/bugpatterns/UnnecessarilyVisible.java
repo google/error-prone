@@ -47,7 +47,7 @@ import java.util.Set;
 import java.util.stream.Stream;
 import javax.lang.model.element.Modifier;
 
-/** Suggests restricting the visibility of methods which should only be called by a framework. */
+/// Suggests restricting the visibility of methods which should only be called by a framework.
 @BugPattern(
     altNames = "RestrictInjectVisibility",
     summary =

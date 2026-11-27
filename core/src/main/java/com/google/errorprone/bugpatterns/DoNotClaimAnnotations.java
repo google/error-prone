@@ -42,7 +42,7 @@ import java.util.List;
 import java.util.Objects;
 import javax.lang.model.element.Name;
 
-/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
+/// A [BugChecker]; see the associated [BugPattern] annotation for details.
 @BugPattern(
     summary =
         "Don't 'claim' annotations in annotation processors; Processor#process should"

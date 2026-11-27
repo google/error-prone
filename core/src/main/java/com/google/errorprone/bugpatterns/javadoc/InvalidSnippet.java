@@ -36,7 +36,7 @@ import com.sun.source.tree.VariableTree;
 import com.sun.source.util.DocTreePath;
 import com.sun.source.util.DocTreePathScanner;
 
-/** A bug pattern; see the summary. */
+/// A bug pattern; see the summary.
 @BugPattern(summary = "This tag is invalid.", severity = WARNING, documentSuppression = false)
 public final class InvalidSnippet extends BugChecker
     implements ClassTreeMatcher, MethodTreeMatcher, VariableTreeMatcher {

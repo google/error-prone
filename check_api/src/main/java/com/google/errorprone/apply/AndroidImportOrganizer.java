@@ -27,30 +27,24 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
-/**
- * Organizes imports based on Android Code Style
- *
- * <p>As the style rules do not specify where static imports are placed this supports first or last.
- *
- * <p>The imports are partitioned into groups in two steps, each step sub-partitions all groups from
- * the previous step. The steps are:
- *
- * <ol>
- *   <li>Split into static and non-static, the static imports come before or after the non static
- *       imports depending on the {@link StaticOrder} specified.
- *   <li>The groups are then partitioned based on a prefix of the type, the groups are ordered by
- *       prefix as follows:
- *       <ol>
- *         <li>{@code android.}
- *         <li>{@code com.android.}
- *         <li>A group for each root package, in alphabetical order.
- *         <li>{@code java.}
- *         <li>{@code javax.}
- *       </ol>
- * </ol>
- *
- * <p>Each group is separate from the previous/next groups with a blank line.
- */
+/// Organizes imports based on Android Code Style
+///
+/// As the style rules do not specify where static imports are placed this supports first or last.
+///
+/// The imports are partitioned into groups in two steps, each step sub-partitions all groups from
+/// the previous step. The steps are:
+///
+/// 1. Split into static and non-static, the static imports come before or after the non static
+///    imports depending on the [StaticOrder] specified.
+/// 1. The groups are then partitioned based on a prefix of the type, the groups are ordered by
+///    prefix as follows:
+///    1. `android.`
+///    1. `com.android.`
+///    1. A group for each root package, in alphabetical order.
+///    1. `java.`
+///    1. `javax.`
+///
+/// Each group is separate from the previous/next groups with a blank line.
 class AndroidImportOrganizer implements ImportOrganizer {
 
   private static final String ANDROID = "android";

@@ -31,10 +31,8 @@ import com.sun.source.tree.ModifiersTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.tools.javac.code.Type;
 
-/**
- * A Checker that catches {@link java.util.Optional}/{@link com.google.common.base.Optional} with
- * {@code Nullable} annotation.
- */
+/// A Checker that catches [java.util.Optional]/[com.google.common.base.Optional] with `Nullable`
+/// annotation.
 @BugPattern(
     summary =
         "Using an Optional variable which is expected to possibly be null is discouraged. It is"
@@ -63,16 +61,13 @@ public final class NullableOptional extends BugChecker
     return Description.NO_MATCH;
   }
 
-  /** Check if the input ModifiersTree has any kind of "Nullable" annotation. */
+  /// Check if the input ModifiersTree has any kind of "Nullable" annotation.
   private static boolean hasNullableAnnotation(ModifiersTree modifiersTree) {
     return ASTHelpers.getAnnotationWithSimpleName(modifiersTree.getAnnotations(), "Nullable")
         != null;
   }
 
-  /**
-   * Check if the input Type is either {@link java.util.Optional} or{@link
-   * com.google.common.base.Optional}.
-   */
+  /// Check if the input Type is either [java.util.Optional] or [com.google.common.base.Optional].
   private static boolean isOptional(Type type, VisitorState state) {
     return IS_OPTIONAL_TYPE.apply(type, state);
   }

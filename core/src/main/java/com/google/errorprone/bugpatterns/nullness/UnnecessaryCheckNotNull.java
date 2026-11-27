@@ -22,6 +22,7 @@ import static com.google.errorprone.matchers.Matchers.argument;
 import static com.google.errorprone.matchers.Matchers.stringFormatInvocation;
 import static com.google.errorprone.matchers.Matchers.stringFormattedInvocation;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
+import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
 import static com.sun.source.tree.Tree.Kind.STRING_LITERAL;
@@ -51,18 +52,15 @@ import com.sun.source.util.TreePath;
 import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
-import com.sun.tools.javac.tree.JCTree.JCIdent;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-/**
- * Checks for unnecessarily performing null checks on expressions which can't be null.
- *
- * @author awturner@google.com (Andy Turner)
- * @author bhagwani@google.com (Sumit Bhagwani)
- */
+/// Checks for unnecessarily performing null checks on expressions which can't be null.
+///
+/// @author awturner@google.com (Andy Turner)
+/// @author bhagwani@google.com (Sumit Bhagwani)
 @BugPattern(
     summary = "This null check is unnecessary; the expression can never be null",
     severity = ERROR,
@@ -82,7 +80,7 @@ public class UnnecessaryCheckNotNull extends BugChecker implements MethodInvocat
   private static final Matcher<MethodInvocationTree> STRING_LITERAL_ARG_MATCHER =
       argument(0, Matchers.<ExpressionTree>kindIs(STRING_LITERAL));
 
-  /** Matches methods that construct a new (and hence non-null) formatted string. */
+  /// Matches methods that construct a new (and hence non-null) formatted string.
   private static final Matcher<ExpressionTree> STRING_FORMAT_MATCHER =
       anyOf(stringFormatInvocation(), stringFormattedInvocation());
 
@@ -109,13 +107,11 @@ public class UnnecessaryCheckNotNull extends BugChecker implements MethodInvocat
     return Description.NO_MATCH;
   }
 
-  /**
-   * Returns true if {@code tree} is a newly constructed string (a string concatenation or a call to
-   * {@code String.format}/{@code formatted}), which can never be null.
-   *
-   * <p>Concatenations of compile-time constants are folded into a single string literal by javac,
-   * and are handled by {@link #matchStringLiteral}.
-   */
+  /// Returns true if `tree` is a newly constructed string (a string concatenation or a call to
+  /// `String.format`/`formatted`), which can never be null.
+  ///
+  /// Concatenations of compile-time constants are folded into a single string literal by javac, and
+  /// are handled by [#matchStringLiteral].
   private static boolean isConstructedString(ExpressionTree tree, VisitorState state) {
     if (tree.getKind() == Kind.PLUS) {
       return isSameType(getType(tree), state.getSymtab().stringType, state);
@@ -123,11 +119,9 @@ public class UnnecessaryCheckNotNull extends BugChecker implements MethodInvocat
     return STRING_FORMAT_MATCHER.matches(tree, state);
   }
 
-  /**
-   * Handles a newly constructed string as the first argument, e.g. {@code checkNotNull("Missing " +
-   * key, value)} (the arguments were likely swapped) or {@code checkNotNull(String.format(...))}
-   * (the null check is a no-op).
-   */
+  /// Handles a newly constructed string as the first argument, e.g. `checkNotNull("Missing " + key,
+  /// value)` (the arguments were likely swapped) or `checkNotNull(String.format(...))` (the null
+  /// check is a no-op).
   private Description matchConstructedString(MethodInvocationTree tree, VisitorState state) {
     List<? extends ExpressionTree> arguments = tree.getArguments();
     ExpressionTree first = arguments.get(0);
@@ -174,22 +168,20 @@ public class UnnecessaryCheckNotNull extends BugChecker implements MethodInvocat
     return describeMatch(stringLiteralValue, fix);
   }
 
-  /**
-   * If the call to Preconditions.checkNotNull is part of an expression (assignment, return, etc.),
-   * we substitute the argument for the method call. E.g.: {@code bar =
-   * Preconditions.checkNotNull(foo); ==> bar = foo;}
-   *
-   * <p>If the argument to Preconditions.checkNotNull is a comparison using == or != and one of the
-   * operands is null, we call checkNotNull on the non-null operand. E.g.: {@code checkNotNull(a ==
-   * null); ==> checkNotNull(a);}
-   *
-   * <p>If the argument is a method call or binary tree and its return type is boolean, change it to
-   * a checkArgument/checkState. E.g.: {@code Preconditions.checkNotNull(foo.hasFoo()) ==>
-   * Preconditions.checkArgument(foo.hasFoo())}
-   *
-   * <p>Otherwise, delete the checkNotNull call. E.g.: {@code Preconditions.checkNotNull(foo); ==>
-   * [delete the line]}
-   */
+  /// If the call to Preconditions.checkNotNull is part of an expression (assignment, return, etc.),
+  /// we substitute the argument for the method call. E.g.: `bar = Preconditions.checkNotNull(foo);
+  /// ==> bar = foo;`
+  ///
+  /// If the argument to Preconditions.checkNotNull is a comparison using == or != and one of the
+  /// operands is null, we call checkNotNull on the non-null operand. E.g.: `checkNotNull(a ==
+  /// null); ==> checkNotNull(a);`
+  ///
+  /// If the argument is a method call or binary tree and its return type is boolean, change it to a
+  /// checkArgument/checkState. E.g.: `Preconditions.checkNotNull(foo.hasFoo()) ==>
+  /// Preconditions.checkArgument(foo.hasFoo())`
+  ///
+  /// Otherwise, delete the checkNotNull call. E.g.: `Preconditions.checkNotNull(foo); ==> [delete
+  /// the line]`
   private Description describePrimitiveMatch(
       MethodInvocationTree methodInvocationTree, VisitorState state) {
     ExpressionTree arg1 = methodInvocationTree.getArguments().get(0);
@@ -224,10 +216,8 @@ public class UnnecessaryCheckNotNull extends BugChecker implements MethodInvocat
     return describeMatch(arg1, SuggestedFix.delete(parent));
   }
 
-  /**
-   * Creates a SuggestedFix that replaces the checkNotNull call with a checkArgument or checkState
-   * call.
-   */
+  /// Creates a SuggestedFix that replaces the checkNotNull call with a checkArgument or checkState
+  /// call.
   private static Fix createCheckArgumentOrStateCall(
       MethodInvocationTree methodInvocationTree, VisitorState state, ExpressionTree arg1) {
     String replacementMethod = "checkState";
@@ -244,16 +234,14 @@ public class UnnecessaryCheckNotNull extends BugChecker implements MethodInvocat
     return fix.build();
   }
 
-  /**
-   * Determines whether the expression contains a reference to one of the enclosing method's
-   * parameters.
-   *
-   * <p>TODO(eaftan): Extract this to ASTHelpers.
-   *
-   * @param path the path to the current tree node
-   * @param tree the node to compare against the parameters
-   * @return whether the argument is a parameter to the enclosing method
-   */
+  /// Determines whether the expression contains a reference to one of the enclosing method's
+  /// parameters.
+  ///
+  /// TODO(eaftan): Extract this to ASTHelpers.
+  ///
+  /// @param path the path to the current tree node
+  /// @param tree the node to compare against the parameters
+  /// @return whether the argument is a parameter to the enclosing method
   private static boolean hasMethodParameter(TreePath path, ExpressionTree tree) {
     Set<Symbol> symbols = new HashSet<>();
     for (IdentifierTree ident : getVariableUses(tree)) {
@@ -280,20 +268,18 @@ public class UnnecessaryCheckNotNull extends BugChecker implements MethodInvocat
     return false;
   }
 
-  /**
-   * Find the root variable identifiers from an arbitrary expression.
-   *
-   * <p>Examples: a.trim().intern() ==> {a} a.b.trim().intern() ==> {a} this.intValue.foo() ==>
-   * {this} this.foo() ==> {this} intern() ==> {} String.format() ==> {} java.lang.String.format()
-   * ==> {} x.y.z(s.t) ==> {x,s}
-   */
+  /// Find the root variable identifiers from an arbitrary expression.
+  ///
+  /// Examples: a.trim().intern() ==> {a} a.b.trim().intern() ==> {a} this.intValue.foo() ==> {this}
+  /// this.foo() ==> {this} intern() ==> {} String.format() ==> {} java.lang.String.format() ==> {}
+  /// x.y.z(s.t) ==> {x,s}
   static List<IdentifierTree> getVariableUses(ExpressionTree tree) {
     List<IdentifierTree> freeVars = new ArrayList<>();
 
     new TreeScanner<Void, Void>() {
       @Override
       public Void visitIdentifier(IdentifierTree node, Void v) {
-        if (((JCIdent) node).sym instanceof VarSymbol) {
+        if (getSymbol(node) instanceof VarSymbol) {
           freeVars.add(node);
         }
         return super.visitIdentifier(node, null);

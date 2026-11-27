@@ -41,7 +41,7 @@ import com.sun.source.util.SimpleTreeVisitor;
 import java.util.ArrayList;
 import java.util.List;
 
-/** A BugPattern; see the summary. */
+/// A BugPattern; see the summary.
 @BugPattern(
     summary = "Using a format string avoids string concatenation in the common case.",
     explanation =

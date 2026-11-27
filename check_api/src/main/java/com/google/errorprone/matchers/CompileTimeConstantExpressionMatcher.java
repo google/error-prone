@@ -18,27 +18,24 @@ package com.google.errorprone.matchers;
 
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.anything;
-import static com.google.errorprone.matchers.Matchers.constructor;
 import static com.google.errorprone.matchers.Matchers.nullLiteral;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
 import static com.google.errorprone.matchers.Matchers.toType;
 import static com.google.errorprone.matchers.Matchers.typeCast;
-import static com.google.errorprone.matchers.field.FieldMatchers.staticField;
-import static com.google.errorprone.predicates.TypePredicates.isPrimitive;
 import static com.google.errorprone.util.ASTHelpers.constValue;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.isConsideredFinal;
 import static com.google.errorprone.util.AnnotationNames.COMPILE_TIME_CONSTANT_ANNOTATION;
+import static javax.lang.model.element.ElementKind.FIELD;
+import static javax.lang.model.element.ElementKind.PARAMETER;
 
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.CompileTimeConstant;
-import com.google.errorprone.matchers.method.ParameterPredicates;
 import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.CaseTree.CaseKind;
 import com.sun.source.tree.ConditionalExpressionTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
-import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.ParenthesizedTree;
 import com.sun.source.tree.SwitchExpressionTree;
 import com.sun.source.tree.ThrowTree;
@@ -49,34 +46,31 @@ import com.sun.source.util.SimpleTreeVisitor;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 
-/**
- * A matcher for compile-time-constant expressions.
- *
- * <p>For the purposes of this matcher, a compile-time constant expression is one of the following:
- *
- * <ol>
- *   <li>Any expression for which the Java compiler can determine a constant value at compile time.
- *   <li>The expression consisting of the literal {@code null}.
- *   <li>An enum constant.
- *   <li>A class literal (e.g. {@code String.class}).
- *   <li>A field of a class or record, which is declared {@code final} and is either:
- *       <ul>
- *         <li>Explicitly annotated with {@link CompileTimeConstant}.
- *         <li>A well-known compatible field, e.g. from the Java standard library. (See {@link
- *             #COMPATIBLE_FIELDS} below for the complete list.)
- *       </ul>
- *   <li>A formal parameter of a method or constructor, which is effectively {@code final} (either
- *       inferred or explicitly declared) and is annotated with {@link CompileTimeConstant}.
- *   <li>A {@link String} which is formed from the concatenation of other compile-time-constant
- *       {@link String}s.
- *   <li>A switch expression where all case bodies are compile-time constants.
- *   <li>A conditional expression (a ? b : c) where both branches are compile-time constants.
- *   <li>A call to a well-known (e.g. from a Java standard library class) constructor or static
- *       method, where all arguments are compile-time constants and the resulting object is
- *       immutable. (See {@link #COMPATIBLE_METHODS} and {@link #COMPATIBLE_CONSTRUCTORS} below for
- *       the complete list.)
- * </ol>
- */
+/// A matcher for compile-time-constant expressions.
+///
+/// For the purposes of this matcher, a compile-time constant expression is one of the following:
+///
+/// 1. Any expression for which the Java compiler can determine a constant value at compile time.
+/// 1. The expression consisting of the literal `null`.
+/// 1. An expression consisting of a single identifier, where the identifier has the
+///    [CompileTimeConstant] annotation and is either:
+///    - A class field that is declared `final`.
+///    - A formal parameter of a method or constructor, which is declared `final` or is effectively
+///      final.
+/// 1. A [String] which is formed from the concatenation of other compile-time-constant [String]s.
+/// 1. A switch expression where all case bodies are compile-time constants.
+/// 1. A conditional expression (a ? b : c) where both branches are compile-time constants.
+/// 1. The result of an invocation of one of the following immutable collection factory methods,
+///    where all arguments are compile-time constants:
+///    - `ImmutableList.of(...)`
+///    - `ImmutableSet.of(...)`
+///    - `ImmutableMap.of(...)`
+///    - `ImmutableMultiset.of(...)`
+///    - `ImmutableSortedSet.of(...)`
+///    - `ImmutableSortedMap.of(...)`
+///    - `List.of(...)`
+///    - `Set.of(...)`
+///    - `Map.of(...)`
 public class CompileTimeConstantExpressionMatcher implements Matcher<ExpressionTree> {
 
   private static final Matcher<ExpressionTree> INSTANCE =
@@ -100,10 +94,23 @@ public class CompileTimeConstantExpressionMatcher implements Matcher<ExpressionT
     return INSTANCE.matches(t, state);
   }
 
-  /**
-   * A matcher for {@link ExpressionTree}s for which the java compiler can compute a constant value
-   * (except a literal {@code null}).
-   */
+  private static final Matcher<ExpressionTree> IMMUTABLE_FACTORY =
+      anyOf(
+          staticMethod()
+              .onClassAny(
+                  "com.google.common.collect.ImmutableList",
+                  "com.google.common.collect.ImmutableSet",
+                  "com.google.common.collect.ImmutableMap",
+                  "com.google.common.collect.ImmutableMultiset",
+                  "com.google.common.collect.ImmutableSortedSet",
+                  "com.google.common.collect.ImmutableSortedMap",
+                  "java.util.List",
+                  "java.util.Set",
+                  "java.util.Map")
+              .named("of"));
+
+  /// A matcher for [ExpressionTree]s for which the java compiler can compute a constant value
+  /// (except a literal `null`).
   private static final class ExpressionWithConstValueMatcher implements Matcher<ExpressionTree> {
 
     @Override
@@ -135,20 +142,8 @@ public class CompileTimeConstantExpressionMatcher implements Matcher<ExpressionT
 
       @Override
       public Boolean visitMethodInvocation(MethodInvocationTree tree, Void unused) {
-        return COMPATIBLE_METHODS.matches(tree, state)
+        return IMMUTABLE_FACTORY.matches(tree, state)
             && tree.getArguments().stream().allMatch(a -> a.accept(this, null));
-      }
-
-      @Override
-      public Boolean visitNewClass(NewClassTree tree, Void unused) {
-        if (tree.getClassBody() != null || !COMPATIBLE_CONSTRUCTORS.matches(tree, state)) {
-          return false;
-        }
-        ExpressionTree enclosing = tree.getEnclosingExpression();
-        if (enclosing != null && !enclosing.accept(this, null)) {
-          return false;
-        }
-        return tree.getArguments().stream().allMatch(a -> a.accept(this, null));
       }
 
       @Override
@@ -172,21 +167,19 @@ public class CompileTimeConstantExpressionMatcher implements Matcher<ExpressionT
         if (!(getSymbol(node) instanceof VarSymbol varSymbol)) {
           return false;
         }
-
-        // Class literals are always compile-time constants. (Not allowed to call .class on a
-        // runtime Class<?> value.)
-        if (varSymbol.getSimpleName().contentEquals("class")) {
+        // Check that the symbol is a formal method/constructor parameter or a field.
+        if (varSymbol.getKind() != PARAMETER && varSymbol.getKind() != FIELD) {
+          return false;
+        }
+        // Check that the symbol is final
+        if (!isConsideredFinal(varSymbol)) {
+          return false;
+        }
+        // Check if the symbol has the @CompileTimeConstant annotation.
+        if (hasCompileTimeConstantAnnotation(state, varSymbol)) {
           return true;
         }
-
-        return switch (varSymbol.getKind()) {
-          case ENUM_CONSTANT -> true;
-          case PARAMETER, FIELD ->
-              isConsideredFinal(varSymbol)
-                  && (hasCompileTimeConstantAnnotation(state, varSymbol)
-                      || isWellKnownCompatibleField(state, node));
-          default -> false;
-        };
+        return false;
       }
     }
   }
@@ -197,616 +190,4 @@ public class CompileTimeConstantExpressionMatcher implements Matcher<ExpressionT
     // be present on a Symbol we're inspecting.
     return annotation != null && symbol.attribute(annotation) != null;
   }
-
-  public static boolean isWellKnownCompatibleField(VisitorState state, Tree node) {
-    return node instanceof ExpressionTree expressionTree
-        && COMPATIBLE_FIELDS.matches(expressionTree, state);
-  }
-
-  /**
-   * Matches method invocations that are known compatible with {@link CompileTimeConstant}, but are
-   * "upstream" of this check and therefore cannot be annotated themselves.
-   *
-   * <p>To be {@link CompileTimeConstant}-compatible, a method must not depend on any runtime state,
-   * (global tables, system properties, etc.) and its return value must be a compile-time constant
-   * (including being immutable) whenever all of the arguments are compile-time constants.
-   */
-  private static final Matcher<ExpressionTree> COMPATIBLE_METHODS =
-      anyOf(
-          // java.lang boxed primitives and numbers
-          staticMethod()
-              .onClass("java.lang.Integer")
-              .namedAnyOf(
-                  "bitCount",
-                  "compare",
-                  "compareUnsigned",
-                  "compress",
-                  "decode",
-                  "divideUnsigned",
-                  "expand",
-                  "hashCode",
-                  "highestOneBit",
-                  "lowestOneBit",
-                  "max",
-                  "min",
-                  "numberOfLeadingZeros",
-                  "numberOfTrailingZeros",
-                  "parseInt",
-                  "parseUnsignedInt",
-                  "remainderUnsigned",
-                  "reverse",
-                  "reverseBytes",
-                  "rotateLeft",
-                  "rotateRight",
-                  "signum",
-                  "sum",
-                  "toBinaryString",
-                  "toHexString",
-                  "toOctalString",
-                  "toString",
-                  "toUnsignedLong",
-                  "toUnsignedString",
-                  "valueOf"),
-          staticMethod()
-              .onClass("java.lang.Long")
-              .namedAnyOf(
-                  "bitCount",
-                  "compare",
-                  "compareUnsigned",
-                  "compress",
-                  "decode",
-                  "divideUnsigned",
-                  "expand",
-                  "hashCode",
-                  "highestOneBit",
-                  "lowestOneBit",
-                  "max",
-                  "min",
-                  "numberOfLeadingZeros",
-                  "numberOfTrailingZeros",
-                  "parseLong",
-                  "parseUnsignedLong",
-                  "remainderUnsigned",
-                  "reverse",
-                  "reverseBytes",
-                  "rotateLeft",
-                  "rotateRight",
-                  "signum",
-                  "sum",
-                  "toBinaryString",
-                  "toHexString",
-                  "toOctalString",
-                  "toString",
-                  "toUnsignedString",
-                  "valueOf"),
-          staticMethod()
-              .onClass("java.lang.Short")
-              .namedAnyOf(
-                  "compare",
-                  "compareUnsigned",
-                  "decode",
-                  "hashCode",
-                  "parseShort",
-                  "reverseBytes",
-                  "toString",
-                  "toUnsignedInt",
-                  "toUnsignedLong",
-                  "valueOf"),
-          staticMethod()
-              .onClass("java.lang.Byte")
-              .namedAnyOf(
-                  "compare",
-                  "compareUnsigned",
-                  "decode",
-                  "hashCode",
-                  "parseByte",
-                  "toString",
-                  "toUnsignedInt",
-                  "toUnsignedLong",
-                  "valueOf"),
-          // TODO(b/576770029): Allow the following char[] overloads:
-          //   Character.codePointAt(char[], int)
-          //   Character.codePointAt(char[], int, int)
-          //   Character.codePointBefore(char[], int)
-          //   Character.codePointBefore(char[], int, int)
-          //   Character.codePointCount(char[], int, int)
-          //   Character.offsetByCodePoints(char[], int, int, int, int)
-          staticMethod()
-              .onClass("java.lang.Character")
-              .namedAnyOf("codePointAt", "codePointBefore")
-              .withParameters("java.lang.CharSequence", "int"),
-          staticMethod()
-              .onClass("java.lang.Character")
-              .namedAnyOf("codePointCount", "offsetByCodePoints")
-              .withParameters("java.lang.CharSequence", "int", "int"),
-          staticMethod()
-              .onClass("java.lang.Character")
-              .namedAnyOf(
-                  "charCount",
-                  "codePointOf",
-                  "compare",
-                  "digit",
-                  "forDigit",
-                  "getDirectionality",
-                  "getName",
-                  "getNumericValue",
-                  "getType",
-                  "hashCode",
-                  "highSurrogate",
-                  "isAlphabetic",
-                  "isBmpCodePoint",
-                  "isDefined",
-                  "isDigit",
-                  "isEmoji",
-                  "isEmojiComponent",
-                  "isEmojiModifier",
-                  "isEmojiModifierBase",
-                  "isEmojiPresentation",
-                  "isExtendedPictographic",
-                  "isHighSurrogate",
-                  "isISOControl",
-                  "isIdentifierIgnorable",
-                  "isIdeographic",
-                  "isJavaIdentifierPart",
-                  "isJavaIdentifierStart",
-                  "isJavaLetter",
-                  "isJavaLetterOrDigit",
-                  "isLetter",
-                  "isLetterOrDigit",
-                  "isLowSurrogate",
-                  "isLowerCase",
-                  "isMirrored",
-                  "isSpace",
-                  "isSpaceChar",
-                  "isSupplementaryCodePoint",
-                  "isSurrogate",
-                  "isSurrogatePair",
-                  "isTitleCase",
-                  "isUnicodeIdentifierPart",
-                  "isUnicodeIdentifierStart",
-                  "isUpperCase",
-                  "isValidCodePoint",
-                  "isWhitespace",
-                  "lowSurrogate",
-                  "reverseBytes",
-                  "toCodePoint",
-                  "toLowerCase",
-                  "toString",
-                  "toTitleCase",
-                  "toUpperCase",
-                  "valueOf"),
-          staticMethod()
-              .onClass("java.lang.Boolean")
-              .namedAnyOf(
-                  "compare",
-                  "hashCode",
-                  "logicalAnd",
-                  "logicalOr",
-                  "logicalXor",
-                  "parseBoolean",
-                  "toString",
-                  "valueOf"),
-          staticMethod()
-              .onClass("java.lang.Float")
-              .namedAnyOf(
-                  "compare",
-                  "float16ToFloat",
-                  "floatToFloat16",
-                  "floatToIntBits",
-                  "floatToRawIntBits",
-                  "hashCode",
-                  "intBitsToFloat",
-                  "isFinite",
-                  "isInfinite",
-                  "isNaN",
-                  "max",
-                  "min",
-                  "parseFloat",
-                  "sum",
-                  "toHexString",
-                  "toString",
-                  "valueOf"),
-          staticMethod()
-              .onClass("java.lang.Double")
-              .namedAnyOf(
-                  "compare",
-                  "doubleToLongBits",
-                  "doubleToRawLongBits",
-                  "hashCode",
-                  "isFinite",
-                  "isInfinite",
-                  "isNaN",
-                  "longBitsToDouble",
-                  "max",
-                  "min",
-                  "parseDouble",
-                  "sum",
-                  "toHexString",
-                  "toString",
-                  "valueOf"),
-
-          // java.lang.String
-          staticMethod().onClass("java.lang.String").named("join"),
-          // TODO(b/576770029): Allow the following methods:
-          //   String.valueOf(char[])
-          //   String.valueOf(char[], int, int)
-          //   String.copyValueOf(char[])
-          //   String.copyValueOf(char[], int, int)
-          staticMethod()
-              .onClass("java.lang.String")
-              .named("valueOf")
-              .withParametersMatching(ParameterPredicates.of(isPrimitive())),
-
-          // java.lang.Math and java.lang.StrictMath
-          staticMethod()
-              .onClassAny("java.lang.Math", "java.lang.StrictMath")
-              .namedAnyOf(
-                  "IEEEremainder",
-                  "abs",
-                  "absExact",
-                  "acos",
-                  "acosh",
-                  "addExact",
-                  "asin",
-                  "asinh",
-                  "atan",
-                  "atan2",
-                  "atanh",
-                  "cbrt",
-                  "ceil",
-                  "ceilDiv",
-                  "ceilDivExact",
-                  "ceilMod",
-                  "clamp",
-                  "copySign",
-                  "cos",
-                  "cosh",
-                  "decrementExact",
-                  "divideExact",
-                  "exp",
-                  "expm1",
-                  "floor",
-                  "floorDiv",
-                  "floorDivExact",
-                  "floorMod",
-                  "fma",
-                  "getExponent",
-                  "hypot",
-                  "incrementExact",
-                  "log",
-                  "log10",
-                  "log1p",
-                  "max",
-                  "min",
-                  "multiplyExact",
-                  "multiplyFull",
-                  "multiplyHigh",
-                  "negateExact",
-                  "nextAfter",
-                  "nextDown",
-                  "nextUp",
-                  "pow",
-                  "powExact",
-                  "rint",
-                  "round",
-                  "scalb",
-                  "signum",
-                  "sin",
-                  "sinh",
-                  "sqrt",
-                  "subtractExact",
-                  "tan",
-                  "tanh",
-                  "toDegrees",
-                  "toIntExact",
-                  "toRadians",
-                  "ulp",
-                  "unsignedMultiplyExact",
-                  "unsignedMultiplyHigh",
-                  "unsignedPowExact"),
-
-          // java.lang.Enum
-          staticMethod()
-              .onClass("java.lang.Enum")
-              .named("valueOf")
-              .withParameters("java.lang.Class", "java.lang.String"),
-          staticMethod()
-              .onDescendantOf("java.lang.Enum")
-              .named("valueOf")
-              .withParameters("java.lang.String"),
-
-          // java.math
-          // Omit instance methods on BigInteger and BigDecimal because neither the classes nor
-          // their methods are final.
-          staticMethod()
-              .onClassAny("java.math.BigInteger", "java.math.BigDecimal")
-              .named("valueOf"),
-
-          // java.time
-          staticMethod().onClass("java.time.Clock").namedAnyOf("fixed", "offset", "tick"),
-          staticMethod()
-              .onClassAny("java.time.DayOfWeek", "java.time.Month")
-              .namedAnyOf("from", "of", "valueOf"),
-          staticMethod()
-              .onClass("java.time.Duration")
-              .namedAnyOf(
-                  "between",
-                  "from",
-                  "of",
-                  "ofDays",
-                  "ofHours",
-                  "ofMillis",
-                  "ofMinutes",
-                  "ofNanos",
-                  "ofSeconds",
-                  "parse"),
-          staticMethod()
-              .onClass("java.time.Instant")
-              .namedAnyOf("from", "ofEpochMilli", "ofEpochSecond", "parse"),
-          staticMethod()
-              .onClass("java.time.LocalDate")
-              .namedAnyOf("from", "of", "ofEpochDay", "ofInstant", "ofYearDay", "parse"),
-          staticMethod()
-              .onClass("java.time.LocalDateTime")
-              .namedAnyOf("from", "of", "ofEpochSecond", "ofInstant", "parse"),
-          staticMethod()
-              .onClass("java.time.LocalTime")
-              .namedAnyOf("from", "of", "ofInstant", "ofNanoOfDay", "ofSecondOfDay", "parse"),
-          staticMethod().onClass("java.time.MonthDay").namedAnyOf("from", "of", "parse"),
-          staticMethod()
-              .onClass("java.time.OffsetDateTime")
-              .namedAnyOf("from", "of", "ofInstant", "parse"),
-          staticMethod()
-              .onClass("java.time.OffsetTime")
-              .namedAnyOf("from", "of", "ofInstant", "parse"),
-          staticMethod()
-              .onClass("java.time.Period")
-              .namedAnyOf(
-                  "between", "from", "of", "ofDays", "ofMonths", "ofWeeks", "ofYears", "parse"),
-          staticMethod().onClass("java.time.Year").namedAnyOf("from", "isLeap", "of", "parse"),
-          staticMethod().onClass("java.time.YearMonth").namedAnyOf("from", "of", "parse"),
-          staticMethod()
-              .onClass("java.time.ZoneOffset")
-              .namedAnyOf(
-                  "from",
-                  "of",
-                  "ofHours",
-                  "ofHoursMinutes",
-                  "ofHoursMinutesSeconds",
-                  "ofTotalSeconds"),
-          staticMethod()
-              .onClass("java.time.ZonedDateTime")
-              .namedAnyOf("from", "of", "ofInstant", "ofLocal", "ofStrict"),
-
-          // java.util collections, optionals, and utilities
-          staticMethod().onClass("java.util.List").namedAnyOf("copyOf", "of"),
-          staticMethod().onClass("java.util.Set").namedAnyOf("copyOf", "of"),
-          staticMethod().onClass("java.util.Map").namedAnyOf("copyOf", "entry", "of", "ofEntries"),
-          // Omit unmodifiable* methods because it's redundant; any CTC collection is immutable.
-          staticMethod()
-              .onClass("java.util.Collections")
-              .namedAnyOf(
-                  "emptyEnumeration",
-                  "emptyIterator",
-                  "emptyList",
-                  "emptyListIterator",
-                  "emptyMap",
-                  "emptyNavigableMap",
-                  "emptyNavigableSet",
-                  "emptySet",
-                  "emptySortedMap",
-                  "emptySortedSet",
-                  "nCopies",
-                  "reverseOrder",
-                  "singleton",
-                  "singletonList",
-                  "singletonMap"),
-          staticMethod()
-              .onClassAny(
-                  "java.util.Optional",
-                  "java.util.OptionalInt",
-                  "java.util.OptionalLong",
-                  "java.util.OptionalDouble")
-              .namedAnyOf("empty", "of", "ofNullable"),
-          staticMethod()
-              .onClass("java.util.Objects")
-              .namedAnyOf(
-                  "checkFromIndexSize",
-                  "checkFromToIndex",
-                  "checkIndex",
-                  "isNull",
-                  "nonNull",
-                  "requireNonNull",
-                  "requireNonNullElse"),
-          staticMethod()
-              .onClass("java.util.Comparator")
-              .namedAnyOf("naturalOrder", "nullsFirst", "nullsLast", "reverseOrder"),
-          staticMethod()
-              .onClass("java.util.Locale")
-              .namedAnyOf("caseFoldLanguageTag", "forLanguageTag", "of"),
-          staticMethod().onClass("java.util.UUID").named("fromString"),
-          staticMethod()
-              .onClass("java.util.regex.Pattern")
-              .namedAnyOf("compile", "matches", "quote"),
-
-          // Guava Immutable collections
-          //
-          // Remove once/if Guava annotates to tell us the result is a compile-time constant iff the
-          // arguments are compile-time constants.
-          staticMethod()
-              .onClassAny(
-                  "com.google.common.collect.ImmutableList",
-                  "com.google.common.collect.ImmutableSet",
-                  "com.google.common.collect.ImmutableMap",
-                  "com.google.common.collect.ImmutableMultiset",
-                  "com.google.common.collect.ImmutableSortedSet",
-                  "com.google.common.collect.ImmutableSortedMap")
-              .named("of"));
-
-  /**
-   * Matches constructors that are known to produce compile-time constants if their arguments are
-   * all compile-time constants, but are defined "upstream" of this check and therefore cannot be
-   * annotated {@code @CompileTimeConstant} themselves.
-   *
-   * <p>The class must be immutable to be included here. (It can seem valid to include a mutable
-   * class {@code T}'s constructor if it doesn't depend on any runtime state, but that causes
-   * constness issues (like b/576770029) unless the lint can forbid operations mutate the object.)
-   */
-  private static final Matcher<ExpressionTree> COMPATIBLE_CONSTRUCTORS =
-      anyOf(
-          constructor().forClass("java.lang.Integer"),
-          constructor().forClass("java.lang.Long"),
-          constructor().forClass("java.lang.Short"),
-          constructor().forClass("java.lang.Byte"),
-          constructor().forClass("java.lang.Character"),
-          constructor().forClass("java.lang.Boolean"),
-          constructor().forClass("java.lang.Float"),
-          constructor().forClass("java.lang.Double"),
-
-          // TODO(b/576770029): Allow the byte[], char[], and int[] String constructors.
-          // String(byte[]) and String(byte[], int, int)) are disallowed because they use the
-          // default charset, which is not a compile-time constant.
-          constructor().forClass("java.lang.String").withNoParameters(),
-          constructor().forClass("java.lang.String").withParameters("java.lang.String"),
-
-          // TODO(b/576770029): Allow the byte[] BigInteger constructors and char[] BigDecimal
-          // constructors.
-          constructor().forClass("java.math.BigInteger").withParameters("java.lang.String"),
-          constructor().forClass("java.math.BigInteger").withParameters("java.lang.String", "int"),
-          constructor().forClass("java.math.BigDecimal").withParameters("double"),
-          constructor()
-              .forClass("java.math.BigDecimal")
-              .withParameters("double", "java.math.MathContext"),
-          constructor().forClass("java.math.BigDecimal").withParameters("int"),
-          constructor()
-              .forClass("java.math.BigDecimal")
-              .withParameters("int", "java.math.MathContext"),
-          constructor().forClass("java.math.BigDecimal").withParameters("long"),
-          constructor()
-              .forClass("java.math.BigDecimal")
-              .withParameters("long", "java.math.MathContext"),
-          constructor().forClass("java.math.BigDecimal").withParameters("java.lang.String"),
-          constructor()
-              .forClass("java.math.BigDecimal")
-              .withParameters("java.lang.String", "java.math.MathContext"),
-          constructor().forClass("java.math.MathContext"),
-          constructor().forClass("java.util.Locale"),
-          constructor().forClass("java.util.UUID"));
-
-  /**
-   * Matches static final fields that are known to be compile-time constants, but are "upstream" of
-   * this check and therefore cannot be annotated {@code @CompileTimeConstant} themselves.
-   *
-   * <p>Note that {@code static final} fields of primitive or {@link String} type initialized with a
-   * constant expression (JLS §4.12.4 "constant variables", such as {@link Integer#MAX_VALUE} or
-   * {@link Math#PI}) already have their constant value computed by {@code javac} and are matched
-   * via {@link ASTHelpers#constValue}, so only non-primitive, non-{@link String} constant fields
-   * need to be listed here.
-   */
-  private static final Matcher<ExpressionTree> COMPATIBLE_FIELDS =
-      anyOf(
-          // java.lang
-          staticField().onClass("java.lang.Boolean").namedAnyOf("FALSE", "TRUE", "TYPE"),
-          staticField().onClass("java.lang.Byte").named("TYPE"),
-          staticField().onClass("java.lang.Character").named("TYPE"),
-          staticField().onClass("java.lang.Double").named("TYPE"),
-          staticField().onClass("java.lang.Float").named("TYPE"),
-          staticField().onClass("java.lang.Integer").named("TYPE"),
-          staticField().onClass("java.lang.Long").named("TYPE"),
-          staticField().onClass("java.lang.Short").named("TYPE"),
-          staticField().onClass("java.lang.Void").named("TYPE"),
-          staticField().onClass("java.lang.String").named("CASE_INSENSITIVE_ORDER"),
-
-          // java.math
-          staticField().onClass("java.math.BigDecimal").namedAnyOf("ONE", "TEN", "TWO", "ZERO"),
-          staticField().onClass("java.math.BigInteger").namedAnyOf("ONE", "TEN", "TWO", "ZERO"),
-          staticField()
-              .onClass("java.math.MathContext")
-              .namedAnyOf("DECIMAL128", "DECIMAL32", "DECIMAL64", "UNLIMITED"),
-
-          // java.time
-          staticField().onClass("java.time.Duration").named("ZERO"),
-          staticField().onClass("java.time.Instant").namedAnyOf("EPOCH", "MAX", "MIN"),
-          staticField().onClass("java.time.LocalDate").namedAnyOf("EPOCH", "MAX", "MIN"),
-          staticField().onClass("java.time.LocalDateTime").namedAnyOf("MAX", "MIN"),
-          staticField().onClass("java.time.LocalTime").namedAnyOf("MAX", "MIDNIGHT", "MIN", "NOON"),
-          staticField().onClass("java.time.OffsetDateTime").namedAnyOf("MAX", "MIN"),
-          staticField().onClass("java.time.OffsetTime").namedAnyOf("MAX", "MIN"),
-          staticField().onClass("java.time.Period").named("ZERO"),
-          staticField().onClass("java.time.ZoneOffset").namedAnyOf("MAX", "MIN", "UTC"),
-          staticField()
-              .onClass("java.time.format.DateTimeFormatter")
-              .namedAnyOf(
-                  "BASIC_ISO_DATE",
-                  "ISO_DATE",
-                  "ISO_DATE_TIME",
-                  "ISO_INSTANT",
-                  "ISO_LOCAL_DATE",
-                  "ISO_LOCAL_DATE_TIME",
-                  "ISO_LOCAL_TIME",
-                  "ISO_OFFSET_DATE",
-                  "ISO_OFFSET_DATE_TIME",
-                  "ISO_OFFSET_TIME",
-                  "ISO_ORDINAL_DATE",
-                  "ISO_TIME",
-                  "ISO_WEEK_DATE",
-                  "ISO_ZONED_DATE_TIME",
-                  "RFC_1123_DATE_TIME"),
-          staticField()
-              .onClass("java.time.temporal.IsoFields")
-              .namedAnyOf(
-                  "DAY_OF_QUARTER",
-                  "QUARTER_OF_YEAR",
-                  "QUARTER_YEARS",
-                  "WEEK_BASED_YEAR",
-                  "WEEK_BASED_YEARS",
-                  "WEEK_OF_WEEK_BASED_YEAR"),
-          staticField()
-              .onClass("java.time.temporal.JulianFields")
-              .namedAnyOf("JULIAN_DAY", "MODIFIED_JULIAN_DAY", "RATA_DIE"),
-          staticField().onClass("java.time.temporal.WeekFields").namedAnyOf("ISO", "SUNDAY_START"),
-
-          // java.util
-          staticField()
-              .onClass("java.util.Collections")
-              .namedAnyOf("EMPTY_LIST", "EMPTY_MAP", "EMPTY_SET"),
-          staticField()
-              .onClass("java.util.Locale")
-              .namedAnyOf(
-                  "CANADA",
-                  "CANADA_FRENCH",
-                  "CHINA",
-                  "CHINESE",
-                  "ENGLISH",
-                  "FRANCE",
-                  "FRENCH",
-                  "GERMAN",
-                  "GERMANY",
-                  "ITALIAN",
-                  "ITALY",
-                  "JAPAN",
-                  "JAPANESE",
-                  "KOREA",
-                  "KOREAN",
-                  "PRC",
-                  "ROOT",
-                  "SIMPLIFIED_CHINESE",
-                  "TAIWAN",
-                  "TRADITIONAL_CHINESE",
-                  "UK",
-                  "US"),
-
-          // java.nio.charset
-          staticField()
-              .onClass("java.nio.charset.StandardCharsets")
-              .namedAnyOf(
-                  "ISO_8859_1",
-                  "US_ASCII",
-                  "UTF_16",
-                  "UTF_16BE",
-                  "UTF_16LE",
-                  "UTF_32",
-                  "UTF_32BE",
-                  "UTF_32LE",
-                  "UTF_8"));
 }

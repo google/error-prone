@@ -26,263 +26,239 @@ import com.sun.tools.javac.code.Type;
 
 public final class MethodMatchers {
 
-  /**
-   * @deprecated use {@code Matcher<ExpressionTree>} instead of referring directly to this type.
-   */
+  /// @deprecated use `Matcher<ExpressionTree>` instead of referring directly to this type.
   @Deprecated
   public interface MethodMatcher extends Matcher<ExpressionTree> {}
 
   // Language definition for fluent method matchers.
 
-  /**
-   * @deprecated use {@code Matcher<ExpressionTree>} instead of referring directly to this type.
-   */
+  /// @deprecated use `Matcher<ExpressionTree>` instead of referring directly to this type.
   @Deprecated
   public interface InstanceMethodMatcher extends MethodMatcher {
-    /** Match on types that satisfy the given predicate. */
+    /// Match on types that satisfy the given predicate.
     MethodClassMatcher onClass(TypePredicate predicate);
 
-    /** Match on types with the given fully-qualified name. (e.g. {@code java.lang.String}) */
+    /// Match on types with the given fully-qualified name. (e.g. `java.lang.String`)
     MethodClassMatcher onExactClass(String className);
 
-    /** Match on the given class exactly. */
+    /// Match on the given class exactly.
     MethodClassMatcher onExactClass(ClassName className);
 
-    /** Match on the given type exactly. */
+    /// Match on the given type exactly.
     MethodClassMatcher onExactClass(Supplier<Type> classType);
 
-    /** Match on types that are exactly the same as any of the given types. */
+    /// Match on types that are exactly the same as any of the given types.
     MethodClassMatcher onExactClassAny(Iterable<String> classTypes);
 
-    /** Match on types that are exactly the same as any of the given types. */
+    /// Match on types that are exactly the same as any of the given types.
     MethodClassMatcher onExactClassAny(String... classTypes);
 
-    /** Match on types that are exactly the same as any of the given classes. */
+    /// Match on types that are exactly the same as any of the given classes.
     MethodClassMatcher onExactClassAny(ClassName... classTypes);
 
-    /** Match on descendants of the given fully-qualified type name. */
+    /// Match on descendants of the given fully-qualified type name.
     MethodClassMatcher onDescendantOf(String className);
 
-    /** Match on descendants of the given class. */
+    /// Match on descendants of the given class.
     MethodClassMatcher onDescendantOf(ClassName className);
 
-    /** Match on descendants of the given type. */
+    /// Match on descendants of the given type.
     MethodClassMatcher onDescendantOf(Supplier<Type> classType);
 
-    /** Match on types that are descendants of any of the given types. */
+    /// Match on types that are descendants of any of the given types.
     MethodClassMatcher onDescendantOfAny(String... classTypes);
 
-    /** Match on types that are descendants of any of the given classes. */
+    /// Match on types that are descendants of any of the given classes.
     MethodClassMatcher onDescendantOfAny(ClassName... classTypes);
 
-    /** Match on types that are descendants of any of the given types. */
+    /// Match on types that are descendants of any of the given types.
     MethodClassMatcher onDescendantOfAny(Iterable<String> classTypes);
 
-    /** Match on any class. */
+    /// Match on any class.
     MethodClassMatcher anyClass();
   }
 
-  /**
-   * @deprecated use {@code Matcher<ExpressionTree>} instead of referring directly to this type.
-   */
+  /// @deprecated use `Matcher<ExpressionTree>` instead of referring directly to this type.
   @Deprecated
   public interface StaticMethodMatcher extends MethodMatcher {
-    /** Match on types that satisfy the given predicate. */
+    /// Match on types that satisfy the given predicate.
     MethodClassMatcher onClass(TypePredicate predicate);
 
-    /** Match on types with the given fully-qualified name. (e.g. {@code java.lang.String}) */
+    /// Match on types with the given fully-qualified name. (e.g. `java.lang.String`)
     MethodClassMatcher onClass(String className);
 
-    /** Match on the given class exactly. */
+    /// Match on the given class exactly.
     MethodClassMatcher onClass(ClassName className);
 
-    /** Match on the given type exactly. */
+    /// Match on the given type exactly.
     MethodClassMatcher onClass(Supplier<Type> classType);
 
-    /** Match on types that are equal to any of the given types. */
+    /// Match on types that are equal to any of the given types.
     MethodClassMatcher onClassAny(Iterable<String> classNames);
 
-    /** Match on types that are equal to any of the given types. */
+    /// Match on types that are equal to any of the given types.
     MethodClassMatcher onClassAny(String... classNames);
 
-    /** Match on types that are equal to any of the given classes. */
+    /// Match on types that are equal to any of the given classes.
     MethodClassMatcher onClassAny(ClassName... classNames);
 
-    /** Match on descendants of the given fully-qualified type name. */
+    /// Match on descendants of the given fully-qualified type name.
     MethodClassMatcher onDescendantOf(String className);
 
-    /** Match on descendants of the given class. */
+    /// Match on descendants of the given class.
     MethodClassMatcher onDescendantOf(ClassName className);
 
-    /** Match on descendants of the given type. */
+    /// Match on descendants of the given type.
     MethodClassMatcher onDescendantOf(Supplier<Type> classType);
 
-    /** Match on types that are descendants of any of the given types. */
+    /// Match on types that are descendants of any of the given types.
     MethodClassMatcher onDescendantOfAny(String... classTypes);
 
-    /** Match on types that are descendants of any of the given classes. */
+    /// Match on types that are descendants of any of the given classes.
     MethodClassMatcher onDescendantOfAny(ClassName... classTypes);
 
-    /** Match on types that are descendants of any of the given types. */
+    /// Match on types that are descendants of any of the given types.
     MethodClassMatcher onDescendantOfAny(Iterable<String> classTypes);
 
-    /** Match on any class. */
+    /// Match on any class.
     MethodClassMatcher anyClass();
   }
 
-  /**
-   * @deprecated use {@code Matcher<ExpressionTree>} instead of referring directly to this type.
-   */
+  /// @deprecated use `Matcher<ExpressionTree>` instead of referring directly to this type.
   @Deprecated
   public interface AnyMethodMatcher extends MethodMatcher {
-    /** Match the given type exactly. */
+    /// Match the given type exactly.
     MethodClassMatcher onClass(TypePredicate predicate);
 
-    /** Match on types with the given fully-qualified name. (e.g. {@code java.lang.String}) */
+    /// Match on types with the given fully-qualified name. (e.g. `java.lang.String`)
     MethodClassMatcher onClass(String className);
 
-    /** Match on the given class exactly. */
+    /// Match on the given class exactly.
     MethodClassMatcher onClass(ClassName className);
 
-    /** Match on descendants of the given fully-qualified type name. */
+    /// Match on descendants of the given fully-qualified type name.
     MethodClassMatcher onDescendantOf(String className);
 
-    /** Match on descendants of the given class. */
+    /// Match on descendants of the given class.
     MethodClassMatcher onDescendantOf(ClassName className);
 
-    /** Match on descendants of the given type. */
+    /// Match on descendants of the given type.
     MethodClassMatcher onDescendantOf(Supplier<Type> classType);
 
-    /** Match on types that are descendants of any of the given types. */
+    /// Match on types that are descendants of any of the given types.
     MethodClassMatcher onDescendantOfAny(String... classTypes);
 
-    /** Match on types that are descendants of any of the given classes. */
+    /// Match on types that are descendants of any of the given classes.
     MethodClassMatcher onDescendantOfAny(ClassName... classTypes);
 
-    /** Match on types that are descendants of any of the given types. */
+    /// Match on types that are descendants of any of the given types.
     MethodClassMatcher onDescendantOfAny(Iterable<String> classTypes);
 
-    /** Match on any class. */
+    /// Match on any class.
     MethodClassMatcher anyClass();
   }
 
-  /**
-   * @deprecated use {@code Matcher<ExpressionTree>} instead of referring directly to this type.
-   */
+  /// @deprecated use `Matcher<ExpressionTree>` instead of referring directly to this type.
   @Deprecated
   public interface MethodClassMatcher extends MethodMatcher {
-    /** Match methods with the given name. (e.g. {@code toString}) */
+    /// Match methods with the given name. (e.g. `toString`)
     MethodNameMatcher named(String name);
 
-    /** Match methods with any of the given names. */
+    /// Match methods with any of the given names.
     MethodNameMatcher namedAnyOf(String... names);
 
-    /** Match methods with any of the given names. */
+    /// Match methods with any of the given names.
     MethodNameMatcher namedAnyOf(Iterable<String> names);
 
-    /** Match methods with any name. */
+    /// Match methods with any name.
     MethodNameMatcher withAnyName();
 
-    /** Match methods with a name that matches the given regular expression. */
+    /// Match methods with a name that matches the given regular expression.
     MethodNameMatcher withNameMatching(org.safere.Pattern pattern);
 
-    /** Match methods with a name that matches the given regular expression. */
+    /// Match methods with a name that matches the given regular expression.
     MethodNameMatcher withNameMatching(java.util.regex.Pattern pattern);
   }
 
-  /**
-   * @deprecated use {@code Matcher<ExpressionTree>} instead of referring directly to this type.
-   */
+  /// @deprecated use `Matcher<ExpressionTree>` instead of referring directly to this type.
   @Deprecated
   public interface MethodSignatureMatcher extends MethodMatcher {}
 
-  /**
-   * @deprecated use {@code Matcher<ExpressionTree>} instead of referring directly to this type.
-   */
+  /// @deprecated use `Matcher<ExpressionTree>` instead of referring directly to this type.
   @Deprecated
   public interface MethodNameMatcher extends MethodMatcher {
-    /** Match methods with no formal parameters. */
+    /// Match methods with no formal parameters.
     ParameterMatcher withNoParameters();
 
-    /** Match methods whose formal parameters have the given types. */
+    /// Match methods whose formal parameters have the given types.
     ParameterMatcher withParameters(String first, String... rest);
 
-    /** Match methods whose formal parameters have the given types. */
+    /// Match methods whose formal parameters have the given types.
     ParameterMatcher withParameters(Iterable<String> parameters);
 
-    /** Match methods whose formal parameters have the given types. */
+    /// Match methods whose formal parameters have the given types.
     ParameterMatcher withParametersOfType(Iterable<Supplier<Type>> parameters);
 
-    /** Match methods whose formal parameters have the given types. */
+    /// Match methods whose formal parameters have the given types.
     ParameterMatcher withParametersOfType(Supplier<Type> first, Supplier<Type>... rest);
 
-    /** Match methods whose formal parameters have the given types. */
+    /// Match methods whose formal parameters have the given types.
     ParameterMatcher withParametersOfType(ClassName first, ClassName... rest);
 
-    /**
-     * Match methods whose formal parameters have the given types.
-     *
-     * <p>Unlike other methods for matching on parameters which consider erased types, this method
-     * provides access to generic types. Note also that other methods like {@link
-     * TypePredicates#isExactType} still only compare erased types.
-     */
+    /// Match methods whose formal parameters have the given types.
+    ///
+    /// Unlike other methods for matching on parameters which consider erased types, this method
+    /// provides access to generic types. Note also that other methods like
+    /// [TypePredicates#isExactType] still only compare erased types.
     ParameterMatcher withParametersMatching(ParameterPredicate first, ParameterPredicate... rest);
 
-    /**
-     * Match methods whose formal parameters have the given types.
-     *
-     * <p>Unlike other methods for matching on parameters which consider erased types, this method
-     * provides access to generic types. Note also that other methods like {@link
-     * TypePredicates#isExactType} still only compare erased types.
-     */
+    /// Match methods whose formal parameters have the given types.
+    ///
+    /// Unlike other methods for matching on parameters which consider erased types, this method
+    /// provides access to generic types. Note also that other methods like
+    /// [TypePredicates#isExactType] still only compare erased types.
     ParameterMatcher withParametersMatching(Iterable<ParameterPredicate> parameters);
   }
 
-  /**
-   * @deprecated use {@code Matcher<ExpressionTree>} instead of referring directly to this type.
-   */
+  /// @deprecated use `Matcher<ExpressionTree>` instead of referring directly to this type.
   @Deprecated
   public interface ConstructorMatcher extends MethodMatcher {
-    /** Match on types that satisfy the given predicate. */
+    /// Match on types that satisfy the given predicate.
     ConstructorClassMatcher forClass(TypePredicate predicate);
 
-    /** Match on the given type exactly. */
+    /// Match on the given type exactly.
     ConstructorClassMatcher forClass(String className);
 
-    /** Match on the given class exactly. */
+    /// Match on the given class exactly.
     ConstructorClassMatcher forClass(ClassName className);
 
-    /** Match on the given type exactly. */
+    /// Match on the given type exactly.
     ConstructorClassMatcher forClass(Supplier<Type> classType);
   }
 
-  /**
-   * @deprecated use {@code Matcher<ExpressionTree>} instead of referring directly to this type.
-   */
+  /// @deprecated use `Matcher<ExpressionTree>` instead of referring directly to this type.
   @Deprecated
   public interface ConstructorClassMatcher extends MethodMatcher {
-    /** Match constructors with no formal parameters. */
+    /// Match constructors with no formal parameters.
     ParameterMatcher withNoParameters();
 
-    /** Match constructors whose formal parameters have the given types. */
+    /// Match constructors whose formal parameters have the given types.
     ParameterMatcher withParameters(String first, String... rest);
 
-    /** Match constructors whose formal parameters have the given types. */
+    /// Match constructors whose formal parameters have the given types.
     ParameterMatcher withParameters(Iterable<String> parameters);
 
-    /** Match constructors whose formal parameters have the given types. */
+    /// Match constructors whose formal parameters have the given types.
     ParameterMatcher withParametersOfType(Iterable<Supplier<Type>> parameters);
 
-    /** Match constructors whose formal parameters have the given types. */
+    /// Match constructors whose formal parameters have the given types.
     ParameterMatcher withParametersOfType(Supplier<Type> first, Supplier<Type>... rest);
 
-    /** Match constructors whose formal parameters have the given types. */
+    /// Match constructors whose formal parameters have the given types.
     ParameterMatcher withParametersOfType(ClassName first, ClassName... rest);
   }
 
-  /**
-   * @deprecated use {@code Matcher<ExpressionTree>} instead of referring directly to this type.
-   */
+  /// @deprecated use `Matcher<ExpressionTree>` instead of referring directly to this type.
   @Deprecated
   public interface ParameterMatcher extends MethodMatcher {}
 

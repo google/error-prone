@@ -16,11 +16,9 @@
 
 package com.google.errorprone;
 
-/**
- * An exception that indicates that BugPattern validation failed.
- *
- * @author eaftan@google.com (Eddie Aftandilian)
- */
+/// An exception that indicates that BugPattern validation failed.
+///
+/// @author eaftan@google.com (Eddie Aftandilian)
 public class ValidationException extends Exception {
   public ValidationException(String message) {
     super(message);

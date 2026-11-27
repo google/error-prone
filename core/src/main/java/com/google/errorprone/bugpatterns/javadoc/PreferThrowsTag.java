@@ -30,11 +30,9 @@ import com.sun.source.tree.MethodTree;
 import com.sun.source.util.DocTreePath;
 import com.sun.source.util.DocTreePathScanner;
 
-/**
- * Prefer the {@code @throws} tag instead of the {@code @exception} tag.
- *
- * @author kak@google.com (Kurt Alfred Kluever)
- */
+/// Prefer the `@throws` tag instead of the `@exception` tag.
+///
+/// @author kak@google.com (Kurt Alfred Kluever)
 @BugPattern(summary = "Prefer the @throws javadoc tag instead of @exception.", severity = WARNING)
 public final class PreferThrowsTag extends BugChecker implements MethodTreeMatcher {
 

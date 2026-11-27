@@ -55,11 +55,9 @@ import java.util.Map;
 import java.util.Set;
 import javax.lang.model.element.ElementKind;
 
-/**
- * Looks for hashCode implementations which are inconsistent with equals.
- *
- * @author ghm@google.com (Graeme Morgan)
- */
+/// Looks for hashCode implementations which are inconsistent with equals.
+///
+/// @author ghm@google.com (Graeme Morgan)
 @BugPattern(
     summary =
         "Including fields in hashCode which are not compared in equals violates "
@@ -73,11 +71,11 @@ public final class InconsistentHashCode extends BugChecker implements ClassTreeM
           + "could compare equal, but have different hashCodes, which violates the hashCode "
           + "contract.";
 
-  /** Non-static methods that we might expect to see in #hashCode, and allow. */
+  /// Non-static methods that we might expect to see in #hashCode, and allow.
   private static final Matcher<ExpressionTree> HASH_CODE_METHODS =
       instanceMethod().anyClass().named("hashCode").withNoParameters();
 
-  /** Non-static methods that we might expect to see in #equals, and allow. */
+  /// Non-static methods that we might expect to see in #equals, and allow.
   private static final Matcher<ExpressionTree> EQUALS_METHODS =
       anyOf(instanceMethod().anyClass().named("getClass"), instanceEqualsInvocation());
 
@@ -136,10 +134,8 @@ public final class InconsistentHashCode extends BugChecker implements ClassTreeM
         : buildDescription(hashCodeDeclaration).setMessage(message).build();
   }
 
-  /**
-   * Scans a method to find which fields are accessed from it. Fails if instance methods not
-   * matching {@code acceptableMethods} are found: that is, it's optimised for simple getters.
-   */
+  /// Scans a method to find which fields are accessed from it. Fails if instance methods not
+  /// matching `acceptableMethods` are found: that is, it's optimised for simple getters.
   private static final class FieldAccessFinder extends TreeScanner<Void, Void> {
     private final Matcher<ExpressionTree> acceptableMethods;
     private final Map<MethodSymbol, ImmutableSet<Symbol>> knownMethods;

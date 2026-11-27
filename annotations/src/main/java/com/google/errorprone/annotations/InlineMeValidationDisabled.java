@@ -21,16 +21,12 @@ import static java.lang.annotation.ElementType.METHOD;
 
 import java.lang.annotation.Target;
 
-/**
- * An annotation that disables validation of the {@link InlineMe} annotation's correctness (i.e.:
- * that it accurately represents an inlining of the annotated method).
- */
+/// An annotation that disables validation of the [InlineMe] annotation's correctness (i.e.: that it
+/// accurately represents an inlining of the annotated method).
 @Target({METHOD, CONSTRUCTOR})
 public @interface InlineMeValidationDisabled {
-  /**
-   * An explanation as to why the validation is disabled (e.g.: moving from a constructor to a
-   * static factory method that delegates to this constructor, which is behavior-perserving, but
-   * isn't strictly an inlining).
-   */
+  /// An explanation as to why the validation is disabled (e.g.: moving from a constructor to a
+  /// static factory method that delegates to this constructor, which is behavior-perserving, but
+  /// isn't strictly an inlining).
   String value();
 }

@@ -21,7 +21,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** Tests for {@code ForOverrideChecker}. */
+/// Tests for `ForOverrideChecker`.
 @RunWith(JUnit4.class)
 public class ForOverrideCheckerTest {
 

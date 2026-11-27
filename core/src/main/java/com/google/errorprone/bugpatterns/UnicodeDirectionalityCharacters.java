@@ -27,7 +27,7 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.sun.source.tree.CompilationUnitTree;
 
-/** Bans, without the possibility of suppression, the use of direction-changing Unicode escapes. */
+/// Bans, without the possibility of suppression, the use of direction-changing Unicode escapes.
 @BugPattern(
     severity = ERROR,
     summary = "Unicode directionality modifiers can be used to conceal code in many editors.",

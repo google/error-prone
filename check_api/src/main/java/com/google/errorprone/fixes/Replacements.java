@@ -31,13 +31,11 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
-/** A collection of {@link Replacement}s to be made to a source file. */
+/// A collection of [Replacement]s to be made to a source file.
 public class Replacements {
 
-  /**
-   * We apply replacements in reverse order of start position, so that replacements that change the
-   * length of the input don't affect the position of earlier replacements.
-   */
+  /// We apply replacements in reverse order of start position, so that replacements that change the
+  /// length of the input don't affect the position of earlier replacements.
   private static final Comparator<Range<Integer>> DESCENDING =
       Comparator.<Range<Integer>, Integer>comparing(Range::lowerEndpoint)
           .thenComparing(Range::upperEndpoint)
@@ -47,9 +45,9 @@ public class Replacements {
   private final RangeMap<Integer, Replacement> overlaps = TreeRangeMap.create();
   private final TreeSet<Integer> zeroLengthRanges = new TreeSet<>();
 
-  /** A policy for handling overlapping insertions. */
+  /// A policy for handling overlapping insertions.
   public enum CoalescePolicy {
-    /** Reject overlapping insertions and throw an {@link IllegalArgumentException}. */
+    /// Reject overlapping insertions and throw an [IllegalArgumentException].
     REJECT(DuplicateInsertPolicy.DROP) {
       @Override
       public String coalesce(String replacement, String existing) {
@@ -57,31 +55,25 @@ public class Replacements {
             String.format("%s conflicts with existing replacement %s", replacement, existing));
       }
     },
-    /**
-     * Accept overlapping insertions, with the new insertion before the existing one. Duplicate
-     * insertions (inserting the same text at the same position) will still be dropped.
-     */
+    /// Accept overlapping insertions, with the new insertion before the existing one. Duplicate
+    /// insertions (inserting the same text at the same position) will still be dropped.
     REPLACEMENT_FIRST(DuplicateInsertPolicy.DROP) {
       @Override
       public String coalesce(String replacement, String existing) {
         return replacement + existing;
       }
     },
-    /**
-     * Accept overlapping insertions, with the existing insertion before the new one. Duplicate
-     * insertions (inserting the same text at the same position) will still be dropped.
-     */
+    /// Accept overlapping insertions, with the existing insertion before the new one. Duplicate
+    /// insertions (inserting the same text at the same position) will still be dropped.
     EXISTING_FIRST(DuplicateInsertPolicy.DROP) {
       @Override
       public String coalesce(String replacement, String existing) {
         return existing + replacement;
       }
     },
-    /**
-     * Reject overlapping inserts, but treat duplicate inserts (same text at same position)
-     * specially. Instead of dropping duplicates, as the other coalesce policies do, this policy
-     * keeps them.
-     */
+    /// Reject overlapping inserts, but treat duplicate inserts (same text at same position)
+    /// specially. Instead of dropping duplicates, as the other coalesce policies do, this policy
+    /// keeps them.
     KEEP_ONLY_IDENTICAL_INSERTS(DuplicateInsertPolicy.KEEP) {
       @Override
       public String coalesce(String replacement, String existing) {
@@ -95,20 +87,16 @@ public class Replacements {
       this.duplicateInsertPolicy = duplicateInsertPolicy;
     }
 
-    /**
-     * Handle two insertions at the same position.
-     *
-     * @param replacement the replacement being added
-     * @param existing the existing insert at this position
-     * @return the coalesced replacement
-     */
+    /// Handle two insertions at the same position.
+    ///
+    /// @param replacement the replacement being added
+    /// @param existing the existing insert at this position
+    /// @return the coalesced replacement
     public abstract String coalesce(String replacement, String existing);
 
-    /**
-     * Duplicate inserts are handled specially: usually dropped (e.g. don't add the same import
-     * twice), but can be kept. e.g., a BugChecker that adds {} blocks around some statements may
-     * need to insert a close brace at the same place twice.
-     */
+    /// Duplicate inserts are handled specially: usually dropped (e.g. don't add the same import
+    /// twice), but can be kept. e.g., a BugChecker that adds {} blocks around some statements may
+    /// need to insert a close brace at the same place twice.
     private Replacement handleDuplicateInsertion(Replacement replacement) {
       return duplicateInsertPolicy.combineDuplicateInserts(replacement);
     }
@@ -190,18 +178,16 @@ public class Replacements {
     }
   }
 
-  /**
-   * Non-overlapping replacements, sorted in descending order by position. Prefer using {@link
-   * #ascending} when applying changes, because applying changes in reverse tends to result in
-   * quadratic-time copying of the underlying string.
-   */
+  /// Non-overlapping replacements, sorted in descending order by position. Prefer using
+  /// [#ascending] when applying changes, because applying changes in reverse tends to result in
+  /// quadratic-time copying of the underlying string.
   @Deprecated
   public Set<Replacement> descending() {
     // TODO(cushon): refactor SuggestedFix#getReplacements and just return a Collection,
     return new LinkedHashSet<>(replacements.values());
   }
 
-  /** Non-overlapping replacements, sorted in ascending order by position. */
+  /// Non-overlapping replacements, sorted in ascending order by position.
   public ImmutableSet<Replacement> ascending() {
     return ImmutableSet.copyOf(replacements.descendingMap().values());
   }

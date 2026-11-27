@@ -25,11 +25,9 @@ import com.sun.source.tree.TreeVisitor;
 import com.sun.source.tree.UnionTypeTree;
 import com.sun.tools.javac.tree.JCTree.JCTypeUnion;
 
-/**
- * {@code UTree} representation of {@code UnionTypeTree}.
- *
- * @author lowasser@google.com (Louis Wasserman)
- */
+/// `UTree` representation of `UnionTypeTree`.
+///
+/// @author lowasser@google.com (Louis Wasserman)
 @AutoValue
 abstract class UUnionType extends UExpression implements UnionTypeTree {
   @VisibleForTesting

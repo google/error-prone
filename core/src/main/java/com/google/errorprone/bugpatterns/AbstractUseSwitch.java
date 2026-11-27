@@ -50,7 +50,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.jspecify.annotations.Nullable;
 
-/** Helper for refactoring from if-else chains to switches. */
+/// Helper for refactoring from if-else chains to switches.
 public abstract class AbstractUseSwitch extends BugChecker implements IfTreeMatcher {
 
   private static final int MIN_BRANCHES = 3;
@@ -58,7 +58,7 @@ public abstract class AbstractUseSwitch extends BugChecker implements IfTreeMatc
   private static final Matcher<ExpressionTree> EQUALS =
       instanceMethod().anyClass().named("equals").withParameters("java.lang.Object");
 
-  /** Returns the source text that should appear in a {@code case} statement in the fix. */
+  /// Returns the source text that should appear in a `case` statement in the fix.
   protected abstract @Nullable String getExpressionForCase(
       VisitorState state, ExpressionTree argument);
 
@@ -86,10 +86,8 @@ public abstract class AbstractUseSwitch extends BugChecker implements IfTreeMatc
     return good[0];
   }
 
-  /**
-   * Returns the source code from a JCBlock {...} for use on the right hind side of a {@code ->}
-   * switch case.
-   */
+  /// Returns the source code from a JCBlock {...} for use on the right hind side of a `->` switch
+  /// case.
   private static CharSequence renderForSwitchRule(BlockTree block, VisitorState state) {
     List<? extends StatementTree> statements = block.getStatements();
     if (statements.isEmpty()) {

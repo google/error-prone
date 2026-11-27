@@ -31,7 +31,7 @@ import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 import com.sun.tools.javac.code.Symbol.TypeSymbol;
 
-/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
+/// A [BugChecker]; see the associated [BugPattern] annotation for details.
 @BugPattern(summary = "Instance created but never used", severity = ERROR)
 public class UnusedAnonymousClass extends BugChecker implements NewClassTreeMatcher {
 

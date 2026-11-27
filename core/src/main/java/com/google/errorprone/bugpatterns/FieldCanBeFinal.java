@@ -71,15 +71,13 @@ import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
 
-/**
- * @author Liam Miller-Cushon (cushon@google.com)
- */
+/// @author Liam Miller-Cushon (cushon@google.com)
 @BugPattern(
     summary = "This field is only assigned during initialization; consider making it final",
     severity = SUGGESTION)
 public class FieldCanBeFinal extends BugChecker implements CompilationUnitTreeMatcher {
 
-  /** Annotations that imply a field is non-constant. */
+  /// Annotations that imply a field is non-constant.
   // TODO(cushon): consider supporting @Var as a meta-annotation
   private static final ImmutableSet<ClassName> IMPLICIT_VAR_ANNOTATIONS =
       ImmutableSet.<ClassName>builder()
@@ -111,14 +109,12 @@ public class FieldCanBeFinal extends BugChecker implements CompilationUnitTreeMa
 
   private static final String OBJECTIFY_PREFIX = "com.googlecode.objectify.";
 
-  /**
-   * Annotations that imply a field is non-constant, and that do not have a canonical
-   * implementation. Instead, we match on any annotation with one of the following simple names.
-   */
+  /// Annotations that imply a field is non-constant, and that do not have a canonical
+  /// implementation. Instead, we match on any annotation with one of the following simple names.
   private static final ImmutableSet<String> IMPLICIT_VAR_ANNOTATION_SIMPLE_NAMES =
       ImmutableSet.of("NonFinalForTesting", "NotFinalForTesting");
 
-  /** Unary operator kinds that implicitly assign to their operand. */
+  /// Unary operator kinds that implicitly assign to their operand.
   private static final ImmutableSet<Kind> UNARY_ASSIGNMENT =
       Sets.immutableEnumSet(
           Kind.PREFIX_DECREMENT,
@@ -133,27 +129,27 @@ public class FieldCanBeFinal extends BugChecker implements CompilationUnitTreeMa
     this.wellKnownKeep = wellKnownKeep;
   }
 
-  /** The initialization context where an assignment occurred. */
+  /// The initialization context where an assignment occurred.
   private enum InitializationContext {
-    /** A class (static) initializer. */
+    /// A class (static) initializer.
     STATIC,
-    /** An instance initializer. */
+    /// An instance initializer.
     INSTANCE,
-    /** Neither a static or instance initializer. */
+    /// Neither a static or instance initializer.
     NONE
   }
 
-  /** A record of all assignments to variables in the current compilation unit. */
+  /// A record of all assignments to variables in the current compilation unit.
   private static class VariableAssignmentRecords {
 
     private final Map<VarSymbol, VariableAssignments> assignments = new LinkedHashMap<>();
 
-    /** Returns all {@link VariableAssignments} in the current compilation unit. */
+    /// Returns all [VariableAssignments] in the current compilation unit.
     private Collection<VariableAssignments> getAssignments() {
       return assignments.values();
     }
 
-    /** Records an assignment to a variable. */
+    /// Records an assignment to a variable.
     private void recordAssignment(Tree tree, InitializationContext init) {
       Symbol sym = getSymbol(tree);
       if (sym != null && sym.getKind() == ElementKind.FIELD) {
@@ -161,7 +157,7 @@ public class FieldCanBeFinal extends BugChecker implements CompilationUnitTreeMa
       }
     }
 
-    /** Records an assignment to a variable. */
+    /// Records an assignment to a variable.
     private void recordAssignment(VarSymbol sym, InitializationContext init) {
       getDeclaration(sym).recordAssignment(init);
     }
@@ -170,13 +166,13 @@ public class FieldCanBeFinal extends BugChecker implements CompilationUnitTreeMa
       return assignments.computeIfAbsent(sym, VariableAssignments::new);
     }
 
-    /** Records a variable declaration. */
+    /// Records a variable declaration.
     private void recordDeclaration(VarSymbol sym, VariableTree tree, ClassTree enclosingClass) {
       getDeclaration(sym).recordDeclaration(tree, enclosingClass);
     }
   }
 
-  /** A record of all assignments to a specific variable in the current compilation unit. */
+  /// A record of all assignments to a specific variable in the current compilation unit.
   private static class VariableAssignments {
 
     private final VarSymbol sym;
@@ -190,19 +186,19 @@ public class FieldCanBeFinal extends BugChecker implements CompilationUnitTreeMa
       this.sym = sym;
     }
 
-    /** Records an assignment to the variable. */
+    /// Records an assignment to the variable.
     private void recordAssignment(InitializationContext init) {
       writes.add(init);
       totalWrites++;
     }
 
-    /** Records that a variable was declared in this compilation unit. */
+    /// Records that a variable was declared in this compilation unit.
     private void recordDeclaration(VariableTree tree, ClassTree enclosingClass) {
       this.declaration = tree;
       this.enclosingClass = enclosingClass;
     }
 
-    /** Returns true if the variable is effectively final. */
+    /// Returns true if the variable is effectively final.
     private boolean isEffectivelyFinal() {
       if (declaration == null) {
         return false;
@@ -275,11 +271,9 @@ public class FieldCanBeFinal extends BugChecker implements CompilationUnitTreeMa
     return Description.NO_MATCH;
   }
 
-  /**
-   * Returns true if adding {@code final} to the field is guaranteed to compile, checking that the
-   * field is either initialized at its declaration with no other writes, or initialized once in
-   * straight-line code before any reads or early returns.
-   */
+  /// Returns true if adding `final` to the field is guaranteed to compile, checking that the field
+  /// is either initialized at its declaration with no other writes, or initialized once in
+  /// straight-line code before any reads or early returns.
   private static boolean definitelyCanBeFinal(VariableAssignments var) {
     VarSymbol sym = var.sym;
     if (sym.getModifiers().contains(Modifier.VOLATILE)) {
@@ -350,16 +344,14 @@ public class FieldCanBeFinal extends BugChecker implements CompilationUnitTreeMa
     return nonDelegatingConstructors > 0 && var.totalWrites == nonDelegatingConstructors;
   }
 
-  /**
-   * Returns true if {@code statements} definitely initializes {@code sym} in straight-line code
-   * before any reads or early returns.
-   *
-   * <p>Note that {@link #mayRead} also visits the left-hand side of assignments, so any write to
-   * {@code sym} other than a top-level {@code sym = ...;} statement (such as {@code if (c) sym =
-   * 1;} or {@code foo(sym = 1)}) is treated as a read and causes this method to return {@code
-   * false}. Combined with checking {@code totalWrites == nonDelegatingConstructors}, this ensures
-   * the field is assigned on every path and never reassigned.
-   */
+  /// Returns true if `statements` definitely initializes `sym` in straight-line code before any
+  /// reads or early returns.
+  ///
+  /// Note that [#mayRead] also visits the left-hand side of assignments, so any write to `sym`
+  /// other than a top-level `sym = ...;` statement (such as `if (c) sym = 1;` or `foo(sym = 1)`) is
+  /// treated as a read and causes this method to return `false`. Combined with checking
+  /// `totalWrites == nonDelegatingConstructors`, this ensures the field is assigned on every path
+  /// and never reassigned.
   private static boolean isInitializedInStraightLine(
       List<? extends StatementTree> statements, VarSymbol sym) {
     for (StatementTree statement : statements) {
@@ -398,10 +390,8 @@ public class FieldCanBeFinal extends BugChecker implements CompilationUnitTreeMa
     return sym.isStatic() ? tree instanceof IdentifierTree : isThisAccess(tree);
   }
 
-  /**
-   * Returns true if {@code tree} is an unqualified identifier or a {@code this.x} member select.
-   * Callers are expected to check that {@code tree} resolves to the relevant field symbol.
-   */
+  /// Returns true if `tree` is an unqualified identifier or a `this.x` member select. Callers are
+  /// expected to check that `tree` resolves to the relevant field symbol.
   private static boolean isThisAccess(Tree tree) {
     return switch (tree) {
       case IdentifierTree ident -> true;
@@ -423,13 +413,11 @@ public class FieldCanBeFinal extends BugChecker implements CompilationUnitTreeMa
         && identifier.getName().contentEquals("this");
   }
 
-  /**
-   * Returns true if the tree may read the variable in a way that is subject to the definite
-   * assignment rules, i.e. using its simple name or qualified by {@code this}. Reads via other
-   * instances, and reads within the methods of nested classes, don't need the variable to be
-   * definitely assigned. (Field initializers and initializer blocks of nested classes are still
-   * scanned, since the compiler checks those in anonymous classes.)
-   */
+  /// Returns true if the tree may read the variable in a way that is subject to the definite
+  /// assignment rules, i.e. using its simple name or qualified by `this`. Reads via other
+  /// instances, and reads within the methods of nested classes, don't need the variable to be
+  /// definitely assigned. (Field initializers and initializer blocks of nested classes are still
+  /// scanned, since the compiler checks those in anonymous classes.)
   private static boolean mayRead(Tree tree, VarSymbol sym) {
     boolean[] result = {false};
     new TreeScanner<Void, Void>() {
@@ -465,7 +453,7 @@ public class FieldCanBeFinal extends BugChecker implements CompilationUnitTreeMa
     return result[0];
   }
 
-  /** Returns true for {@code this} and {@code Outer.this}, possibly parenthesized. */
+  /// Returns true for `this` and `Outer.this`, possibly parenthesized.
   private static boolean isThis(ExpressionTree tree) {
     return switch (stripParentheses(tree)) {
       case IdentifierTree identifier -> identifier.getName().contentEquals("this");
@@ -496,7 +484,7 @@ public class FieldCanBeFinal extends BugChecker implements CompilationUnitTreeMa
     return result[0];
   }
 
-  /** Record assignments to possibly-final variables in a compilation unit. */
+  /// Record assignments to possibly-final variables in a compilation unit.
   private final class FinalScanner extends TreePathScanner<Void, InitializationContext> {
 
     private final VariableAssignmentRecords writes;

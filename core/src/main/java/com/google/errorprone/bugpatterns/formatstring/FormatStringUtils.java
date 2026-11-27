@@ -43,7 +43,7 @@ import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
 import java.util.List;
 
-/** Format string utilities. */
+/// Format string utilities.
 public final class FormatStringUtils {
 
   private static final ClassName LOCALE = ClassName.of("java.util.Locale");

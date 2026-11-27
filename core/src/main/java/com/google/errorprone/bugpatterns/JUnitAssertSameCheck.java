@@ -29,26 +29,20 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import java.util.List;
 
-/**
- * Points out if an object is tested for reference equality to itself using JUnit library.
- *
- * @author bhagwani@google.com (Sumit Bhagwani)
- */
+/// Points out if an object is tested for reference equality to itself using JUnit library.
+///
+/// @author bhagwani@google.com (Sumit Bhagwani)
 @BugPattern(
     summary = "An object is tested for reference equality to itself using JUnit library.",
     severity = ERROR)
 public class JUnitAssertSameCheck extends BugChecker implements MethodInvocationTreeMatcher {
 
-  /**
-   * Cases:
-   *
-   * <ol>
-   *   <li>org.junit.Assert.assertSame(a, a);
-   *   <li>org.junit.Assert.assertSame("message", a, a);
-   *   <li>junit.framework.Assert.assertSame(a, a);
-   *   <li>junit.framework.Assert.assertSame("message", a, a);
-   * </ol>
-   */
+  /// Cases:
+  ///
+  /// 1. org.junit.Assert.assertSame(a, a);
+  /// 1. org.junit.Assert.assertSame("message", a, a);
+  /// 1. junit.framework.Assert.assertSame(a, a);
+  /// 1. junit.framework.Assert.assertSame("message", a, a);
   private static final Matcher<ExpressionTree> ASSERT_SAME_MATCHER =
       staticMethod().onClassAny("org.junit.Assert", "junit.framework.Assert").named("assertSame");
 

@@ -35,7 +35,7 @@ import com.sun.source.tree.NewClassTree;
 import com.sun.tools.javac.code.Type;
 import java.util.List;
 
-/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
+/// A [BugChecker]; see the associated [BugPattern] annotation for details.
 @BugPattern(
     summary =
         "Using IdentityHashMap with a boxed type as the key is risky since boxing may produce"

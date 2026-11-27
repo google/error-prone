@@ -42,9 +42,7 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import java.util.Arrays;
 import javax.lang.model.element.Modifier;
 
-/**
- * @author eaftan@google.com (Eddie Aftandilian)
- */
+/// @author eaftan@google.com (Eddie Aftandilian)
 @BugPattern(
     summary = "Overriding method is missing a call to overridden super method",
     severity = ERROR)
@@ -86,10 +84,8 @@ public class MissingSuperCall extends BugChecker
               .map(anno -> isType(anno.fullyQualifiedName()))
               .collect(ImmutableList.toImmutableList()));
 
-  /**
-   * Prevents abstract methods from being annotated with {@code @CallSuper} et al. It doesn't make
-   * sense to require overriders to call a method with no implementation.
-   */
+  /// Prevents abstract methods from being annotated with `@CallSuper` et al. It doesn't make sense
+  /// to require overriders to call a method with no implementation.
   @Override
   public Description matchAnnotation(AnnotationTree tree, VisitorState state) {
     if (!ANNOTATION_MATCHER.matches(tree, state)) {
@@ -120,10 +116,8 @@ public class MissingSuperCall extends BugChecker
         .build();
   }
 
-  /**
-   * Matches a method that overrides a method that has been annotated with {@code @CallSuper} et
-   * al., but does not call the super method.
-   */
+  /// Matches a method that overrides a method that has been annotated with `@CallSuper` et al., but
+  /// does not call the super method.
   @Override
   public Description matchMethod(MethodTree tree, VisitorState state) {
     MethodSymbol methodSym = ASTHelpers.getSymbol(tree);
@@ -163,7 +157,7 @@ public class MissingSuperCall extends BugChecker
         .build();
   }
 
-  /** Scans a tree looking for calls to a method that is overridden by the given one. */
+  /// Scans a tree looking for calls to a method that is overridden by the given one.
   private static final class FindSuperTreeScanner extends TreeScanner<Boolean, Void> {
     private final String overridingMethodName;
 
@@ -201,10 +195,8 @@ public class MissingSuperCall extends BugChecker
     }
   }
 
-  /**
-   * Given a {@link MethodSymbol}, returns a method name in the form "owningClass#methodName", e.g.
-   * "java.util.function.Function#apply".
-   */
+  /// Given a [MethodSymbol], returns a method name in the form "owningClass#methodName", e.g.
+  /// "java.util.function.Function#apply".
   private static String getMethodName(MethodSymbol methodSym) {
     return String.format("%s#%s", methodSym.owner, methodSym.getSimpleName());
   }

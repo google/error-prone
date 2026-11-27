@@ -44,7 +44,7 @@ import java.lang.annotation.ElementType;
 import java.util.List;
 import java.util.Set;
 
-/** A bugpattern; see the summary. */
+/// A bugpattern; see the summary.
 @BugPattern(
     summary =
         "Type-use nullability annotations should annotate the inner class, not the outer class"
@@ -98,10 +98,7 @@ public final class NullableOnContainingClass extends BugChecker
     return NO_MATCH;
   }
 
-  /**
-   * True if this annotation is only {@link TYPE_USE}, or only {@link TYPE_USE} and {@link
-   * TYPE_PARAMETER}.
-   */
+  /// True if this annotation is only [TYPE_USE], or only [TYPE_USE] and [TYPE_PARAMETER].
   private static boolean isOnlyTypeAnnotation(Symbol anno) {
     Set<ElementType> elementTypes = getTargetElementTypes(anno);
     return elementTypes != null

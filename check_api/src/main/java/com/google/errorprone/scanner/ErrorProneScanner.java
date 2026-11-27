@@ -172,11 +172,9 @@ import java.util.Map;
 import java.util.Set;
 import javax.tools.JavaFileObject;
 
-/**
- * Scans the parsed AST, looking for violations of any of the enabled checks.
- *
- * @author Alex Eagle (alexeagle@google.com)
- */
+/// Scans the parsed AST, looking for violations of any of the enabled checks.
+///
+/// @author Alex Eagle (alexeagle@google.com)
 public class ErrorProneScanner extends Scanner {
 
   private final com.google.errorprone.suppliers.Supplier<? extends Set<? extends Name>>
@@ -185,30 +183,24 @@ public class ErrorProneScanner extends Scanner {
   private final Map<String, SeverityLevel> severities;
   private final ImmutableSet<BugChecker> bugCheckers;
 
-  /**
-   * Create an error-prone scanner for the given checkers.
-   *
-   * @param checkers The checkers that this scanner should use.
-   */
+  /// Create an error-prone scanner for the given checkers.
+  ///
+  /// @param checkers The checkers that this scanner should use.
   public ErrorProneScanner(BugChecker... checkers) {
     this(Arrays.asList(checkers));
   }
 
-  /**
-   * Create an error-prone scanner for a non-hardcoded set of checkers.
-   *
-   * @param checkers The checkers that this scanner should use.
-   */
+  /// Create an error-prone scanner for a non-hardcoded set of checkers.
+  ///
+  /// @param checkers The checkers that this scanner should use.
   public ErrorProneScanner(Iterable<BugChecker> checkers) {
     this(checkers, defaultSeverities(checkers));
   }
 
-  /**
-   * Create an error-prone scanner for a non-hardcoded set of checkers.
-   *
-   * @param checkers The checkers that this scanner should use.
-   * @param severities The default check severities.
-   */
+  /// Create an error-prone scanner for a non-hardcoded set of checkers.
+  ///
+  /// @param checkers The checkers that this scanner should use.
+  /// @param severities The default check severities.
   public ErrorProneScanner(Iterable<BugChecker> checkers, Map<String, SeverityLevel> severities) {
     this.bugCheckers = ImmutableSet.copyOf(checkers);
     this.severities = severities;
@@ -1115,11 +1107,9 @@ public class ErrorProneScanner extends Scanner {
     return super.visitYield(tree, state);
   }
 
-  /**
-   * Handles an exception thrown by an individual BugPattern. By default, wraps the exception in an
-   * {@link ErrorProneError} and rethrows. May be overridden by subclasses, for example to log the
-   * error and continue.
-   */
+  /// Handles an exception thrown by an individual BugPattern. By default, wraps the exception in an
+  /// [ErrorProneError] and rethrows. May be overridden by subclasses, for example to log the error
+  /// and continue.
   @Override
   protected void handleError(Suppressible s, Throwable t) {
     if (t instanceof ErrorProneError errorProneError) {

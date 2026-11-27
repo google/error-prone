@@ -20,7 +20,7 @@ import com.sun.source.tree.Tree;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
 
-/** A {@link DiagnosticPosition} with a fixed position. */
+/// A [DiagnosticPosition] with a fixed position.
 public record FixedPosition(JCTree tree, int startPosition, int endPosition)
     implements ErrorPronePosition {
 

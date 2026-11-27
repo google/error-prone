@@ -36,11 +36,9 @@ import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Types;
 
-/**
- * Checks unsafe instance creation via reflection.
- *
- * @author bhagwani@google.com (Sumit Bhagwani)
- */
+/// Checks unsafe instance creation via reflection.
+///
+/// @author bhagwani@google.com (Sumit Bhagwani)
 @BugPattern(
     summary =
         "Prefer `asSubclass` instead of casting the result of `newInstance`,"

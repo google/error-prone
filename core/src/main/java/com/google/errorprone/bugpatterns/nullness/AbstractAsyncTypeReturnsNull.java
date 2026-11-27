@@ -43,10 +43,8 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
 import java.util.stream.Stream;
 
-/**
- * Superclass for checks that implementations of null-hostile abstract methods do not return
- * definitely null values.
- */
+/// Superclass for checks that implementations of null-hostile abstract methods do not return
+/// definitely null values.
 abstract class AbstractAsyncTypeReturnsNull extends BugChecker
     implements ReturnTreeMatcher, LambdaExpressionTreeMatcher {
   private final Class<?> asyncClass;

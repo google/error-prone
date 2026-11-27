@@ -42,7 +42,7 @@ import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.TypeTag;
 import org.safere.Pattern;
 
-/** Matches {@code AutoValue_} uses outside the containing file. */
+/// Matches `AutoValue_` uses outside the containing file.
 @BugPattern(
     severity = WARNING,
     summary =

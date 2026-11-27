@@ -23,7 +23,7 @@ import com.sun.tools.javac.util.Context;
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
 
-/** Combines multiple {@code CodeTransformer}s into one. */
+/// Combines multiple `CodeTransformer`s into one.
 public record CompositeCodeTransformer(ImmutableList<CodeTransformer> transformers)
     implements CodeTransformer, Serializable {
   public static CodeTransformer compose(CodeTransformer... transformers) {

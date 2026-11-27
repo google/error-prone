@@ -21,7 +21,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-/** A FileSource that reads source files from the local filesystem. */
+/// A FileSource that reads source files from the local filesystem.
 public final class FsFileSource implements FileSource {
 
   private final Path rootPath;

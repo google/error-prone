@@ -28,16 +28,15 @@ import com.sun.tools.javac.util.Name;
 import java.lang.annotation.Annotation;
 import java.util.Set;
 
-/** Helpers for handling suppression annotations in refaster. */
+/// Helpers for handling suppression annotations in refaster.
 final class RefasterSuppressionHelper {
 
-  /**
-   * Returns true if the given rule is suppressed on the given tree.
-   *
-   * <p>Unlike Error Prone, which scans the compilation unit once for all checks, refaster scans the
-   * compilation unit separately for each check. This simplifies suppression handling, since we can
-   * just stop recursively scanning as soon as a suppression is found for the current refaster rule.
-   */
+  /// Returns true if the given rule is suppressed on the given tree.
+  ///
+  /// Unlike Error Prone, which scans the compilation unit once for all checks, refaster scans the
+  /// compilation unit separately for each check. This simplifies suppression handling, since we can
+  /// just stop recursively scanning as soon as a suppression is found for the current refaster
+  /// rule.
   static boolean suppressed(RefasterRule<?, ?> rule, Tree tree, Context context) {
     VisitorState state = VisitorState.createForUtilityPurposes(context);
     Symbol sym = ASTHelpers.getDeclaredSymbol(tree);
@@ -52,7 +51,7 @@ final class RefasterSuppressionHelper {
         .equals(SuppressionInfo.SuppressedState.SUPPRESSED);
   }
 
-  /** Adapts a {@link RefasterRule<?, ?>} into a {@link Suppressible}. */
+  /// Adapts a [`RefasterRule<?, ?>`][RefasterRule] into a [Suppressible].
   private record RefasterSuppressible(RefasterRule<?, ?> rule) implements Suppressible {
     @Override
     public Set<String> allNames() {

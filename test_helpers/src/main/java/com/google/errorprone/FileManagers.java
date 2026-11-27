@@ -28,6 +28,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.jimfs.Jimfs;
 import com.sun.tools.javac.file.CacheFSInfo;
 import com.sun.tools.javac.file.JavacFileManager;
+import com.sun.tools.javac.main.Option;
 import com.sun.tools.javac.util.Context;
 import java.io.File;
 import java.io.IOException;
@@ -38,12 +39,10 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import javax.tools.StandardLocation;
 
-/**
- * Manages {@link JavacFileManager}s for use in Error Prone's test.
- *
- * <p>The file manager does some expensive IO to process the platform and user classpaths, so we
- * re-use the same filemanager instance across multiple tests to re-use that work.
- */
+/// Manages [JavacFileManager]s for use in Error Prone's test.
+///
+/// The file manager does some expensive IO to process the platform and user classpaths, so we
+/// re-use the same filemanager instance across multiple tests to re-use that work.
 public final class FileManagers {
 
   // The file manager isn't thread-safe, so keep one instance per thread instead of using static
@@ -61,7 +60,7 @@ public final class FileManagers {
     return new JavacFileManager(context, /* register= */ false, UTF_8);
   }
 
-  /** Returns a {@link JavacFileManager} for use in compiler-based tests. */
+  /// Returns a [JavacFileManager] for use in compiler-based tests.
   public static JavacFileManager testFileManager() {
     JavacFileManager fileManager = FILE_MANAGER.get();
 
@@ -85,10 +84,21 @@ public final class FileManagers {
         .forEach(outputLocation ->
             setLocation(fileManager, ImmutableList.of(tempDirectory), outputLocation));
 
+    // Clear annotation processor locations that a prior test on this thread may have configured.
+    // Use the internal handleOption(Option, null) because setLocation(..., null) delegates to
+    // SimpleLocationHandler.setPaths(null) (which leaves a non-null empty SearchPath, so
+    // hasLocation still returns true), and setLocationFromPaths(..., null) throws NPE.
+    if (fileManager.hasLocation(StandardLocation.ANNOTATION_PROCESSOR_PATH)) {
+      fileManager.handleOption(Option.PROCESSOR_PATH, null);
+    }
+    if (fileManager.hasLocation(StandardLocation.ANNOTATION_PROCESSOR_MODULE_PATH)) {
+      fileManager.handleOption(Option.PROCESSOR_MODULE_PATH, null);
+    }
+
     return fileManager;
   }
 
-  /** Returns the current runtime's classpath. */
+  /// Returns the current runtime's classpath.
   private static ImmutableList<Path> systemClassPath() {
     // splitToStream isn't available if Android guava is on the classpath
     return stream(Splitter.on(File.pathSeparatorChar).split(JAVA_CLASS_PATH.value()))

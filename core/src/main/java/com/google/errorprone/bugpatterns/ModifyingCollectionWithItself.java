@@ -47,9 +47,7 @@ import java.util.List;
 import java.util.function.Predicate;
 import javax.lang.model.element.ElementKind;
 
-/**
- * @author scottjohnson@google.com (Scott Johnson)
- */
+/// @author scottjohnson@google.com (Scott Johnson)
 @BugPattern(summary = "Using a collection function with itself as the argument.", severity = ERROR)
 public class ModifyingCollectionWithItself extends BugChecker
     implements MethodInvocationTreeMatcher {
@@ -71,7 +69,7 @@ public class ModifyingCollectionWithItself extends BugChecker
             receiverSameAsArgument(1)));
   }
 
-  /** Matches calls to addAll, containsAll, removeAll, and retainAll on itself */
+  /// Matches calls to addAll, containsAll, removeAll, and retainAll on itself
   @Override
   public Description matchMethodInvocation(MethodInvocationTree t, VisitorState state) {
     if (IS_COLLECTION_MODIFIED_WITH_ITSELF.matches(t, state)) {
@@ -80,21 +78,19 @@ public class ModifyingCollectionWithItself extends BugChecker
     return Description.NO_MATCH;
   }
 
-  /**
-   * We expect that the lhs is a field and the rhs is an identifier, specifically a parameter to the
-   * method. We base our suggested fixes on this expectation.
-   *
-   * <p>Case 1: If lhs is a field and rhs is an identifier, find a method parameter of the same type
-   * and similar name and suggest it as the rhs. (Guess that they have misspelled the identifier.)
-   *
-   * <p>Case 2: If lhs is a field and rhs is not an identifier, find a method parameter of the same
-   * type and similar name and suggest it as the rhs.
-   *
-   * <p>Case 3: If lhs is not a field and rhs is an identifier, find a class field of the same type
-   * and similar name and suggest it as the lhs.
-   *
-   * <p>Case 4: Otherwise replace with literal meaning of functionality
-   */
+  /// We expect that the lhs is a field and the rhs is an identifier, specifically a parameter to
+  /// the method. We base our suggested fixes on this expectation.
+  ///
+  /// Case 1: If lhs is a field and rhs is an identifier, find a method parameter of the same type
+  /// and similar name and suggest it as the rhs. (Guess that they have misspelled the identifier.)
+  ///
+  /// Case 2: If lhs is a field and rhs is not an identifier, find a method parameter of the same
+  /// type and similar name and suggest it as the rhs.
+  ///
+  /// Case 3: If lhs is not a field and rhs is an identifier, find a class field of the same type
+  /// and similar name and suggest it as the lhs.
+  ///
+  /// Case 4: Otherwise replace with literal meaning of functionality
   private Description describe(MethodInvocationTree methodInvocationTree, VisitorState state) {
     ExpressionTree receiver = ASTHelpers.getReceiver(methodInvocationTree);
 

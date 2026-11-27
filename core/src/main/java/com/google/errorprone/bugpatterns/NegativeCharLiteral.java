@@ -35,7 +35,7 @@ import com.google.errorprone.suppliers.Suppliers;
 import com.sun.source.tree.LiteralTree;
 import com.sun.source.tree.TypeCastTree;
 
-/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
+/// A [BugChecker]; see the associated [BugPattern] annotation for details.
 @BugPattern(
     summary = "Casting a negative signed literal to an (unsigned) char might be misleading.",
     severity = WARNING)

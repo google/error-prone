@@ -24,7 +24,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** Unit tests for the missing fail matcher. */
+/// Unit tests for the missing fail matcher.
 @RunWith(JUnit4.class)
 public class MissingFailTest {
 

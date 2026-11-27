@@ -54,7 +54,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.safere.Pattern;
 
-/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
+/// A [BugChecker]; see the associated [BugPattern] annotation for details.
 @BugPattern(
     summary =
         "Implicit use of the JVM default locale, which can result in differing behaviour between"
@@ -450,11 +450,9 @@ public class DefaultLocale extends BugChecker
     return description.build();
   }
 
-  /**
-   * Should only refactor String.format() and similar methods' invocations where specifiers aren't
-   * locale-dependent. For %s this includes checking for non-Formattable arguments. Format strings
-   * (first argument) as variables or constants are excluded from refactoring.
-   */
+  /// Should only refactor String.format() and similar methods' invocations where specifiers aren't
+  /// locale-dependent. For %s this includes checking for non-Formattable arguments. Format strings
+  /// (first argument) as variables or constants are excluded from refactoring.
   private boolean shouldRefactorStringFormat(
       ExpressionTree pattern, List<? extends ExpressionTree> arguments, VisitorState state) {
     String patternValue = ASTHelpers.constValue(pattern, String.class);

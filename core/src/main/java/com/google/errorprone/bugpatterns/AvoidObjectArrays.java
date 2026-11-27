@@ -40,7 +40,7 @@ import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Type.ArrayType;
 import javax.lang.model.element.ElementKind;
 
-/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
+/// A [BugChecker]; see the associated [BugPattern] annotation for details.
 @BugPattern(
     summary =
         "Object arrays are inferior to collections in almost every way. Prefer immutable"
@@ -107,7 +107,7 @@ public class AvoidObjectArrays extends BugChecker implements MethodTreeMatcher {
     return buildDescription(tree).setMessage(message).build();
   }
 
-  /** Returns whether the tree represents an object array or not. */
+  /// Returns whether the tree represents an object array or not.
   private static boolean isObjectArray(Tree tree) {
     return getType(tree) instanceof ArrayType arrayType
         && !arrayType.getComponentType().isPrimitive();

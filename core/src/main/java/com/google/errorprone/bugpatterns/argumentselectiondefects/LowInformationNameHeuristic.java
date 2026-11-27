@@ -22,13 +22,11 @@ import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import org.jspecify.annotations.Nullable;
 
-/**
- * A heuristic for checking if a formal parameter matches a predefined set of words which have been
- * identified as ones which don't have a reliable similarity score. Typically these are words which
- * are used in many different contexts e.g. {@code key}, {@code value}, {@code str0}.
- *
- * @author andrewrice@google.com (Andrew Rice)
- */
+/// A heuristic for checking if a formal parameter matches a predefined set of words which have been
+/// identified as ones which don't have a reliable similarity score. Typically these are words which
+/// are used in many different contexts e.g. `key`, `value`, `str0`.
+///
+/// @author andrewrice@google.com (Andrew Rice)
 final class LowInformationNameHeuristic implements Heuristic {
 
   private static final ImmutableSet<String> DEFAULT_FORMAL_PARAMETER_EXCLUSION_REGEXS =
@@ -45,20 +43,16 @@ final class LowInformationNameHeuristic implements Heuristic {
     this(DEFAULT_FORMAL_PARAMETER_EXCLUSION_REGEXS);
   }
 
-  /**
-   * Return true if this parameter does not match any of the regular expressions in the list of
-   * overloaded words.
-   */
+  /// Return true if this parameter does not match any of the regular expressions in the list of
+  /// overloaded words.
   @Override
   public boolean isAcceptableChange(
       Changes changes, Tree node, MethodSymbol symbol, VisitorState state) {
     return changes.changedPairs().stream().allMatch(p -> findMatch(p.formal()) == null);
   }
 
-  /**
-   * Return the first regular expression from the list of overloaded words which matches the
-   * parameter name.
-   */
+  /// Return the first regular expression from the list of overloaded words which matches the
+  /// parameter name.
   protected @Nullable String findMatch(Parameter parameter) {
     return overloadedNamesRegexs.stream()
         .filter(r -> parameter.name().matches(r))

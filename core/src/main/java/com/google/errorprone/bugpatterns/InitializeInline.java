@@ -40,10 +40,8 @@ import com.sun.tools.javac.util.Position;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Bugpattern to encourage initializing effectively final variables inline with their declaration,
- * if possible.
- */
+/// Bugpattern to encourage initializing effectively final variables inline with their declaration,
+/// if possible.
 @BugPattern(
     summary = "Initializing variables in their declaring statement is clearer, where possible.",
     severity = WARNING)

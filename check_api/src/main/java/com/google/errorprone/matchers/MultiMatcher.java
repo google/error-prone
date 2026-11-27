@@ -23,27 +23,23 @@ import com.google.errorprone.VisitorState;
 import com.sun.source.tree.Tree;
 import java.util.List;
 
-/**
- * An matcher that applies a single matcher across multiple tree nodes.
- *
- * @author eaftan@google.com (Eddie Aftandilian)
- * @param <T> the type of the node to match on
- * @param <N> the type of the subnode that the given matcher should match
- */
+/// An matcher that applies a single matcher across multiple tree nodes.
+///
+/// @author eaftan@google.com (Eddie Aftandilian)
+/// @param <T> the type of the node to match on
+/// @param <N> the type of the subnode that the given matcher should match
 public interface MultiMatcher<T extends Tree, N extends Tree> extends Matcher<T> {
 
-  /** Attempt to match the given node, and return the associated subnodes that matched. */
+  /// Attempt to match the given node, and return the associated subnodes that matched.
   MultiMatchResult<N> multiMatchResult(T tree, VisitorState vs);
 
-  /**
-   * A result from the call of {@link MultiMatcher#multiMatchResult(Tree, VisitorState)}, containing
-   * information about whether it matched, and if so, what nodes matched.
-   *
-   * @param matches True if the MultiMatcher matched the nodes expected.
-   * @param matchingNodes The list of nodes which matched the MultiMatcher's expectations (could be
-   *     empty if the match type was ALL and there were no child nodes). Only sensical if {@link
-   *     #matches()} is true.
-   */
+  /// A result from the call of [MultiMatcher#multiMatchResult(Tree, VisitorState)], containing
+  /// information about whether it matched, and if so, what nodes matched.
+  ///
+  /// @param matches True if the MultiMatcher matched the nodes expected.
+  /// @param matchingNodes The list of nodes which matched the MultiMatcher's expectations (could be
+  ///   empty if the match type was ALL and there were no child nodes). Only sensical if
+  ///   [#matches()] is true.
   public record MultiMatchResult<N extends Tree>(boolean matches, ImmutableList<N> matchingNodes) {
     public final N onlyMatchingNode() {
       return getOnlyElement(matchingNodes());

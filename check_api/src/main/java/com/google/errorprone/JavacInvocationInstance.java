@@ -17,12 +17,10 @@ package com.google.errorprone;
 
 import com.sun.tools.javac.util.Context;
 
-/**
- * A token uniquely identifying a single invocation of javac. Any caches which might otherwise
- * persist indefinitely should be reset if they detect that the JavacInvocationInstance inside their
- * {@link Context} has changed. The only meaningful way to compare JavacInvocationInstance objects
- * is by their object identity, as they have no properties.
- */
+/// A token uniquely identifying a single invocation of javac. Any caches which might otherwise
+/// persist indefinitely should be reset if they detect that the JavacInvocationInstance inside
+/// their [Context] has changed. The only meaningful way to compare JavacInvocationInstance objects
+/// is by their object identity, as they have no properties.
 public final class JavacInvocationInstance {
   public static JavacInvocationInstance instance(Context context) {
     JavacInvocationInstance instance = context.get(JavacInvocationInstance.class);

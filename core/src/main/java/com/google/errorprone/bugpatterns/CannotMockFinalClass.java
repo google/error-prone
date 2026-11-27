@@ -43,11 +43,9 @@ import com.sun.source.tree.VariableTree;
 import com.sun.tools.javac.code.Type;
 import javax.lang.model.element.Modifier;
 
-/**
- * Bug pattern to recognize attempts to mock final types.
- *
- * @author Louis Wasserman
- */
+/// Bug pattern to recognize attempts to mock final types.
+///
+/// @author Louis Wasserman
 @BugPattern(summary = "Mockito cannot mock final classes", severity = SeverityLevel.WARNING)
 public class CannotMockFinalClass extends BugChecker
     implements MethodInvocationTreeMatcher, VariableTreeMatcher {

@@ -44,42 +44,37 @@ import com.sun.tools.javac.code.Symbol.VarSymbol;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * Utility methods for refactoring try-fail pattern to assertThrows, which is preferred. Used by
- * {@link TryFailRefactoring} and {@link MissingFail}.
- */
+/// Utility methods for refactoring try-fail pattern to assertThrows, which is preferred. Used by
+/// [TryFailRefactoring] and [MissingFail].
 public final class AssertThrowsUtils {
 
-  /**
-   * Transforms a try-catch block in the try-fail pattern into a call to JUnit's {@code
-   * assertThrows}, inserting the behavior of the {@code try} block into a lambda parameter, and
-   * assigning the thrown exception to a variable, if it is used within the {@code catch} block. For
-   * example:
-   *
-   * <pre>
-   * try {
-   *   foo();
-   *   fail();
-   * } catch (MyException thrown) {
-   *   assertThat(thrown).isEqualTo(other);
-   * }
-   * </pre>
-   *
-   * becomes
-   *
-   * <pre>
-   * {@code MyException thrown = assertThrows(MyException.class, () -> foo());}
-   * assertThat(thrown).isEqualTo(other);
-   * </pre>
-   *
-   * @param tryTree the tree representing the try-catch block to be refactored.
-   * @param throwingStatements the list of statements in the {@code throw} clause, <b>excluding</b>
-   *     the fail statement.
-   * @param state current visitor state (for source positions).
-   * @return an {@link Optional} containing a {@link Fix} that replaces {@code tryTree} with an
-   *     equivalent {@code assertThrows}, if possible. Returns an {@code Optional.empty()} if a fix
-   *     could not be constructed for the given code (e.g. multi-catch).
-   */
+  /// Transforms a try-catch block in the try-fail pattern into a call to JUnit's `assertThrows`,
+  /// inserting the behavior of the `try` block into a lambda parameter, and assigning the thrown
+  /// exception to a variable, if it is used within the `catch` block. For example:
+  ///
+  /// ```
+  /// try {
+  ///   foo();
+  ///   fail();
+  /// } catch (MyException thrown) {
+  ///   assertThat(thrown).isEqualTo(other);
+  /// }
+  /// ```
+  ///
+  /// becomes
+  ///
+  /// ```
+  /// MyException thrown = assertThrows(MyException.class, () -> foo());
+  /// assertThat(thrown).isEqualTo(other);
+  /// ```
+  ///
+  /// @param tryTree the tree representing the try-catch block to be refactored.
+  /// @param throwingStatements the list of statements in the `throw` clause, **excluding** the fail
+  ///   statement.
+  /// @param state current visitor state (for source positions).
+  /// @return an [Optional] containing a [Fix] that replaces `tryTree` with an equivalent
+  ///   `assertThrows`, if possible. Returns an `Optional.empty()` if a fix could not be constructed
+  ///   for the given code (e.g. multi-catch).
   public static Optional<Fix> tryFailToAssertThrows(
       TryTree tryTree,
       List<? extends StatementTree> throwingStatements,

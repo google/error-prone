@@ -34,9 +34,8 @@ import com.sun.tools.javac.code.Type;
 import javax.lang.model.type.TypeKind;
 import org.jspecify.annotations.Nullable;
 
-/**
- * Detects Flogger log statements that pass Exceptions to the log method instead of using withCause.
- */
+/// Detects Flogger log statements that pass Exceptions to the log method instead of using
+/// withCause.
 @BugPattern(
     summary = "Use withCause to associate Exceptions with log statements",
     severity = BugPattern.SeverityLevel.WARNING)

@@ -65,10 +65,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-/**
- * Discourages using multiple names to refer to the same type within a file (e.g. both {@code
- * OuterClass.InnerClass} and {@code InnerClass}).
- */
+/// Discourages using multiple names to refer to the same type within a file (e.g. both
+/// `OuterClass.InnerClass` and `InnerClass`).
 @BugPattern(
     severity = SeverityLevel.WARNING,
     summary =
@@ -229,13 +227,10 @@ public final class DifferentNameButSame extends BugChecker implements Compilatio
         || tree instanceof VariableTree;
   }
 
-  /**
-   * Checks whether the symbol with {@code name} is visible from the position encoded in {@code
-   * state}.
-   *
-   * <p>This is not fool-proof by any means: it doesn't check that the symbol actually has the same
-   * meaning.
-   */
+  /// Checks whether the symbol with `name` is visible from the position encoded in `state`.
+  ///
+  /// This is not fool-proof by any means: it doesn't check that the symbol actually has the same
+  /// meaning.
   private static boolean visibleAndReferToSameThing(
       String name, ImmutableList<TreePath> locations, VisitorState state) {
     String firstComponent = name.contains(".") ? name.substring(0, name.indexOf(".")) : name;

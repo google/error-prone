@@ -50,11 +50,9 @@ import java.util.Optional;
 import java.util.Set;
 import javax.lang.model.element.ElementKind;
 
-/**
- * Checks if class constructor and members are both annotated as @Inject.
- *
- * @author bhagwani@google.com (Sumit Bhagwani)
- */
+/// Checks if class constructor and members are both annotated as @Inject.
+///
+/// @author bhagwani@google.com (Sumit Bhagwani)
 @BugPattern(
     summary =
         "Members shouldn't be annotated with @Inject if constructor is already annotated @Inject",

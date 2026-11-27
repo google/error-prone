@@ -38,18 +38,16 @@ import com.sun.source.util.TreePath;
 import com.sun.tools.javac.code.Type;
 import javax.lang.model.type.TypeKind;
 
-/**
- * Check for usage of {@code Objects.equal} on primitive types.
- *
- * @author vlk@google.com (Volodymyr Kachurovskyi)
- */
+/// Check for usage of `Objects.equal` on primitive types.
+///
+/// @author vlk@google.com (Volodymyr Kachurovskyi)
 @BugPattern(
     summary = "Avoid unnecessary boxing by using == (or !=) when comparing primitive types.",
     tags = StandardTags.PERFORMANCE,
     severity = WARNING)
 public class ObjectEqualsForPrimitives extends BugChecker implements MethodInvocationTreeMatcher {
 
-  /** Matches when {@link java.util.Objects#equals}-like methods compare two primitive types. */
+  /// Matches when [java.util.Objects#equals]-like methods compare two primitive types.
   private static final Matcher<MethodInvocationTree> MATCHER =
       allOf(
           staticEqualsInvocation(), argument(0, isPrimitiveType()), argument(1, isPrimitiveType()));

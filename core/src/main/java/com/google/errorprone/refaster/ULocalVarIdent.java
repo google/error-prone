@@ -24,14 +24,12 @@ import com.sun.tools.javac.tree.JCTree.JCIdent;
 import java.util.Objects;
 import java.util.Optional;
 
-/**
- * Identifier corresponding to a template local variable.
- *
- * @author lowasser@google.com (Louis Wasserman)
- */
+/// Identifier corresponding to a template local variable.
+///
+/// @author lowasser@google.com (Louis Wasserman)
 @AutoValue
 abstract class ULocalVarIdent extends UIdent {
-  /** A key in a {@code Bindings} associated with a local variable of the specified name. */
+  /// A key in a `Bindings` associated with a local variable of the specified name.
   static final class Key extends Bindings.Key<LocalVarBinding> {
     Key(CharSequence name) {
       super(name.toString());

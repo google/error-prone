@@ -36,7 +36,7 @@ import com.sun.tools.javac.code.Type;
 import java.util.Optional;
 import javax.inject.Inject;
 
-/** Flags calls to {@code toString} on lite protos. */
+/// Flags calls to `toString` on lite protos.
 @BugPattern(
     summary =
         "toString() on lite protos will not generate a useful representation of the proto from"

@@ -47,10 +47,8 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
 import javax.lang.model.element.Modifier;
 
-/**
- * If a method always throws an exception, consider annotating it with {@code @DoNotCall} to prevent
- * calls at compile-time instead failing at runtime.
- */
+/// If a method always throws an exception, consider annotating it with `@DoNotCall` to prevent
+/// calls at compile-time instead failing at runtime.
 @BugPattern(
     summary =
         "Consider annotating methods that always throw with @DoNotCall. "

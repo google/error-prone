@@ -21,12 +21,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * {@link ThreadPriorityCheck}Test
- *
- * @author siyuanl@google.com (Siyuan Liu)
- * @author eleanorh@google.com (Eleanor Harris)
- */
+/// [ThreadPriorityCheck]Test
+///
+/// @author siyuanl@google.com (Siyuan Liu)
+/// @author eleanorh@google.com (Eleanor Harris)
 @RunWith(JUnit4.class)
 public final class ThreadPriorityCheckTest {
 

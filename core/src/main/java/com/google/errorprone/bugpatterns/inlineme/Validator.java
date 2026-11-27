@@ -46,7 +46,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import javax.inject.Inject;
 
-/** Checker that ensures the {@code @InlineMe} annotation is used correctly. */
+/// Checker that ensures the `@InlineMe` annotation is used correctly.
 @BugPattern(
     name = "InlineMeValidator",
     summary = "Ensures that the @InlineMe annotation is used correctly.",
@@ -80,7 +80,7 @@ public final class Validator extends BugChecker implements MethodTreeMatcher {
     }
   }
 
-  /** Whether or not the API should be deleted when run in cleanup mode. */
+  /// Whether or not the API should be deleted when run in cleanup mode.
   private boolean shouldDelete(MethodTree tree, VisitorState state) {
     // We don't delete @InlineMe APIs that are:
     //   * annotated with @InlineMeValidationDisabled (this stops us from deleting default methods)
@@ -183,7 +183,7 @@ public final class Validator extends BugChecker implements MethodTreeMatcher {
     return mismatches;
   }
 
-  /** Determines if the first and second token strings are equivalent. */
+  /// Determines if the first and second token strings are equivalent.
   private static boolean parseAndCheckForTokenEquivalence(
       String first, String second, Context context) {
     ImmutableList<ErrorProneToken> tokens1 = ErrorProneTokens.getTokens(first, context);

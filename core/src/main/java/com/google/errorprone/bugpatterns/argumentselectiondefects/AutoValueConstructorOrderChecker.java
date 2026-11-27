@@ -29,17 +29,15 @@ import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Symbol;
 import java.util.function.Function;
 
-/**
- * Checker to make sure that constructors for AutoValue types are invoked with arguments in the
- * correct order.
- *
- * <p>Warning: this check relies on recovering parameter names from library class files. These names
- * are only included if you compile with debugging symbols (-g) or with -parameters. You also need
- * to tell the compiler to read these names from the classfiles and so must compile your project
- * with -parameters too.
- *
- * @author andrewrice@google.com (Andrew Rice)
- */
+/// Checker to make sure that constructors for AutoValue types are invoked with arguments in the
+/// correct order.
+///
+/// Warning: this check relies on recovering parameter names from library class files. These names
+/// are only included if you compile with debugging symbols (-g) or with -parameters. You also need
+/// to tell the compiler to read these names from the classfiles and so must compile your project
+/// with -parameters too.
+///
+/// @author andrewrice@google.com (Andrew Rice)
 @BugPattern(summary = "Arguments to AutoValue constructor are in the wrong order", severity = ERROR)
 public final class AutoValueConstructorOrderChecker extends BugChecker
     implements NewClassTreeMatcher {

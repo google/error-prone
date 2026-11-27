@@ -22,10 +22,8 @@ import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.NewArrayTree;
 
-/**
- * @author eaftan@google.com (Eddie Aftandilian)
- * @author pepstein@google.com (Peter Epstein)
- */
+/// @author eaftan@google.com (Eddie Aftandilian)
+/// @author pepstein@google.com (Peter Epstein)
 public class AnnotationHasArgumentWithValue implements Matcher<AnnotationTree> {
 
   private final String element;

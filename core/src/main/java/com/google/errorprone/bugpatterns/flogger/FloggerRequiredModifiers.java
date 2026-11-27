@@ -73,7 +73,7 @@ import javax.inject.Inject;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.NestingKind;
 
-/** Ensures that class-level FluentLogger objects are private static final. */
+/// Ensures that class-level FluentLogger objects are private static final.
 @BugPattern(
     summary =
         "FluentLogger.forEnclosingClass should always be saved to a private static final field.",
@@ -95,7 +95,7 @@ public final class FloggerRequiredModifiers extends BugChecker
   private static final ImmutableList<Modifier> EXPECTED_MODIFIERS =
       ImmutableList.of(Modifier.PRIVATE, STATIC, FINAL);
 
-  /** A list of names we could give to new fields of type Logger, in descending preference order. */
+  /// A list of names we could give to new fields of type Logger, in descending preference order.
   private static final ImmutableList<String> REASONABLE_LOGGER_NAMES =
       ImmutableList.of("logger", "flogger", "googleLogger", "myLogger");
 
@@ -407,10 +407,8 @@ public final class FloggerRequiredModifiers extends BugChecker
     return rehomeLogger(tree, state);
   }
 
-  /**
-   * If the expression refers to a FluentLogger owned by a class in another file, rewrites it to
-   * refer to a logger in this file, defining one if necessary.
-   */
+  /// If the expression refers to a FluentLogger owned by a class in another file, rewrites it to
+  /// refer to a logger in this file, defining one if necessary.
   private Description rehomeLogger(ExpressionTree tree, VisitorState state) {
     Symbol sym = ASTHelpers.getSymbol(tree);
     if (sym == null) {
@@ -467,10 +465,8 @@ public final class FloggerRequiredModifiers extends BugChecker
     return result;
   }
 
-  /**
-   * Fields which we should not use to replace the current expression, because we are in the middle
-   * of defining them.
-   */
+  /// Fields which we should not use to replace the current expression, because we are in the middle
+  /// of defining them.
   private static ImmutableSet<Symbol> fieldsToIgnore(VisitorState state) {
     Tree t = state.findEnclosing(VariableTree.class, ClassTree.class);
     return t instanceof VariableTree ? ImmutableSet.of(ASTHelpers.getSymbol(t)) : ImmutableSet.of();

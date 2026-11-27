@@ -52,10 +52,10 @@ import javax.lang.model.element.Modifier;
 import javax.lang.model.type.TypeKind;
 import org.jspecify.annotations.Nullable;
 
-/** Analyzes types for deep immutability. */
+/// Analyzes types for deep immutability.
 public final class ImmutableAnalysis {
 
-  /** Factory for {@link ImmutableAnalysis}. */
+  /// Factory for [ImmutableAnalysis].
   public static final class Factory {
     private final WellKnownMutability wellKnownMutability;
 
@@ -115,7 +115,7 @@ public final class ImmutableAnalysis {
     return threadSafety.checkInvocation(methodType, symbol);
   }
 
-  /** Accepts {@link Violation violations} that are found during the analysis. */
+  /// Accepts [`violations`][Violation] that are found during the analysis.
   @FunctionalInterface
   public interface ViolationReporter {
     Description.Builder describe(Tree tree, Violation info);
@@ -128,18 +128,14 @@ public final class ImmutableAnalysis {
     }
   }
 
-  /**
-   * Check that an {@code @Immutable}-annotated class:
-   *
-   * <ul>
-   *   <li>does not declare or inherit any mutable fields,
-   *   <li>any immutable supertypes are instantiated with immutable type arguments as required by
-   *       their containerOf spec, and
-   *   <li>any enclosing instances are immutable.
-   * </ul>
-   *
-   * requiring supertypes to be annotated immutable would be too restrictive.
-   */
+  /// Check that an `@Immutable`-annotated class:
+  ///
+  /// - does not declare or inherit any mutable fields,
+  /// - any immutable supertypes are instantiated with immutable type arguments as required by their
+  ///   containerOf spec, and
+  /// - any enclosing instances are immutable.
+  ///
+  /// requiring supertypes to be annotated immutable would be too restrictive.
   public Violation checkForImmutability(
       Optional<ClassTree> tree,
       ImmutableSet<String> immutableTyParams,
@@ -222,12 +218,10 @@ public final class ImmutableAnalysis {
     return info.plus(message);
   }
 
-  /**
-   * Check a single class' fields for immutability.
-   *
-   * @param immutableTyParams the in-scope immutable type parameters
-   * @param classType the type to check the fields of
-   */
+  /// Check a single class' fields for immutability.
+  ///
+  /// @param immutableTyParams the in-scope immutable type parameters
+  /// @param classType the type to check the fields of
   Violation areFieldsImmutable(
       Optional<ClassTree> tree,
       ImmutableSet<String> immutableTyParams,
@@ -264,7 +258,7 @@ public final class ImmutableAnalysis {
     return Violation.absent();
   }
 
-  /** Check a single field for immutability. */
+  /// Check a single field for immutability.
   Violation isFieldImmutable(
       Optional<Tree> tree,
       ImmutableSet<String> immutableTyParams,
@@ -314,10 +308,8 @@ public final class ImmutableAnalysis {
     return Violation.absent();
   }
 
-  /**
-   * Gets the {@link Symbol}'s {@code @Immutable} annotation info, either from an annotation on the
-   * symbol or from the list of well-known immutable types.
-   */
+  /// Gets the [Symbol]'s `@Immutable` annotation info, either from an annotation on the symbol or
+  /// from the list of well-known immutable types.
   AnnotationInfo getImmutableAnnotation(Symbol sym, VisitorState state) {
     String nameStr = sym.flatName().toString();
     AnnotationInfo known = wellKnownMutability.getKnownImmutableClasses().get(nameStr);
@@ -327,10 +319,8 @@ public final class ImmutableAnalysis {
     return threadSafety.getInheritedAnnotation(sym, state);
   }
 
-  /**
-   * Gets the {@link Tree}'s {@code @Immutable} annotation info, either from an annotation on the
-   * symbol or from the list of well-known immutable types.
-   */
+  /// Gets the [Tree]'s `@Immutable` annotation info, either from an annotation on the symbol or
+  /// from the list of well-known immutable types.
   @Nullable AnnotationInfo getImmutableAnnotation(Tree tree, VisitorState state) {
     Symbol sym = ASTHelpers.getSymbol(tree);
     return sym == null ? null : threadSafety.getMarkerOrAcceptedAnnotation(sym, state);

@@ -22,7 +22,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** {@link FieldCanBeStatic}Test */
+/// [FieldCanBeStatic]Test
 @RunWith(JUnit4.class)
 public class FieldCanBeStaticTest {
   private final BugCheckerRefactoringTestHelper helper =

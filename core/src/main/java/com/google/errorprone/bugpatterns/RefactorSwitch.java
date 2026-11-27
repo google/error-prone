@@ -91,12 +91,12 @@ import java.util.Set;
 import java.util.stream.Stream;
 import javax.inject.Inject;
 
-/** Checks for refactorings that can be applied to simplify arrow switches. */
+/// Checks for refactorings that can be applied to simplify arrow switches.
 @BugPattern(severity = WARNING, summary = "This switch can be refactored to be more readable")
 public final class RefactorSwitch extends BugChecker
     implements SwitchTreeMatcher, SwitchExpressionTreeMatcher {
 
-  /** Default (negative) result for overall analysis. Note that the value is immutable. */
+  /// Default (negative) result for overall analysis. Note that the value is immutable.
   private static final AnalysisResult DEFAULT_ANALYSIS_RESULT =
       new AnalysisResult(ImmutableList.of());
 
@@ -153,11 +153,9 @@ public final class RefactorSwitch extends BugChecker
         : buildDescription(switchExpressionTree).addAllFixes(suggestedFixes).build();
   }
 
-  /**
-   * Analyzes a {@code SwitchTree}, and determines any possible findings and suggested fixes related
-   * to expression switches that can be made. Does not report any findings or suggested fixes up to
-   * the Error Prone framework.
-   */
+  /// Analyzes a `SwitchTree`, and determines any possible findings and suggested fixes related to
+  /// expression switches that can be made. Does not report any findings or suggested fixes up to
+  /// the Error Prone framework.
   private AnalysisResult analyzeSwitchTree(SwitchTree switchTree, VisitorState state) {
 
     // Don't convert switch within switch because findings may overlap
@@ -322,11 +320,9 @@ public final class RefactorSwitch extends BugChecker
     return new AnalysisResult(ImmutableList.copyOf(convertibleFindings));
   }
 
-  /**
-   * Analyzes a {@code SwitchExpressionTree}, and determines any possible findings and suggested
-   * fixes related to expression switches that can be made. Does not report any findings or
-   * suggested fixes up to the Error Prone framework.
-   */
+  /// Analyzes a `SwitchExpressionTree`, and determines any possible findings and suggested fixes
+  /// related to expression switches that can be made. Does not report any findings or suggested
+  /// fixes up to the Error Prone framework.
   private AnalysisResult analyzeSwitchExpressionTree(
       SwitchExpressionTree switchTree, VisitorState state) {
     // Nothing to be done for an empty switch
@@ -393,7 +389,7 @@ public final class RefactorSwitch extends BugChecker
     return new AnalysisResult(ImmutableList.copyOf(convertibleFindings));
   }
 
-  /** Analyzes a single case for simplifications. */
+  /// Analyzes a single case for simplifications.
   private static boolean analyzeCaseForSimplify(
       ImmutableList<StatementTree> statements, CaseTree caseTree) {
     // Remove redundant braces
@@ -411,11 +407,9 @@ public final class RefactorSwitch extends BugChecker
     return false;
   }
 
-  /**
-   * Returns a map from return trees to the scope that they are returning from. Special case: when
-   * returning from the scope of the switch statement itself, the {@code switchTree} itself is used
-   * as a sentinel value (no attempt is made to identify the specific enclosing scope).
-   */
+  /// Returns a map from return trees to the scope that they are returning from. Special case: when
+  /// returning from the scope of the switch statement itself, the `switchTree` itself is used as a
+  /// sentinel value (no attempt is made to identify the specific enclosing scope).
   private static Map<Tree, Tree> analyzeReturnControlFlow(
       SwitchTree switchTree, VisitorState state) {
     ArrayDeque<Tree> returnScope = new ArrayDeque<>();
@@ -448,11 +442,9 @@ public final class RefactorSwitch extends BugChecker
     return result;
   }
 
-  /**
-   * Analyze a single {@code case} of a single {@code switch} statement to determine whether it is
-   * convertible to a return switch. The supplied {@code previousCaseQualifications} is updated and
-   * returned based on this analysis.
-   */
+  /// Analyze a single `case` of a single `switch` statement to determine whether it is convertible
+  /// to a return switch. The supplied `previousCaseQualifications` is updated and returned based on
+  /// this analysis.
   private static CaseQualifications analyzeCaseForReturnSwitch(
       CaseQualifications previousCaseQualifications, ImmutableList<StatementTree> statements) {
     // An empty RHS can't yield a value
@@ -484,11 +476,9 @@ public final class RefactorSwitch extends BugChecker
         : CaseQualifications.ALL_CASES_QUALIFY;
   }
 
-  /**
-   * Analyze a single {@code case} of a single {@code switch} statement to determine whether it is
-   * convertible to an assignment switch. The supplied {@code previousAssignmentSwitchAnalysisState}
-   * is updated and returned based on this analysis.
-   */
+  /// Analyze a single `case` of a single `switch` statement to determine whether it is convertible
+  /// to an assignment switch. The supplied `previousAssignmentSwitchAnalysisState` is updated and
+  /// returned based on this analysis.
   private static AssignmentSwitchAnalysisState analyzeCaseForAssignmentSwitch(
       AssignmentSwitchAnalysisState previousAssignmentSwitchAnalysisState,
       List<StatementTree> statements) {
@@ -588,10 +578,7 @@ public final class RefactorSwitch extends BugChecker
         assignmentTreeOptional.isEmpty() ? caseAssignmentTreeOptional : assignmentTreeOptional);
   }
 
-  /**
-   * Converts a switch that {@code return}s on each case, and is exhaustive, into a {@code return
-   * switch}.
-   */
+  /// Converts a switch that `return`s on each case, and is exhaustive, into a `return switch`.
   private static SuggestedFix convertToReturnSwitch(
       SwitchTree switchTree,
       VisitorState state,
@@ -639,12 +626,10 @@ public final class RefactorSwitch extends BugChecker
     return suggestedFixBuilder.build();
   }
 
-  /**
-   * Deletes the code that becomes dead once {@code switchTree} is converted to a {@code return
-   * switch}, which cannot complete normally. Returns true if successful, or false if the conversion
-   * should be abandoned (in which case {@code suggestedFixBuilder} may hold some of the deletions
-   * and should be discarded).
-   */
+  /// Deletes the code that becomes dead once `switchTree` is converted to a `return switch`, which
+  /// cannot complete normally. Returns true if successful, or false if the conversion should be
+  /// abandoned (in which case `suggestedFixBuilder` may hold some of the deletions and should be
+  /// discarded).
   @CanIgnoreReturnValue
   private static boolean deleteDeadCodeAfterReturnSwitch(
       SwitchTree switchTree, VisitorState state, SuggestedFix.Builder suggestedFixBuilder) {
@@ -658,12 +643,10 @@ public final class RefactorSwitch extends BugChecker
         /* declineIfDeleted= */ SwitchUtils::hasSwitchInTree);
   }
 
-  /**
-   * Converts a single `yield` statement to a single expression within the {@code
-   * suggestedFixBuilder}, for example `case null -> {yield 0;}` would become `case null -> 0;`.
-   * Precondition: it must have been validated that this transformation is syntactically valid
-   * before invoking this method.
-   */
+  /// Converts a single `yield` statement to a single expression within the `suggestedFixBuilder`,
+  /// for example `case null -> {yield 0;}` would become `case null -> 0;`. Precondition: it must
+  /// have been validated that this transformation is syntactically valid before invoking this
+  /// method.
   private static void simplifySingleYieldStatement(
       YieldTree yieldStatement,
       VisitorState state,
@@ -714,10 +697,8 @@ public final class RefactorSwitch extends BugChecker
             + suffixBuilder);
   }
 
-  /**
-   * Transforms the RHS block of a case for a return switch. This involves replacing relevant
-   * `return`s with `yield`s, removing any redundant braces, and adjusting comments if needed.
-   */
+  /// Transforms the RHS block of a case for a return switch. This involves replacing relevant
+  /// `return`s with `yield`s, removing any redundant braces, and adjusting comments if needed.
   private static void transformCaseForReturnSwitch(
       SwitchTree switchTree,
       CaseTree caseTree,
@@ -824,11 +805,9 @@ public final class RefactorSwitch extends BugChecker
     }
   }
 
-  /**
-   * Transforms the supplied switch into an assignment switch (e.g. {@code x = switch ... ;}).
-   * Comments are preserved where possible. Precondition: the {@code AnalysisResult} must have
-   * deduced that this conversion is possible.
-   */
+  /// Transforms the supplied switch into an assignment switch (e.g. `x = switch ... ;`). Comments
+  /// are preserved where possible. Precondition: the `AnalysisResult` must have deduced that this
+  /// conversion is possible.
   private static SuggestedFix convertToAssignmentSwitch(
       SwitchTree switchTree,
       VisitorState state,
@@ -946,10 +925,8 @@ public final class RefactorSwitch extends BugChecker
     return suggestedFixBuilder.build();
   }
 
-  /**
-   * Converts a switch statement to a simplified form. Where possible, a single suggested fix will
-   * contain multiple simplifications.
-   */
+  /// Converts a switch statement to a simplified form. Where possible, a single suggested fix will
+  /// contain multiple simplifications.
   private static SuggestedFix convertToSimplifiedCommon(
       List<? extends CaseTree> cases, VisitorState state, boolean removeDefault) {
 
@@ -1053,15 +1030,13 @@ public final class RefactorSwitch extends BugChecker
     return suggestedFixBuilder.build();
   }
 
-  /** Returns a range that encloses the given comment, offset by the given start position. */
+  /// Returns a range that encloses the given comment, offset by the given start position.
   private static Range<Integer> buildCommentRange(ErrorProneComment comment) {
     return Range.closedOpen(comment.getPos(), comment.getEndPos());
   }
 
-  /**
-   * Returns the comments that are within the case's RHS source code range but outside the printed
-   * range for the RHS.
-   */
+  /// Returns the comments that are within the case's RHS source code range but outside the printed
+  /// range for the RHS.
   private static ImmutableList<ErrorProneComment> computeOrphanedComments(
       ImmutableList<ErrorProneComment> allComments,
       Range<Integer> caseRhsSourceCodeRange,

@@ -48,7 +48,7 @@ import com.sun.tools.javac.code.Type;
 import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-/** A BugPattern; see the summary. */
+/// A BugPattern; see the summary.
 @BugPattern(
     severity = SeverityLevel.WARNING,
     summary = "This TestRule isn't annotated with @Rule, so won't be run.")

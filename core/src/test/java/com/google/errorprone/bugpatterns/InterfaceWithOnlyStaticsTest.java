@@ -22,7 +22,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** Unit tests for {@link InterfaceWithOnlyStatics} bug pattern. */
+/// Unit tests for [InterfaceWithOnlyStatics] bug pattern.
 @RunWith(JUnit4.class)
 public class InterfaceWithOnlyStaticsTest {
   private final CompilationTestHelper testHelper =

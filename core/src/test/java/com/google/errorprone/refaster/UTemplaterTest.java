@@ -23,17 +23,13 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * Tests for {@link UTemplater}'s support for basic syntactic constructs.
- *
- * @author lowasser@google.com (Louis Wasserman)
- */
+/// Tests for [UTemplater]'s support for basic syntactic constructs.
+///
+/// @author lowasser@google.com (Louis Wasserman)
 @RunWith(JUnit4.class)
 public class UTemplaterTest extends AbstractUTreeTest {
-  /**
-   * Parses a Java expression, templates it using a {@link UTemplater}, and tests that the template
-   * matches the original parsed expression.
-   */
+  /// Parses a Java expression, templates it using a [UTemplater], and tests that the template
+  /// matches the original parsed expression.
   private void testTemplateWithoutTypes(String expression) {
     JCTree ast = parseExpression(expression);
     UTree<?> template = (UTree<?>) new UTemplater(context).template(ast);

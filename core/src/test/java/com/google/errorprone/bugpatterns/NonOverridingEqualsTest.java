@@ -21,7 +21,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** Tests for {@link NonOverridingEquals}. */
+/// Tests for [NonOverridingEquals].
 // TODO(eaftan): Tests for correctness of suggested fix
 @RunWith(JUnit4.class)
 public class NonOverridingEqualsTest {
@@ -211,11 +211,9 @@ public enum Planet {
         .doTest();
   }
 
-  /**
-   * A static method can be invoked on an instance, so a static equals method with one argument
-   * could be confused with Object#equals. Though I can't imagine how anyone would define a
-   * single-argument static equals method...
-   */
+  /// A static method can be invoked on an instance, so a static equals method with one argument
+  /// could be confused with Object#equals. Though I can't imagine how anyone would define a
+  /// single-argument static equals method...
   @Test
   public void flagsStaticEqualsMethod() {
     compilationHelper

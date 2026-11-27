@@ -27,7 +27,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** Tests for {@link StatementSwitchToExpressionSwitch}. */
+/// Tests for [StatementSwitchToExpressionSwitch].
 @RunWith(JUnit4.class)
 public final class StatementSwitchToExpressionSwitchTest {
   private static final String SUIT =
@@ -5475,11 +5475,96 @@ public final class StatementSwitchToExpressionSwitchTest {
         .doTest();
   }
 
-  /**
-   * Asserts that there is exactly one suggested fix and returns it.
-   *
-   * <p>Similar to {@code FixChoosers.FIRST}, but also asserts that there is exactly one fix.
-   */
+  @Test
+  public void switchByEnum_assignmentSwitchToThrowingStdlibInitializer() {
+    // SwitchUtils.findCombinableVariableTree relies on CompileTimeConstantExpressionMatcher to
+    // decide whether a preceding variable initializer is side-effect-free and non-throwing so it
+    // can be elided as a dead store. Throwing stdlib initializers must not be elided.
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import java.util.Optional;
+
+            class Test {
+              public int parseIntInitializer(Suit suit) {
+                // Throws NumberFormatException at runtime; should not be elided.
+                int x = Integer.parseInt("not-a-number");
+                switch (suit) {
+                  case HEART:
+                  case DIAMOND:
+                    x = 1;
+                    break;
+                  case SPADE:
+                    x = 2;
+                    break;
+                  default:
+                    x = 3;
+                    break;
+                }
+                return x;
+              }
+
+              public String orElseThrowInitializer(Suit suit) {
+                // Throws NoSuchElementException at runtime; should not be elided.
+                String s = Optional.<String>empty().orElseThrow();
+                switch (suit) {
+                  case HEART:
+                  case DIAMOND:
+                    s = "a";
+                    break;
+                  case SPADE:
+                    s = "b";
+                    break;
+                  default:
+                    s = "c";
+                    break;
+                }
+                return s;
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            import java.util.Optional;
+
+            class Test {
+              public int parseIntInitializer(Suit suit) {
+                // Throws NumberFormatException at runtime; should not be elided.
+                int x = Integer.parseInt("not-a-number");
+                x =
+                    switch (suit) {
+                      case HEART, DIAMOND -> 1;
+                      case SPADE -> 2;
+                      default -> 3;
+                    };
+                return x;
+              }
+
+              public String orElseThrowInitializer(Suit suit) {
+                // Throws NoSuchElementException at runtime; should not be elided.
+                String s = Optional.<String>empty().orElseThrow();
+                s =
+                    switch (suit) {
+                      case HEART, DIAMOND -> "a";
+                      case SPADE -> "b";
+                      default -> "c";
+                    };
+                return s;
+              }
+            }
+            """)
+        .setArgs(
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion",
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
+        .setFixChooser(StatementSwitchToExpressionSwitchTest::assertOneFixAndChoose)
+        .doTest();
+  }
+
+  /// Asserts that there is exactly one suggested fix and returns it.
+  ///
+  /// Similar to `FixChoosers.FIRST`, but also asserts that there is exactly one fix.
   public static Fix assertOneFixAndChoose(List<Fix> fixes) {
     assertThat(fixes).hasSize(1);
     return fixes.get(0);

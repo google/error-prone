@@ -20,12 +20,10 @@ import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.annotations.DoNotMock;
 
-/**
- * Points out if a Mockito mock is mocking an object that would be better off being tested using an
- * alternative instance.
- *
- * @author amalloy@google.com (Alan Malloy)
- */
+/// Points out if a Mockito mock is mocking an object that would be better off being tested using an
+/// alternative instance.
+///
+/// @author amalloy@google.com (Alan Malloy)
 @BugPattern(
     name = "DoNotMock",
     severity = SeverityLevel.ERROR,

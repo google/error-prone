@@ -161,9 +161,9 @@ import javax.tools.SimpleJavaFileObject;
 import javax.tools.StandardJavaFileManager;
 import org.jspecify.annotations.Nullable;
 
-/** Factories for constructing {@link Fix}es. */
+/// Factories for constructing [Fix]es.
 public final class SuggestedFixes {
-  /** Adds modifiers to the given class, method, or field declaration. */
+  /// Adds modifiers to the given class, method, or field declaration.
   public static Optional<SuggestedFix> addModifiers(
       Tree tree, VisitorState state, Modifier... modifiers) {
     ModifiersTree originalModifiers = getModifiers(tree);
@@ -173,7 +173,7 @@ public final class SuggestedFixes {
     return addModifiers(tree, originalModifiers, state, new TreeSet<>(Arrays.asList(modifiers)));
   }
 
-  /** Adds modifiers to the given declaration and corresponding modifiers tree. */
+  /// Adds modifiers to the given declaration and corresponding modifiers tree.
   public static Optional<SuggestedFix> addModifiers(
       Tree tree, ModifiersTree originalModifiers, VisitorState state, Set<Modifier> modifiers) {
     Set<Modifier> toAdd = Sets.difference(modifiers, originalModifiers.getFlags());
@@ -248,7 +248,7 @@ public final class SuggestedFixes {
     fix.replace(insertPos, insertPos, Joiner.on(' ').join(toAdd) + " ");
   }
 
-  /** Removes modifiers from the given class, method, or field declaration. */
+  /// Removes modifiers from the given class, method, or field declaration.
   public static Optional<SuggestedFix> removeModifiers(
       Tree tree, VisitorState state, Modifier... modifiers) {
     ImmutableSet<Modifier> toRemove = ImmutableSet.copyOf(modifiers);
@@ -259,7 +259,7 @@ public final class SuggestedFixes {
     return removeModifiers(originalModifiers, state, toRemove);
   }
 
-  /** Removes modifiers to the given declaration and corresponding modifiers tree. */
+  /// Removes modifiers to the given declaration and corresponding modifiers tree.
   public static Optional<SuggestedFix> removeModifiers(
       ModifiersTree originalModifiers, VisitorState state, Set<Modifier> toRemove) {
     SuggestedFix.Builder fix = SuggestedFix.builder();
@@ -277,10 +277,8 @@ public final class SuggestedFixes {
     return Optional.of(fix.build());
   }
 
-  /**
-   * Parses the modifier at the start of the given {@code tokens} into a {@link ModifierWithTokens},
-   * if there is one.
-   */
+  /// Parses the modifier at the start of the given `tokens` into a [ModifierWithTokens], if there
+  /// is one.
   private static @Nullable ModifierWithTokens getTokModifierKind(List<ErrorProneToken> tokens) {
     var firstToken = tokens.getFirst();
     return switch (firstToken.kind()) {
@@ -313,10 +311,8 @@ public final class SuggestedFixes {
     };
   }
 
-  /**
-   * A modifier and the tokens that make up its representation. This would be trivial except for
-   * {@code non-sealed}, which is composed of three tokens.
-   */
+  /// A modifier and the tokens that make up its representation. This would be trivial except for
+  /// `non-sealed`, which is composed of three tokens.
   record ModifierWithTokens(Modifier modifier, List<ErrorProneToken> tokens) {
     ModifierWithTokens(Modifier modifier, ErrorProneToken token) {
       this(modifier, ImmutableList.of(token));
@@ -347,16 +343,12 @@ public final class SuggestedFixes {
 
   private static final Splitter COMPONENT_SPLITTER = Splitter.on('.');
 
-  /**
-   * Returns a human-friendly name of the given {@link Symbol} for use in fixes.
-   *
-   * <ul>
-   *   <li>If the symbol is already in scope, its simple name is used.
-   *   <li>If the symbol is a {@link Symbol.TypeSymbol} and an enclosing type is imported, that
-   *       enclosing type is used as a qualifier.
-   *   <li>Otherwise the outermost enclosing type is imported and used as a qualifier.
-   * </ul>
-   */
+  /// Returns a human-friendly name of the given [Symbol] for use in fixes.
+  ///
+  /// - If the symbol is already in scope, its simple name is used.
+  /// - If the symbol is a [Symbol.TypeSymbol] and an enclosing type is imported, that enclosing
+  ///   type is used as a qualifier.
+  /// - Otherwise the outermost enclosing type is imported and used as a qualifier.
   public static String qualifyType(VisitorState state, SuggestedFix.Builder fix, Symbol sym) {
     if (sym.getKind() == ElementKind.TYPE_PARAMETER) {
       return sym.getSimpleName().toString();
@@ -394,7 +386,7 @@ public final class SuggestedFixes {
     return Joiner.on('.').join(names);
   }
 
-  /** Returns a human-friendly name of the given type for use in fixes. */
+  /// Returns a human-friendly name of the given type for use in fixes.
   public static String qualifyType(VisitorState state, SuggestedFix.Builder fix, TypeMirror type) {
     return type.accept(
         new SimpleTypeVisitor8<String, SuggestedFix.Builder>() {
@@ -442,11 +434,9 @@ public final class SuggestedFixes {
         fix);
   }
 
-  /**
-   * Returns a human-friendly name of the given {@code typeName} for use in fixes.
-   *
-   * <p>This should be used if the type may not be loaded.
-   */
+  /// Returns a human-friendly name of the given `typeName` for use in fixes.
+  ///
+  /// This should be used if the type may not be loaded.
   public static String qualifyType(
       VisitorState state, SuggestedFix.Builder fix, ClassName typeName) {
     ClassSymbol sym = typeName.symbol(state);
@@ -456,13 +446,11 @@ public final class SuggestedFixes {
     return qualifyType(state, fix, typeName.toString().replace('$', '.'));
   }
 
-  /**
-   * Returns a human-friendly name of the given {@code typeName} for use in fixes.
-   *
-   * <p>This should be used if the type may not be loaded.
-   *
-   * @param typeName a qualified canonical type name, e.g. {@code java.util.Map.Entry}.
-   */
+  /// Returns a human-friendly name of the given `typeName` for use in fixes.
+  ///
+  /// This should be used if the type may not be loaded.
+  ///
+  /// @param typeName a qualified canonical type name, e.g. `java.util.Map.Entry`.
   public static String qualifyType(VisitorState state, SuggestedFix.Builder fix, String typeName) {
     List<String> components = COMPONENT_SPLITTER.splitToList(typeName);
     // Check if the simple name is already visible.
@@ -521,15 +509,13 @@ public final class SuggestedFixes {
     return result[0];
   }
 
-  /**
-   * Provides a name to use for the (fully qualified) method provided in {@code qualifiedName},
-   * trying to static import it if possible. Adds imports to {@code fix} as appropriate.
-   *
-   * <p>The heuristic is quite conservative: it won't add a static import if an identifier with the
-   * same name is referenced anywhere in the class. Otherwise, we'd have to implement overload
-   * resolution, and ensure that adding a new static import doesn't change the semantics of existing
-   * code.
-   */
+  /// Provides a name to use for the (fully qualified) method provided in `qualifiedName`, trying to
+  /// static import it if possible. Adds imports to `fix` as appropriate.
+  ///
+  /// The heuristic is quite conservative: it won't add a static import if an identifier with the
+  /// same name is referenced anywhere in the class. Otherwise, we'd have to implement overload
+  /// resolution, and ensure that adding a new static import doesn't change the semantics of
+  /// existing code.
   public static String qualifyStaticImport(
       String qualifiedName, SuggestedFix.Builder fix, VisitorState state) {
     int lastDot = qualifiedName.lastIndexOf('.');
@@ -544,15 +530,13 @@ public final class SuggestedFixes {
         state);
   }
 
-  /**
-   * Provides a name to use for the static member {@code memberName} on {@code className}, trying to
-   * static import it if possible. Adds imports to {@code fix} as appropriate.
-   *
-   * <p>The heuristic is quite conservative: it won't add a static import if an identifier with the
-   * same name is referenced anywhere in the class. Otherwise, we'd have to implement overload
-   * resolution, and ensure that adding a new static import doesn't change the semantics of existing
-   * code.
-   */
+  /// Provides a name to use for the static member `memberName` on `className`, trying to static
+  /// import it if possible. Adds imports to `fix` as appropriate.
+  ///
+  /// The heuristic is quite conservative: it won't add a static import if an identifier with the
+  /// same name is referenced anywhere in the class. Otherwise, we'd have to implement overload
+  /// resolution, and ensure that adding a new static import doesn't change the semantics of
+  /// existing code.
   public static String qualifyStaticImport(
       ClassName className, String memberName, SuggestedFix.Builder fix, VisitorState state) {
     requireNonNull(className);
@@ -616,7 +600,7 @@ public final class SuggestedFixes {
     return memberName;
   }
 
-  /** Replaces the leaf doctree in the given path with {@code replacement}. */
+  /// Replaces the leaf doctree in the given path with `replacement`.
   public static void replaceDocTree(
       SuggestedFix.Builder fix, DocTreePath docPath, String replacement) {
     DocTree leaf = docPath.getLeaf();
@@ -634,13 +618,11 @@ public final class SuggestedFixes {
     return getEndPosition(pos, docPath.getTreePath().getCompilationUnit());
   }
 
-  /**
-   * Fully qualifies a javadoc reference, e.g. for replacing <code>{&#64;link List}</code> with
-   * <code>{&#64;link java.util.List}</code>.
-   *
-   * @param fix the fix builder to add to
-   * @param docPath the path to a {@link DCTree.DCReference} element
-   */
+  /// Fully qualifies a javadoc reference, e.g. for replacing `{@link List}` with `{@link
+  /// java.util.List}`.
+  ///
+  /// @param fix the fix builder to add to
+  /// @param docPath the path to a [DCTree.DCReference] element
   public static void qualifyDocReference(
       SuggestedFix.Builder fix, DocTreePath docPath, VisitorState state) {
 
@@ -667,13 +649,11 @@ public final class SuggestedFixes {
     replaceDocTree(fix, docPath, qualifiedName);
   }
 
-  /**
-   * Removes {@code tree} from {@code trees}, assuming that {@code trees} represents a
-   * comma-separated list of expressions containing {@code tree}.
-   *
-   * <p>Can be used to remove a single element from an annotation. Does not remove the enclosing
-   * parentheses if no elements are left.
-   */
+  /// Removes `tree` from `trees`, assuming that `trees` represents a comma-separated list of
+  /// expressions containing `tree`.
+  ///
+  /// Can be used to remove a single element from an annotation. Does not remove the enclosing
+  /// parentheses if no elements are left.
   public static SuggestedFix removeElement(
       Tree tree, List<? extends Tree> trees, VisitorState state) {
     int indexOf = trees.indexOf(tree);
@@ -689,10 +669,8 @@ public final class SuggestedFixes {
     return SuggestedFix.replace(startPos, getStartPosition(trees.get(indexOf + 1)), "");
   }
 
-  /**
-   * Instructs {@link #addMembers(ClassTree, VisitorState, AdditionPosition, String, String...)}
-   * whether to add the new member(s) at the beginning of the class, or at the end.
-   */
+  /// Instructs [#addMembers(ClassTree, VisitorState, AdditionPosition, String, String...)] whether
+  /// to add the new member(s) at the beginning of the class, or at the end.
   public enum AdditionPosition {
     FIRST {
 
@@ -733,13 +711,11 @@ public final class SuggestedFixes {
       }
     };
 
-    /** The position at which to make changes */
+    /// The position at which to make changes
     abstract int pos(ClassTree tree, VisitorState state);
 
-    /**
-     * An imprecise guess at whether the member is actually defined in a .java file, as opposed to
-     * being generated by javac (e.g. a synthetic member or a generated constructor).
-     */
+    /// An imprecise guess at whether the member is actually defined in a .java file, as opposed to
+    /// being generated by javac (e.g. a synthetic member or a generated constructor).
     private static boolean definedInSourceFile(Tree member) {
       Symbol sym = getSymbol(member);
       if (sym == null) {
@@ -754,21 +730,17 @@ public final class SuggestedFixes {
     }
   }
 
-  /**
-   * Returns a {@link Fix} that adds members defined by {@code firstMember} (and optionally {@code
-   * otherMembers}) to the end of the class referenced by {@code classTree}. This method should only
-   * be called once per {@link ClassTree} as the suggestions will otherwise collide.
-   */
+  /// Returns a [Fix] that adds members defined by `firstMember` (and optionally `otherMembers`) to
+  /// the end of the class referenced by `classTree`. This method should only be called once per
+  /// [ClassTree] as the suggestions will otherwise collide.
   public static SuggestedFix addMembers(
       ClassTree classTree, VisitorState state, String firstMember, String... otherMembers) {
     return addMembers(classTree, state, AdditionPosition.LAST, firstMember, otherMembers);
   }
 
-  /**
-   * Returns a {@link Fix} that adds members defined by {@code firstMember} (and optionally {@code
-   * otherMembers}) to the class referenced by {@code classTree}. This method should only be called
-   * once per {@link ClassTree} as the suggestions will otherwise collide.
-   */
+  /// Returns a [Fix] that adds members defined by `firstMember` (and optionally `otherMembers`) to
+  /// the class referenced by `classTree`. This method should only be called once per [ClassTree] as
+  /// the suggestions will otherwise collide.
   public static SuggestedFix addMembers(
       ClassTree classTree,
       VisitorState state,
@@ -780,12 +752,9 @@ public final class SuggestedFixes {
     return addMembers(classTree, state, where, members).get();
   }
 
-  /**
-   * Returns a {@link Fix} that adds members defined by {@code members} to the class referenced by
-   * {@code classTree}. This method should only be called once per {@link ClassTree} as the
-   * suggestions will otherwise collide. It will return {@code Optional.empty()} if and only if
-   * {@code members} is empty.
-   */
+  /// Returns a [Fix] that adds members defined by `members` to the class referenced by `classTree`.
+  /// This method should only be called once per [ClassTree] as the suggestions will otherwise
+  /// collide. It will return `Optional.empty()` if and only if `members` is empty.
   public static Optional<SuggestedFix> addMembers(
       ClassTree classTree, VisitorState state, AdditionPosition where, Iterable<String> members) {
     // Manually desugaring a foreach over members so that we can behave differently if it's empty.
@@ -803,10 +772,8 @@ public final class SuggestedFixes {
     return Optional.of(SuggestedFix.replace(pos, pos, stringBuilder.toString()));
   }
 
-  /**
-   * Renames the given {@link VariableTree} and its usages in the current compilation unit to {@code
-   * replacement}.
-   */
+  /// Renames the given [VariableTree] and its usages in the current compilation unit to
+  /// `replacement`.
   public static SuggestedFix renameVariable(
       VariableTree tree, String replacement, VisitorState state) {
     String name = tree.getName().toString();
@@ -826,20 +793,19 @@ public final class SuggestedFixes {
             })
         .findFirst()
         .ifPresent(token -> fix.replace(token.pos(), token.endPos(), replacement));
-    fix.merge(renameVariableUsages(tree, replacement, state));
+    if (!name.isEmpty() && !replacement.equals("_")) {
+      fix.merge(renameVariableUsages(tree, replacement, state));
+    }
     return fix.build();
   }
 
-  /**
-   * Renames usage of the given {@link VariableTree} in the current compilation unit to {@code
-   * replacement}.
-   */
+  /// Renames usage of the given [VariableTree] in the current compilation unit to `replacement`.
   public static SuggestedFix renameVariableUsages(
       VariableTree tree, String replacement, VisitorState state) {
     return renameSymbolOccurrences(getSymbol(tree), replacement, state);
   }
 
-  /** Be warned, only changes method name at the declaration. */
+  /// Be warned, only changes method name at the declaration.
   public static SuggestedFix renameMethod(MethodTree tree, String replacement, VisitorState state) {
     // Search tokens from end of return type tree to beginning of method body.
     int basePos = state.getEndPosition(tree.getReturnType());
@@ -856,10 +822,8 @@ public final class SuggestedFixes {
     throw new AssertionError();
   }
 
-  /**
-   * Renames the given {@link MethodTree} and its usages in the current compilation unit to {@code
-   * replacement}.
-   */
+  /// Renames the given [MethodTree] and its usages in the current compilation unit to
+  /// `replacement`.
   public static SuggestedFix renameMethodWithInvocations(
       MethodTree tree, String replacement, VisitorState state) {
     MethodSymbol sym = getSymbol(tree);
@@ -867,7 +831,7 @@ public final class SuggestedFixes {
         renameMethod(tree, replacement, state), renameSymbolOccurrences(sym, replacement, state));
   }
 
-  /** Replaces the name of the method being invoked in {@code tree} with {@code replacement}. */
+  /// Replaces the name of the method being invoked in `tree` with `replacement`.
   public static SuggestedFix renameMethodInvocation(
       MethodInvocationTree tree, String replacement, VisitorState state) {
     Tree methodSelect = tree.getMethodSelect();
@@ -897,7 +861,7 @@ public final class SuggestedFixes {
     throw malformedMethodInvocationTree(tree);
   }
 
-  /** Rename a class and all uses of it in the current file. */
+  /// Rename a class and all uses of it in the current file.
   public static SuggestedFix renameClassWithUses(
       ClassTree tree, String replacement, VisitorState state) {
     return SuggestedFix.merge(
@@ -905,7 +869,7 @@ public final class SuggestedFixes {
         renameSymbolOccurrences(getSymbol(tree), replacement, state));
   }
 
-  /** Be warned, this only renames the class declaration. */
+  /// Be warned, this only renames the class declaration.
   private static SuggestedFix renameClass(ClassTree tree, String replacement, VisitorState state) {
     // Search tokens from start of class to first member (if present).
     int basePos = getStartPosition(tree);
@@ -968,10 +932,8 @@ public final class SuggestedFixes {
         String.format("Couldn't replace the method name in %s.", tree));
   }
 
-  /**
-   * Renames a type parameter {@code typeParameter} owned by {@code owningTree} to {@code
-   * typeVarReplacement}. Renames occurrences in Javadoc as well.
-   */
+  /// Renames a type parameter `typeParameter` owned by `owningTree` to `typeVarReplacement`.
+  /// Renames occurrences in Javadoc as well.
   public static SuggestedFix renameTypeParameter(
       TypeParameterTree typeParameter,
       Tree owningTree,
@@ -1038,7 +1000,7 @@ public final class SuggestedFixes {
     return fixBuilder.build();
   }
 
-  /** Deletes the given exceptions from a method's throws clause. */
+  /// Deletes the given exceptions from a method's throws clause.
   public static Fix deleteExceptions(
       MethodTree tree, VisitorState state, List<ExpressionTree> toDelete) {
     List<? extends ExpressionTree> trees = tree.getThrows();
@@ -1066,29 +1028,25 @@ public final class SuggestedFixes {
     throw new AssertionError();
   }
 
-  /**
-   * Returns a fix that adds a {@code @SuppressWarnings(warningToSuppress)} to the closest
-   * suppressible element to the node pointed at by {@code state.getPath()}.
-   *
-   * @see #addSuppressWarnings(VisitorState, String, String)
-   */
+  /// Returns a fix that adds a `@SuppressWarnings(warningToSuppress)` to the closest suppressible
+  /// element to the node pointed at by `state.getPath()`.
+  ///
+  /// @see #addSuppressWarnings(VisitorState, String, String)
   public static SuggestedFix addSuppressWarnings(VisitorState state, String warningToSuppress) {
     return addSuppressWarnings(state, warningToSuppress, null);
   }
 
-  /**
-   * Returns a fix that adds a {@code @SuppressWarnings(warningToSuppress)} to the closest
-   * suppressible element to the node pointed at by {@code state.getPath()}, optionally suffixing
-   * the suppression with a comment suffix (e.g. a reason for the suppression).
-   *
-   * <p>If the closest suppressible element already has a @SuppressWarning annotation,
-   * warningToSuppress will be added to the value in {@code @SuppressWarnings} instead.
-   *
-   * <p>In the event that a suppressible element couldn't be found (e.g.: the state is pointing at a
-   * CompilationUnit, or some other internal inconsistency has occurred), or the enclosing
-   * suppressible element already has a {@code @SuppressWarnings} annotation with {@code
-   * warningToSuppress}, this method will throw an {@link IllegalArgumentException}.
-   */
+  /// Returns a fix that adds a `@SuppressWarnings(warningToSuppress)` to the closest suppressible
+  /// element to the node pointed at by `state.getPath()`, optionally suffixing the suppression with
+  /// a comment suffix (e.g. a reason for the suppression).
+  ///
+  /// If the closest suppressible element already has a @SuppressWarning annotation,
+  /// warningToSuppress will be added to the value in `@SuppressWarnings` instead.
+  ///
+  /// In the event that a suppressible element couldn't be found (e.g.: the state is pointing at a
+  /// CompilationUnit, or some other internal inconsistency has occurred), or the enclosing
+  /// suppressible element already has a `@SuppressWarnings` annotation with `warningToSuppress`,
+  /// this method will throw an [IllegalArgumentException].
   public static SuggestedFix addSuppressWarnings(
       VisitorState state, String warningToSuppress, @Nullable String lineComment) {
     SuggestedFix.Builder fixBuilder = SuggestedFix.builder();
@@ -1099,29 +1057,25 @@ public final class SuggestedFixes {
     return fixBuilder.build();
   }
 
-  /**
-   * Modifies {@code fixBuilder} to either create a new {@code @SuppressWarnings} element on the
-   * closest suppressible node, or add {@code warningToSuppress} to that node if there's already a
-   * {@code SuppressWarnings} annotation there.
-   *
-   * @see #addSuppressWarnings(VisitorState, String, String)
-   */
+  /// Modifies `fixBuilder` to either create a new `@SuppressWarnings` element on the closest
+  /// suppressible node, or add `warningToSuppress` to that node if there's already a
+  /// `SuppressWarnings` annotation there.
+  ///
+  /// @see #addSuppressWarnings(VisitorState, String, String)
   public static void addSuppressWarnings(
       SuggestedFix.Builder fixBuilder, VisitorState state, String warningToSuppress) {
     addSuppressWarnings(fixBuilder, state, warningToSuppress, null);
   }
 
-  /**
-   * Modifies {@code fixBuilder} to either create a new {@code @SuppressWarnings} element on the
-   * closest suppressible node, or add {@code warningToSuppress} to that node if there's already a
-   * {@code SuppressWarnings} annotation there.
-   *
-   * @param warningToSuppress the warning to be suppressed, without the surrounding annotation. For
-   *     example, to produce {@code @SuppressWarnings("Foo")}, pass {@code Foo}.
-   * @param lineComment if non-null, the {@code @SuppressWarnings} will be prefixed by a line
-   *     comment containing this text. Do not pass leading {@code //} or include any line breaks.
-   * @see #addSuppressWarnings(VisitorState, String, String)
-   */
+  /// Modifies `fixBuilder` to either create a new `@SuppressWarnings` element on the closest
+  /// suppressible node, or add `warningToSuppress` to that node if there's already a
+  /// `SuppressWarnings` annotation there.
+  ///
+  /// @param warningToSuppress the warning to be suppressed, without the surrounding annotation. For
+  ///   example, to produce `@SuppressWarnings("Foo")`, pass `Foo`.
+  /// @param lineComment if non-null, the `@SuppressWarnings` will be prefixed by a line comment
+  ///   containing this text. Do not pass leading `//` or include any line breaks.
+  /// @see #addSuppressWarnings(VisitorState, String, String)
   public static void addSuppressWarnings(
       SuggestedFix.Builder fixBuilder,
       VisitorState state,
@@ -1130,20 +1084,18 @@ public final class SuggestedFixes {
     addSuppressWarnings(fixBuilder, state, warningToSuppress, lineComment, true);
   }
 
-  /**
-   * Modifies {@code fixBuilder} to either create a new {@code @SuppressWarnings} element on the
-   * closest suppressible node, or add {@code warningToSuppress} to that node if there's already a
-   * {@code SuppressWarnings} annotation there.
-   *
-   * @param warningToSuppress the warning to be suppressed, without the surrounding annotation. For
-   *     example, to produce {@code @SuppressWarnings("Foo")}, pass {@code Foo}.
-   * @param lineComment if non-null, the {@code @SuppressWarnings} will have this comment associated
-   *     with it. Do not pass leading {@code //} or include any line breaks.
-   * @param commentOnNewLine if false, and this suppression results in a new annotation, the line
-   *     comment will be added on the same line as the {@code @SuppressWarnings} annotation. In
-   *     other cases, the line comment will be on its own line.
-   * @see #addSuppressWarnings(VisitorState, String, String)
-   */
+  /// Modifies `fixBuilder` to either create a new `@SuppressWarnings` element on the closest
+  /// suppressible node, or add `warningToSuppress` to that node if there's already a
+  /// `SuppressWarnings` annotation there.
+  ///
+  /// @param warningToSuppress the warning to be suppressed, without the surrounding annotation. For
+  ///   example, to produce `@SuppressWarnings("Foo")`, pass `Foo`.
+  /// @param lineComment if non-null, the `@SuppressWarnings` will have this comment associated with
+  ///   it. Do not pass leading `//` or include any line breaks.
+  /// @param commentOnNewLine if false, and this suppression results in a new annotation, the line
+  ///   comment will be added on the same line as the `@SuppressWarnings` annotation. In other
+  ///   cases, the line comment will be on its own line.
+  /// @see #addSuppressWarnings(VisitorState, String, String)
   public static void addSuppressWarnings(
       SuggestedFix.Builder fixBuilder,
       VisitorState state,
@@ -1192,11 +1144,9 @@ public final class SuggestedFixes {
     }
   }
 
-  /**
-   * Modifies {@code fixBuilder} to either remove a {@code warningToRemove} warning from the closest
-   * {@code SuppressWarning} node or remove the entire {@code SuppressWarning} node if {@code
-   * warningToRemove} is the only warning in that node.
-   */
+  /// Modifies `fixBuilder` to either remove a `warningToRemove` warning from the closest
+  /// `SuppressWarning` node or remove the entire `SuppressWarning` node if `warningToRemove` is the
+  /// only warning in that node.
   public static void removeSuppressWarnings(
       SuggestedFix.Builder fixBuilder, VisitorState state, String warningToRemove) {
     // Find the nearest tree to remove @SuppressWarnings from.
@@ -1264,12 +1214,10 @@ public final class SuggestedFixes {
         .orElse(null);
   }
 
-  /**
-   * Returns a fix that appends {@code newValues} to the {@code parameterName} argument for {@code
-   * annotation}, regardless of whether there is already an argument.
-   *
-   * <p>N.B.: {@code newValues} are source-code strings, not string literal values.
-   */
+  /// Returns a fix that appends `newValues` to the `parameterName` argument for `annotation`,
+  /// regardless of whether there is already an argument.
+  ///
+  /// N.B.: `newValues` are source-code strings, not string literal values.
   public static SuggestedFix.Builder addValuesToAnnotationArgument(
       AnnotationTree annotation,
       String parameterName,
@@ -1307,22 +1255,18 @@ public final class SuggestedFixes {
     }
   }
 
-  /**
-   * @deprecated use {@link #updateAnnotationArgumentValues(AnnotationTree, VisitorState, String,
-   *     Collection)} instead
-   */
+  /// @deprecated This overload is deprecated; instead use
+  ///   [#updateAnnotationArgumentValues(AnnotationTree, VisitorState, String, Collection)].
   @Deprecated
   public static SuggestedFix.Builder updateAnnotationArgumentValues(
       AnnotationTree annotation, String parameterName, Collection<String> newValues) {
     return updateAnnotationArgumentValues(annotation, null, parameterName, newValues);
   }
 
-  /**
-   * Returns a fix that updates {@code newValues} to the {@code parameterName} argument for {@code
-   * annotation}, regardless of whether there is already an argument.
-   *
-   * <p>N.B.: {@code newValues} are source-code strings, not string literal values.
-   */
+  /// Returns a fix that updates `newValues` to the `parameterName` argument for `annotation`,
+  /// regardless of whether there is already an argument.
+  ///
+  /// N.B.: `newValues` are source-code strings, not string literal values.
   public static SuggestedFix.Builder updateAnnotationArgumentValues(
       AnnotationTree annotation,
       VisitorState state,
@@ -1387,21 +1331,17 @@ public final class SuggestedFixes {
     return Optional.empty();
   }
 
-  /**
-   * Returns true if the current compilation would succeed with the given fix applied. Note that
-   * calling this method is very expensive as it requires rerunning the entire compile, so it should
-   * be used with restraint.
-   */
+  /// Returns true if the current compilation would succeed with the given fix applied. Note that
+  /// calling this method is very expensive as it requires rerunning the entire compile, so it
+  /// should be used with restraint.
   public static boolean compilesWithFix(Fix fix, VisitorState state) {
     return compilesWithFix(fix, state, ImmutableList.of(), false);
   }
 
-  /**
-   * Returns true if the current compilation would succeed with the given fix applied, using the
-   * given additional compiler options, optionally limiting the checking of compilation failures to
-   * the compilation unit in which the fix is applied. Note that calling this method is very
-   * expensive as it requires rerunning the entire compile, so it should be used with restraint.
-   */
+  /// Returns true if the current compilation would succeed with the given fix applied, using the
+  /// given additional compiler options, optionally limiting the checking of compilation failures to
+  /// the compilation unit in which the fix is applied. Note that calling this method is very
+  /// expensive as it requires rerunning the entire compile, so it should be used with restraint.
   public static boolean compilesWithFix(
       Fix fix,
       VisitorState state,
@@ -1493,10 +1433,8 @@ public final class SuggestedFixes {
     return true;
   }
 
-  /**
-   * A class to hold the files from the compilation context, with a diff applied to the
-   * currently-processed one; the files can then be recompiled.
-   */
+  /// A class to hold the files from the compilation context, with a diff applied to the
+  /// currently-processed one; the files can then be recompiled.
   public static final class FixCompiler {
     private final List<JavaFileObject> fileObjects;
     private final VisitorState state;
@@ -1629,14 +1567,14 @@ public final class SuggestedFixes {
           });
     }
 
-    /** The result of the compilation. */
+    /// The result of the compilation.
     public record Result(List<Diagnostic<? extends JavaFileObject>> diagnostics) {}
   }
 
   private static final ImmutableSet<String> SOURCE_TARGET_OPTIONS =
       ImmutableSet.of("-source", "--source", "-target", "--target");
 
-  /** Create a plausible URI to use in {@link #compilesWithFix}. */
+  /// Create a plausible URI to use in [#compilesWithFix].
   @VisibleForTesting
   static URI sourceURI(URI uri) {
     if (!uri.getScheme().equals("jar")) {
@@ -1650,18 +1588,14 @@ public final class SuggestedFixes {
     }
   }
 
-  /**
-   * Pretty-prints a Type for use in diagnostic messages, qualifying any enclosed type names using
-   * {@link #qualifyType}}.
-   */
+  /// Pretty-prints a Type for use in diagnostic messages, qualifying any enclosed type names using
+  /// [#qualifyType].
   public static String prettyType(Type type, @Nullable VisitorState state) {
     return prettyType(state, /* existingFix= */ null, type);
   }
 
-  /**
-   * Pretty-prints a Type for use in fixes, qualifying any enclosed type names using {@link
-   * #qualifyType}}.
-   */
+  /// Pretty-prints a Type for use in fixes, qualifying any enclosed type names using
+  /// [#qualifyType].
   public static String prettyType(
       @Nullable VisitorState state, SuggestedFix.@Nullable Builder existingFix, Type type) {
     SuggestedFix.Builder fix = existingFix == null ? SuggestedFix.builder() : existingFix;
@@ -1717,27 +1651,23 @@ public final class SuggestedFixes {
   private static final ClassName DONT_SUGGEST_FIXES =
       ClassName.of("com.google.errorprone.annotations.DontSuggestFixes");
 
-  /**
-   * Create a fix to add a suppression annotation on the surrounding class.
-   *
-   * <p>No suggested fix is produced if the suppression annotation cannot be used on classes, i.e.
-   * the annotation has a {@code @Target} but does not include {@code @Target(TYPE)}.
-   *
-   * <p>If the suggested annotation is {@code DontSuggestFixes}, return empty.
-   */
+  /// Create a fix to add a suppression annotation on the surrounding class.
+  ///
+  /// No suggested fix is produced if the suppression annotation cannot be used on classes, i.e. the
+  /// annotation has a `@Target` but does not include `@Target(TYPE)`.
+  ///
+  /// If the suggested annotation is `DontSuggestFixes`, return empty.
   public static Optional<SuggestedFix> suggestExemptingAnnotation(
       String exemptingAnnotation, TreePath where, VisitorState state) {
     return suggestExemptingAnnotation(ClassName.of(exemptingAnnotation), where, state);
   }
 
-  /**
-   * Create a fix to add a suppression annotation on the surrounding class.
-   *
-   * <p>No suggested fix is produced if the suppression annotation cannot be used on classes, i.e.
-   * the annotation has a {@code @Target} but does not include {@code @Target(TYPE)}.
-   *
-   * <p>If the suggested annotation is {@code DontSuggestFixes}, return empty.
-   */
+  /// Create a fix to add a suppression annotation on the surrounding class.
+  ///
+  /// No suggested fix is produced if the suppression annotation cannot be used on classes, i.e. the
+  /// annotation has a `@Target` but does not include `@Target(TYPE)`.
+  ///
+  /// If the suggested annotation is `DontSuggestFixes`, return empty.
   public static Optional<SuggestedFix> suggestExemptingAnnotation(
       ClassName exemptingAnnotation, TreePath where, VisitorState state) {
     // TODO(bangert): Support annotations that do not have @Target(CLASS).
@@ -1767,16 +1697,14 @@ public final class SuggestedFixes {
     return t instanceof ClassTree classTree && classTree.getSimpleName().contentEquals("");
   }
 
-  /**
-   * We assume annotations with an unknown type can be used on these Tree kinds.
-   *
-   * <p>These are reasonable for exempting annotations which annotate a block of code, e.g. they
-   * don't usually make sense on a variable declaration.
-   */
+  /// We assume annotations with an unknown type can be used on these Tree kinds.
+  ///
+  /// These are reasonable for exempting annotations which annotate a block of code, e.g. they don't
+  /// usually make sense on a variable declaration.
   private static final ImmutableSet<Class<? extends Tree>> TREE_TYPE_UNKNOWN_ANNOTATION =
       ImmutableSet.of(ClassTree.class, MethodTree.class);
 
-  /** Returns true iff {@code suggestExemptingAnnotation()} supports this annotation. */
+  /// Returns true iff `suggestExemptingAnnotation()` supports this annotation.
   public static boolean suggestedExemptingAnnotationSupported(Element exemptingAnnotation) {
     return !supportedTreeTypes(exemptingAnnotation).isEmpty();
   }
@@ -1800,13 +1728,11 @@ public final class SuggestedFixes {
         .collect(toImmutableSet());
   }
 
-  /**
-   * Replaces the tree at {@code path} along with any Javadocs/associated single-line comments.
-   *
-   * <p>This is the same as just deleting the tree for non-class members. For class members, we
-   * tokenize and scan backwards to try to work out which prior comments are associated with this
-   * node.
-   */
+  /// Replaces the tree at `path` along with any Javadocs/associated single-line comments.
+  ///
+  /// This is the same as just deleting the tree for non-class members. For class members, we
+  /// tokenize and scan backwards to try to work out which prior comments are associated with this
+  /// node.
   public static SuggestedFix replaceIncludingComments(
       TreePath path, String replacement, VisitorState state) {
     Tree tree = path.getLeaf();
@@ -1887,7 +1813,7 @@ public final class SuggestedFixes {
     return ImmutableList.of();
   }
 
-  /** Casts the given {@code expressionTree} to {@code toType}, adding parentheses if necessary. */
+  /// Casts the given `expressionTree` to `toType`, adding parentheses if necessary.
   public static String castTree(ExpressionTree expressionTree, String toType, VisitorState state) {
     boolean needsParentheses =
         expressionTree instanceof BinaryTree
@@ -1904,12 +1830,10 @@ public final class SuggestedFixes {
         + (needsParentheses ? ")" : "");
   }
 
-  /**
-   * Replaces the type of the given variable with {@code replacementType}.
-   *
-   * <p>If the tree is a {@code var} declaration, the {@code var} keyword will be replaced with the
-   * {@code replacementType}.
-   */
+  /// Replaces the type of the given variable with `replacementType`.
+  ///
+  /// If the tree is a `var` declaration, the `var` keyword will be replaced with the
+  /// `replacementType`.
   public static Optional<SuggestedFix> replaceVariableType(
       VariableTree tree, String replacementType, VisitorState state) {
     Tree type = tree.getType();
@@ -1937,7 +1861,7 @@ public final class SuggestedFixes {
         SuggestedFix.replace(pos + token.pos(), pos + token.endPos(), replacementType));
   }
 
-  /** Visibility modifiers. */
+  /// Visibility modifiers.
   public enum Visibility {
     PUBLIC(Optional.of(Modifier.PUBLIC)),
     PRIVATE(Optional.of(Modifier.PRIVATE)),
@@ -1990,25 +1914,20 @@ public final class SuggestedFixes {
     }
   }
 
-  /**
-   * Returns a {@link VariableNamer} that avoids shadowing any variables or identifiers in scope at
-   * the current {@code state} location.
-   */
+  /// Returns a [VariableNamer] that avoids shadowing any variables or identifiers in scope at the
+  /// current `state` location.
   public static VariableNamer variableNamer(VisitorState state) {
     return variableNamer(state, ImmutableList.of());
   }
 
-  /**
-   * Returns a {@link VariableNamer} that avoids shadowing any variables or identifiers in scope at
-   * the current {@code state} location, as well as declarations within the given {@code extraScope}
-   * trees.
-   */
+  /// Returns a [VariableNamer] that avoids shadowing any variables or identifiers in scope at the
+  /// current `state` location, as well as declarations within the given `extraScope` trees.
   public static VariableNamer variableNamer(
       VisitorState state, Iterable<? extends Tree> extraScope) {
     return new VariableNamer(state, extraScope);
   }
 
-  /** Helper class for avoiding variable name shadowing. */
+  /// Helper class for avoiding variable name shadowing.
   public static final class VariableNamer {
     private final Set<String> idents;
 

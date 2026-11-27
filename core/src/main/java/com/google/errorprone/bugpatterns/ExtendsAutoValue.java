@@ -38,7 +38,7 @@ import com.sun.tools.javac.util.Name;
 import java.util.stream.Stream;
 import javax.inject.Inject;
 
-/** Makes sure that you are not extending a class that has @AutoValue as an annotation. */
+/// Makes sure that you are not extending a class that has @AutoValue as an annotation.
 @BugPattern(
     summary = "Do not extend an @AutoValue-like classes in non-generated code.",
     severity = SeverityLevel.ERROR)

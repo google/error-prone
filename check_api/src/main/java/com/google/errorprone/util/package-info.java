@@ -14,5 +14,5 @@
  * limitations under the License.
  */
 
-/** Utility code. */
+/// Utility code.
 package com.google.errorprone.util;

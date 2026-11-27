@@ -25,9 +25,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * @author kmb@google.com (Kevin Bierhoff)
- */
+/// @author kmb@google.com (Kevin Bierhoff)
 @RunWith(JUnit4.class)
 public class MislabeledAndroidStringTest {
 
@@ -108,10 +106,8 @@ public class MislabeledAndroidStringTest {
         .doTest();
   }
 
-  /**
-   * Ensures that {@link MislabeledAndroidString#ASSUMED_MEANINGS} is complete, which is important
-   * for generating readable diagnostic messages.
-   */
+  /// Ensures that [MislabeledAndroidString#ASSUMED_MEANINGS] is complete, which is important for
+  /// generating readable diagnostic messages.
   @Test
   public void assumedMeanings() {
     for (Map.Entry<String, String> label : MislabeledAndroidString.MISLEADING.entrySet()) {

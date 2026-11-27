@@ -23,7 +23,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** Unit tests for {@link StringSplitter} check. */
+/// Unit tests for [StringSplitter] check.
 @RunWith(JUnit4.class)
 public class StringSplitterTest {
   private final BugCheckerRefactoringTestHelper testHelper =

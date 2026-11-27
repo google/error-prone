@@ -98,18 +98,16 @@ import java.util.stream.Stream;
 import javax.lang.model.element.Name;
 import javax.lang.model.type.TypeKind;
 
-/**
- * An abstract base class to match API usages in which the return value is not used.
- *
- * <p>In addition to regular contexts in which a return value isn't used (e.g.: the result of {@code
- * String.trim()} is just ignored), this class has the capacity to determine if the result is cast
- * in such a way as to lose important static type information.
- *
- * <p>If an analysis extending this base class chooses to care about this circumstance, they can
- * override {@link #lostType} to define the type information they wish to keep.
- *
- * @author eaftan@google.com (Eddie Aftandilian)
- */
+/// An abstract base class to match API usages in which the return value is not used.
+///
+/// In addition to regular contexts in which a return value isn't used (e.g.: the result of
+/// `String.trim()` is just ignored), this class has the capacity to determine if the result is cast
+/// in such a way as to lose important static type information.
+///
+/// If an analysis extending this base class chooses to care about this circumstance, they can
+/// override [#lostType] to define the type information they wish to keep.
+///
+/// @author eaftan@google.com (Eddie Aftandilian)
 public abstract class AbstractReturnValueIgnored extends BugChecker
     implements MethodInvocationTreeMatcher,
         MemberReferenceTreeMatcher,
@@ -187,22 +185,18 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
     return isCheckReturnValue(expression, state) ? EXPECTED : UNSPECIFIED;
   }
 
-  /**
-   * Returns whether the given expression's return value should be used according to this checker,
-   * regardless of whether or not the return value is actually used.
-   */
+  /// Returns whether the given expression's return value should be used according to this checker,
+  /// regardless of whether or not the return value is actually used.
   private boolean isCheckReturnValue(ExpressionTree tree, VisitorState state) {
     // TODO(cgdecker): Just replace specializedMatcher with this?
     return specializedMatcher().matches(tree, state);
   }
 
-  /**
-   * Match whatever additional conditions concrete subclasses want to match (a list of known
-   * side-effect-free methods, has a @CheckReturnValue annotation, etc.).
-   */
+  /// Match whatever additional conditions concrete subclasses want to match (a list of known
+  /// side-effect-free methods, has a @CheckReturnValue annotation, etc.).
   protected abstract Matcher<? super ExpressionTree> specializedMatcher();
 
-  /** Check for occurrences of this type being lost, i.e. cast to {@link Object}. */
+  /// Check for occurrences of this type being lost, i.e. cast to [Object].
   protected Optional<Type> lostType(VisitorState state) {
     return Optional.empty();
   }
@@ -211,18 +205,14 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
     return format("Returning %s from method that returns %s.", returnedType, declaredReturnType);
   }
 
-  /**
-   * Override this to return false to forbid discarding return values in testers that are testing
-   * whether an exception is thrown.
-   */
+  /// Override this to return false to forbid discarding return values in testers that are testing
+  /// whether an exception is thrown.
   protected boolean allowInExceptionThrowers() {
     return true;
   }
 
-  /**
-   * Fixes the error by assigning the result of the call to the receiver reference, or deleting the
-   * method call. Subclasses may override if they prefer a different description.
-   */
+  /// Fixes the error by assigning the result of the call to the receiver reference, or deleting the
+  /// method call. Subclasses may override if they prefer a different description.
   protected Description describeReturnValueIgnored(
       MethodInvocationTree methodInvocationTree, VisitorState state) {
     return buildDescription(methodInvocationTree)
@@ -373,10 +363,8 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
         .collect(toImmutableList());
   }
 
-  /**
-   * Uses the default description for results ignored via a method reference. Subclasses may
-   * override if they prefer a different description.
-   */
+  /// Uses the default description for results ignored via a method reference. Subclasses may
+  /// override if they prefer a different description.
   protected Description describeReturnValueIgnored(
       MemberReferenceTree memberReferenceTree, VisitorState state) {
     return buildDescription(memberReferenceTree)
@@ -386,10 +374,8 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
         .build();
   }
 
-  /**
-   * Uses the default description for results ignored via a constructor call. Subclasses may
-   * override if they prefer a different description.
-   */
+  /// Uses the default description for results ignored via a constructor call. Subclasses may
+  /// override if they prefer a different description.
   protected Description describeReturnValueIgnored(NewClassTree newClassTree, VisitorState state) {
     return buildDescription(newClassTree)
         .setMessage(
@@ -408,10 +394,8 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
     return memberReferenceTree.getName().toString();
   }
 
-  /**
-   * Returns the diagnostic message. Can be overridden by subclasses to provide a customized
-   * diagnostic that includes the name of the invoked method.
-   */
+  /// Returns the diagnostic message. Can be overridden by subclasses to provide a customized
+  /// diagnostic that includes the name of the invoked method.
   protected String getMessage(Name name) {
     return message();
   }
@@ -530,11 +514,9 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
     return functionalInterfaceReturnsObject(type, state) && !isExemptedInterfaceType(type, state);
   }
 
-  /**
-   * Checks that the return value of a functional interface is void. Note, we do not use
-   * ASTHelpers.isVoidType here, return values of Void are actually type-checked. Only
-   * void-returning functions silently ignore return values of any type.
-   */
+  /// Checks that the return value of a functional interface is void. Note, we do not use
+  /// ASTHelpers.isVoidType here, return values of Void are actually type-checked. Only
+  /// void-returning functions silently ignore return values of any type.
   private static boolean functionalInterfaceReturnsObject(Type interfaceType, VisitorState state) {
     Type objectType = state.getSymtab().objectType;
     return isSubtype(
@@ -563,7 +545,7 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
     return isExemptedInterfaceType(enclosingClass(symbol).type, state);
   }
 
-  /** Returning a type from a lambda or method that returns Object loses the type information. */
+  /// Returning a type from a lambda or method that returns Object loses the type information.
   @Override
   public Description matchReturn(ReturnTree tree, VisitorState state) {
     Optional<Type> optionalType = lostType(state);

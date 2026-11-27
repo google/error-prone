@@ -31,12 +31,10 @@ import com.sun.source.tree.Tree.Kind;
 import java.util.regex.Pattern;
 import org.jspecify.annotations.Nullable;
 
-/**
- * Matcher for a <code>long</code> literal with a lower-case ell for a suffix (e.g. <code>234l
- * </code>) rather than the more readable upper-case ell (e.g. <code>234L</code>).
- *
- * @author Simon Nickerson (sjnickerson@google.com)
- */
+/// Matcher for a `long` literal with a lower-case ell for a suffix (e.g. `234l`) rather than the
+/// more readable upper-case ell (e.g. `234L`).
+///
+/// @author Simon Nickerson (sjnickerson@google.com)
 @BugPattern(summary = "Prefer 'L' to 'l' for the suffix to long literals", severity = ERROR)
 public class LongLiteralLowerCaseSuffix extends BugChecker implements LiteralTreeMatcher {
 
@@ -57,10 +55,8 @@ public class LongLiteralLowerCaseSuffix extends BugChecker implements LiteralTre
   private static final Pattern LONG_LITERAL_PATTERN =
       Pattern.compile("-? *(0[bBxX]?)?[0-9a-fA-F_]+[lL]?");
 
-  /**
-   * Extracts the long literal corresponding to a given {@link LiteralTree} node from the source
-   * code as a string. Returns null if the source code is not available.
-   */
+  /// Extracts the long literal corresponding to a given [LiteralTree] node from the source code as
+  /// a string. Returns null if the source code is not available.
   private static @Nullable String getLongLiteral(LiteralTree literalTree, VisitorState state) {
     CharSequence sourceFile = state.getSourceCode();
     if (sourceFile == null) {

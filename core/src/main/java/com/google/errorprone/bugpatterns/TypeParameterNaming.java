@@ -49,12 +49,10 @@ import javax.lang.model.element.Name;
 import org.safere.Matcher;
 import org.safere.Pattern;
 
-/**
- * Enforces type parameters match the google style guide.
- *
- * @author siyuanl@google.com (Siyuan Liu)
- * @author glorioso@google.com (Nick Glorioso)
- */
+/// Enforces type parameters match the google style guide.
+///
+/// @author siyuanl@google.com (Siyuan Liu)
+/// @author glorioso@google.com (Nick Glorioso)
 @BugPattern(
     summary =
         "Type parameters must be a single letter with an optional numeric suffix,"
@@ -71,30 +69,24 @@ public class TypeParameterNaming extends BugChecker implements TypeParameterTree
     return "" + Ascii.toUpperCase(s.charAt(0)) + (s.length() == 1 ? "" : s.substring(1));
   }
 
-  /**
-   * An enum that classifies a String name into different types, based on the Google Java Style
-   * Guide's rules for Type Parameters.
-   */
+  /// An enum that classifies a String name into different types, based on the Google Java Style
+  /// Guide's rules for Type Parameters.
   public enum TypeParameterNamingClassification {
-    /** Examples: B, Q, R2, T1, A9 */
+    /// Examples: B, Q, R2, T1, A9
     LETTER_WITH_MAYBE_NUMERAL(true),
 
-    /**
-     * A valid Type Parameter name, that follows the style guide rule:
-     *
-     * <p>Examples: DataTypeT, FooT, BarT
-     */
+    /// A valid Type Parameter name, that follows the style guide rule:
+    ///
+    /// Examples: DataTypeT, FooT, BarT
     CLASS_NAME_WITH_T(true),
 
-    /**
-     * Names of the form which are not camel case, but nonetheless have a Capital T at the end and
-     * this shouldn't suggest to add more.
-     *
-     * <p>Examples; IDataT, CConverterT. BART, FOOT
-     */
+    /// Names of the form which are not camel case, but nonetheless have a Capital T at the end and
+    /// this shouldn't suggest to add more.
+    ///
+    /// Examples; IDataT, CConverterT. BART, FOOT
     NON_CLASS_NAME_WITH_T_SUFFIX(false),
 
-    /** Anything else. */
+    /// Anything else.
     UNCLASSIFIED(false);
 
     private final boolean isValidName;

@@ -32,18 +32,14 @@ import com.google.errorprone.matchers.Matcher;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.NewClassTree;
 
-/**
- * Check for calls to bad JodaTime constructors.
- *
- * <ul>
- *   <li>{@code org.joda.time.Duration#Duration(long)}
- *   <li>{@code org.joda.time.Instant#Instant()}
- *   <li>{@code org.joda.time.Instant#Instant(long)}
- *   <li>{@code org.joda.time.DateTime#DateTime()}
- *   <li>{@code org.joda.time.DateTime#DateTime(org.joda.time.Chronology)}
- *   <li>{@code org.joda.time.DateTime#DateTime(org.joda.time.DateTimeZone)}
- * </ul>
- */
+/// Check for calls to bad JodaTime constructors.
+///
+/// - `org.joda.time.Duration#Duration(long)`
+/// - `org.joda.time.Instant#Instant()`
+/// - `org.joda.time.Instant#Instant(long)`
+/// - `org.joda.time.DateTime#DateTime()`
+/// - `org.joda.time.DateTime#DateTime(org.joda.time.Chronology)`
+/// - `org.joda.time.DateTime#DateTime(org.joda.time.DateTimeZone)`
 @BugPattern(
     summary = "Use of certain JodaTime constructors are not allowed.",
     explanation = "Use JodaTime's static factories instead of the ambiguous constructors.",

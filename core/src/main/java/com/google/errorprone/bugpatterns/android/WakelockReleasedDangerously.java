@@ -54,9 +54,7 @@ import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Type.UnionClassType;
 import com.sun.tools.javac.code.Types;
 
-/**
- * @author epmjohnston@google.com
- */
+/// @author epmjohnston@google.com
 @BugPattern(
     tags = StandardTags.FRAGILE_CODE,
     summary =
@@ -145,7 +143,7 @@ public class WakelockReleasedDangerously extends BugChecker implements MethodInv
         .build();
   }
 
-  /** Return whether the given try-tree will catch the given exception type. */
+  /// Return whether the given try-tree will catch the given exception type.
   private boolean tryCatchesException(TryTree tryTree, Type exceptionToCatch, VisitorState state) {
     Types types = state.getTypes();
     return tryTree.getCatches().stream()
@@ -161,11 +159,9 @@ public class WakelockReleasedDangerously extends BugChecker implements MethodInv
         });
   }
 
-  /**
-   * Whether the given WakeLock may throw an unexpected RuntimeException when released.
-   *
-   * <p>Returns true if the given WakeLock was acquired with timeout and it is reference counted.
-   */
+  /// Whether the given WakeLock may throw an unexpected RuntimeException when released.
+  ///
+  /// Returns true if the given WakeLock was acquired with timeout and it is reference counted.
   private boolean wakelockMayThrow(Symbol wakelockSymbol, VisitorState state) {
     ClassTree enclosingClass = getTopLevelClass(state);
     ImmutableMultimap<String, MethodInvocationTree> map =
@@ -186,10 +182,8 @@ public class WakelockReleasedDangerously extends BugChecker implements MethodInv
             .orElseThrow(() -> new IllegalArgumentException("No enclosing class found"));
   }
 
-  /**
-   * Finds all method invocations on the given symbol, and constructs a map of the called method's
-   * name, to the {@link MethodInvocationTree} in which it was called.
-   */
+  /// Finds all method invocations on the given symbol, and constructs a map of the called method's
+  /// name, to the [MethodInvocationTree] in which it was called.
   private ImmutableMultimap<String, MethodInvocationTree> methodCallsForSymbol(
       Symbol sym, ClassTree classTree) {
     ImmutableMultimap.Builder<String, MethodInvocationTree> methodMap = ImmutableMultimap.builder();

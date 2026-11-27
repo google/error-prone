@@ -36,7 +36,7 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.NewClassTree;
 
-/** A {@link BugChecker} that detects use of the unsafe JNDI API system. */
+/// A [BugChecker] that detects use of the unsafe JNDI API system.
 @BugPattern(
     summary =
         "Using dangerous ClassLoader APIs may deserialize untrusted user input into bytecode,"

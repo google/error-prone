@@ -37,7 +37,7 @@ import com.sun.source.tree.IfTree;
 import com.sun.source.tree.ParenthesizedTree;
 import com.sun.source.tree.WhileLoopTree;
 
-/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
+/// A [BugChecker]; see the associated [BugPattern] annotation for details.
 @BugPattern(
     summary =
         "Assignment where a boolean expression was expected;"

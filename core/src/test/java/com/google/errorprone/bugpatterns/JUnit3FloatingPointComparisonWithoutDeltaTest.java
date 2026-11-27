@@ -22,11 +22,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * Tests for {@link JUnit3FloatingPointComparisonWithoutDelta}.
- *
- * @author mwacker@google.com (Mike Wacker)
- */
+/// Tests for [JUnit3FloatingPointComparisonWithoutDelta].
+///
+/// @author mwacker@google.com (Mike Wacker)
 @RunWith(JUnit4.class)
 public class JUnit3FloatingPointComparisonWithoutDeltaTest {
 

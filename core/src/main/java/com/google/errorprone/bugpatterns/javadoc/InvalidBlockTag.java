@@ -51,19 +51,15 @@ import java.util.Optional;
 import java.util.Set;
 import javax.inject.Inject;
 
-/**
- * Matches invalid Javadoc tags, and tries to suggest fixes.
- *
- * @author ghm@google.com (Graeme Morgan)
- */
+/// Matches invalid Javadoc tags, and tries to suggest fixes.
+///
+/// @author ghm@google.com (Graeme Morgan)
 @BugPattern(summary = "This tag is invalid.", severity = WARNING, documentSuppression = false)
 public final class InvalidBlockTag extends BugChecker
     implements ClassTreeMatcher, MethodTreeMatcher, VariableTreeMatcher {
 
-  /**
-   * HTML tags which imply we're showing code, and should therefore probably escape unknown block
-   * tags.
-   */
+  /// HTML tags which imply we're showing code, and should therefore probably escape unknown block
+  /// tags.
   private static final ImmutableSet<String> CODE_TAGS = ImmutableSet.of("code", "pre");
 
   private final KnownTags knownTags;
@@ -214,10 +210,8 @@ public final class InvalidBlockTag extends BugChecker
       return super.visitUnknownBlockTag(unknownBlockTagTree, null);
     }
 
-    /**
-     * When we have an erroneous block tag inside a {@literal @}code tag, the enclosing
-     * {@literal @}code tag will fail to parse. So, we're looking for an enclosing erroneous tag.
-     */
+    /// When we have an erroneous block tag inside a `@code` tag, the enclosing `@code` tag will
+    /// fail to parse. So, we're looking for an enclosing erroneous tag.
     private boolean parentIsErroneousCodeTag() {
       if (getCurrentPath().getParentPath() == null) {
         return false;

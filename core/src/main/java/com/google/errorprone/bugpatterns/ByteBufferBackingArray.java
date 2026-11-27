@@ -42,10 +42,8 @@ import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import java.util.Optional;
 
-/**
- * Checks when ByteBuffer.array() is used without calling .arrayOffset() to know the offset of the
- * array, or when the buffer wasn't initialized using ByteBuffer.wrap() or ByteBuffer.allocate().
- */
+/// Checks when ByteBuffer.array() is used without calling .arrayOffset() to know the offset of the
+/// array, or when the buffer wasn't initialized using ByteBuffer.wrap() or ByteBuffer.allocate().
 @BugPattern(
     summary =
         "ByteBuffer.array() shouldn't be called unless ByteBuffer.arrayOffset() is used or "
@@ -119,10 +117,8 @@ public class ByteBufferBackingArray extends BugChecker implements MethodInvocati
         || !BYTE_BUFFER_MATCHER.matches(receiver, state);
   }
 
-  /**
-   * Scan for a call to ByteBuffer.arrayOffset() or check if buffer was initialized with either
-   * ByteBuffer.wrap() or ByteBuffer.allocate().
-   */
+  /// Scan for a call to ByteBuffer.arrayOffset() or check if buffer was initialized with either
+  /// ByteBuffer.wrap() or ByteBuffer.allocate().
   private static final class ValidByteBufferArrayScanner extends TreeScanner<Void, VisitorState> {
 
     private final Symbol searchedBufferSymbol;
@@ -184,7 +180,7 @@ public class ByteBufferBackingArray extends BugChecker implements MethodInvocati
     }
   }
 
-  /** Scan for a call to ByteBuffer.wrap() or ByteBuffer.allocate(). */
+  /// Scan for a call to ByteBuffer.wrap() or ByteBuffer.allocate().
   private static final class ValidByteBufferInitializerScanner
       extends TreeScanner<Boolean, VisitorState> {
 

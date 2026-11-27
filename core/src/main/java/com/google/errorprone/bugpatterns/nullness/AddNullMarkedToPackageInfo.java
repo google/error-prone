@@ -29,7 +29,7 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.CompilationUnitTree;
 
-/** Refactoring to add {@code @NullMarked} annotation to package-info.java files. */
+/// Refactoring to add `@NullMarked` annotation to package-info.java files.
 @BugPattern(summary = "Apply @NullMarked to this package", severity = SUGGESTION)
 public final class AddNullMarkedToPackageInfo extends BugChecker
     implements CompilationUnitTreeMatcher {

@@ -47,10 +47,8 @@ import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Types;
 import java.util.List;
 
-/**
- * Checks for calls to Guava's {@code Futures.getChecked} method that will always fail because they
- * pass an incompatible exception type.
- */
+/// Checks for calls to Guava's `Futures.getChecked` method that will always fail because they pass
+/// an incompatible exception type.
 @BugPattern(
     summary = "Futures.getChecked requires a checked exception type with a standard constructor.",
     severity = ERROR)

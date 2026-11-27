@@ -28,7 +28,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
-/** Tests for {@link UseBinds}. */
+/// Tests for [UseBinds].
 @RunWith(Parameterized.class)
 public class UseBindsTest {
   @Parameters(name = "{0}")

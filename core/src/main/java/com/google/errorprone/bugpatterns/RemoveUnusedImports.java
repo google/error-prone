@@ -69,9 +69,7 @@ import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.SimpleAnnotationValueVisitor8;
 import org.jspecify.annotations.Nullable;
 
-/**
- * @author gak@google.com (Gregory Kick)
- */
+/// @author gak@google.com (Gregory Kick)
 @BugPattern(
     summary = "Unused imports",
     severity = SUGGESTION,
@@ -150,10 +148,8 @@ public final class RemoveUnusedImports extends BugChecker implements Compilation
         : ((MemberSelectTree) importTree.getQualifiedIdentifier()).getIdentifier();
   }
 
-  /**
-   * A callback that provides actions for whenever you encounter a {@link Symbol}. Also provides a
-   * hook by which you can stop scanning.
-   */
+  /// A callback that provides actions for whenever you encounter a [Symbol]. Also provides a hook
+  /// by which you can stop scanning.
   private interface SymbolSink {
     boolean keepScanning();
 
@@ -172,7 +168,7 @@ public final class RemoveUnusedImports extends BugChecker implements Compilation
       this.state = state;
     }
 
-    /** Skip the imports themselves when checking for usage. */
+    /// Skip the imports themselves when checking for usage.
     @Override
     public Void visitImport(ImportTree importTree, SymbolSink usedSymbols) {
       return null;
@@ -287,11 +283,9 @@ public final class RemoveUnusedImports extends BugChecker implements Compilation
       docTreeSymbolScanner.scan(new DocTreePath(getCurrentPath(), commentTree), sink);
     }
 
-    /**
-     * For the time being, this will just report any symbol referenced from javadoc as a usage.
-     * TODO(gak): improve this so that we can remove imports used only from javadoc and replace the
-     * usages with fully-qualified names.
-     */
+    /// For the time being, this will just report any symbol referenced from javadoc as a usage.
+    /// TODO(gak): improve this so that we can remove imports used only from javadoc and replace the
+    /// usages with fully-qualified names.
     final class DocTreeSymbolScanner extends DocTreePathScanner<Void, SymbolSink> {
       @Override
       public Void visitReference(ReferenceTree referenceTree, SymbolSink sink) {

@@ -45,7 +45,7 @@ import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.UnaryTree;
 import javax.lang.model.element.Modifier;
 
-/** Detects non-atomic updates to volatile variables. */
+/// Detects non-atomic updates to volatile variables.
 @BugPattern(
     summary = "This update of a volatile variable is non-atomic",
     severity = WARNING,
@@ -53,30 +53,28 @@ import javax.lang.model.element.Modifier;
 public class NonAtomicVolatileUpdate extends BugChecker
     implements UnaryTreeMatcher, CompoundAssignmentTreeMatcher, AssignmentTreeMatcher {
 
-  /** Extracts the expression from a UnaryTree and applies a matcher to it. */
+  /// Extracts the expression from a UnaryTree and applies a matcher to it.
   private static Matcher<UnaryTree> expressionFromUnaryTree(Matcher<ExpressionTree> exprMatcher) {
     return (UnaryTree tree, VisitorState state) ->
         exprMatcher.matches(stripParentheses(tree.getExpression()), state);
   }
 
-  /** Extracts the variable from a CompoundAssignmentTree and applies a matcher to it. */
+  /// Extracts the variable from a CompoundAssignmentTree and applies a matcher to it.
   private static Matcher<CompoundAssignmentTree> variableFromCompoundAssignmentTree(
       Matcher<ExpressionTree> exprMatcher) {
     return (CompoundAssignmentTree tree, VisitorState state) ->
         exprMatcher.matches(stripParentheses(tree.getVariable()), state);
   }
 
-  /** Extracts the variable from an AssignmentTree and applies a matcher to it. */
+  /// Extracts the variable from an AssignmentTree and applies a matcher to it.
   private static Matcher<AssignmentTree> variableFromAssignmentTree(
       Matcher<ExpressionTree> exprMatcher) {
     return (AssignmentTree tree, VisitorState state) ->
         exprMatcher.matches(stripParentheses(tree.getVariable()), state);
   }
 
-  /**
-   * Matches patterns like i++ and i-- in which i is volatile, and the pattern is not enclosed by a
-   * synchronized block.
-   */
+  /// Matches patterns like i++ and i-- in which i is volatile, and the pattern is not enclosed by a
+  /// synchronized block.
   private static final Matcher<UnaryTree> unaryIncrementDecrementMatcher =
       allOf(
           expressionFromUnaryTree(Matchers.<ExpressionTree>hasModifier(Modifier.VOLATILE)),
@@ -95,10 +93,8 @@ public class NonAtomicVolatileUpdate extends BugChecker
     return Description.NO_MATCH;
   }
 
-  /**
-   * Matches patterns like i += 1 and i -= 1 in which i is volatile, and the pattern is not enclosed
-   * by a synchronized block.
-   */
+  /// Matches patterns like i += 1 and i -= 1 in which i is volatile, and the pattern is not
+  /// enclosed by a synchronized block.
   private static final Matcher<CompoundAssignmentTree> compoundAssignmentIncrementDecrementMatcher =
       allOf(
           variableFromCompoundAssignmentTree(
@@ -114,10 +110,8 @@ public class NonAtomicVolatileUpdate extends BugChecker
     return Description.NO_MATCH;
   }
 
-  /**
-   * Matches patterns like i = i + 1 and i = i - 1 in which i is volatile, and the pattern is not
-   * enclosed by a synchronized block.
-   */
+  /// Matches patterns like i = i + 1 and i = i - 1 in which i is volatile, and the pattern is not
+  /// enclosed by a synchronized block.
   private static Matcher<AssignmentTree> assignmentIncrementDecrementMatcher(
       ExpressionTree variable) {
     return allOf(

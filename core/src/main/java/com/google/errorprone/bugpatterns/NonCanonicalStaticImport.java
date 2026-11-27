@@ -26,11 +26,9 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.sun.source.tree.ImportTree;
 
-/**
- * Types shouldn't be statically by their non-canonical name.
- *
- * @author cushon@google.com (Liam Miller-Cushon)
- */
+/// Types shouldn't be statically by their non-canonical name.
+///
+/// @author cushon@google.com (Liam Miller-Cushon)
 @BugPattern(
     summary = "Static import of type uses non-canonical name",
     severity = ERROR,

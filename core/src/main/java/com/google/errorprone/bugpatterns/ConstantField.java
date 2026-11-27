@@ -34,7 +34,7 @@ import com.sun.tools.javac.code.Symbol.VarSymbol;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
 
-/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
+/// A [BugChecker]; see the associated [BugPattern] annotation for details.
 @BugPattern(
     summary = "Fields with CONSTANT_CASE names should be both static and final",
     severity = SUGGESTION,

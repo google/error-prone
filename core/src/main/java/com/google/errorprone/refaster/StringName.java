@@ -20,11 +20,9 @@ import com.google.auto.value.AutoValue;
 import javax.lang.model.element.Name;
 import org.jspecify.annotations.Nullable;
 
-/**
- * A simple wrapper to view a {@code String} as a {@code Name}.
- *
- * @author lowasser@google.com (Louis Wasserman)
- */
+/// A simple wrapper to view a `String` as a `Name`.
+///
+/// @author lowasser@google.com (Louis Wasserman)
 @AutoValue
 public abstract class StringName
     implements Name, Unifiable<Name>, Inlineable<com.sun.tools.javac.util.Name> {

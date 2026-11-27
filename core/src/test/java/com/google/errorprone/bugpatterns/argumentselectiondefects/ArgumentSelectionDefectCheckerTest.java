@@ -30,11 +30,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * Tests for {@link ArgumentSelectionDefectChecker}.
- *
- * @author andrewrice@google.com (Andrew Rice)
- */
+/// Tests for [ArgumentSelectionDefectChecker].
+///
+/// @author andrewrice@google.com (Andrew Rice)
 @RunWith(JUnit4.class)
 public class ArgumentSelectionDefectCheckerTest {
 
@@ -42,10 +40,8 @@ public class ArgumentSelectionDefectCheckerTest {
       CompilationTestHelper.newInstance(
           ArgumentSelectionDefectWithStringEquality.class, getClass());
 
-  /**
-   * A {@link BugChecker} which runs the ArgumentSelectionDefectChecker checker using string
-   * equality for edit distance
-   */
+  /// A [BugChecker] which runs the ArgumentSelectionDefectChecker checker using string equality for
+  /// edit distance
   @BugPattern(
       severity = SeverityLevel.ERROR,
       summary =
@@ -153,10 +149,8 @@ public class ArgumentSelectionDefectCheckerTest {
         .doTest();
   }
 
-  /**
-   * A {@link BugChecker} which runs the ArgumentSelectionDefectChecker checker using string
-   * equality for edit distance and ignores formal parameters called 'ignore'.
-   */
+  /// A [BugChecker] which runs the ArgumentSelectionDefectChecker checker using string equality for
+  /// edit distance and ignores formal parameters called 'ignore'.
   @BugPattern(
       severity = SeverityLevel.ERROR,
       summary =
@@ -226,10 +220,8 @@ public class ArgumentSelectionDefectCheckerTest {
         .doTest();
   }
 
-  /**
-   * A {@link BugChecker} which runs the ArgumentSelectionDefectChecker checker using string
-   * equality for edit distance and a penaltyThreshold of 0.9
-   */
+  /// A [BugChecker] which runs the ArgumentSelectionDefectChecker checker using string equality for
+  /// edit distance and a penaltyThreshold of 0.9
   @BugPattern(
       severity = SeverityLevel.ERROR,
       summary =
@@ -282,10 +274,8 @@ public class ArgumentSelectionDefectCheckerTest {
         .doTest();
   }
 
-  /**
-   * A {@link BugChecker} which runs the ArgumentSelectionDefectChecker checker using string
-   * equality for edit distance and name in comments heuristic
-   */
+  /// A [BugChecker] which runs the ArgumentSelectionDefectChecker checker using string equality for
+  /// edit distance and name in comments heuristic
   @BugPattern(
       severity = SeverityLevel.ERROR,
       summary =
@@ -326,7 +316,7 @@ public class ArgumentSelectionDefectCheckerTest {
     };
   }
 
-  /** A {@link BugChecker} which returns true if parameter names are available */
+  /// A [BugChecker] which returns true if parameter names are available
   @BugPattern(
       severity = SeverityLevel.ERROR,
       summary = "Returns true if parameter names are available on a method call")

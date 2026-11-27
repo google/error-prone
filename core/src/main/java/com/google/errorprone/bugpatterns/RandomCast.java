@@ -39,7 +39,7 @@ import com.sun.source.util.TreePath;
 import com.sun.tools.javac.code.Type;
 import javax.lang.model.type.TypeKind;
 
-/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
+/// A [BugChecker]; see the associated [BugPattern] annotation for details.
 @BugPattern(
     summary =
         "Casting a random number in the range [0.0, 1.0) to an integer or long always results"

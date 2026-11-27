@@ -39,7 +39,7 @@ import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
 import javax.inject.Inject;
 
-/** Highlights cases where a proto's build method has its return value ignored. */
+/// Highlights cases where a proto's build method has its return value ignored.
 @BugPattern(
     summary =
         "Unnecessary call to proto's #build() method.  If you don't consume the return value of "

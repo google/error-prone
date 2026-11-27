@@ -21,7 +21,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** Tests for {@link NonCanonicalType}. */
+/// Tests for [NonCanonicalType].
 @RunWith(JUnit4.class)
 public final class NonCanonicalTypeTest {
   private final CompilationTestHelper compilationHelper =

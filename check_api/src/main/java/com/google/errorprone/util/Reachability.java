@@ -60,52 +60,40 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
-/** An implementation of JLS 14.21 reachability. */
+/// An implementation of JLS 14.21 reachability.
 public class Reachability {
-  /**
-   * A replacement for the completion result of one tree, for {@link
-   * #canCompleteNormally(StatementTree, ImmutableMap)}.
-   */
+  /// A replacement for the completion result of one tree, passed to
+  /// [#canCompleteNormally(StatementTree, ImmutableMap)].
   public enum CanCompleteNormallyPatch {
-    /**
-     * The tree cannot complete normally, and is not analyzed, so the targets of any {@code break}
-     * and {@code continue} statements it contains are not recorded.
-     */
+    /// The tree cannot complete normally, and is not analyzed, so the targets of any `break` and
+    /// `continue` statements it contains are not recorded.
     CANNOT_COMPLETE_NORMALLY_SKIP_INSIDE,
-    /**
-     * The tree cannot complete normally, but is still analyzed, so that the targets of any {@code
-     * break} and {@code continue} statements it contains are recorded.
-     */
+    /// The tree cannot complete normally, but is still analyzed, so that the targets of any `break`
+    /// and `continue` statements it contains are recorded.
     CANNOT_COMPLETE_NORMALLY_ANALYZE_INSIDE,
   }
 
-  /**
-   * Returns true if the given statement can complete normally, as defined by JLS 14.21.
-   *
-   * <p>An exception is made for {@code System.exit}, which cannot complete normally in practice.
-   */
+  /// Returns true if the given statement can complete normally, as defined by JLS 14.21.
+  ///
+  /// An exception is made for `System.exit`, which cannot complete normally in practice.
   public static boolean canCompleteNormally(StatementTree statement) {
     return new CanCompleteNormallyVisitor(/* patches= */ ImmutableMap.of()).scan(statement);
   }
 
-  /**
-   * Returns whether the given statement can complete normally, as defined by JLS 14.21, when taking
-   * into account the given {@code patches}. The patches are a (possibly empty) map from {@code
-   * Tree} to a {@link CanCompleteNormallyPatch}. All relevant tree(s) not present in the patches
-   * will be analyzed as per the JLS.
-   *
-   * <p>An exception is made for {@code System.exit}, which cannot complete normally in practice.
-   */
+  /// Returns whether the given statement can complete normally, as defined by JLS 14.21, when
+  /// taking into account the given `patches`. The patches are a (possibly empty) map from `Tree` to
+  /// a [CanCompleteNormallyPatch]. All relevant tree(s) not present in the patches will be analyzed
+  /// as per the JLS.
+  ///
+  /// An exception is made for `System.exit`, which cannot complete normally in practice.
   public static boolean canCompleteNormally(
       StatementTree statement, ImmutableMap<Tree, CanCompleteNormallyPatch> patches) {
     return new CanCompleteNormallyVisitor(patches).scan(statement);
   }
 
-  /**
-   * Returns true if the given case tree can fall through to the next case tree.
-   *
-   * <p>An exception is made for {@code System.exit}, which cannot complete normally in practice.
-   */
+  /// Returns true if the given case tree can fall through to the next case tree.
+  ///
+  /// An exception is made for `System.exit`, which cannot complete normally in practice.
   public static boolean canFallThrough(CaseTree caseTree) {
     return switch (caseTree.getCaseKind()) {
       case STATEMENT -> {
@@ -126,13 +114,13 @@ public class Reachability {
 
   private static class CanCompleteNormallyVisitor extends SimpleTreeVisitor<Boolean, Void> {
 
-    /** Trees that are the target of a reachable break statement. */
+    /// Trees that are the target of a reachable break statement.
     private final Set<Tree> breaks = new HashSet<>();
 
-    /** Trees that are the target of a reachable continue statement. */
+    /// Trees that are the target of a reachable continue statement.
     private final Set<Tree> continues = new HashSet<>();
 
-    /** Trees whose completion result is replaced by a patch. */
+    /// Trees whose completion result is replaced by a patch.
     private final ImmutableMap<Tree, CanCompleteNormallyPatch> patches;
 
     CanCompleteNormallyVisitor(ImmutableMap<Tree, CanCompleteNormallyPatch> patches) {
@@ -339,11 +327,9 @@ public class Reachability {
       return false;
     }
 
-    /**
-     * Returns whether the switch statement is enhanced: either (i) the type of its selector
-     * expression is not in a designated set of types, or an enum type, or (ii) there is a case
-     * pattern or {@code case null}.
-     */
+    /// Returns whether the switch statement is enhanced: either (i) the type of its selector
+    /// expression is not in a designated set of types, or an enum type, or (ii) there is a case
+    /// pattern or `case null`.
     private static boolean isEnhanced(SwitchTree tree) {
       return TreeInfo.expectedExhaustive((JCTree.JCSwitch) tree);
     }

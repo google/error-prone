@@ -63,7 +63,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** Unit tests for {@link Matchers}. */
+/// Unit tests for [Matchers].
 @RunWith(JUnit4.class)
 public class MatchersTest {
 
@@ -596,7 +596,7 @@ public class MatchersTest {
     }
   }
 
-  /** Simple checker to make sure hasAnnotation doesn't match on MethodInvocationTree. */
+  /// Simple checker to make sure hasAnnotation doesn't match on MethodInvocationTree.
   @BugPattern(
       summary = "Checker that flags the given method invocation if the given matcher matches",
       severity = ERROR)
@@ -611,7 +611,7 @@ public class MatchersTest {
     }
   }
 
-  /** Simple checker to make sure sameArgument doesn't throw IndexOutOfBoundsException. */
+  /// Simple checker to make sure sameArgument doesn't throw IndexOutOfBoundsException.
   @BugPattern(
       summary = "Checker that matches invocation if the first argument is repeated",
       severity = ERROR)
@@ -629,7 +629,7 @@ public class MatchersTest {
     }
   }
 
-  /** Checker that makes sure symbolHasAnnotation matches on MethodInvocationTree. */
+  /// Checker that makes sure symbolHasAnnotation matches on MethodInvocationTree.
   @BugPattern(
       summary = "Checker that flags the given method invocation if the given matcher matches",
       severity = ERROR)
@@ -644,7 +644,7 @@ public class MatchersTest {
     }
   }
 
-  /** Checker that checks if a class is in a particular package. */
+  /// Checker that checks if a class is in a particular package.
   @BugPattern(summary = "Checks the name of the package", severity = ERROR)
   public static class PackageNameChecker extends BugChecker implements ClassTreeMatcher {
     private static final Matcher<Tree> MATCHER = Matchers.packageStartsWith("test.foo");
@@ -655,7 +655,7 @@ public class MatchersTest {
     }
   }
 
-  /** Checker that checks if an argument is 'Boolean.TRUE'. */
+  /// Checker that checks if an argument is 'Boolean.TRUE'.
   @BugPattern(summary = "BooleanConstantTrueChecker", severity = ERROR)
   public static class BooleanConstantTrueChecker extends BugChecker
       implements MethodInvocationTreeMatcher {
@@ -673,7 +673,7 @@ public class MatchersTest {
     }
   }
 
-  /** Checker that flags annotations matched by {@link Matchers#hasMetaAnnotation(String)}. */
+  /// Checker that flags annotations matched by [Matchers#hasMetaAnnotation(String)].
   @BugPattern(summary = "Checker that flags meta-annotated annotations", severity = ERROR)
   public static class HasMetaAnnotationChecker extends BugChecker implements AnnotationTreeMatcher {
     @Override
@@ -1367,9 +1367,7 @@ public class MatchersTest {
     }
   }
 
-  /**
-   * Checker exercising {@link Suppliers#arrayOf(ClassName)} for present and absent element types.
-   */
+  /// Checker exercising [Suppliers#arrayOf(ClassName)] for present and absent element types.
   @BugPattern(summary = "ArrayOfClassNameChecker", severity = ERROR)
   public static class ArrayOfClassNameChecker extends BugChecker implements VariableTreeMatcher {
     private static final ClassName STRING = ClassName.of("java.lang.String");

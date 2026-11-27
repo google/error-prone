@@ -19,12 +19,11 @@ package com.google.errorprone.refaster;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.io.CharStreams;
-import com.google.errorprone.FileManagers;
+import com.google.errorprone.TestCompilations;
 import com.google.errorprone.apply.SourceFile;
 import com.google.testing.compile.JavaFileObjects;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.tools.javac.api.JavacTaskImpl;
-import com.sun.tools.javac.api.JavacTool;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.tree.JCTree.JCMethodDecl;
 import com.sun.tools.javac.tree.TreeInfo;
@@ -32,15 +31,11 @@ import com.sun.tools.javac.tree.TreeScanner;
 import com.sun.tools.javac.util.Context;
 import java.io.IOException;
 import javax.tools.DiagnosticCollector;
-import javax.tools.JavaCompiler;
 import javax.tools.JavaFileObject;
-import javax.tools.StandardJavaFileManager;
 
-/**
- * Abstract skeleton for tests that run the compiler on the fly.
- *
- * @author lowasser@google.com (Louis Wasserman)
- */
+/// Abstract skeleton for tests that run the compiler on the fly.
+///
+/// @author lowasser@google.com (Louis Wasserman)
 public class CompilerBasedTest {
   protected Context context;
   protected SourceFile sourceFile;
@@ -48,18 +43,13 @@ public class CompilerBasedTest {
   private ImmutableMap<String, JCMethodDecl> methods;
 
   protected void compile(TreeScanner scanner, JavaFileObject fileObject) {
-    JavaCompiler compiler = JavacTool.create();
     DiagnosticCollector<JavaFileObject> diagnosticsCollector = new DiagnosticCollector<>();
-    StandardJavaFileManager fileManager = FileManagers.testFileManager();
     JavacTaskImpl task =
-        (JavacTaskImpl)
-            compiler.getTask(
-                CharStreams.nullWriter(),
-                fileManager,
-                diagnosticsCollector,
-                ImmutableList.<String>of(),
-                null,
-                ImmutableList.of(fileObject));
+        TestCompilations.getTask(
+            CharStreams.nullWriter(),
+            diagnosticsCollector,
+            ImmutableList.of(),
+            ImmutableList.of(fileObject));
     try {
       this.sourceFile = SourceFile.create(fileObject);
       Iterable<? extends CompilationUnitTree> trees = task.parse();

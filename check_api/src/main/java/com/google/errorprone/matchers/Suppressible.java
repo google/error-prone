@@ -21,23 +21,19 @@ import com.sun.tools.javac.util.Name;
 import java.lang.annotation.Annotation;
 import java.util.Set;
 
-/**
- * @author alexeagle@google.com (Alex Eagle)
- */
+/// @author alexeagle@google.com (Alex Eagle)
 public interface Suppressible {
-  /**
-   * Returns all of the name strings that this checker should respect as part of a
-   * {@code @SuppressWarnings} annotation.
-   */
+  /// Returns all of the name strings that this checker should respect as part of a
+  /// `@SuppressWarnings` annotation.
   Set<String> allNames();
 
-  /** The canonical name of the check. */
+  /// The canonical name of the check.
   String canonicalName();
 
-  /** Returns true if this checker can be suppressed using {@code @SuppressWarnings}. */
+  /// Returns true if this checker can be suppressed using `@SuppressWarnings`.
   boolean supportsSuppressWarnings();
 
-  /** Returns the custom suppression annotations for this checker, if custom suppression is used. */
+  /// Returns the custom suppression annotations for this checker, if custom suppression is used.
   Set<Class<? extends Annotation>> customSuppressionAnnotations();
 
   boolean suppressedByAnyOf(Set<Name> annotations, VisitorState s);

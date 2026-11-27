@@ -29,7 +29,7 @@ import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.Tree.Kind;
 import java.util.Objects;
 
-/** A BugPattern; see the summary. */
+/// A BugPattern; see the summary.
 @BugPattern(
     summary =
         "This expression evaluates to 0. If this isn't an error, consider expressing it as a"

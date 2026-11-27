@@ -20,7 +20,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** Tests for {@link TemporalAccessorGetChronoField}. */
+/// Tests for [TemporalAccessorGetChronoField].
 @RunWith(JUnit4.class)
 public class TemporalAccessorGetChronoFieldTest {
   private final CompilationTestHelper helper =

@@ -16,6 +16,7 @@
 
 package com.google.errorprone;
 
+import com.google.common.collect.ImmutableList;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import com.google.errorprone.scanner.ScannerSupplier;
 import com.sun.tools.javac.main.Main.Result;
@@ -27,10 +28,10 @@ import javax.tools.DiagnosticListener;
 import javax.tools.JavaCompiler.CompilationTask;
 import javax.tools.JavaFileObject;
 
-/** Wraps {@link com.google.errorprone.ErrorProneJavaCompiler}. */
+/// Wraps [com.google.errorprone.ErrorProneJavaCompiler].
 public class ErrorProneTestCompiler {
 
-  /** {@link ErrorProneTestCompiler.Builder} */
+  /// [ErrorProneTestCompiler.Builder]
   public static class Builder {
 
     private DiagnosticListener<? super JavaFileObject> listener;
@@ -87,18 +88,17 @@ public class ErrorProneTestCompiler {
 
   public Result compile(
       String[] args, List<JavaFileObject> sources, List<? extends Processor> processors) {
-    if (processors == null || processors.isEmpty()) {
-      List<String> processedArgs =
-          CompilationTestHelper.disableImplicitProcessing(Arrays.asList(args));
-      args = processedArgs.toArray(new String[0]);
-    }
+    ImmutableList<String> processedArgs =
+        TestCompilations.defaultTestArgs(
+            Arrays.asList(args),
+            /* disableImplicitProcessing= */ processors == null || processors.isEmpty());
     CompilationTask task =
         new BaseErrorProneJavaCompiler(scannerSupplier)
             .getTask(
                 printWriter,
                 FileManagers.testFileManager(),
                 listener,
-                Arrays.asList(args),
+                processedArgs,
                 null,
                 sources);
     if (processors != null) {

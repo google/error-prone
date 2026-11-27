@@ -22,7 +22,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** Tests for {@link MissingRefasterAnnotation}. */
+/// Tests for [MissingRefasterAnnotation].
 @RunWith(JUnit4.class)
 public final class MissingRefasterAnnotationTest {
   private final CompilationTestHelper compilationTestHelper =

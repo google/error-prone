@@ -35,11 +35,9 @@ import com.sun.tools.javac.code.Type;
 import java.util.Optional;
 import javax.inject.Inject;
 
-/**
- * Flags {@code javax.lang.model.element.Element#toString} usage in {@link BugChecker}s.
- *
- * @author bhagwani@google.com (Sumit Bhagwani)
- */
+/// Flags `javax.lang.model.element.Element#toString` usage in [BugChecker]s.
+///
+/// @author bhagwani@google.com (Sumit Bhagwani)
 @BugPattern(
     summary = "Element#toString shouldn't be used for comparison as it is expensive and fragile.",
     severity = SUGGESTION)

@@ -39,9 +39,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 import javax.lang.model.element.Modifier;
 
-/**
- * @author sgoldfeder@google.com (Steven Goldfeder)
- */
+/// @author sgoldfeder@google.com (Steven Goldfeder)
 @BugPattern(
     name = "IncompatibleModifiers",
     summary =
