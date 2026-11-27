@@ -23,7 +23,9 @@ import static com.google.errorprone.util.ASTHelpers.enclosingClass;
 import static com.google.errorprone.util.ASTHelpers.findMatchingMethods;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
+import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
+import static com.google.errorprone.util.ASTHelpers.isSuper;
 import static java.nio.charset.StandardCharsets.ISO_8859_1;
 import static java.nio.charset.StandardCharsets.US_ASCII;
 import static java.nio.charset.StandardCharsets.UTF_16;
@@ -46,14 +48,18 @@ import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.suppliers.Supplier;
+import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.Tree.Kind;
+import com.sun.tools.javac.api.JavacTrees;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
+import com.sun.tools.javac.comp.Resolve;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
@@ -106,7 +112,8 @@ public final class PreferCharsetOverload extends BugChecker
     }
 
     // 2. Find the best overload that accepts Charset.
-    MethodSymbol bestOverload = findBestCharsetOverload(methodSymbol, candidateIndices, state);
+    MethodSymbol bestOverload =
+        findBestCharsetOverload(tree, methodSymbol, candidateIndices, state);
     if (bestOverload == null) {
       return Description.NO_MATCH;
     }
@@ -177,7 +184,10 @@ public final class PreferCharsetOverload extends BugChecker
   }
 
   private static @Nullable MethodSymbol findBestCharsetOverload(
-      MethodSymbol methodSymbol, ImmutableList<Integer> candidateIndices, VisitorState state) {
+      ExpressionTree tree,
+      MethodSymbol methodSymbol,
+      ImmutableList<Integer> candidateIndices,
+      VisitorState state) {
     Type startClass = enclosingClass(methodSymbol).asType();
 
     // Find all potential overloads across the class hierarchy.
@@ -188,10 +198,41 @@ public final class PreferCharsetOverload extends BugChecker
             startClass,
             state.getTypes());
 
-    // If multiple overloads match, pick the one that replaces the most parameters.
+    if (matchingMethods.isEmpty()) {
+      return null;
+    }
+    var scope = JavacTrees.instance(state.context).getScope(state.getPath());
+    Type site = accessSite(tree, startClass, state);
+    var resolve = Resolve.instance(state.context);
+    // Rank only overloads that javac allows at this call site.
     return matchingMethods.stream()
+        .filter(candidate -> resolve.isAccessible(scope.getEnv(), site, candidate))
         .max(comparingInt(m -> countCharsetParams(m, candidateIndices, state)))
         .orElse(null);
+  }
+
+  private static Type accessSite(ExpressionTree tree, Type declaringType, VisitorState state) {
+    if (!(tree instanceof MethodInvocationTree)) {
+      return declaringType;
+    }
+    ExpressionTree receiver = getReceiver(tree);
+    if (receiver != null) {
+      if (!isSuper(receiver)) {
+        return getType(receiver);
+      }
+      if (receiver instanceof MemberSelectTree qualifiedSuper) {
+        return getType(qualifiedSuper.getExpression());
+      }
+    }
+    // An implicit receiver or an unqualified super call can access protected members
+    // through the enclosing subclass, even when the declaring class is in another package.
+    for (var node : state.getPath()) {
+      if (node instanceof ClassTree clazz
+          && state.getTypes().isSubtype(getType(clazz), declaringType)) {
+        return getType(clazz);
+      }
+    }
+    return declaringType;
   }
 
   /// Checks if the given `candidate` method is a valid `Charset`-based overload of the given
