@@ -306,6 +306,42 @@ public final class InvalidInlineTagTest {
   }
 
   @Test
+  public void standardInlineTags() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            /** {@summary A short summary.} {@index term} {@systemProperty java.home} */
+            class Test {
+              /**
+               * {@summary A short summary.} {@index term} {@systemProperty java.home}
+               * {@return the result}
+               */
+              int method() {
+                return 0;
+              }
+
+              /** {@summary A short summary.} {@index term} {@systemProperty java.home} */
+              int field;
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void rejectedInlineTags() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            // BUG: Diagnostic contains: hidden
+            /** {@hidden} */
+            class Test {}
+            """)
+        .doTest();
+  }
+
+  @Test
   public void blockTagUsedInline() {
     helper
         .addSourceLines(

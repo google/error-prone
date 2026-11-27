@@ -30,12 +30,17 @@ record JavadocTag(String name, TagType type) {
           inlineTag("code"),
           blockTag("deprecated"),
           inlineTag("docRoot"),
+          blockTag("hidden"),
+          inlineTag("index"),
           inlineTag("link"),
           inlineTag("linkplain"),
           inlineTag("literal"),
           blockTag("see"),
           blockTag("since"),
-          inlineTag("snippet"));
+          inlineTag("snippet"),
+          blockTag("spec"),
+          inlineTag("summary"),
+          inlineTag("systemProperty"));
 
   static final ImmutableSet<JavadocTag> VALID_CLASS_TAGS =
       ImmutableSet.<JavadocTag>builder()
@@ -44,6 +49,7 @@ record JavadocTag(String name, TagType type) {
               blockTag("author"),
               inlineTag("inheritDoc"),
               blockTag("param"),
+              blockTag("serial"),
               inlineTag("value"),
               blockTag("version"))
           .build();
@@ -67,6 +73,7 @@ record JavadocTag(String name, TagType type) {
               inlineTag("inheritDoc"),
               blockTag("param"),
               blockTag("return"),
+              inlineTag("return"),
               blockTag("serial"),
               blockTag("throws"),
               blockTag("serialData"),
