@@ -96,6 +96,107 @@ public final class UnnecessaryQualifierTest {
   }
 
   @Test
+  public void cdiObserverParameters_noFinding() {
+    addObserverAnnotation("Observes")
+        .addSourceLines(
+            "Test.java",
+            """
+            import javax.enterprise.event.Observes;
+            import javax.inject.Named;
+
+            class Test {
+              private void event(@Observes @Qual String event) {}
+
+              void eventFirst(@Observes String event, @Qual int dependency) {}
+
+              static void eventLast(@Qual int dependency, @Observes @Qual @Named("event") String event) {}
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void cdiAsyncObserverParameters_noFinding() {
+    addObserverAnnotation("ObservesAsync")
+        .addSourceLines(
+            "Test.java",
+            """
+            import javax.enterprise.event.ObservesAsync;
+
+            class Test {
+              void event(@ObservesAsync @Qual String event) {}
+
+              void eventFirst(@ObservesAsync String event, @Qual int dependency) {}
+
+              static void eventLast(@Qual int dependency, @ObservesAsync @Qual String event) {}
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void cdiObserver_otherLocations_finding() {
+    addObserverAnnotation("Observes")
+        .addSourceLines(
+            "Test.java",
+            """
+            import java.util.function.Function;
+            import javax.enterprise.event.Observes;
+
+            class Test {
+              // BUG: Diagnostic contains:
+              @Qual
+              void event(@Observes String event) {
+                // BUG: Diagnostic contains:
+                @Qual int local = 0;
+                // BUG: Diagnostic contains:
+                Function<String, String> function = (@Qual String value) -> value;
+                class Nested {
+                  // BUG: Diagnostic contains:
+                  void ordinary(@Qual String value) {}
+                }
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void unrelatedObservesAnnotation_finding() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            @interface Observes {}
+
+            class Test {
+              // BUG: Diagnostic contains:
+              void ordinary(@Observes @Qual String value) {}
+            }
+            """)
+        .doTest();
+  }
+
+  private CompilationTestHelper addObserverAnnotation(String name) {
+    return helper.addSourceLines(
+        "javax/enterprise/event/" + name + ".java",
+        """
+        package javax.enterprise.event;
+
+        import static java.lang.annotation.ElementType.PARAMETER;
+        import static java.lang.annotation.RetentionPolicy.RUNTIME;
+
+        import java.lang.annotation.Retention;
+        import java.lang.annotation.Target;
+
+        @Target(PARAMETER)
+        @Retention(RUNTIME)
+        public @interface %s {}
+        """
+            .formatted(name));
+  }
+
+  @Test
   public void methodReturnType_notProvider_finding() {
     helper
         .addSourceLines(
